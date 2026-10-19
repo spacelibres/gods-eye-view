@@ -136,9 +136,10 @@ run_as_service() {
 run_as_service "$NODE_DIR/npm ci --no-audit --no-fund" ||
   run_as_service "$NODE_DIR/npm ci --no-audit --no-fund --registry=https://registry.npmmirror.com" || {
     # `npm ci` deletes node_modules first, and on a busy host that rmdir can
-    # fail with ENOTEMPTY (a file appears between the readdir and the rmdir).
-    # Removing the tree ourselves and retrying is the whole fix.
-    log "npm ci failed; clearing node_modules and retrying"
+    # fail with ENOTEMPTY: the running service still has files open under it.
+    # Stop the service before clearing the tree, then start it again.
+    log "npm ci failed; stopping the service and retrying with a clean tree"
+    systemctl stop gev.service 2>/dev/null || true
     rm -rf "$GEV_HOME/node_modules"
     run_as_service "$NODE_DIR/npm ci --no-audit --no-fund --registry=https://registry.npmmirror.com"
   }
