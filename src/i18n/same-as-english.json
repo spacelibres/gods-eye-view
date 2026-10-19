@@ -150,5 +150,22 @@
     "{value} KM",
     "{value} KM/S",
     "▲ {frp} MW"
+  ],
+  "zh-TW": [
+    "1090 MHz",
+    "978 MHz UAT",
+    "AIS: --",
+    "CCTV",
+    "CRT",
+    "Landsat 8/9",
+    "Sentinel-2",
+    "dB",
+    "{city} CCTV",
+    "{heading}DEG",
+    "{source} HTTP {status}",
+    "{speed}KT",
+    "{value} KM",
+    "{value} KM/S",
+    "▲ {frp} MW"
   ]
 }
