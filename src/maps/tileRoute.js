@@ -19,9 +19,27 @@ export const TILES_RELAY_PATH = '/api/google/tiles';
 /** How long Google gets to answer the probe. */
 export const PROBE_TIMEOUT_MS = 3000;
 
-/** Google's tileset root. Any HTTP answer proves the host is reachable. */
+/** Google's tileset root, asked without a usable key on purpose. */
 export const PROBE_URL =
   'https://tile.googleapis.com/v1/3dtiles/root.json?key=probe';
+
+/**
+ * Decide whether a probe response really came from Google.
+ *
+ * A status code cannot tell: Google answers an invalid key with 400, and so
+ * does a local proxy that refuses the connection, which is exactly the case
+ * this probe exists to catch (a browser behind a proxy that only handles
+ * localhost shows `400 Bad Request` from 127.0.0.1 and never leaves the
+ * machine). What Google always adds, and a stopgap proxy does not, is a CORS
+ * grant naming this origin — without it the browser could not read the tile
+ * root at all, so a response lacking it is not a usable path to Google.
+ *
+ * @param {Response} response
+ * @returns {boolean}
+ */
+export function probeReachedGoogle(response) {
+  return Boolean(response?.headers?.get?.('access-control-allow-origin'));
+}
 
 /**
  * Decide the route for this page load.
@@ -35,7 +53,7 @@ export async function chooseTileRoute({
   timeoutMs = PROBE_TIMEOUT_MS,
   relayPath = TILES_RELAY_PATH,
 } = {}) {
-  if (await answers(fetchImpl, PROBE_URL, timeoutMs, () => true)) {
+  if (await answers(fetchImpl, PROBE_URL, timeoutMs, probeReachedGoogle)) {
     return 'direct';
   }
   return (await answers(fetchImpl, relayPath, timeoutMs, (r) => r.ok))

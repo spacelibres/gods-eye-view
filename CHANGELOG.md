@@ -1,5 +1,15 @@
 # Changelog
 
+- Tell Google's tiles apart from a local proxy that refuses them. The
+  reachability probe accepted any HTTP answer, so a browser behind a
+  localhost-only proxy — which answers `400 Bad Request` from `127.0.0.1` and
+  never leaves the machine — looked like a working path to Google, and every
+  tile then failed instead of using the relay. Google answers an invalid key
+  with 400 too, so the status code cannot decide; the probe now requires
+  Google's CORS grant, which is the one header a stopgap proxy does not
+  produce and without which the browser could not read the tiles anyway
+  (spacelibres, #105).
+
 - Serve the production build with the app's own API routes. The deployed host
   ran `vite preview`, which serves `dist/` as static files and never loads the
   provider plugins, so every `/api/*` path answered the app's own 404 — the map

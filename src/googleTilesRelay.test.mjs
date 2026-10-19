@@ -20,13 +20,31 @@ test('a reachable Google keeps the session direct', async () => {
   const route = await chooseTileRoute({
     fetchImpl: async (url) => {
       asked.push(url);
-      return new Response(null, { status: 403 });
+      // Google answers an invalid key with 400 *and* grants CORS.
+      return new Response('{}', {
+        status: 400,
+        headers: { 'Access-Control-Allow-Origin': 'https://example.test' },
+      });
     },
   });
   assert.equal(route, 'direct');
   // The relay is never consulted when Google answers.
   assert.equal(asked.length, 1);
   assert.match(asked[0], /tile\.googleapis\.com/);
+});
+
+test('a local proxy answering 400 is not a path to Google', async () => {
+  // The reported failure: a browser behind a localhost-only proxy shows
+  // "400 Bad Request" from 127.0.0.1 and never reaches Google.
+  const route = await chooseTileRoute({
+    fetchImpl: async (url) => {
+      if (url.includes('tile.googleapis.com')) {
+        return new Response('Bad Request', { status: 400 });
+      }
+      return new Response(null, { status: 200 });
+    },
+  });
+  assert.equal(route, 'relayed');
 });
 
 test('an unreachable Google falls back to the relay when it exists', async () => {
