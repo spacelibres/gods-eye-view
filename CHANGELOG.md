@@ -1,5 +1,171 @@
 # Changelog
 
+- Add nine Spanish city bike systems to Bike Share and `get_bike_share`: BiciMAD
+  (Madrid), Valenbisi (Valencia), Bizi Zaragoza, Sevici (Seville), BIKI
+  (Valladolid), BiciCoruña, Dbizi (Donostia-San Sebastián), Bilbao Bizi and
+  BicinRivas, about 1,840 stations. Station names read underscores as word
+  breaks, and station capacity counts docks rather than PBSC's geofenced area
+  (ulihhhh, #1190).
+
+- Keep missing launch-pad coordinates unknown so launches use the location
+  fallback or stay off the map instead of appearing at 0°N 0°E. Missing stage
+  flight numbers no longer show "FLIGHT 0"
+  (Rudy Celekli, @rudycelekli, #1186).
+
+- Flights' ground floor works across the antimeridian. The viewer-distance
+  check behind the 150 km floor radius and its copy in the photoreal mesh-floor
+  sampler subtracted longitudes without wrapping, so two points 21 km apart
+  across 180° measured about 38,000 km and low or grounded aircraft just across
+  the line from the viewer were never floored. A contact's display corridor
+  walked a segment across 180° the long way round, spending its cell budget on
+  ground behind the contact, and a contact on the seam lost its cell hysteresis.
+  SEARCH NEARBY SITES on a view across 180° searched Google Places around
+  longitude 0, on the far side of the globe, with a radius sized from the view's
+  height alone; it now searches the view (Aditya, @Rohilalala, #1173).
+
+- Keep missing CCTV numbers unknown instead of reading them as zero. `Number`
+  turns null, blank strings and booleans into 0 or 1, and the camera source
+  list sends an unknown number as JSON null, so a source-pack camera that left
+  out its pose reached the browser as zeros clamped to each field's floor —
+  facing north, pitch −2°, FOV 20°, range 120 m, mount 6 m and ground 0 m —
+  instead of the defaults (id-hash heading, −17°, 74°, 700 m, 24 m and the
+  city's ground); a null or blank position placed the camera at 0,0. The
+  server's `toFiniteNumber` and the browser's `safeNumber` now treat absent,
+  blank and boolean values as missing. The same conversion also stops a
+  Tallinn row with a null heading reading as a confident north-facing camera,
+  a Caltrans camera with a blank elevation losing its 150 m ground prior, and
+  a TfL or Catalonia camera with a null or blank coordinate being kept at 0,0
+  or on the zero meridian (omerbberk, #1172).
+
+- Director shot actions land on the requested shot. A seek to a shot's start
+  could round a hair below it and select the end of the previous shot for some
+  shot counts and durations (Aditya, @Rohilalala, #1171).
+
+- Fire-perimeter queries handle outlines and holes crossing the antimeridian:
+  areas enclosed near ±180° are included, areas at the opposite meridian are
+  excluded, and returned perimeter coordinates stay near the dateline. Incident
+  cards use the same circular longitude mean and compare multipart outline
+  areas along short longitude edges, keeping the card on the largest polygon
+  (Arianna Method, @ariannamethod, #1142).
+
+- Scenes keep the "Scene not saved" status when a capture, update, append or
+  import cannot be saved, and an unreadable saved project no longer overwrites
+  the recovery checkpoint. `startScene()` resolves to its documented result,
+  `afterShotId` works without an explicit scene, and `scenesRun` counts the
+  distinct scenes queued (djabhi31, #1135).
+
+- Label camera-tool Street View fallbacks as historical Google imagery rather
+  than the current camera view; keep unknown frame provenance explicit
+  (rudycelekli, #1118).
+
+- Release superseded Google Street View open waits and suppress metadata
+  requests whose viewer was unmounted while the service loaded (rudycelekli,
+  #1117).
+
+- Exclude aircraft without a reported altitude from requested altitude bands;
+  unfiltered aircraft queries still retain them (rudycelekli, #1115).
+
+- A failed Esri Satellite or keyless terrain load still shows OSM or flat terrain
+  at once, but no longer lasts the whole session: while the fallback is on
+  screen, the real provider is retried in the background (30 seconds, doubling
+  to a 10-minute cap) and replaces it live once it loads. Map switches never
+  wait for a retry (Aditya, @Rohilalala, #1111).
+
+- Skip TLE sets whose line 1 and line 2 carry different catalog numbers, so a
+  spliced catalog cannot pair one satellite's elements with another's; the next
+  valid set still parses (VG31OP, #1101).
+
+- Overpass data whose element tags contain a failure phrase ("timed out",
+  "runtime error", "too many requests" and similar, e.g. a place named "Timed
+  Out Escape Rooms") is returned as data instead of being refused and putting
+  the endpoint on cooldown; upstream failures are read from the remark (Aditya,
+  @Rohilalala, #1097).
+
+- Military aircraft keep their last heading and speed when an adsb.lol row omits
+  `track` or `gs`, instead of turning north and stopping; a grounded row without
+  a speed still reads 0 (Aditya, @Rohilalala, #1096).
+
+- Update DOMPurify to 3.4.17, Sharp to 0.35.5 and source-map-js to 1.2.2 for
+  GHSA-p98j-92pf-mc4p, GHSA-6688-9rhm-gjv2, GHSA-wq5f-xc86-pv6w and
+  GHSA-68fv-2mgg-jv7q; `npm audit` now reports no vulnerabilities (NurstarK,
+  #1094).
+
+- Location search accepts two-dimensional WGS84 `geo:` URIs offline, with
+  the existing coordinate framing and label. Unsupported URI fields are passed
+  to the remaining search providers unchanged (cj-vana, #1071).
+
+- On Windows, `npm run doctor` and the Pinokio install no longer print Node's
+  DEP0190 warning ("Passing args to a child process with shell option true can
+  lead to security vulnerabilities"): npm.cmd's fixed subcommand is now part of
+  the shell command string instead of an argument array (quanticsoul4772, #1057).
+
+- Cross-site browser requests can no longer spend the TomTom traffic-tile
+  budget through `/api/tomtom/*`. The shared same-site gate runs before status,
+  cache, and upstream work; same-origin app requests and non-browser local
+  callers remain supported (Sunil56224972, #973).
+
+- Recent Imagery: opening DETAILS scrolls its card into view when it opens below
+  the fold. The panel used to restore the previous scroll position right after
+  the reveal, so the card stayed out of sight (Ian Blenke, #970).
+
+- Changelog entries are now one file per pull request. A change adds
+  `changelog.d/<pull request>-<slug>.md` instead of editing the top of
+  `CHANGELOG.md`, which two pull requests in flight could not share — it was the
+  most frequent merge conflict in the open queue, and for six of them the only
+  one. `npm run changelog` splices the directory into `CHANGELOG.md` at release
+  time and empties it; `npm run changelog:check` reports the batch and changes
+  nothing. Fragment text is copied through unchanged (daikaginza, #787).
+
+- Read satellite catalog numbers written in Alpha-5, the TLE spelling of
+  numbers above 99999: a letter for the first two digits, skipping I and O
+  (`A0000` is 100000, `Z9999` is 339999). The satellites layer converted such a
+  field to `NaN`, so every Alpha-5 satellite shared one catalog entry and all
+  but the first were dropped as duplicates; the satellite tools read the same
+  field as no number, so such a satellite could not be found by it. The layer
+  and the tools now decode the field in `src/sources/tle.js`, and reject a
+  malformed one (a sign, decimal point, hex, embedded space or stray letter)
+  instead of reading part of it as a number. This is Alpha-5 TLE
+  compatibility: CelesTrak's TLE feed carries no satellite above 99999, which
+  needs the OMM feed (#1191) (Honorius Neogy, #767, fixes #751).
+
+- The dev server no longer watches `.gev-cache` and `.gev-logs`. Providers write
+  cache files and logs there while the app runs, and none of it is source, so
+  the watcher now skips it; this guards against the DNS-lookup delays heavy
+  cache writes have caused, though no difference was measured on current main
+  (monwiss, #761).
+
+- The client's great-circle distances now come from one shared
+  `src/geoDistance.js` (`greatCircleKm`/`greatCircleMeters`, `{lat, lon}`
+  points). The Earth radius is standardized on 6371.0088 km, so distances shift
+  by about 1.4 ppm and region areas by about 2.8 ppm, and missing or
+  out-of-range points return `Infinity` (onionviolet, #287; Rajojha-1, #749).
+
+- The site wears the spacelibre identity. The official lockup from the visual
+  identity manual is used as one unmodified vector (symbol and wordmark
+  together, geometry untouched), recoloured from the active palette instead of
+  being restyled, filtered or split; the icon and favicon are the manual's
+  monochrome white symbol. Colour is a setting, not a constant: six presets plus
+  any custom primary, with every role derived from it, so the mark, the HUD,
+  the first-run mission launcher and the panels all follow one scheme at once
+  (`?primary=RRGGBB&mode=…` previews one without storing it). The palette is
+  resolved before the first frame, so the loading screen already appears in the
+  stored scheme instead of flashing the default. The old God's Eye title text,
+  eye logo, its pointer-following animation and the Cyber theme's per-part
+  recolouring of it are gone (spacelibres, #99).
+
+- Add a one-command VPS installer and a signed GitHub webhook. The installer
+  puts Node 24 in `/opt/node24`, builds the app, runs it under systemd on
+  127.0.0.1:4173 and adds a Caddy site block for the public hostname without
+  rewriting existing sites; the webhook rebuilds the site on a push to `main`
+  (spacelibres, #2).
+
+- Ship the interface in Simplified Chinese (`zh-CN`), complete at 2623
+  messages, with a translator glossary in `docs/translations/zh-CN.md`. The
+  language picker finds it automatically from the browser or `?lang=zh-CN`.
+  A single locale registry now drives the shipped list, and language tags with
+  a region resolve in order: exact tag, then bare code, then the browser's
+  region (spacelibres, #1).
+
 - The tracked-aircraft descriptor now publishes `verticalRateMps`, on both the
   civil and military layers, so a consumer reading `getTrackedInfo()` no longer
   has to reach past it into the raw poll record for climb/descent. Reported,
