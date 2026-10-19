@@ -168,6 +168,9 @@ Environment=PORT=$GEV_PORT
 # The app answers only Host headers it knows. Caddy passes the public name
 # through, so it has to be listed here or every request gets a 403.
 Environment=GEV_ALLOWED_HOSTS=$GEV_DOMAIN
+# Runtime credentials (the Google tile relay reads its key from here). The
+# leading dash keeps the unit valid before the file exists.
+EnvironmentFile=-$GEV_ENV_FILE
 ExecStart=$NODE_BIN $GEV_HOME/node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port $GEV_PORT --strictPort
 Restart=always
 RestartSec=5
