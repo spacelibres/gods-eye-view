@@ -1,5 +1,9 @@
 # Changelog
 
+- Import the translator in the application shell. The connectivity status lines
+  called `t` without importing it, so every page threw `t is not defined`
+  immediately after the probe and the globe never finished starting.
+
 - Name every built asset after the release (`assets/index-v0.2.14.js`) instead
   of its content hash, so a deployed page is identifiable from any URL and a
   browser holding an older page cannot mix in files from a newer build. A

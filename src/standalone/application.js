@@ -7,7 +7,7 @@ import { createStandaloneControls } from './controls.js';
 import { createStandaloneData } from './data.js';
 import { createStandaloneTools } from './tools.js';
 import { resolveLocale, applyDocumentLanguage } from '../i18n/locale.js';
-import { applyDocumentTranslations, setLocale } from '../i18n/index.js';
+import { applyDocumentTranslations, setLocale, t } from '../i18n/index.js';
 import { initColorSystem } from '../ui/colorSystemRuntime.js';
 import { chooseTileRoute } from '../maps/tileRoute.js';
 import { mountBrandLockups } from '../ui/brandLockup.js';
