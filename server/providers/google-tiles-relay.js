@@ -122,6 +122,8 @@ export function googleTilesRelay({
         const response = await follow(fetchImpl, target.toString());
         res.statusCode = response.status;
         for (const header of FORWARDED_HEADERS) {
+          // `content-length` is recomputed for a rewritten body below.
+          if (header === 'content-length') continue;
           const value = response.headers.get(header);
           if (value) res.setHeader(header, value);
         }
@@ -139,7 +141,11 @@ export function googleTilesRelay({
         const type = String(response.headers.get('content-type') || '');
         if (type.includes('json')) {
           const text = await response.text();
-          res.end(rewriteDocumentUris(text, path, req.headers.host, req.socket));
+          const body = rewriteDocumentUris(text, path);
+          // The rewrite changes the length; the upstream `Content-Length` would
+          // otherwise truncate the body at the old size.
+          res.setHeader('Content-Length', String(Buffer.byteLength(body)));
+          res.end(body);
           return;
         }
         toNodeStream(response.body).pipe(res);

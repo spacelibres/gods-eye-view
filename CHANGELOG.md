@@ -1,5 +1,10 @@
 # Changelog
 
+- Recompute Content-Length for a rewritten tile-set document. The relay
+  rewrites child URIs and then answered with the upstream length, so the body
+  was cut at the old size and the JSON arrived truncated — the client parsed
+  a broken document and asked for no tiles at all.
+
 - Keep relayed tile-set children inside the relay. Google names them with
   root-relative URIs (`/v1/3dtiles/…`), and a client resolving one against
   `/api/google/tiles/v1/3dtiles/root.json` drops the mount entirely — every
