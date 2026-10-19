@@ -67,7 +67,7 @@ burst of commits costs two builds at most.
 Health and the last run:
 
 ```bash
-curl https://godseye.spacelibre.cn/health
+curl https://godseye.spacelibre.cn/webhook/health
 journalctl -u gev-webhook -f
 ```
 

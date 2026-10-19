@@ -100,8 +100,13 @@ async function deploy({ ref, after }) {
 
 const server = createServer(async (request, response) => {
   const url = new URL(request.url, `http://${request.headers.host}`);
+  // Caddy forwards both /webhook and /webhook/health here, so match on the
+  // prefix and compare the remainder.
+  const subpath = url.pathname.startsWith(PATH)
+    ? url.pathname.slice(PATH.length)
+    : null;
 
-  if (request.method === 'GET' && url.pathname === '/health') {
+  if (request.method === 'GET' && subpath === '/health') {
     response.writeHead(200, { 'content-type': 'application/json' });
     response.end(
       JSON.stringify({ ok: true, running, queued, lastRun, branch: BRANCH }),
@@ -109,7 +114,7 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  if (url.pathname !== PATH) {
+  if (subpath === null) {
     response.writeHead(404).end();
     return;
   }
