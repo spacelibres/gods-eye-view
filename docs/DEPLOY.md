@@ -38,22 +38,32 @@ Overrides, all optional: `GEV_HOME`, `GEV_REPO`, `GEV_BRANCH`, `GEV_DOMAIN`,
 
 ## Build-time credentials
 
-The installer reads `CESIUM_ION_TOKEN` from its own environment, or — when that
-is unset — from `/etc/gods-eye-view.env`. The file wins for automatic deploys:
-the webhook rebuilds with only that file loaded, so a value exported by hand is
-gone on the next push.
+The installer reads `CESIUM_ION_TOKEN` and `GOOGLE_MAPS_API_KEY` from its own
+environment, or — when either is unset — from `/etc/gods-eye-view.env`. The file
+wins for automatic deploys: the webhook rebuilds with only that file loaded, so
+a value exported by hand is gone on the next push.
 
 ```bash
-sudoedit /etc/gods-eye-view.env     # CESIUM_ION_TOKEN=eyJ...
+sudoedit /etc/gods-eye-view.env     # CESIUM_ION_TOKEN=...
+                                    # GOOGLE_MAPS_API_KEY=AIza...
 sudo bash /opt/gods-eye-view/scripts/install-vps.sh
 ```
 
-The build prints `Cesium ion token: configured (eyJhbGciOiJ…` when it picks the
-value up, and `absent` when it does not; the latter still works, on Cesium's
-keyless terrain. The token is baked into the browser bundle, so treat it as
-public — ion tokens are scoped per asset, not per secret, and the ion dashboard
-can revoke one that is abused. Never commit it: the file above stays outside
-the checkout at mode 600.
+The build prints `Cesium ion token: configured (eyJhbGciOiJ…` and
+`Google Maps key: configured (AIzaSyExample…` when it picks each one up, and
+`absent` when it does not. The credentials decide which host serves the globe:
+
+| Configured | Startup route | Requests go to |
+| --- | --- | --- |
+| `GOOGLE_MAPS_API_KEY` | `google-direct` | `tile.googleapis.com` |
+| only `CESIUM_ION_TOKEN` | `google-ion` | `api.cesium.com`, Google's hosted asset |
+| neither | keyless | Esri imagery on a plain globe |
+
+Both values are baked into the browser bundle, so treat them as public. The
+Google key is therefore protected by its HTTP-referrer restriction and by
+limiting it to the Map Tiles and Maps JavaScript APIs, not by secrecy; the ion
+token by its asset scope. Never commit either: the file above stays outside the
+checkout at mode 600.
 
 ## The webhook
 

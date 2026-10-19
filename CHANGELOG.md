@@ -1,5 +1,12 @@
 # Changelog
 
+- Build with a Google Maps key from `/etc/gods-eye-view.env`. The installer now
+  reads `GOOGLE_MAPS_API_KEY` the same way it reads the Cesium ion token, so a
+  key stored once survives every webhook rebuild and names the source that
+  actually serves the photoreal globe. The build reports whether each credential
+  was found; with no Google key the app still loads Google 3D through Cesium ion,
+  and with neither it falls back to the keyless globe (spacelibres, #101).
+
 - Build with a Cesium ion token from `/etc/gods-eye-view.env`. The installer
   now reads `CESIUM_ION_TOKEN` from the environment or, when unset, from that
   file, so a token stored once survives every webhook rebuild instead of

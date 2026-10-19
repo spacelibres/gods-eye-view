@@ -33,6 +33,10 @@
 #                     /etc/gods-eye-view.env, so a token stored once survives
 #                     every automatic rebuild. The build otherwise falls back
 #                     to Cesium's public keyless terrain.
+#   GOOGLE_MAPS_API_KEY  Google Maps browser key (optional). Read the same way.
+#                     With it the build prefers Google's own 3D tiles host;
+#                     without it the app still loads Google 3D through Cesium
+#                     ion when an ion token is present.
 set -euo pipefail
 
 GEV_HOME="${GEV_HOME:-/opt/gods-eye-view}"
@@ -49,10 +53,16 @@ GEV_ENV_FILE="${GEV_ENV_FILE:-/etc/gods-eye-view.env}"
 # Build-time credentials. The env file is the durable home for them: the
 # webhook rebuilds in a fresh shell with only this file loaded, so a value
 # exported by hand would be lost on the next push.
-if [ -z "${CESIUM_ION_TOKEN:-}" ] && [ -f "$GEV_ENV_FILE" ]; then
-  CESIUM_ION_TOKEN="$(sed -n 's/^CESIUM_ION_TOKEN=//p' "$GEV_ENV_FILE" | tail -n 1)"
+if [ -f "$GEV_ENV_FILE" ]; then
+  if [ -z "${CESIUM_ION_TOKEN:-}" ]; then
+    CESIUM_ION_TOKEN="$(sed -n 's/^CESIUM_ION_TOKEN=//p' "$GEV_ENV_FILE" | tail -n 1)"
+  fi
+  if [ -z "${GOOGLE_MAPS_API_KEY:-}" ]; then
+    GOOGLE_MAPS_API_KEY="$(sed -n 's/^GOOGLE_MAPS_API_KEY=//p' "$GEV_ENV_FILE" | tail -n 1)"
+  fi
 fi
 export CESIUM_ION_TOKEN="${CESIUM_ION_TOKEN:-}"
+export GOOGLE_MAPS_API_KEY="${GOOGLE_MAPS_API_KEY:-}"
 CADDYFILE="${CADDYFILE:-/etc/caddy/Caddyfile}"
 BEGIN_MARK="# >>> gods-eye-view (managed by scripts/install-vps.sh) >>>"
 END_MARK="# <<< gods-eye-view <<<"
@@ -132,6 +142,11 @@ if [ -n "$CESIUM_ION_TOKEN" ]; then
 else
   log "Cesium ion token: absent — the build uses Cesium's keyless terrain"
 fi
+if [ -n "$GOOGLE_MAPS_API_KEY" ]; then
+  log "Google Maps key: configured ($(printf '%s' "$GOOGLE_MAPS_API_KEY" | cut -c1-12)…)"
+else
+  log "Google Maps key: absent — Google 3D loads through Cesium ion"
+fi
 run_as_service "$NODE_DIR/npm run build"
 
 # ---------------------------------------------------------------- systemd ---
@@ -196,6 +211,10 @@ GEV_INSTALLER=$GEV_HOME/scripts/install-vps.sh
 # it at build time, so editing it here and re-running the installer (or
 # pushing to main) is enough. Keep it to one line, unquoted.
 CESIUM_ION_TOKEN=
+# Google Maps browser key (Google Cloud Console). Read at build time like the
+# ion token. This key ships inside the browser bundle by design, so restrict it
+# by HTTP referrer and to the Map Tiles API rather than treating it as secret.
+GOOGLE_MAPS_API_KEY=
 ENV
   chmod 600 "$GEV_ENV_FILE"
   log "created $GEV_ENV_FILE — add your GitHub webhook secret, then restart gev-webhook"
@@ -203,10 +222,10 @@ fi
 
 # Keep the token key present in an env file written by an older installer, so
 # the one place to set it is always obvious.
-if ! grep -q '^CESIUM_ION_TOKEN=' "$GEV_ENV_FILE"; then
-  printf '\n# Cesium ion access token, read at build time.\nCESIUM_ION_TOKEN=\n' \
+if ! grep -q '^GOOGLE_MAPS_API_KEY=' "$GEV_ENV_FILE"; then
+  printf '\n# Google Maps browser key, read at build time.\nGOOGLE_MAPS_API_KEY=\n' \
     >>"$GEV_ENV_FILE"
-  log "added CESIUM_ION_TOKEN= to $GEV_ENV_FILE"
+  log "added GOOGLE_MAPS_API_KEY= to $GEV_ENV_FILE"
 fi
 
 cat >/etc/systemd/system/gev-webhook.service <<UNIT
