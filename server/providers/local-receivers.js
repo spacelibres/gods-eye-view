@@ -505,14 +505,11 @@ export function localReceiversProxy(options = {}) {
   const install = (server) => {
     const { handle } = createLocalReceiversHandler(options);
     server.middlewares.use(LOCAL_RECEIVERS_ROUTE, (req, res, next) => {
-      // The mount keeps the full URL here (Vite and serve.js both pass it
-      // through), so compare against the route itself rather than assuming
-      // the prefix was stripped.
-      const path = new URL(req.url || '/', 'http://localhost').pathname.replace(
-        /\/+$/,
-        '',
-      );
-      if (path !== LOCAL_RECEIVERS_ROUTE) {
+      // The mount is stripped before the handler runs (Vite and
+      // server/standalone/serve.js both do this), so anything but the empty
+      // remainder belongs to another route.
+      const path = new URL(req.url || '/', 'http://localhost').pathname;
+      if (path !== '/' && path !== '') {
         if (typeof next === 'function') return next();
         return undefined;
       }

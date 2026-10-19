@@ -1,5 +1,11 @@
 # Changelog
 
+- Strip the route mount before a handler runs, as Vite does. Passing the full
+  URL made every mounted route decline: `/api/flights` answered 404, the
+  Celestrak groups parsed the mount as the group name (`invalid group`), and
+  local-receivers returned without answering. Every data layer was affected.
+  The receivers route relies on the stripped form again.
+
 - Recompute Content-Length for a rewritten tile-set document. The relay
   rewrites child URIs and then answered with the upstream length, so the body
   was cut at the old size and the JSON arrived truncated — the client parsed

@@ -109,14 +109,22 @@ function createRouter() {
         ) {
           continue;
         }
-        // A handler may decline by calling `next()` (local-receivers does this
-        // for any path other than its own), in which case the next matching
-        // route gets the request. Passing an inert stub here left such a
-        // request open forever: the handler returned without answering and
-        // nothing else ran.
-        // The full URL is kept, which is what the plugins expect: the tile
-        // relay strips its own mount, and the weather route parses `req.url`
-        // whole. Vite behaves the same way.
+        // A handler may decline by calling `next()`, in which case the next
+        // matching route gets the request. Passing an inert stub here left
+        // such a request open forever: the handler returned without answering
+        // and nothing else ran.
+        //
+        // The mount is stripped before the handler runs, which is what Vite's
+        // middleware does and what the plugins assume: the flights route only
+        // answers when the remaining path is `/`, the local-receivers route
+        // compares the remainder with its own mount, and the tile relay
+        // strips the prefix it was given. Passing the full URL made all three
+        // decline, and every layer answered 404 or `invalid group`.
+        const originalUrl = req.url;
+        if (prefix) {
+          const rest = String(originalUrl || '').slice(prefix.length);
+          req.url = rest.startsWith('?') ? `/${rest}` : rest || '/';
+        }
         let declined = false;
         let release;
         const declinedPromise = new Promise((resolve) => {
@@ -141,6 +149,7 @@ function createRouter() {
             await Promise.race([result, declinedPromise]);
           }
         } catch (error) {
+          req.url = originalUrl;
           if (!res.headersSent) {
             res.statusCode = 500;
             res.setHeader('Content-Type', 'application/json');
@@ -148,6 +157,7 @@ function createRouter() {
           }
           return true;
         }
+        req.url = originalUrl;
         if (declined && !res.headersSent && !res.writableEnded) continue;
         return true;
       }
