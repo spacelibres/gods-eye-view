@@ -378,7 +378,9 @@ export function bindKeySetupPlacement(documentRef, chip) {
  * @returns {boolean}
  */
 export function isLocalHostname(hostname) {
-  const name = String(hostname || '').trim().toLowerCase();
+  const name = String(hostname || '')
+    .trim()
+    .toLowerCase();
   if (!name) return false;
   if (name === 'localhost' || name.endsWith('.localhost')) return true;
   // IPv4 loopback, bracketed IPv6 loopback, and IPv6-mapped IPv4 loopback.

@@ -1,5 +1,13 @@
 # Changelog
 
+- Hide satellites on the far side of the planet, and their labels with them.
+  Google 3D Tiles replace the globe (`scene.globe.show = false`), so the depth
+  buffer holds no Earth surface and every point behind the planet drew
+  straight through it. Points are now culled against the ellipsoid each frame,
+  the same horizon test the flights layer and the label overlay use, and the
+  ISS label no longer opts out of occlusion. The orbit ring already stopped at
+  the limb.
+
 - Hide the part of a satellite orbit that passes behind the Earth. It was
   dimmed rather than removed, so a ring still drew a faint line across the
   globe disc and read as passing in front of it.

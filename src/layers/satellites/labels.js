@@ -31,7 +31,9 @@ export function createLabels({ state: layerState, services, parts, source }) {
       placement: 'above',
       edgeFade: 'keyhole',
       horizonCull: true,
-      terrainOcclusion: false,
+      // The globe is the 3D tileset here, and a label drawn without the
+      // terrain-occlusion pass showed through the planet from the far side.
+      terrainOcclusion: true,
     };
   }
 

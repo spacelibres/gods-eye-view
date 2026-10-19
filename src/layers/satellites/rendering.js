@@ -208,6 +208,12 @@ export function createRendering({
 
     _updatePointFocus(now);
 
+    // Google 3D Tiles replace the globe (`scene.globe.show = false`), so there
+    // is no Earth surface in the depth buffer and points behind the planet
+    // would otherwise draw straight through it. Cull them against the
+    // ellipsoid instead, which is the same rule the label overlay applies.
+    _cullPointsBehindEarth();
+
     // Hidden standalone orbit primitives do not need GMST matrix writes while
     // Space Missions draws the selected mission orbit itself.
     if (
@@ -216,6 +222,30 @@ export function createRendering({
     ) {
       _updateOrbitPathRotations(new Date(now));
       layerState._lastRingRotation = now;
+    }
+  }
+
+  /**
+   * Show only the points the camera can actually see around the planet.
+   *
+   * `EllipsoidalOccluder.isPointVisible` is the horizon test: a point below and
+   * behind the limb is hidden. Points already hidden by their own layer state
+   * are left alone, so re-enabling the layer restores them without a rebuild.
+   */
+  function _cullPointsBehindEarth() {
+    const scene = layerState._viewer?.scene;
+    if (!scene || !layerState._pointCollection) return;
+    // The collection's own `show` is the layer switch; when it is off every
+    // point stays hidden and this is a no-op.
+    if (layerState._pointCollection.show === false) return;
+    layerState._occluder ??= new Cesium.EllipsoidalOccluder(
+      scene.globe?.ellipsoid ?? Cesium.Ellipsoid.WGS84,
+    );
+    const occluder = layerState._occluder;
+    occluder.cameraPosition = scene.camera.positionWC;
+    for (const point of layerState._points.values()) {
+      if (!point?.position) continue;
+      point.show = occluder.isPointVisible(point.position);
     }
   }
 
