@@ -331,3 +331,24 @@ test('child URIs stay under the relay mount', () => {
 test('a non-JSON body is passed through untouched', () => {
   assert.equal(rewriteDocumentUris('not json', GOOGLE_TILES_PATH), 'not json');
 });
+
+test('a probe still answers after the mount is stripped', async () => {
+  let called = false;
+  const handler = mount(
+    googleTilesRelay({
+      apiKey: () => 'server-key',
+      fetchImpl: async () => {
+        called = true;
+        return new Response('');
+      },
+    }),
+  );
+  // The middleware hands handlers the path with the mount removed, so the
+  // probe arrives as `/` rather than as the full route.
+  for (const url of ['/', '', '/?probe=1']) {
+    const res = response();
+    await handler(request({ url }), res);
+    assert.equal(res.statusCode, 200, JSON.stringify(url));
+  }
+  assert.equal(called, false);
+});

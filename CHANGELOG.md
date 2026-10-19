@@ -1,5 +1,10 @@
 # Changelog
 
+- Answer the relay probe after the mount is stripped. The middleware now
+  hands handlers the path with the mount removed, so a probe arrives as `/`;
+  it was compared against the full route, missed, and forwarded to Google
+  root — which answers its own 404 and made the relay look broken.
+
 - Strip the route mount before a handler runs, as Vite does. Passing the full
   URL made every mounted route decline: `/api/flights` answered 404, the
   Celestrak groups parsed the mount as the group name (`invalid group`), and

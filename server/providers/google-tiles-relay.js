@@ -43,18 +43,19 @@ const FORWARDED_HEADERS = Object.freeze([
 ]);
 
 /**
- * True for a request to the mount itself — the client's probe.
+ * True for a request to the mount itself — the client's reachability probe.
  *
- * The server hands handlers the full URL, and a probe asks for exactly the
- * mount (optionally with a trailing slash or a query) and nothing after it.
+ * The middleware strips the mount before the handler runs, so a probe arrives
+ * as `/`, `''` or `?…`; a real tile request always has a path after the mount.
  *
- * @param {string} requestUrl
- * @param {string} mount
+ * @param {string} requestUrl The URL as the handler sees it.
+ * @param {string} mount The relay mount, accepted for callers that pass the
+ *   un-stripped form too.
  * @returns {boolean}
  */
 export function isMountRoot(requestUrl, mount = GOOGLE_TILES_PATH) {
   const path = String(requestUrl || '').split('?')[0].replace(/\/+$/, '');
-  return path === mount;
+  return path === '' || path === mount;
 }
 
 /** Strip the mount, keep Google's leading slash. */
