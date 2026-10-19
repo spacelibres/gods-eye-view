@@ -194,5 +194,32 @@
     "{value} KM",
     "{value} KM/S",
     "▲ {frp} MW"
+  ],
+  "ko": [
+    "1090 MHz",
+    "978 MHz UAT",
+    "AIS: --",
+    "AIS: {name}",
+    "CCTV",
+    "CH {index} / {total}",
+    "CRT",
+    "DENSE",
+    "DENSE ···",
+    "DENSE ✕",
+    "Landsat 8/9",
+    "Sentinel-2",
+    "dB",
+    "ft",
+    "hPa",
+    "km",
+    "km/h",
+    "mph",
+    "{city} CCTV",
+    "{heading}DEG",
+    "{source} HTTP {status}",
+    "{speed}KT",
+    "{value} KM",
+    "{value} KM/S",
+    "▲ {frp} MW"
   ]
 }

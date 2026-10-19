@@ -6,7 +6,7 @@
 // complete: `npm run i18n` fails on a shipped locale without one.
 //
 // Planned but not yet shipped (add with their catalog): fr, de, it, nl,
-// pt-BR, pl, sv, cs, ro, uk, tr, ko, hi, id, th, vi.
+// pt-BR, pl, sv, cs, ro, uk, tr, hi, id, th, vi.
 
 export const LOCALE_REGISTRY = Object.freeze([
   { code: 'en', name: 'English', dir: 'ltr' },
@@ -15,4 +15,5 @@ export const LOCALE_REGISTRY = Object.freeze([
   { code: 'zh-CN', name: '简体中文', dir: 'ltr' },
   { code: 'zh-TW', name: '繁體中文', dir: 'ltr' },
   { code: 'ja', name: '日本語', dir: 'ltr' },
+  { code: 'ko', name: '한국어', dir: 'ltr' },
 ]);
