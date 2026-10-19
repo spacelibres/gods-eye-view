@@ -134,7 +134,14 @@ run_as_service() {
   su -s /bin/bash "$GEV_USER" -c "export PATH=$NODE_DIR:\$PATH; cd $GEV_HOME && $*"
 }
 run_as_service "$NODE_DIR/npm ci --no-audit --no-fund" ||
-  run_as_service "$NODE_DIR/npm ci --no-audit --no-fund --registry=https://registry.npmmirror.com"
+  run_as_service "$NODE_DIR/npm ci --no-audit --no-fund --registry=https://registry.npmmirror.com" || {
+    # `npm ci` deletes node_modules first, and on a busy host that rmdir can
+    # fail with ENOTEMPTY (a file appears between the readdir and the rmdir).
+    # Removing the tree ourselves and retrying is the whole fix.
+    log "npm ci failed; clearing node_modules and retrying"
+    rm -rf "$GEV_HOME/node_modules"
+    run_as_service "$NODE_DIR/npm ci --no-audit --no-fund --registry=https://registry.npmmirror.com"
+  }
 
 log "Build"
 if [ -n "$CESIUM_ION_TOKEN" ]; then
