@@ -9,6 +9,7 @@ import { createStandaloneTools } from './tools.js';
 import { resolveLocale, applyDocumentLanguage } from '../i18n/locale.js';
 import { applyDocumentTranslations, setLocale } from '../i18n/index.js';
 import { initColorSystem } from '../ui/colorSystemRuntime.js';
+import { chooseTileRoute } from '../maps/tileRoute.js';
 import { mountBrandLockups } from '../ui/brandLockup.js';
 import { createGoogleTokenSource } from '../maps/googleTokens.js';
 
@@ -28,6 +29,23 @@ export function createStandaloneApplication({
   if (constructed)
     throw new Error('The standalone application already owns this page');
   constructed = true;
+  // This is the first thing initialization does: ask whether this network can
+  // reach Google at all. It starts here, before the palette, the locale and the
+  // viewer, because nothing about the map should be built on an assumption the
+  // network may contradict. The probe runs in parallel with the rest of the
+  // boot; only the tile request waits for it, and it has a three-second
+  // deadline, so a blocked Google costs three seconds once and a reachable one
+  // costs nothing.
+  const googleRoute = googleApiKey
+    ? chooseTileRoute().then((route) => {
+        if (route === 'relayed') {
+          console.info(
+            '[Init] Google is unreachable from this network; tiles will be relayed.',
+          );
+        }
+        return route;
+      })
+    : Promise.resolve('direct');
   // The identity palette is resolved before the UI is built, so the first
   // painted frame already carries the primary colour and its derived roles.
   // The pre-paint bootstrap has already written the roles, so this only keeps
@@ -50,6 +68,19 @@ export function createStandaloneApplication({
   applyDocumentTranslations(document);
   const loadingScreen = document.getElementById('loading-screen');
   const loaderStatus = loadingScreen.querySelector('.loader-status');
+  // The probe is already in flight. Show it, then report what it found, so a
+  // slow network shows progress rather than a still screen.
+  if (googleApiKey) {
+    const checking = t('Checking connectivity...');
+    loaderStatus.textContent = checking;
+    void googleRoute.then((route) => {
+      if (loaderStatus.textContent !== checking) return;
+      loaderStatus.textContent =
+        route === 'relayed'
+          ? t('Routing map data through the server...')
+          : t('Loading Google 3D Tiles...');
+    });
+  }
   let placeSearch;
   let catalog;
   return createApplication({
@@ -66,6 +97,7 @@ export function createStandaloneApplication({
       const scene = await createStandaloneScene({
         ...context,
         googleApiKey,
+        googleRoute,
         // Without a key, Google 3D can still load with tokens from the
         // app's server when it offers them.
         googleTokens: googleApiKey ? null : createGoogleTokenSource(),

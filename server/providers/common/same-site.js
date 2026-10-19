@@ -1,6 +1,18 @@
 import { admitSameSiteRequest } from '../../../src/localRequestGate.mjs';
 
 /**
+ * Whether this deployment sits behind a reverse proxy it trusts (the VPS
+ * install sets GEV_TRUSTED_PROXY=1). Read per call so a restart picks a change
+ * up without a module reload.
+ */
+function trustedProxy() {
+  const value = String(process.env?.GEV_TRUSTED_PROXY ?? '')
+    .trim()
+    .toLowerCase();
+  return value === '1' || value === 'true' || value === 'yes';
+}
+
+/**
  * Cross-site request gate for cost-bearing and log endpoints. Feeds the
  * request to the pure, unit-tested `admitSameSiteRequest` and answers 403
  * itself when the request is refused. Returns true when it has already
@@ -19,6 +31,7 @@ export function admitSameSite(req, res) {
     origin: req.headers?.origin,
     secFetchSite: req.headers?.['sec-fetch-site'],
     proxyHeaders: req.headers || {},
+    trustedProxy: trustedProxy(),
   });
   if (verdict.ok) return false;
   res.statusCode = verdict.status;

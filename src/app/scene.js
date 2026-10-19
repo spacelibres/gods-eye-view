@@ -8,11 +8,7 @@ import { registerDataCredits } from '../data/dataCredits.js';
 import { configureCreditKeyboardAccess } from '../creditKeyboard.js';
 import { MapStackController } from '../mapStackController.js';
 import { loadPhotorealisticTileset } from '../mapStartup.js';
-import {
-  chooseTileRoute,
-  relayGoogleTiles,
-  restoreDirectTiles,
-} from '../maps/tileRoute.js';
+import { relayGoogleTiles, restoreDirectTiles } from '../maps/tileRoute.js';
 import {
   uninstallRenderGovernor,
   governorRequestRender,
@@ -25,6 +21,9 @@ export async function createApplicationScene({
   requestServices,
   googleApiKey,
   googleTokens = null,
+  // Resolved by the application before the UI is built: 'direct' unless this
+  // network cannot reach Google. See standalone/application.js.
+  googleRoute = Promise.resolve('direct'),
   cesiumToken,
   credits,
   MapController = MapStackController,
@@ -69,15 +68,12 @@ export async function createApplicationScene({
     googleApiKey || googleTokens || cesiumToken
       ? t('Loading Google 3D Tiles...')
       : t('Loading the keyless globe...');
-  // Measure the visitor's own path to Google once, with a short deadline. A
-  // network that cannot reach it falls back to this server's relay, which asks
-  // Google from the app host instead.
-  const tileRoute = googleApiKey ? await chooseTileRoute() : 'direct';
+  // The application already decided this before the UI existed; waiting here
+  // costs nothing when it has answered, and lets the relay be set before the
+  // first tile request.
+  const tileRoute = await googleRoute;
   if (tileRoute === 'relayed') {
     relayGoogleTiles(Cesium);
-    console.info(
-      '[Init] Google tiles unreachable; relaying through this server.',
-    );
   }
   const photoreal = await loadPhotorealisticTileset(Cesium, {
     googleApiKey,

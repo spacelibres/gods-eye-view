@@ -1,5 +1,23 @@
 # Changelog
 
+- Check Google's reachability at the very start of initialization, before the
+  palette, the locale and the viewer, and run it alongside the rest of the boot.
+  The loading screen says `Checking connectivity...` while it waits and reports
+  whether the map will come straight from Google or through this server, so a
+  blocked network shows progress instead of a still screen. The probe also uses
+  GET rather than HEAD: Google's edge answers HEAD with a network failure on
+  connections that serve GET in a few hundred milliseconds, which routed those
+  visitors through the relay for no reason (spacelibres, #103).
+- Accept requests from the reverse proxy the deployment runs behind. The
+  same-site gate refused every visitor behind Caddy, because Caddy's forwarding
+  headers mean "this did not originate here" and its hop to the app is plain
+  HTTP, so an `https:` Origin never matched. `GEV_TRUSTED_PROXY=1`, which the
+  installer now sets on the app service, admits those headers and restores the
+  visitor's scheme from `X-Forwarded-Proto`; a foreign Origin and a hostile
+  `Sec-Fetch-Site` are still refused. This also unblocks the Google Places and
+  HUD-summary routes on the deployed host, which had been answering 403 to
+  every browser (spacelibres, #103).
+
 - Route Google's 3D tiles through this server only when the browser cannot reach
   them itself. Each page load measures `tile.googleapis.com` once, with a
   three-second deadline: an answer keeps every tile request between the browser

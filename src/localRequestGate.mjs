@@ -76,7 +76,9 @@ function requestAuthority(hostHeader, protocol) {
  * to admit. Pure: no I/O, no globals.
  *
  * Policy, in order:
- *  1. any reverse-proxy / CDN signal header present (PROXY_SIGNALS) → 403;
+ *  1. any reverse-proxy / CDN signal header present (PROXY_SIGNALS) → 403 —
+ *     unless `trustedProxy` is set, in which case those headers are the honest
+ *     record of how the request reached this process (see below);
  *  2. `Sec-Fetch-Site` present and not `same-origin` / `none` → 403 (this is
  *     what blocks `<img src=...>` and cross-site navigation, which carry no
  *     Origin but do carry `Sec-Fetch-Site: cross-site`);
@@ -87,7 +89,15 @@ function requestAuthority(hostHeader, protocol) {
  *  4. otherwise ok. Non-browser loopback tools and the LAN opt-in (which may
  *     carry neither `Origin` nor `Sec-Fetch-Site`) pass here.
  *
- * @param {{hostHeader?: string, protocol?: string, origin?: string, secFetchSite?: string, proxyHeaders?: Record<string,string>}} req
+ * `trustedProxy` is for a deployment behind a reverse proxy that terminates
+ * TLS (the VPS install). There the socket is always plain HTTP, so the
+ * request's protocol has to come from `X-Forwarded-Proto`; without it every
+ * `https:` Origin looks cross-origin and every call is refused. Trusting these
+ * headers means trusting the proxy to have set them, which is why it is a
+ * deployment switch rather than a default: set it only when the app is not
+ * reachable except through that proxy.
+ *
+ * @param {{hostHeader?: string, protocol?: string, origin?: string, secFetchSite?: string, proxyHeaders?: Record<string,string>, trustedProxy?: boolean}} req
  * @returns {{ok: true} | {ok: false, status: 403, error: string}}
  */
 export function admitSameSiteRequest({
@@ -96,15 +106,27 @@ export function admitSameSiteRequest({
   origin,
   secFetchSite,
   proxyHeaders = {},
+  trustedProxy = false,
 } = {}) {
   // (1) A request carrying reverse-proxy / CDN forwarding headers did not
-  // originate on this machine, whatever its socket says.
-  if (hasProxySignals(proxyHeaders)) {
+  // originate on this machine, whatever its socket says. A declared trusted
+  // proxy is the exception: there the headers describe the real hop.
+  if (hasProxySignals(proxyHeaders) && !trustedProxy) {
     return {
       ok: false,
       status: 403,
       error: 'Proxied requests are not accepted',
     };
+  }
+  // Behind a TLS-terminating proxy the socket protocol is `http:`; the
+  // browser's Origin is `https:`. Restore the scheme before comparing.
+  if (trustedProxy) {
+    const forwarded = String(proxyHeaders['x-forwarded-proto'] || '')
+      .split(',')[0]
+      .trim()
+      .toLowerCase();
+    if (forwarded === 'https' || forwarded === 'http')
+      protocol = `${forwarded}:`;
   }
   // (2) The browser tells us when a request is cross-site. `none` is a typed
   // URL / bookmark; `same-origin` is the app itself. Anything else (cross-site,

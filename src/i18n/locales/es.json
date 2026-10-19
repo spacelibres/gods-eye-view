@@ -2891,5 +2891,7 @@
   "SDR decoder stopped responding; receiver stopped": "El decodificador SDR dejó de responder; receptor detenido",
   "SDR decoder fell behind; receiver stopped": "El decodificador SDR se quedó atrás; receptor detenido",
   "Globe colour scheme": "Combinación de colores del globo",
-  "Custom colour": "Color personalizado"
+  "Custom colour": "Color personalizado",
+  "Checking connectivity...": "Comprobando la conectividad...",
+  "Routing map data through the server...": "Enrutando los datos del mapa a través del servidor..."
 }

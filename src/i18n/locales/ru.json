@@ -2958,5 +2958,7 @@
   "SDR decoder stopped responding; receiver stopped": "Декодер SDR перестал отвечать; приёмник остановлен",
   "SDR decoder fell behind; receiver stopped": "Декодер SDR не успевает; приёмник остановлен",
   "Globe colour scheme": "Цветовая схема глобуса",
-  "Custom colour": "Свой цвет"
+  "Custom colour": "Свой цвет",
+  "Checking connectivity...": "Проверка подключения...",
+  "Routing map data through the server...": "Маршрутизация данных карты через сервер..."
 }

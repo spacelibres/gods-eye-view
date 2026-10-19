@@ -168,6 +168,10 @@ Environment=PORT=$GEV_PORT
 # The app answers only Host headers it knows. Caddy passes the public name
 # through, so it has to be listed here or every request gets a 403.
 Environment=GEV_ALLOWED_HOSTS=$GEV_DOMAIN
+# The app is reachable only through Caddy, so its forwarding headers are the
+# honest record of how a request arrived. Without this the same-site gate sees
+# a plain-HTTP hop and refuses every https:// Origin.
+Environment=GEV_TRUSTED_PROXY=1
 # Runtime credentials (the Google tile relay reads its key from here). The
 # leading dash keeps the unit valid before the file exists.
 EnvironmentFile=-$GEV_ENV_FILE
@@ -280,33 +284,17 @@ text += f"""
 {domain} {{
 \tencode zstd gzip
 
-\t# The app's same-site gate refuses requests that carry forwarding headers,
-\t# because those normally mean a request did not come from this machine.
-\t# Caddy adds them by default, so clear them here: it is the only proxy in
-\t# front, and the app's own Host check still rejects a forged Host. Caddy 2.6
-\t# needs them listed one by one; the wildcard form is newer.
+\t# Caddy's forwarding headers are kept: the app runs behind this proxy and
+\t# reads X-Forwarded-Proto to know the visitor's scheme (see GEV_TRUSTED_PROXY
+\t# on the service), because the hop to 127.0.0.1 is always plain HTTP.
 \t# GitHub pushes land here; everything else is the app.
 \thandle {hook_path}* {{
 \t\treverse_proxy 127.0.0.1:{hook_port} {{
-\t\t\theader_up X-Forwarded-For ""
-\t\t\theader_up X-Forwarded-Host ""
-\t\t\theader_up X-Forwarded-Proto ""
-\t\t\theader_up X-Forwarded-Port ""
-\t\t\theader_up X-Real-IP ""
-\t\t\theader_up Forwarded ""
-\t\t\theader_up Via ""
 \t\t}}
 \t}}
 
 \thandle {{
 \t\treverse_proxy 127.0.0.1:{port} {{
-\t\t\theader_up X-Forwarded-For ""
-\t\t\theader_up X-Forwarded-Host ""
-\t\t\theader_up X-Forwarded-Proto ""
-\t\t\theader_up X-Forwarded-Port ""
-\t\t\theader_up X-Real-IP ""
-\t\t\theader_up Forwarded ""
-\t\t\theader_up Via ""
 \t\t}}
 \t}}
 }}

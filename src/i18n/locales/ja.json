@@ -2757,5 +2757,7 @@
   ", or ": "、または",
   "{speed} kn": "{speed} ノット",
   "Globe colour scheme": "地球の配色",
-  "Custom colour": "カスタムカラー"
+  "Custom colour": "カスタムカラー",
+  "Checking connectivity...": "接続を確認しています...",
+  "Routing map data through the server...": "サーバー経由で地図データを中継しています..."
 }

@@ -2757,5 +2757,7 @@
   "Tip: the GEV MIC button in the dock lets you talk to the map.": "팁: 독의 GEV MIC 버튼으로 지도에 말을 걸 수 있습니다.",
   ", or ": ", 또는",
   "Globe colour scheme": "지구 색상 구성",
-  "Custom colour": "사용자 지정 색상"
+  "Custom colour": "사용자 지정 색상",
+  "Checking connectivity...": "연결을 확인하는 중...",
+  "Routing map data through the server...": "서버를 통해 지도 데이터를 중계하는 중..."
 }

@@ -2757,5 +2757,7 @@
   ", or ": "，或",
   " or ": " 或",
   "Globe colour scheme": "地球配色方案",
-  "Custom colour": "自定义颜色"
+  "Custom colour": "自定义颜色",
+  "Checking connectivity...": "正在检测连接...",
+  "Routing map data through the server...": "正在通过服务器中转地图数据..."
 }
