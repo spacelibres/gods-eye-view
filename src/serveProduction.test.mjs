@@ -62,6 +62,15 @@ test('the production server serves the build and its API routes', async (t) => {
   assert.equal(setup.status, 200);
   assert.match(setup.headers.get('content-type'), /application\/json/);
 
+  // A streaming route must not be handed on to the 404 plugin just because
+  // its body has not finished when the handler's promise settles.
+  const streaming = await fetch(`${base}/api/google/tiles/v1/3dtiles/root.json`);
+  assert.doesNotMatch(
+    await streaming.text(),
+    /Unknown API route/,
+    'a matched route owns the request',
+  );
+
   // Unknown API paths answer JSON rather than falling back to the shell.
   const missing = await fetch(`${base}/api/not-a-route`);
   assert.equal(missing.status, 404);

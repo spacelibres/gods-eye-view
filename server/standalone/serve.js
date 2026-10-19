@@ -96,10 +96,8 @@ function createRouter() {
     /**
      * Run the first matching route. A prefix match keeps the full URL, because
      * the plugins parse `req.url` themselves (and expect the mount in it).
-     *
-     * Every provider handler has the shape `async (req, res)` and ends its own
-     * response; one that returns without doing so declined the request, and
-     * the next matching route is tried. Returns true when a route answered.
+     * Returns true when a route matched, whether or not its response has
+     * finished yet.
      */
     async dispatch(req, res) {
       const pathname = (req.url || '/').split('?')[0];
@@ -111,6 +109,10 @@ function createRouter() {
         ) {
           continue;
         }
+        // A matched handler owns the request. Streaming responses finish
+        // after the handler's promise settles (the relay pipes Google's body),
+        // so "did it answer?" cannot be read from the response object here —
+        // the match itself is the answer. One that throws is answered as a 500.
         try {
           const result = handler(req, res, () => {});
           if (result && typeof result.then === 'function') await result;
@@ -122,9 +124,8 @@ function createRouter() {
               JSON.stringify({ error: error?.message ?? 'Route failed' }),
             );
           }
-          return true;
         }
-        if (res.headersSent || res.writableEnded) return true;
+        return true;
       }
       return false;
     },
