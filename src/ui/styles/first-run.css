@@ -19,13 +19,17 @@
   overflow: hidden;
   color: var(--text-primary);
   background:
-    linear-gradient(145deg, rgba(10, 27, 37, 0.97), rgba(7, 13, 22, 0.95)),
-    rgba(7, 17, 25, 0.96);
-  border: 1px solid rgba(54, 220, 255, 0.42);
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--sp-deep) 82%, #ffffff 4%),
+      var(--sp-deep)
+    ),
+    var(--sp-deep);
+  border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent);
   border-radius: 0.65rem;
   box-shadow:
     0 1.4rem 4.5rem rgba(0, 0, 0, 0.72),
-    0 0 2.5rem rgba(0, 212, 255, 0.09),
+    0 0 2.5rem color-mix(in srgb, var(--accent) 10%, transparent),
     inset 0 0 0 1px rgba(255, 255, 255, 0.025);
   backdrop-filter: blur(28px) saturate(1.25);
   -webkit-backdrop-filter: blur(28px) saturate(1.25);
@@ -60,10 +64,10 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(54, 220, 255, 0.8),
+    color-mix(in srgb, var(--accent) 80%, transparent),
     transparent
   );
-  box-shadow: 0 0 1rem rgba(54, 220, 255, 0.45);
+  box-shadow: 0 0 1rem color-mix(in srgb, var(--accent) 45%, transparent);
   pointer-events: none;
 }
 
@@ -73,7 +77,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  color: rgba(171, 210, 220, 0.6);
+  color: var(--text-secondary);
   font-family: var(--font-mono);
   font-size: 0.58rem;
   letter-spacing: 0.1rem;
@@ -81,7 +85,7 @@
 }
 
 .first-run-kicker {
-  color: rgba(54, 220, 255, 0.86);
+  color: var(--accent);
 }
 
 #first-run-launcher h2 {
@@ -95,7 +99,7 @@
 #first-run-description {
   max-width: 29rem;
   margin-top: 0.3rem;
-  color: rgba(215, 231, 235, 0.66);
+  color: var(--text-secondary);
   font-size: 0.78rem;
   line-height: 1.5;
 }
@@ -112,7 +116,8 @@
   scroll-behavior: smooth;
   /* A visible, non-overlaying affordance that the list continues. */
   scrollbar-width: thin;
-  scrollbar-color: rgba(54, 220, 255, 0.45) transparent;
+  scrollbar-color: color-mix(in srgb, var(--accent) 45%, transparent)
+    transparent;
   scrollbar-gutter: stable;
 }
 
@@ -120,7 +125,7 @@
   width: 6px;
 }
 .first-run-choices::-webkit-scrollbar-thumb {
-  background: rgba(54, 220, 255, 0.45);
+  background: color-mix(in srgb, var(--accent) 45%, transparent);
   border-radius: 3px;
 }
 
@@ -132,10 +137,10 @@
   width: 100%;
   min-height: 3.55rem;
   padding: 0.6rem 0.7rem;
-  color: rgba(225, 244, 248, 0.92);
+  color: var(--text-primary);
   text-align: left;
-  background: rgba(29, 69, 81, 0.18);
-  border: 1px solid rgba(100, 200, 220, 0.18);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
   border-radius: 0.42rem;
   cursor: pointer;
   transition:
@@ -146,8 +151,8 @@
 
 .first-run-choices button:hover,
 .first-run-choices button:focus-visible {
-  background: rgba(25, 151, 178, 0.16);
-  border-color: rgba(54, 220, 255, 0.62);
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 62%, transparent);
   outline: none;
   transform: translateX(2px);
 }
@@ -162,7 +167,7 @@
 }
 
 .first-run-choices button > .material-symbols-outlined:first-child {
-  color: #55dff5;
+  color: var(--accent);
   font-size: 1.35rem;
 }
 
@@ -180,12 +185,12 @@
 }
 
 .first-run-choices small {
-  color: rgba(198, 220, 226, 0.55);
+  color: var(--text-secondary);
   font-size: 0.66rem;
 }
 
 .first-run-arrow {
-  color: rgba(54, 220, 255, 0.4);
+  color: color-mix(in srgb, var(--accent) 40%, transparent);
   font-size: 1rem;
   transition:
     transform var(--transition-fast),
@@ -194,7 +199,7 @@
 
 .first-run-choices button:hover .first-run-arrow,
 .first-run-choices button:focus-visible .first-run-arrow {
-  color: rgba(54, 220, 255, 0.9);
+  color: color-mix(in srgb, var(--accent) 90%, transparent);
   transform: translateX(2px);
 }
 
@@ -213,7 +218,7 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  color: rgba(199, 225, 231, 0.66);
+  color: var(--text-secondary);
   text-transform: none;
   font-size: 0.62rem;
   letter-spacing: 0.02rem;
@@ -224,12 +229,12 @@
   width: 0.82rem;
   height: 0.82rem;
   margin: 0;
-  accent-color: #36dcff;
+  accent-color: var(--accent);
   cursor: pointer;
 }
 
 .first-run-suppress:hover {
-  color: rgba(225, 244, 248, 0.92);
+  color: var(--text-primary);
 }
 
 /* The live region carries mission progress and failures, so it owns a full row
@@ -237,14 +242,14 @@
 .first-run-note {
   min-height: 1.1rem;
   margin-top: 0.5rem;
-  color: rgba(199, 225, 231, 0.62);
+  color: var(--text-secondary);
   font-family: var(--font-mono);
   font-size: 0.62rem;
   line-height: 1.35;
 }
 
 #first-run-launcher[data-state='loading'] .first-run-note {
-  color: rgba(54, 220, 255, 0.85);
+  color: var(--accent);
 }
 
 /* Every surface that claims the screen hides the launcher. This list is the CSS

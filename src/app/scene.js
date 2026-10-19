@@ -8,7 +8,6 @@ import { registerDataCredits } from '../data/dataCredits.js';
 import { configureCreditKeyboardAccess } from '../creditKeyboard.js';
 import { MapStackController } from '../mapStackController.js';
 import { loadPhotorealisticTileset } from '../mapStartup.js';
-import { initLogoGaze } from '../logoGaze.js';
 import {
   uninstallRenderGovernor,
   governorRequestRender,
@@ -33,7 +32,8 @@ export async function createApplicationScene({
     requests: requestServices,
     signal,
   });
-  defer(initLogoGaze());
+  // The spacelibre identity mark is drawn as one fixed lockup; the manual
+  // forbids moving or deforming it, so the earlier gaze effect is not used.
   const previousKey = window.__GOOGLE_MAPS_API_KEY__;
   if (googleApiKey) {
     window.__GOOGLE_MAPS_API_KEY__ = googleApiKey;

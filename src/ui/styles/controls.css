@@ -415,22 +415,23 @@ html:not([lang='en']) .panel-collapse-btn {
 
 .loader-logo {
   display: block;
-  width: 128px;
+  /* The stacked lockup is 620 × 430; the manual sets ≥180 px wide. */
+  width: 220px;
   height: auto;
   margin: 0 auto 24px;
-  filter: drop-shadow(0 0 24px rgba(0, 246, 255, 0.42));
-  animation: logo-pulse 2s ease-in-out infinite;
 }
 
+/*
+ * The identity manual forbids glow and scaling that distorts the mark, so only
+ * opacity pulses here and the geometry never changes.
+ */
 @keyframes logo-pulse {
   0%,
   100% {
-    opacity: 0.72;
-    transform: scale(0.98);
+    opacity: 0.78;
   }
   50% {
     opacity: 1;
-    transform: scale(1.02);
   }
 }
 

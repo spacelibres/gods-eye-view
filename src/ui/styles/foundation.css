@@ -1,21 +1,39 @@
-/* ═══════════════════════════════════════════════
-   GOD'S EYE VIEW — Dark Sci-Fi UI
-   Apple meets Blade Runner
-   ═══════════════════════════════════════════════ */
+/* ═════════════════════════════════════════════════════════════════
+   GOD'S EYE VIEW — spacelibre identity
+
+   The palette is not fixed. The identity manual fixes a primary colour and
+   a harmony rule, then derives every other role from them; six presets ship
+   and any primary can be entered. `colorSystem.js` generates the `--sp-*`
+   roles at runtime, and the variables below map the app's own names onto
+   those roles so the page, the symbol and the imagery shading change
+   together.
+   ═════════════════════════════════════════════════════════════════ */
 
 :root {
-  --bg-dark: #0a0a0f;
-  --glass-bg: rgba(12, 12, 20, 0.72);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-border-hover: rgba(255, 255, 255, 0.15);
-  --accent: #00d4ff;
-  --accent-dim: rgba(0, 212, 255, 0.15);
-  --accent-glow: rgba(0, 212, 255, 0.4);
-  --text-primary: #e8eaed;
-  --text-secondary: rgba(232, 234, 237, 0.5);
-  --text-dim: rgba(232, 234, 237, 0.3);
+  /* Deep background — the dark base of the identity */
+  --bg-dark: var(--sp-deep, #071424);
+  --glass-bg: color-mix(in srgb, var(--sp-deep, #071424) 72%, transparent);
+  --glass-border: rgba(242, 246, 252, 0.08);
+  --glass-border-hover: rgba(242, 246, 252, 0.15);
+  /* Primary — carries the identity */
+  --accent: var(--sp-primary-on-dark, #007bff);
+  --accent-dim: color-mix(in srgb, var(--sp-primary, #007bff) 15%, transparent);
+  --accent-glow: color-mix(
+    in srgb,
+    var(--sp-primary, #007bff) 40%,
+    transparent
+  );
+  /* Secondary — the planet ring, as the manual specifies */
+  --navy: var(--sp-secondary-on-dark, #002044);
+  /* Legacy alias used by the HUD panels; it is the primary, not a colour of
+     its own, so those panels follow the chosen palette. */
+  --hud-cyan: var(--accent);
+  /* Surface white — text and light surfaces */
+  --text-primary: #f2f6fc;
+  --text-secondary: rgba(242, 246, 252, 0.55);
+  --text-dim: rgba(242, 246, 252, 0.32);
   /* Opaque surface for browser-painted menus, which cannot use --glass-bg. */
-  --menu-bg: #12121c;
+  --menu-bg: color-mix(in srgb, var(--sp-deep, #071424) 92%, #ffffff);
   --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --panel-radius: 16px;
@@ -518,17 +536,22 @@ body.cockpit-mode #cockpit-cloud-effects.active {
   font-weight: 600;
   letter-spacing: 8px;
   color: var(--text-primary);
-  text-shadow: 0 0 30px var(--accent-glow);
   position: relative;
 }
 
 #title-bar .title-logo {
   position: relative;
   display: block;
-  width: 52px;
+  /* The horizontal lockup is 810 × 180; the manual sets ≥240 px wide. */
+  width: 240px;
   height: auto;
-  filter: drop-shadow(0 0 12px rgba(0, 246, 255, 0.5));
 }
+
+/*
+ * The identity manual forbids glow, embossing, outlines and shadows on the
+ * mark, and forbids stretching it — so the logo is placed at its own aspect
+ * ratio and nothing else is applied.
+ */
 
 #title-bar .title-logo::before,
 #title-bar .title-logo::after {
@@ -586,7 +609,11 @@ body.cockpit-mode #cockpit-cloud-effects.active {
 }
 
 .brand-logo {
-  aspect-ratio: 775 / 520;
+  /* The SVG carries its own viewBox; keep the box proportional and intact. */
+  display: block;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
   overflow: visible;
   pointer-events: none;
 }
@@ -596,6 +623,19 @@ body.cockpit-mode #cockpit-cloud-effects.active {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+/* The inlined lockup paints from the palette roles, so its colour follows the
+   chosen primary. The image is removed once the vector is in place to keep one
+   copy in the accessibility tree. */
+.brand-logo--inline > img {
+  display: none;
+}
+
+/* The official symbol uses the deep navy as its planet; on the deep background
+   that would vanish, so the ring takes the secondary-on-dark role instead. */
+.brand-logo--inline [data-stroke-role='planet'] {
+  stroke: var(--sp-logo-planet, var(--sp-secondary-on-dark, #002044));
 }
 
 #title-bar .title-accent,

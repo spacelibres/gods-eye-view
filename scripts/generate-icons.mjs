@@ -16,8 +16,11 @@ const REPO_ROOT = path.resolve(
 const LOGO = path.join(REPO_ROOT, 'public', 'logo.svg');
 const OUT_DIR = path.join(REPO_ROOT, 'public', 'icons');
 
-/** `--bg-dark` from src/ui/styles/foundation.css, so the tile matches the app. */
-const BACKGROUND = '#0a0a0f';
+/**
+ * `--bg-dark` from src/ui/styles/foundation.css, so the tile matches the app.
+ * The mark is the manual's monochrome white symbol, which reads on any palette.
+ */
+const BACKGROUND = '#071424';
 
 /**
  * Fraction of the canvas the mark is allowed to occupy.

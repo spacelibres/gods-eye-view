@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>God's Eye View</title>
+  <title>spacelibre — God's Eye View</title>
   <!-- Raster fallbacks: Safari ignores an SVG apple-touch-icon and falls back to a
        screenshot of the page, so an installed app needs a real PNG. Regenerate
        these from the logo with `node scripts/generate-icons.mjs`. -->
@@ -13,11 +13,15 @@
   <link rel="icon" type="image/svg+xml" href="/logo.svg" />
   <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180.png" />
   <link rel="manifest" href="/manifest.webmanifest" />
-  <meta name="theme-color" content="#0a0a0f" />
+  <meta name="theme-color" content="#071424" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-  <meta name="apple-mobile-web-app-title" content="God's Eye" />
+  <meta name="apple-mobile-web-app-title" content="spacelibre" />
+  <!-- The palette is resolved before the stylesheets load, so the first
+       painted frame (the loading screen) is already in the visitor's
+       chosen colour rather than flashing the default. -->
+  <script src="/palette-bootstrap.js"></script>
   <link rel="stylesheet" href="/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

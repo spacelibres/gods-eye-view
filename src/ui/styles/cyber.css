@@ -780,8 +780,7 @@
   color: var(--cyber-red-bright);
 }
 
-:root[data-ui-theme='cyber']
-  :where(.dock-pin-btn img, .title-logo img, .brand-logo img) {
+:root[data-ui-theme='cyber'] :where(.dock-pin-btn img) {
   filter: grayscale(1) brightness(2.2) contrast(1.1);
 }
 
@@ -832,28 +831,7 @@
   color: var(--cyber-red-bright);
 }
 
-:root[data-ui-theme='cyber'] #title-bar .title-logo {
-  filter: drop-shadow(0 0 10px rgba(196, 84, 84, 0.24));
-}
 
-:root[data-ui-theme='cyber']
-  #title-bar
-  .title-logo
-  :is(#outer_eye, #inner_eye) {
-  fill: #090d0f;
-  stroke: #f5f7f6;
-}
-
-:root[data-ui-theme='cyber'] #title-bar .title-logo #globe {
-  fill: var(--cyber-red);
-  stroke: var(--cyber-red-bright);
-}
-
-:root[data-ui-theme='cyber'] #title-bar .title-logo #globe_cage {
-  fill: #f5f7f6;
-  stroke: #090d0f;
-  opacity: 0.72;
-}
 
 :root[data-ui-theme='cyber'] #top-center-actions button {
   --cyber-action-edge: rgba(226, 235, 236, 0.34);

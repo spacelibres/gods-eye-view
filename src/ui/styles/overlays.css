@@ -106,9 +106,13 @@
   transition:
     opacity 0.4s ease,
     visibility 0.4s ease;
-  --hud-color: rgba(0, 255, 255, 0.6);
-  --hud-glow: rgba(0, 255, 255, 0.4);
-  --hud-border: rgba(0, 255, 255, 0.15);
+  --hud-color: color-mix(
+    in srgb,
+    var(--sp-primary-on-dark, #007bff) 72%,
+    transparent
+  );
+  --hud-glow: color-mix(in srgb, var(--sp-primary, #007bff) 40%, transparent);
+  --hud-border: color-mix(in srgb, var(--sp-primary, #007bff) 18%, transparent);
 }
 
 #intel-hud.active {
@@ -157,6 +161,7 @@
 .hud-top-bar-left,
 .hud-top-bar-right {
   opacity: 0.6;
+  color: var(--accent);
 }
 
 /* Corner blocks */

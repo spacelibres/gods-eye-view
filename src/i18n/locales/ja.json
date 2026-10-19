@@ -2755,5 +2755,7 @@
   "ESC to dismiss": "ESC で閉じる",
   "Tip: the GEV MIC button in the dock lets you talk to the map.": "ヒント: ドックの GEV MIC ボタンで地図に話しかけられます。",
   ", or ": "、または",
-  "{speed} kn": "{speed} ノット"
+  "{speed} kn": "{speed} ノット",
+  "Globe colour scheme": "地球の配色",
+  "Custom colour": "カスタムカラー"
 }

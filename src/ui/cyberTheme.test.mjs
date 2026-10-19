@@ -671,11 +671,10 @@ test('the Display selector, voice schema and final stylesheet expose Cyber', () 
     militaryRendering,
     /baseAlpha:[\s\S]*?alpha: flightState\._irBoost \? 1 : treatment\.alpha/,
   );
-  assert.match(
-    cyberStyles,
-    /#title-bar \.title-logo #globe \{[\s\S]*?fill: var\(--cyber-red\);[\s\S]*?stroke: var\(--cyber-red-bright\);/,
-  );
-  assert.match(cyberStyles, /#title-bar \.title-logo #globe_cage/);
+  // The spacelibre lockup is one vector that follows the palette, so Cyber must
+  // not tint or filter it; the identity manual forbids recolouring per part.
+  assert.doesNotMatch(cyberStyles, /#title-bar \.title-logo/);
+  assert.doesNotMatch(cyberStyles, /\.title-logo img,\s*\.brand-logo img/);
   assert.match(
     cyberStyles,
     /#top-center-actions button\s*\{[\s\S]*?border-radius:\s*0;[\s\S]*?clip-path:\s*polygon\(\s*29% 0,\s*71% 0,[\s\S]*?0 29%\s*\);/,

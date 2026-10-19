@@ -49,7 +49,9 @@
   }
 
   #title-bar .title-logo {
-    width: 36px;
+    /* The manual's smallest usable horizontal width is 240 px; on a phone the
+       lockup keeps enough room for the wordmark to stay legible. */
+    width: 160px;
   }
 
   #title-bar .frame-rate-readout {

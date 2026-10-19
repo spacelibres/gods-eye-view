@@ -1,0 +1,87 @@
+/*
+ * Palette picker — the six identity presets plus a custom primary.
+ *
+ * The swatches read the palette roles rather than literal colours, so they
+ * stay legible against whichever deep background is active.
+ */
+
+#palette-picker {
+  display: flex;
+  align-items: center;
+}
+
+.palette-swatches {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.palette-swatch {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 1px solid var(--glass-border-hover);
+  border-radius: 50%;
+  background: var(--swatch);
+  cursor: pointer;
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.palette-swatch:hover {
+  transform: scale(1.12);
+}
+
+.palette-swatch.is-active {
+  box-shadow:
+    0 0 0 2px var(--bg-dark),
+    0 0 0 3px var(--text-primary);
+}
+
+.palette-swatch:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.palette-custom {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1px dashed var(--glass-border-hover);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--text-secondary);
+}
+
+.palette-custom:hover {
+  color: var(--text-primary);
+  border-color: var(--accent);
+}
+
+/* The native swatch is the control; the ring above is its affordance. */
+.palette-custom input[type='color'] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .palette-swatch {
+    transition: none;
+  }
+
+  .palette-swatch:hover {
+    transform: none;
+  }
+}

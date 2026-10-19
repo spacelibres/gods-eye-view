@@ -58,9 +58,11 @@ const HUD_COLORS = {
     border: 'rgba(255, 170, 0, 0.2)',
   },
   _default: {
-    main: 'rgba(0, 255, 255, 0.6)',
-    glow: 'rgba(0, 255, 255, 0.4)',
-    border: 'rgba(0, 255, 255, 0.15)',
+    // The identity's primary on the deep background, so the HUD follows the
+    // chosen palette instead of holding a colour of its own.
+    main: 'color-mix(in srgb, var(--sp-primary-on-dark, #007BFF) 72%, transparent)',
+    glow: 'color-mix(in srgb, var(--sp-primary, #007BFF) 40%, transparent)',
+    border: 'color-mix(in srgb, var(--sp-primary, #007BFF) 18%, transparent)',
   },
 };
 

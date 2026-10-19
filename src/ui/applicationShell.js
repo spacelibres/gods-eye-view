@@ -46,6 +46,12 @@ import {
   t,
 } from '../i18n/index.js';
 import { applyLocaleChoice, mountLocalePicker } from './localePicker.js';
+import { mountPalettePicker } from './palettePicker.js';
+import {
+  DEFAULT_PRESET,
+  getActivePalette,
+  setPalette,
+} from './colorSystemRuntime.js';
 
 /**
  * Central UI orchestrator for the God's Eye View application.
@@ -741,6 +747,17 @@ export class StyleManager extends ShellFacade {
       current: getLocale(),
       onSelect: (locale) => this._chooseLocale(locale),
     });
+
+    // The identity manual treats colour as a setting; the picker applies the
+    // six presets and any custom primary without a reload.
+    const paletteRoot = globalThis.document?.getElementById?.('palette-picker');
+    if (paletteRoot) {
+      this._palettePicker = mountPalettePicker({
+        root: paletteRoot,
+        primary: getActivePalette()?.primary ?? DEFAULT_PRESET.primary,
+        onSelect: (primary) => setPalette(primary),
+      });
+    }
   }
 
   /**
