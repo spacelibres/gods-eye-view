@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {
   GOOGLE_TILES_PATH,
   googleTilesRelay,
+  rewriteDocumentUris,
   upstreamPath,
 } from '../server/providers/google-tiles-relay.js';
 import {
@@ -305,4 +306,28 @@ test('the endpoint is a string, so Cesium can interpolate it', () => {
     `${Cesium.GoogleMaps.mapTilesApiEndpoint}v1/3dtiles/root.json`,
     `${globalThis.location?.origin ?? 'http://localhost'}/api/google/tiles/v1/3dtiles/root.json`,
   );
+});
+
+test('child URIs stay under the relay mount', () => {
+  const doc = JSON.stringify({
+    root: {
+      children: [
+        { content: { uri: '/v1/3dtiles/datasets/a.glb?session=s' } },
+      ],
+    },
+  });
+  const out = JSON.parse(rewriteDocumentUris(doc, GOOGLE_TILES_PATH));
+  assert.equal(
+    out.root.children[0].content.uri,
+    `${GOOGLE_TILES_PATH}/v1/3dtiles/datasets/a.glb?session=s`,
+  );
+  // Rewriting twice must not stack the prefix.
+  const again = JSON.parse(
+    rewriteDocumentUris(JSON.stringify(out), GOOGLE_TILES_PATH),
+  );
+  assert.equal(again.root.children[0].content.uri, out.root.children[0].content.uri);
+});
+
+test('a non-JSON body is passed through untouched', () => {
+  assert.equal(rewriteDocumentUris('not json', GOOGLE_TILES_PATH), 'not json');
 });

@@ -1,5 +1,12 @@
 # Changelog
 
+- Keep relayed tile-set children inside the relay. Google names them with
+  root-relative URIs (`/v1/3dtiles/…`), and a client resolving one against
+  `/api/google/tiles/v1/3dtiles/root.json` drops the mount entirely — every
+  child request then asked the app root, which serves nothing, so a relayed
+  session loaded the root document and stopped there. The relay now rewrites
+  those URIs to stay under its mount on the way out.
+
 - Point Cesium at the relay with a string. `mapTilesApiEndpoint` is read by
   string interpolation when the root URL is built, and a `Resource` object
   stringifies to `[object Object]`, so every relayed tile request went to a

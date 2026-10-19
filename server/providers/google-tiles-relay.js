@@ -132,6 +132,16 @@ export function googleTilesRelay({
           res.end();
           return;
         }
+        // JSON tile-set documents name their children with root-relative URIs
+        // (`/v1/3dtiles/…`). Resolved against this mount that drops the relay
+        // prefix and asks the app root — a path nothing serves — so the child
+        // requests must be rewritten to stay under the mount.
+        const type = String(response.headers.get('content-type') || '');
+        if (type.includes('json')) {
+          const text = await response.text();
+          res.end(rewriteDocumentUris(text, path, req.headers.host, req.socket));
+          return;
+        }
         toNodeStream(response.body).pipe(res);
       } catch (error) {
         res.statusCode = 502;
@@ -155,6 +165,40 @@ export function googleTilesRelay({
       install(server.middlewares);
     },
   };
+}
+
+/**
+ * Keep a tile-set document's child URIs under the relay mount.
+ *
+ * Google answers with root-relative URIs (`/v1/3dtiles/datasets/…`). A client
+ * resolves those against the document's URL, and a leading `/` discards the
+ * path it was fetched from — so every child request would ask the app root
+ * instead of `/api/google/tiles/…`. Prefixing the mount keeps them here.
+ *
+ * @param {string} text The JSON document body.
+ * @param {string} mount The relay mount, e.g. `/api/google/tiles`.
+ * @returns {string} The body, with `uri` values made relay-relative.
+ */
+export function rewriteDocumentUris(text, mount) {
+  let document;
+  try {
+    document = JSON.parse(text);
+  } catch {
+    return text;
+  }
+  const visit = (node) => {
+    if (!node || typeof node !== 'object') return;
+    if (Array.isArray(node)) {
+      for (const item of node) visit(item);
+      return;
+    }
+    if (typeof node.uri === 'string' && node.uri.startsWith('/')) {
+      if (!node.uri.startsWith(`${mount}/`)) node.uri = `${mount}${node.uri}`;
+    }
+    for (const value of Object.values(node)) visit(value);
+  };
+  visit(document);
+  return JSON.stringify(document);
 }
 
 async function follow(fetchImpl, url) {
