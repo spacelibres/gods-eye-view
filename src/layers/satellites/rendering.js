@@ -30,10 +30,10 @@ export function createRendering({
    * Why not a CallbackProperty entity (dynamic mode)? Verified in Cesium
    * 1.138 source: the dynamic polyline updater renders through a shared
    * PolylineCollection and applies only the fill material —
-   * `depthFailMaterial` is silently dropped, losing the dimmed behind-Earth
-   * segment. The Primitive keeps it via depthFailAppearance + the per-instance
-   * depthFailColor attribute (same mechanism the entity STATIC batch uses):
-   * bright where above the horizon, dimmed where behind the globe.
+   * `depthFailMaterial` is silently dropped, losing control of the
+   * behind-Earth segment. The Primitive keeps it via depthFailAppearance + the
+   * per-instance depthFailColor attribute (same mechanism the entity STATIC
+   * batch uses): drawn above the horizon, hidden where the globe covers it.
    */
 
   function _showOrbitPath(noradId, color) {
@@ -60,7 +60,10 @@ export function createRendering({
             pathColor.withAlpha(0.6),
           ),
           depthFailColor: Cesium.ColorGeometryInstanceAttribute.fromColor(
-            pathColor.withAlpha(0.35),
+            // Fully transparent: the part of an orbit behind the Earth is not
+            // shown at all. A dimmed segment still drew a line across the
+            // globe's disc, which reads as an orbit passing in front of it.
+            Cesium.Color.TRANSPARENT,
           ),
         },
       }),

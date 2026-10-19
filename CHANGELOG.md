@@ -1,5 +1,9 @@
 # Changelog
 
+- Hide the part of a satellite orbit that passes behind the Earth. It was
+  dimmed rather than removed, so a ring still drew a faint line across the
+  globe disc and read as passing in front of it.
+
 - Answer the relay probe after the mount is stripped. The middleware now
   hands handlers the path with the mount removed, so a probe arrives as `/`;
   it was compared against the full route, missed, and forwarded to Google
