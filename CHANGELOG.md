@@ -1,5 +1,12 @@
 # Changelog
 
+- Build with a Cesium ion token from `/etc/gods-eye-view.env`. The installer
+  now reads `CESIUM_ION_TOKEN` from the environment or, when unset, from that
+  file, so a token stored once survives every webhook rebuild instead of
+  applying only to the shell that was open when it was exported. The build
+  reports whether it found one; without it the app still runs on Cesium's
+  keyless terrain (spacelibres, #100).
+
 - Add nine Spanish city bike systems to Bike Share and `get_bike_share`: BiciMAD
   (Madrid), Valenbisi (Valencia), Bizi Zaragoza, Sevici (Seville), BIKI
   (Valladolid), BiciCoruña, Dbizi (Donostia-San Sebastián), Bilbao Bizi and

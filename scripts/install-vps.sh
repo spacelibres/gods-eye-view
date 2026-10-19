@@ -28,6 +28,11 @@
 #   GEV_WEBHOOK_PATH  webhook path             default /webhook
 #   GEV_WEBHOOK_SECRET  GitHub webhook secret; the service refuses every
 #                     request until it is set in /etc/gods-eye-view.env
+#   CESIUM_ION_TOKEN  Cesium ion access token for the build (optional). Read
+#                     from the environment or, when unset, from
+#                     /etc/gods-eye-view.env, so a token stored once survives
+#                     every automatic rebuild. The build otherwise falls back
+#                     to Cesium's public keyless terrain.
 set -euo pipefail
 
 GEV_HOME="${GEV_HOME:-/opt/gods-eye-view}"
@@ -40,6 +45,14 @@ GEV_USER="${GEV_USER:-gev}"
 GEV_WEBHOOK_PORT="${GEV_WEBHOOK_PORT:-4180}"
 GEV_WEBHOOK_PATH="${GEV_WEBHOOK_PATH:-/webhook}"
 GEV_ENV_FILE="${GEV_ENV_FILE:-/etc/gods-eye-view.env}"
+
+# Build-time credentials. The env file is the durable home for them: the
+# webhook rebuilds in a fresh shell with only this file loaded, so a value
+# exported by hand would be lost on the next push.
+if [ -z "${CESIUM_ION_TOKEN:-}" ] && [ -f "$GEV_ENV_FILE" ]; then
+  CESIUM_ION_TOKEN="$(sed -n 's/^CESIUM_ION_TOKEN=//p' "$GEV_ENV_FILE" | tail -n 1)"
+fi
+export CESIUM_ION_TOKEN="${CESIUM_ION_TOKEN:-}"
 CADDYFILE="${CADDYFILE:-/etc/caddy/Caddyfile}"
 BEGIN_MARK="# >>> gods-eye-view (managed by scripts/install-vps.sh) >>>"
 END_MARK="# <<< gods-eye-view <<<"
@@ -114,6 +127,11 @@ run_as_service "$NODE_DIR/npm ci --no-audit --no-fund" ||
   run_as_service "$NODE_DIR/npm ci --no-audit --no-fund --registry=https://registry.npmmirror.com"
 
 log "Build"
+if [ -n "$CESIUM_ION_TOKEN" ]; then
+  log "Cesium ion token: configured ($(printf '%s' "$CESIUM_ION_TOKEN" | cut -c1-12)…)"
+else
+  log "Cesium ion token: absent — the build uses Cesium's keyless terrain"
+fi
 run_as_service "$NODE_DIR/npm run build"
 
 # ---------------------------------------------------------------- systemd ---
@@ -166,14 +184,29 @@ if [ ! -f "$GEV_ENV_FILE" ]; then
   # the webhook answers 503 until this file holds a value.
   umask 077
   cat >"$GEV_ENV_FILE" <<ENV
-# God's Eye View webhook configuration. Set the same value as the GitHub
-# webhook's Secret field, then: systemctl restart gev-webhook
+# God's Eye View server configuration. Mode 600: this file holds secrets.
+#
+# GitHub webhook: set the same value as the webhook's Secret field, then
+#   systemctl restart gev-webhook
 GEV_WEBHOOK_SECRET=
 GEV_BRANCH=$GEV_BRANCH
 GEV_INSTALLER=$GEV_HOME/scripts/install-vps.sh
+#
+# Cesium ion access token (from ion.cesium.com). Scripts/install-vps.sh reads
+# it at build time, so editing it here and re-running the installer (or
+# pushing to main) is enough. Keep it to one line, unquoted.
+CESIUM_ION_TOKEN=
 ENV
   chmod 600 "$GEV_ENV_FILE"
   log "created $GEV_ENV_FILE — add your GitHub webhook secret, then restart gev-webhook"
+fi
+
+# Keep the token key present in an env file written by an older installer, so
+# the one place to set it is always obvious.
+if ! grep -q '^CESIUM_ION_TOKEN=' "$GEV_ENV_FILE"; then
+  printf '\n# Cesium ion access token, read at build time.\nCESIUM_ION_TOKEN=\n' \
+    >>"$GEV_ENV_FILE"
+  log "added CESIUM_ION_TOKEN= to $GEV_ENV_FILE"
 fi
 
 cat >/etc/systemd/system/gev-webhook.service <<UNIT

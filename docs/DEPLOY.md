@@ -36,6 +36,25 @@ the reload — a bad block leaves the running configuration alone.
 Overrides, all optional: `GEV_HOME`, `GEV_REPO`, `GEV_BRANCH`, `GEV_DOMAIN`,
 `GEV_PORT`, `GEV_NODE`, `GEV_USER`, `GEV_WEBHOOK_PORT`, `GEV_WEBHOOK_PATH`.
 
+## Build-time credentials
+
+The installer reads `CESIUM_ION_TOKEN` from its own environment, or — when that
+is unset — from `/etc/gods-eye-view.env`. The file wins for automatic deploys:
+the webhook rebuilds with only that file loaded, so a value exported by hand is
+gone on the next push.
+
+```bash
+sudoedit /etc/gods-eye-view.env     # CESIUM_ION_TOKEN=eyJ...
+sudo bash /opt/gods-eye-view/scripts/install-vps.sh
+```
+
+The build prints `Cesium ion token: configured (eyJhbGciOiJ…` when it picks the
+value up, and `absent` when it does not; the latter still works, on Cesium's
+keyless terrain. The token is baked into the browser bundle, so treat it as
+public — ion tokens are scoped per asset, not per secret, and the ion dashboard
+can revoke one that is abused. Never commit it: the file above stays outside
+the checkout at mode 600.
+
 ## The webhook
 
 ```bash
