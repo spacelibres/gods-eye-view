@@ -29,6 +29,7 @@ const CATALOG_SOURCES = Object.freeze({
   'zh-CN': zhCN,
   'zh-TW': zhTW,
   ja,
+  ko,
 });
 
 /*
