@@ -432,6 +432,9 @@ export class StyleManager extends ShellFacade {
       isNavigationCurrent: (generation) =>
         generation === this._navigationGeneration,
       cancelOwnedNavigation: () => this.viewer.camera.cancelFlight(),
+      // Written into every link as `av=` so a shared view records the build it
+      // came from; `v=` remains the link format.
+      appVersion: import.meta.env.APP_VERSION,
     });
     this.shareLinkManager.setPanelStateProvider(() =>
       this._buildSharePanelState(),

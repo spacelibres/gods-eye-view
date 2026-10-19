@@ -87,9 +87,14 @@ const SHARE_STYLE_PARAM_REGISTRY = Object.freeze({
 export class ShareLinkManager {
   constructor(
     viewer,
-    { onRestore, isNavigationCurrent, cancelOwnedNavigation } = {},
+    { onRestore, isNavigationCurrent, cancelOwnedNavigation, appVersion } = {},
   ) {
     this.viewer = viewer;
+    // The release this page runs. The build injects APP_VERSION; a test (or an
+    // embedding host) can pass one instead. It only annotates links.
+    this._appVersion = String(
+      appVersion ?? import.meta.env?.APP_VERSION ?? '',
+    ).trim();
     this._onRestore = onRestore; // callback: ({ style, bloom, sharpen }) => void
     this._debounceTimer = null;
     this._currentStyle = 'normal';
@@ -550,6 +555,13 @@ export class ShareLinkManager {
 
     const params = new URLSearchParams();
     params.set('v', '2');
+    // The release this link was made with. `v` above is the LINK FORMAT (which
+    // fields exist and how they decode); this is the app build. Nothing reads
+    // it to decide anything — it is what turns "where did this link come
+    // from?" into a one-line answer, and it is written before the fields that
+    // may change shape between releases.
+    const appVersion = this._appVersion;
+    if (appVersion) params.set('av', appVersion);
     params.set('lat', Cesium.Math.toDegrees(carto.latitude).toFixed(4));
     params.set('lon', Cesium.Math.toDegrees(carto.longitude).toFixed(4));
     params.set('alt', Math.round(carto.height).toString());

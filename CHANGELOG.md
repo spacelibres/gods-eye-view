@@ -1,5 +1,10 @@
 # Changelog
 
+- Record the app version in share links as `av`. `v` stays the link format
+  that decides which fields exist; `av` only names the build the link was
+  made with, so a copied URL answers "which release is this from?" without
+  changing how any other parameter decodes.
+
 - Hide satellites on the far side of the planet, and their labels with them.
   Google 3D Tiles replace the globe (`scene.globe.show = false`), so the depth
   buffer holds no Earth surface and every point behind the planet drew
