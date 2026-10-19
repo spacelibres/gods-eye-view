@@ -273,3 +273,24 @@ test('a failed relay puts the direct Google endpoint back', () => {
     'https://tile.googleapis.com/',
   );
 });
+
+test('the relay answers its own mount for GET, the probe this client sends', async () => {
+  let called = false;
+  const handler = mount(
+    googleTilesRelay({
+      apiKey: () => 'server-key',
+      fetchImpl: async () => {
+        called = true;
+        return new Response('');
+      },
+    }),
+  );
+  for (const url of [GOOGLE_TILES_PATH, `${GOOGLE_TILES_PATH}/`]) {
+    const res = response();
+    await handler(request({ url }), res);
+    assert.equal(res.statusCode, 200, url);
+  }
+  // Forwarding the empty path would put Google's own 404 page in front of the
+  // client and look like the relay does not exist.
+  assert.equal(called, false);
+});

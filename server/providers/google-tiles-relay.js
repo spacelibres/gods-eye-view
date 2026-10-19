@@ -42,6 +42,21 @@ const FORWARDED_HEADERS = Object.freeze([
   'last-modified',
 ]);
 
+/**
+ * True for a request to the mount itself — the client's probe.
+ *
+ * The server hands handlers the full URL, and a probe asks for exactly the
+ * mount (optionally with a trailing slash or a query) and nothing after it.
+ *
+ * @param {string} requestUrl
+ * @param {string} mount
+ * @returns {boolean}
+ */
+export function isMountRoot(requestUrl, mount = GOOGLE_TILES_PATH) {
+  const path = String(requestUrl || '').split('?')[0].replace(/\/+$/, '');
+  return path === mount;
+}
+
 /** Strip the mount, keep Google's leading slash. */
 export function upstreamPath(requestPath, mount = GOOGLE_TILES_PATH) {
   const pathname = String(requestPath || '');
@@ -81,8 +96,12 @@ export function googleTilesRelay({
         );
         return;
       }
-      if (req.method === 'HEAD') {
-        // The client's reachability probe; no upstream session is needed.
+      if (req.method === 'HEAD' || isMountRoot(req.url, path)) {
+        // The client's reachability probe: it asks for the mount itself, with
+        // no Google path after it, and only needs to know the relay exists.
+        // This must answer for GET too — the probe uses GET, because HEAD is
+        // not reliable through every proxy — otherwise the empty path would be
+        // forwarded to Google's root, which answers with its own 404 page.
         res.statusCode = 200;
         res.setHeader('Cache-Control', 'no-store');
         res.end();

@@ -1,5 +1,10 @@
 # Changelog
 
+- Answer the relay probe for GET, not just HEAD. The client asks the mount
+  itself with GET, and the route only special-cased HEAD, so the empty path
+  was forwarded to Google root — which replies with its own 404 page, making
+  the relay look missing and sending the session back to direct access.
+
 - Import the translator in the application shell. The connectivity status lines
   called `t` without importing it, so every page threw `t is not defined`
   immediately after the probe and the globe never finished starting.
