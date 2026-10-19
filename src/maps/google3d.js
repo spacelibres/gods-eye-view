@@ -44,7 +44,14 @@ export async function loadPhotorealisticTileset(
     route: 'google-direct',
     create: () => createGoogleDirectTileset(Cesium, googleKey),
   });
-  if (googleKey) attempts.push(direct());
+  // The tileset is built from `GoogleMaps.mapTilesApiEndpoint`, which the
+  // caller already pointed at the relay; the route name records that so the
+  // log and the fallback logic agree with reality.
+  const relayedAttempt = () => ({
+    route: 'google-relay',
+    create: () => createGoogleDirectTileset(Cesium, googleKey),
+  });
+  if (googleKey) attempts.push(relayed ? relayedAttempt() : direct());
   else if (googleTokens)
     attempts.push({
       route: 'google-token',

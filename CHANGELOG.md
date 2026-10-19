@@ -1,5 +1,12 @@
 # Changelog
 
+- Build the tileset through the relay when the probe chose it. The first
+  attempt always called the direct Google loader, so a session that had
+  correctly switched to `/api/google/tiles` still asked Google for every
+  tile and the relay never carried a byte. The route is now named for what
+  actually served it (`google-relay`), and only a failed relayed load falls
+  back to the direct endpoint.
+
 - Let a route decline a request. The production server passed every handler
   an inert `next`, so local-receivers — which declines any path but its own —
   returned without answering and the request stayed open until the proxy gave

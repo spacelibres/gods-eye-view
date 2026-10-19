@@ -216,3 +216,37 @@ test('a server without tokens falls back to ion', async () => {
   assert.equal(result.errors.length, 1);
   assert.equal(Cesium.calls.length, 1);
 });
+
+test('a relayed session builds the tileset through the relay, not Google', async () => {
+  const tileset = { id: 'relayed' };
+  const Cesium = fakeCesium([tileset]);
+  let restored = 0;
+  const result = await loadPhotorealisticTileset(Cesium, {
+    googleApiKey: 'browser-key',
+    relayed: true,
+    restoreDirectRoute: () => {
+      restored += 1;
+    },
+  });
+  assert.equal(result.tileset, tileset);
+  // The route says what actually served the tiles: the caller had already
+  // pointed the SDK at this app's relay.
+  assert.equal(result.route, 'google-relay');
+  assert.equal(restored, 0, 'a successful relayed load does not fall back');
+});
+
+test('a failed relayed load restores the direct endpoint and retries', async () => {
+  const tileset = { id: 'after-retry' };
+  const Cesium = fakeCesium([new Error('relay failed'), tileset]);
+  let restored = 0;
+  const result = await loadPhotorealisticTileset(Cesium, {
+    googleApiKey: 'browser-key',
+    relayed: true,
+    restoreDirectRoute: () => {
+      restored += 1;
+    },
+  });
+  assert.equal(result.tileset, tileset);
+  assert.equal(result.route, 'google-direct');
+  assert.equal(restored, 1);
+});
