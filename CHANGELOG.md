@@ -1,5 +1,13 @@
 # Changelog
 
+- Let a route decline a request. The production server passed every handler
+  an inert `next`, so local-receivers — which declines any path but its own —
+  returned without answering and the request stayed open until the proxy gave
+  up: `/api/local-receivers/aircraft` never returned on the deployed host. A
+  real `next` now hands the request to the next matching route, and the
+  receivers route compares the full URL instead of assuming its mount was
+  stripped (spacelibres, #111).
+
 - Stop asking the loopback-only Provider Settings endpoint from a public
   host. The panel already treated its 403 as "not available" and removed
   itself, but every visitor still sent the request and saw a failure in the

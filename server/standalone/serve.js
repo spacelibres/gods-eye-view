@@ -109,22 +109,46 @@ function createRouter() {
         ) {
           continue;
         }
-        // A matched handler owns the request. Streaming responses finish
-        // after the handler's promise settles (the relay pipes Google's body),
-        // so "did it answer?" cannot be read from the response object here —
-        // the match itself is the answer. One that throws is answered as a 500.
+        // A handler may decline by calling `next()` (local-receivers does this
+        // for any path other than its own), in which case the next matching
+        // route gets the request. Passing an inert stub here left such a
+        // request open forever: the handler returned without answering and
+        // nothing else ran.
+        // The full URL is kept, which is what the plugins expect: the tile
+        // relay strips its own mount, and the weather route parses `req.url`
+        // whole. Vite behaves the same way.
+        let declined = false;
+        let release;
+        const declinedPromise = new Promise((resolve) => {
+          release = resolve;
+        });
+        const next = (error) => {
+          if (error && !res.headersSent) {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ error: error.message ?? 'Route failed' }));
+          } else {
+            declined = true;
+          }
+          release();
+        };
         try {
-          const result = handler(req, res, () => {});
-          if (result && typeof result.then === 'function') await result;
+          const result = handler(req, res, next);
+          // A response that streams finishes after the handler returns, so a
+          // handler that answered is not awaited further; one that declined
+          // is, so the next route can run.
+          if (result && typeof result.then === 'function') {
+            await Promise.race([result, declinedPromise]);
+          }
         } catch (error) {
           if (!res.headersSent) {
             res.statusCode = 500;
             res.setHeader('Content-Type', 'application/json');
-            res.end(
-              JSON.stringify({ error: error?.message ?? 'Route failed' }),
-            );
+            res.end(JSON.stringify({ error: error?.message ?? 'Route failed' }));
           }
+          return true;
         }
+        if (declined && !res.headersSent && !res.writableEnded) continue;
         return true;
       }
       return false;
