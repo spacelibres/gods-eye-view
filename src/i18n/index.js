@@ -20,8 +20,15 @@ import es from './locales/es.json' with { type: 'json' };
 import ru from './locales/ru.json' with { type: 'json' };
 import zhCN from './locales/zh-CN.json' with { type: 'json' };
 import zhTW from './locales/zh-TW.json' with { type: 'json' };
+import ja from './locales/ja.json' with { type: 'json' };
 
-const CATALOG_SOURCES = Object.freeze({ es, ru, 'zh-CN': zhCN, 'zh-TW': zhTW });
+const CATALOG_SOURCES = Object.freeze({
+  es,
+  ru,
+  'zh-CN': zhCN,
+  'zh-TW': zhTW,
+  ja,
+});
 
 /*
  * Parsed JSON is read through a Map for two reasons: with twenty-three
