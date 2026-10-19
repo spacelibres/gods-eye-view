@@ -1,5 +1,11 @@
 # Changelog
 
+- Stop asking the loopback-only Provider Settings endpoint from a public
+  host. The panel already treated its 403 as "not available" and removed
+  itself, but every visitor still sent the request and saw a failure in the
+  network log. The hostname check now runs first, so a deployed page never
+  makes a call that can only be refused.
+
 - Answer the relay probe for GET, not just HEAD. The client asks the mount
   itself with GET, and the route only special-cased HEAD, so the empty path
   was forwarded to Google root — which replies with its own 404 page, making

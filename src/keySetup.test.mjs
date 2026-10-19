@@ -161,6 +161,7 @@ test('aborting pending setup removes its surface and ignores a late response', a
   let requestSignal;
   const controller = new AbortController();
   const pending = initKeySetup({
+    hostname: 'localhost',
     documentRef: { getElementById: (id) => id === 'key-setup-chip' ? chip : root },
     signal: controller.signal,
     fetchImpl: (_url, { signal }) => {
@@ -193,6 +194,7 @@ test('a pasted, unsaved key makes the language switch ask first until teardown',
   };
   const controller = new AbortController();
   const setup = await initKeySetup({
+    hostname: 'localhost',
     documentRef: {
       getElementById: (id) => (id === 'key-setup-chip' ? chip : root),
       addEventListener() {},
@@ -213,4 +215,22 @@ test('a pasted, unsaved key makes the language switch ask first until teardown',
   // The field still holds the key, so only teardown dropping the check clears it.
   controller.abort();
   assert.deepEqual(describeUnsavedWork(), []);
+});
+
+test('a public hostname never asks the loopback-only endpoint', async () => {
+  const chip = { remove() {} };
+  const root = { dataset: {}, remove() {}, querySelector: () => null };
+  let asked = 0;
+  const result = await initKeySetup({
+    hostname: 'godseye.example.com',
+    documentRef: {
+      getElementById: (id) => (id === 'key-setup-chip' ? chip : root),
+    },
+    fetchImpl: async () => {
+      asked += 1;
+      return { ok: false, status: 403 };
+    },
+  });
+  assert.equal(result, null);
+  assert.equal(asked, 0, 'the request would only ever be refused');
 });

@@ -367,11 +367,34 @@ export function bindKeySetupPlacement(documentRef, chip) {
   return () => observer.disconnect();
 }
 
+/**
+ * Whether this page is served from a hostname the setup endpoint answers.
+ *
+ * Mirrors the server's rule (keySetupCore.mjs): loopback addresses and plain
+ * `localhost` names, which is what a developer's own machine and the LAN
+ * opt-in use. Anything else — the public domain, a tunnel — is refused.
+ *
+ * @param {string} [hostname]
+ * @returns {boolean}
+ */
+export function isLocalHostname(hostname) {
+  const name = String(hostname || '').trim().toLowerCase();
+  if (!name) return false;
+  if (name === 'localhost' || name.endsWith('.localhost')) return true;
+  // IPv4 loopback, bracketed IPv6 loopback, and IPv6-mapped IPv4 loopback.
+  return (
+    /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(name) ||
+    name === '[::1]' ||
+    name === '::1'
+  );
+}
+
 /** Wire the dev-only setup surface; unavailable endpoints remove it entirely. */
 export async function initKeySetup({
   documentRef = globalThis.document,
   fetchImpl,
   signal,
+  hostname = globalThis.location?.hostname,
 } = {}) {
   const chip = documentRef?.getElementById?.('key-setup-chip');
   const root = documentRef?.getElementById?.('key-setup');
@@ -407,6 +430,15 @@ export async function initKeySetup({
   }
   signal?.addEventListener('abort', destroy, { once: true });
   const doFetch = fetchImpl || globalThis.fetch?.bind(globalThis);
+
+  // The endpoint answers loopback callers only, so a visitor on a deployed
+  // host is refused by design. Asking anyway costs a 403 on every page load
+  // and fills the network log with a failure that means nothing. A local
+  // hostname is the one case the surface can work in, so only ask there.
+  if (!isLocalHostname(hostname)) {
+    destroy();
+    return null;
+  }
 
   let status = null;
   try {
