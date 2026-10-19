@@ -1,5 +1,14 @@
 # Changelog
 
+- Probe Google with the real key. The reachability check asked for
+  `?key=probe`, and Google answers an invalid key with `400` — the same answer
+  a localhost-only proxy gives for a host it will not reach, so the probe could
+  not tell "Google rejected the key" from "I never left this machine", and a
+  browser behind such a proxy was told it could fetch tiles directly. The probe
+  now carries the key the tileset will use, so `200` means Google is reachable
+  and the key works, and anything else sends the session to the relay
+  (spacelibres, #105).
+
 - Tell Google's tiles apart from a local proxy that refuses them. The
   reachability probe accepted any HTTP answer, so a browser behind a
   localhost-only proxy — which answers `400 Bad Request` from `127.0.0.1` and

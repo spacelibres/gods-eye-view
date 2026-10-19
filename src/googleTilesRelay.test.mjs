@@ -18,25 +18,24 @@ import {
 test('a reachable Google keeps the session direct', async () => {
   const asked = [];
   const route = await chooseTileRoute({
+    apiKey: 'real-key',
     fetchImpl: async (url) => {
       asked.push(url);
-      // Google answers an invalid key with 400 *and* grants CORS.
-      return new Response('{}', {
-        status: 400,
-        headers: { 'Access-Control-Allow-Origin': 'https://example.test' },
-      });
+      return new Response('{"asset":{}}', { status: 200 });
     },
   });
   assert.equal(route, 'direct');
-  // The relay is never consulted when Google answers.
+  // The probe carries the key the tiles will use; without one a 200 is
+  // meaningless (Google answers an invalid key with 400).
   assert.equal(asked.length, 1);
-  assert.match(asked[0], /tile\.googleapis\.com/);
+  assert.match(asked[0], /tile\.googleapis\.com.*[?&]key=real-key/);
 });
 
 test('a local proxy answering 400 is not a path to Google', async () => {
   // The reported failure: a browser behind a localhost-only proxy shows
   // "400 Bad Request" from 127.0.0.1 and never reaches Google.
   const route = await chooseTileRoute({
+    apiKey: 'real-key',
     fetchImpl: async (url) => {
       if (url.includes('tile.googleapis.com')) {
         return new Response('Bad Request', { status: 400 });
@@ -49,6 +48,7 @@ test('a local proxy answering 400 is not a path to Google', async () => {
 
 test('an unreachable Google falls back to the relay when it exists', async () => {
   const route = await chooseTileRoute({
+    apiKey: 'real-key',
     fetchImpl: async (url) => {
       if (url.includes('tile.googleapis.com')) throw new Error('offline');
       return new Response(null, { status: 200 });
@@ -59,6 +59,7 @@ test('an unreachable Google falls back to the relay when it exists', async () =>
 
 test('an unreachable Google with no relay stays direct', async () => {
   const route = await chooseTileRoute({
+    apiKey: 'real-key',
     fetchImpl: async (url) => {
       if (url.includes('tile.googleapis.com')) throw new Error('offline');
       return new Response(null, { status: 404 });
@@ -70,6 +71,7 @@ test('an unreachable Google with no relay stays direct', async () => {
 test('the probe gives up at its deadline instead of waiting', async () => {
   const started = Date.now();
   const route = await chooseTileRoute({
+    apiKey: 'real-key',
     timeoutMs: 40,
     fetchImpl: (url, init) =>
       new Promise((_, reject) => {

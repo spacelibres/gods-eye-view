@@ -32,12 +32,13 @@ export function createStandaloneApplication({
   // This is the first thing initialization does: ask whether this network can
   // reach Google at all. It starts here, before the palette, the locale and the
   // viewer, because nothing about the map should be built on an assumption the
-  // network may contradict. The probe runs in parallel with the rest of the
-  // boot; only the tile request waits for it, and it has a three-second
-  // deadline, so a blocked Google costs three seconds once and a reachable one
-  // costs nothing.
+  // network may contradict. The probe asks Google with the real key, so a 200
+  // proves both the host is reachable and the key works. It runs in parallel
+  // with the rest of the boot; only the tile request waits for it, and it has
+  // a three-second deadline, so a blocked Google costs three seconds once and
+  // a reachable one costs nothing.
   const googleRoute = googleApiKey
-    ? chooseTileRoute().then((route) => {
+    ? chooseTileRoute({ apiKey: googleApiKey }).then((route) => {
         if (route === 'relayed') {
           console.info(
             '[Init] Google is unreachable from this network; tiles will be relayed.',

@@ -19,41 +19,40 @@ export const TILES_RELAY_PATH = '/api/google/tiles';
 /** How long Google gets to answer the probe. */
 export const PROBE_TIMEOUT_MS = 3000;
 
-/** Google's tileset root, asked without a usable key on purpose. */
-export const PROBE_URL =
-  'https://tile.googleapis.com/v1/3dtiles/root.json?key=probe';
-
 /**
- * Decide whether a probe response really came from Google.
+ * Google's tileset root, asked with the key the app actually uses.
  *
- * A status code cannot tell: Google answers an invalid key with 400, and so
- * does a local proxy that refuses the connection, which is exactly the case
- * this probe exists to catch (a browser behind a proxy that only handles
- * localhost shows `400 Bad Request` from 127.0.0.1 and never leaves the
- * machine). What Google always adds, and a stopgap proxy does not, is a CORS
- * grant naming this origin — without it the browser could not read the tile
- * root at all, so a response lacking it is not a usable path to Google.
+ * The probe must send a key that works: Google answers an invalid one with
+ * `400`, and so does a local proxy that refuses the host, so a placeholder
+ * key cannot tell "Google rejected my key" from "I never reached Google".
+ * With the real key a `200` means Google is reachable and the key is good —
+ * which is exactly what the tiles need.
  *
- * @param {Response} response
- * @returns {boolean}
+ * @param {string} apiKey The same key the tileset will use.
+ * @returns {string} The probe URL.
  */
-export function probeReachedGoogle(response) {
-  return Boolean(response?.headers?.get?.('access-control-allow-origin'));
+export function probeUrl(apiKey) {
+  const url = new URL('https://tile.googleapis.com/v1/3dtiles/root.json');
+  url.searchParams.set('key', String(apiKey || '').trim());
+  return url.toString();
 }
 
 /**
  * Decide the route for this page load.
  *
- * @param {{fetchImpl?: Function, timeoutMs?: number, relayPath?: string}} [options]
+ * @param {{apiKey: string, fetchImpl?: Function, timeoutMs?: number,
+ *   relayPath?: string}} options `apiKey` is required: the probe has to ask
+ *   Google with a working key for a `200` to mean anything (see probeUrl).
  * @returns {Promise<'direct'|'relayed'>} Never rejects: an unreachable relay
  *   leaves the session on `direct`, where the existing provider fallback runs.
  */
 export async function chooseTileRoute({
+  apiKey,
   fetchImpl = (...args) => fetch(...args),
   timeoutMs = PROBE_TIMEOUT_MS,
   relayPath = TILES_RELAY_PATH,
 } = {}) {
-  if (await answers(fetchImpl, PROBE_URL, timeoutMs, probeReachedGoogle)) {
+  if (await answers(fetchImpl, probeUrl(apiKey), timeoutMs, (r) => r.ok)) {
     return 'direct';
   }
   return (await answers(fetchImpl, relayPath, timeoutMs, (r) => r.ok))
