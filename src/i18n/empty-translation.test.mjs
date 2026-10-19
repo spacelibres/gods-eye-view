@@ -29,14 +29,14 @@ for (const locale of ['es', 'ru']) {
 
 test('t() and translateKnown() fall back to English for an empty entry', () => {
   const es = getCatalog('es');
-  const saved = es[EMPTY];
-  es[EMPTY] = '';
+  const saved = es.get(EMPTY);
+  es.set(EMPTY, '');
   setLocale('es');
   try {
     assert.equal(t(EMPTY), EMPTY);
     assert.equal(translateKnown(EMPTY), EMPTY);
   } finally {
-    es[EMPTY] = saved;
+    es.set(EMPTY, saved);
     setLocale('en');
   }
 });
@@ -44,19 +44,19 @@ test('t() and translateKnown() fall back to English for an empty entry', () => {
 test('tn() skips an empty plural form', () => {
   const es = getCatalog('es');
   const KEY = '{count} INPUTS UNKNOWN';
-  const saved = es[KEY];
+  const saved = es.get(KEY);
   setLocale('es');
   try {
-    es[KEY] = { ...saved, one: ' ' };
+    es.set(KEY, { ...saved, one: ' ' });
     assert.equal(
       tn(1, '{count} INPUT UNKNOWN', KEY),
       saved.other.replace('{count}', '1'),
     );
-    es[KEY] = { one: '', many: '', other: '' };
+    es.set(KEY, { one: '', many: '', other: '' });
     assert.equal(tn(1, '{count} INPUT UNKNOWN', KEY), '1 INPUT UNKNOWN');
     assert.equal(tn(3, '{count} INPUT UNKNOWN', KEY), '3 INPUTS UNKNOWN');
   } finally {
-    es[KEY] = saved;
+    es.set(KEY, saved);
     setLocale('en');
   }
 });

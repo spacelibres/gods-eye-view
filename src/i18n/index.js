@@ -18,14 +18,32 @@ import {
 } from './locale.js';
 import es from './locales/es.json' with { type: 'json' };
 import ru from './locales/ru.json' with { type: 'json' };
+import zhCN from './locales/zh-CN.json' with { type: 'json' };
 
-const CATALOGS = Object.freeze({ es, ru });
+const CATALOG_SOURCES = Object.freeze({ es, ru, 'zh-CN': zhCN });
+
+/*
+ * Parsed JSON is read through a Map for two reasons: with twenty-three
+ * catalogs resident, every t() call would otherwise probe a dictionary object,
+ * and a Map keeps prototype keys ('constructor', '__proto__') from ever
+ * answering as messages. Built on first use and kept for the session.
+ */
+const catalogMaps = new Map();
 
 let currentLocale = DEFAULT_LOCALE;
 
-/** The catalog for a locale; null for English and unknown codes. */
+/** The catalog for a locale as a Map; null for English and unknown codes. */
 export function getCatalog(locale) {
-  return CATALOGS[normalizeLocale(locale)] ?? null;
+  const normalized = normalizeLocale(locale);
+  if (!normalized || normalized === DEFAULT_LOCALE) return null;
+  let catalog = catalogMaps.get(normalized);
+  if (!catalog) {
+    const source = CATALOG_SOURCES[normalized];
+    if (!source) return null;
+    catalog = new Map(Object.entries(source));
+    catalogMaps.set(normalized, catalog);
+  }
+  return catalog;
 }
 
 /** Active locale. */
@@ -70,9 +88,9 @@ function interpolate(pattern, values) {
 const filled = (value) => typeof value === 'string' && value.trim() !== '';
 
 function lookup(text) {
-  const catalog = CATALOGS[currentLocale];
+  const catalog = getCatalog(currentLocale);
   if (!catalog) return undefined;
-  const entry = Object.hasOwn(catalog, text) ? catalog[text] : undefined;
+  const entry = catalog.get(text);
   if (filled(entry) || (entry && typeof entry === 'object')) return entry;
   warnMissing(text);
   return undefined;
@@ -122,9 +140,9 @@ export function tn(count, one, other, values) {
  * missing-translation warning.
  */
 export function translateKnown(text) {
-  const catalog = CATALOGS[currentLocale];
+  const catalog = getCatalog(currentLocale);
   if (!catalog || typeof text !== 'string') return text;
-  const entry = Object.hasOwn(catalog, text) ? catalog[text] : undefined;
+  const entry = catalog.get(text);
   return filled(entry) ? entry : text;
 }
 
@@ -236,7 +254,7 @@ const DOCUMENT_TRANSLATION_TARGETS = Object.freeze([
  */
 export function applyDocumentTranslations(doc) {
   if (typeof doc?.querySelectorAll !== 'function') return 0;
-  if (!CATALOGS[currentLocale]) return 0;
+  if (!getCatalog(currentLocale)) return 0;
   let applied = 0;
   for (const [marker, attribute] of DOCUMENT_TRANSLATION_TARGETS) {
     for (const element of doc.querySelectorAll(`[${marker}]`)) {

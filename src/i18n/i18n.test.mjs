@@ -12,6 +12,7 @@ import {
   tn,
 } from './index.js';
 import {
+  LOCALES,
   LOCALE_STORAGE_KEY,
   applyDocumentLanguage,
   normalizeLocale,
@@ -56,17 +57,33 @@ test('resolveLocale: ?lang= wins, then the stored choice, then browser languages
     resolveLocale({
       location: { search: '?lang=xx' },
       storage: memoryStorage(),
-      languages: ['de-DE', 'ru-RU'],
+      languages: ['en-AU', 'ru-RU'],
     }),
-    'ru',
+    'en',
   );
   assert.equal(
     resolveLocale({
       location: { search: '' },
       storage: memoryStorage(),
-      languages: ['de'],
+      languages: ['zh-CN', 'en'],
+    }),
+    'zh-CN',
+  );
+  assert.equal(
+    resolveLocale({
+      location: { search: '' },
+      storage: memoryStorage(),
+      languages: ['zz'],
     }),
     'en',
+  );
+  assert.equal(
+    resolveLocale({
+      location: { search: '' },
+      storage: memoryStorage(),
+      languages: ['zh-HK'],
+    }),
+    LOCALES.includes('zh-TW') ? 'zh-TW' : 'zh-CN',
   );
 });
 
