@@ -1,5 +1,12 @@
 # Changelog
 
+- Name every built asset after the release (`assets/index-v0.2.14.js`) instead
+  of its content hash, so a deployed page is identifiable from any URL and a
+  browser holding an older page cannot mix in files from a newer build. A
+  request for an asset this release does not have now answers 404 instead of
+  the app shell, which used to hand a script request an HTML document. The
+  running page records its release as `<html data-app-version>`.
+
 - Probe Google with the real key. The reachability check asked for
   `?key=probe`, and Google answers an invalid key with `400` — the same answer
   a localhost-only proxy gives for a host it will not reach, so the probe could

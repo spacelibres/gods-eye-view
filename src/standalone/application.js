@@ -29,6 +29,11 @@ export function createStandaloneApplication({
   if (constructed)
     throw new Error('The standalone application already owns this page');
   constructed = true;
+  // Record which release this page is running. Assets are named after it, so
+  // this is what turns "which files is this tab using?" into a one-line check
+  // in DevTools (and the value a support report should quote).
+  const appVersion = String(import.meta.env.APP_VERSION || 'dev');
+  document.documentElement.dataset.appVersion = appVersion;
   // This is the first thing initialization does: ask whether this network can
   // reach Google at all. It starts here, before the palette, the locale and the
   // viewer, because nothing about the map should be built on an assumption the

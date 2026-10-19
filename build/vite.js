@@ -3,6 +3,24 @@ import cesium from 'vite-plugin-cesium';
 import { DEFAULT_ALLOWED_HOSTS, hostCheckPlugin } from './allowedHosts.js';
 import { embedFramingPlugin } from './embed-framing.js';
 import { panelBuildPlugin } from './panel.js';
+import { readFileSync } from 'node:fs';
+
+/**
+ * The release version, read once from package.json.
+ *
+ * Every asset is named after it, so a deployed build is identifiable from a
+ * URL alone and a browser holding an older page cannot mix in newer files.
+ */
+export const APP_VERSION = (() => {
+  try {
+    const pkg = JSON.parse(
+      readFileSync(new URL('../package.json', import.meta.url), 'utf8'),
+    );
+    return String(pkg.version || '0.0.0');
+  } catch {
+    return '0.0.0';
+  }
+})();
 
 /**
  * Content-Security-Policy for every document the dev/preview server serves.
@@ -112,7 +130,26 @@ export function createBrowserViteConfig({
       'import.meta.env.MAPILLARY_CLIENT_TOKEN': JSON.stringify(
         mapillaryToken ?? '',
       ),
+      // The release this bundle belongs to. Inlined so the running page can
+      // say which build it is, and stamped into asset names so a deployed
+      // version is identifiable from any URL.
+      'import.meta.env.APP_VERSION': JSON.stringify(APP_VERSION),
     },
-    build: { chunkSizeWarningLimit: 1500 },
+    build: {
+      chunkSizeWarningLimit: 1500,
+      rollupOptions: {
+        output: {
+          // Name assets after the release instead of their content hash. A
+          // deploy then replaces every URL at once — `index-0.2.14.js` is
+          // unambiguous about which build it came from, where a content hash
+          // says nothing and looks like a different library version — and a
+          // stale tab asking for the previous name gets a 404 from the server
+          // rather than silently reusing whatever is still on disk.
+          entryFileNames: `assets/[name]-v${APP_VERSION}.js`,
+          chunkFileNames: `assets/[name]-v${APP_VERSION}-[hash:6].js`,
+          assetFileNames: `assets/[name]-v${APP_VERSION}[extname]`,
+        },
+      },
+    },
   };
 }

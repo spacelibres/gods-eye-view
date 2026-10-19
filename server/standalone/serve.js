@@ -214,6 +214,23 @@ const server = createServer(async (req, res) => {
     sendFile(req, res, file);
     return;
   }
+  // A missing file under /assets/ is a version skew, not a route: an older tab
+  // asks for the asset names of the release it loaded. Answering with the app
+  // shell would hand a script request an HTML document, which fails in a way
+  // that looks like a corrupt build. A 404 says what happened.
+  if (pathname.startsWith('/assets/')) {
+    res.statusCode = 404;
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-store');
+    if (req.method !== 'HEAD') {
+      res.end(
+        `Unknown asset for this release: ${pathname}\nReload the page.\n`,
+      );
+    } else {
+      res.end();
+    }
+    return;
+  }
   // The app is a single page: unknown paths and `/` both get the shell.
   sendFile(req, res, path.join(DIST, 'index.html'));
 });
