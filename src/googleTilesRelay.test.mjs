@@ -144,8 +144,8 @@ test('the relay swaps the placeholder key for the server key', async () => {
   const handler = mount(
     googleTilesRelay({
       apiKey: () => 'server-key',
-      fetchImpl: async (url) => {
-        seen.push(url);
+      fetchImpl: async (url, init) => {
+        seen.push({ url, referer: init?.headers?.Referer });
         return new Response('{"asset":{}}', {
           status: 200,
           headers: {
@@ -165,9 +165,11 @@ test('the relay swaps the placeholder key for the server key', async () => {
 
   assert.equal(seen.length, 1);
   assert.equal(
-    seen[0],
+    seen[0].url,
     'https://tile.googleapis.com/v1/3dtiles/root.json?key=server-key',
   );
+  // The key is referrer-restricted; the relay must present the allowed one.
+  assert.equal(seen[0].referer, 'https://ion.cesium.com/');
   assert.equal(res.statusCode, 200);
   assert.equal(res.getHeader('content-type'), 'application/json');
   // `fetch` already decoded the body; forwarding the header would double it.

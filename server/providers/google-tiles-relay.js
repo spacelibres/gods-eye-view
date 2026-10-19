@@ -23,6 +23,16 @@ export const GOOGLE_TILES_PATH = '/api/google/tiles';
 /** Google's host. */
 export const GOOGLE_TILES_UPSTREAM = 'https://tile.googleapis.com/';
 
+/**
+ * Referrer sent with every relayed request.
+ *
+ * The API key is referrer-restricted to this origin, so a server-side request
+ * that presents another referrer (or none, for the tile endpoints) is refused
+ * with 403. Google's own Cesium integration loads the same asset from this
+ * origin, which is why it is the one that works.
+ */
+export const GOOGLE_TILES_REFERER = 'https://ion.cesium.com/';
+
 const MAX_REDIRECTS = 5;
 
 const FORWARDED_HEADERS = Object.freeze([
@@ -126,7 +136,14 @@ export function googleTilesRelay({
 async function follow(fetchImpl, url) {
   let current = url;
   for (let hop = 0; hop <= MAX_REDIRECTS; hop += 1) {
-    const response = await fetchImpl(current, { redirect: 'manual' });
+    const response = await fetchImpl(current, {
+      redirect: 'manual',
+      headers: {
+        // The key is referrer-restricted; without this Google answers 403.
+        Referer: GOOGLE_TILES_REFERER,
+        Origin: GOOGLE_TILES_REFERER.slice(0, -1),
+      },
+    });
     const location = response.headers.get('location');
     if (![301, 302, 303, 307, 308].includes(response.status) || !location) {
       return response;

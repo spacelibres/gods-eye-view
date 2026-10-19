@@ -277,13 +277,21 @@ text += f"""
 {domain} {{
 \tencode zstd gzip
 
+\t# The app's same-site gate refuses requests that carry forwarding headers,
+\t# because those normally mean a request did not come from this machine.
+\t# Caddy adds them by default, so strip them: it is the only proxy in front,
+\t# and the app's own Host check still rejects a forged Host.
 \t# GitHub pushes land here; everything else is the app.
 \thandle {hook_path}* {{
-\t\treverse_proxy 127.0.0.1:{hook_port}
+\t\treverse_proxy 127.0.0.1:{hook_port} {{
+\t\t\theader_up -X-Forwarded-* -Forwarded -Via -X-Real-IP
+\t\t}}
 \t}}
 
 \thandle {{
-\t\treverse_proxy 127.0.0.1:{port}
+\t\treverse_proxy 127.0.0.1:{port} {{
+\t\t\theader_up -X-Forwarded-* -Forwarded -Via -X-Real-IP
+\t\t}}
 \t}}
 }}
 {end}
