@@ -132,6 +132,9 @@ Environment=PATH=$NODE_DIR:/usr/local/bin:/usr/bin:/bin
 Environment=NODE_ENV=production
 Environment=HOST=127.0.0.1
 Environment=PORT=$GEV_PORT
+# The app answers only Host headers it knows. Caddy passes the public name
+# through, so it has to be listed here or every request gets a 403.
+Environment=GEV_ALLOWED_HOSTS=$GEV_DOMAIN
 ExecStart=$NODE_BIN $GEV_HOME/node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port $GEV_PORT --strictPort
 Restart=always
 RestartSec=5
