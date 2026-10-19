@@ -27,18 +27,24 @@ export function selectMapStartupRoute({
  */
 export async function loadPhotorealisticTileset(
   Cesium,
-  { googleApiKey = '', cesiumToken = '', googleTokens = null } = {},
+  {
+    googleApiKey = '',
+    cesiumToken = '',
+    googleTokens = null,
+    relayed = false,
+    restoreDirectRoute = null,
+  } = {},
 ) {
   const googleKey = clean(googleApiKey);
   const ionToken = clean(cesiumToken);
   const errors = [];
 
   const attempts = [];
-  if (googleKey)
-    attempts.push({
-      route: 'google-direct',
-      create: () => createGoogleDirectTileset(Cesium, googleKey),
-    });
+  const direct = () => ({
+    route: 'google-direct',
+    create: () => createGoogleDirectTileset(Cesium, googleKey),
+  });
+  if (googleKey) attempts.push(direct());
   else if (googleTokens)
     attempts.push({
       route: 'google-token',
@@ -49,13 +55,17 @@ export async function loadPhotorealisticTileset(
       route: 'google-ion',
       create: () => createGoogleIonTileset(Cesium, ionToken),
     });
+  // The probe can be wrong in either direction. If the relay we chose fails,
+  // the browser tries its own path to Google before falling back further.
+  if (googleKey && relayed && restoreDirectRoute) attempts.push(direct());
 
-  for (const attempt of attempts) {
+  for (const [index, attempt] of attempts.entries()) {
     try {
       const tileset = await attempt.create();
       return { tileset, route: attempt.route, errors };
     } catch (error) {
       errors.push(error instanceof Error ? error : new Error(String(error)));
+      if (relayed && index === 0) restoreDirectRoute();
     }
   }
 

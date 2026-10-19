@@ -9,6 +9,11 @@ import { configureCreditKeyboardAccess } from '../creditKeyboard.js';
 import { MapStackController } from '../mapStackController.js';
 import { loadPhotorealisticTileset } from '../mapStartup.js';
 import {
+  chooseTileRoute,
+  relayGoogleTiles,
+  restoreDirectTiles,
+} from '../maps/tileRoute.js';
+import {
   uninstallRenderGovernor,
   governorRequestRender,
 } from '../renderGovernor.js';
@@ -64,10 +69,25 @@ export async function createApplicationScene({
     googleApiKey || googleTokens || cesiumToken
       ? t('Loading Google 3D Tiles...')
       : t('Loading the keyless globe...');
+  // Measure the visitor's own path to Google once, with a short deadline. A
+  // network that cannot reach it falls back to this server's relay, which asks
+  // Google from the app host instead.
+  const tileRoute = googleApiKey ? await chooseTileRoute() : 'direct';
+  if (tileRoute === 'relayed') {
+    relayGoogleTiles(Cesium);
+    console.info(
+      '[Init] Google tiles unreachable; relaying through this server.',
+    );
+  }
   const photoreal = await loadPhotorealisticTileset(Cesium, {
     googleApiKey,
     googleTokens,
     cesiumToken,
+    relayed: tileRoute === 'relayed',
+    // The relay is our own server, so its failure says nothing about the
+    // browser's path to Google: restore the direct endpoint and let the retry
+    // run before falling back to ion or the keyless globe.
+    restoreDirectRoute: () => restoreDirectTiles(Cesium),
   });
   const tileset = photoreal.tileset;
   // A provider can finish after cancellation; retain ownership of its result.

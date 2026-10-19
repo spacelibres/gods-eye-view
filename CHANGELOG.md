@@ -1,5 +1,15 @@
 # Changelog
 
+- Route Google's 3D tiles through this server only when the browser cannot reach
+  them itself. Each page load measures `tile.googleapis.com` once, with a
+  three-second deadline: an answer keeps every tile request between the browser
+  and Google exactly as before, and a failure sends the same requests to
+  `/api/google/tiles`, which asks Google from the app host. A relayed attempt
+  that fails falls back to a direct one before the globe degrades, so a wrong
+  measurement costs a retry rather than the 3D view. The relay needs
+  `GOOGLE_MAPS_API_KEY` on the server and answers 404 without it, which is how
+  the client learns there is nothing to fall back to (spacelibres, #102).
+
 - Build with a Google Maps key from `/etc/gods-eye-view.env`. The installer now
   reads `GOOGLE_MAPS_API_KEY` the same way it reads the Cesium ion token, so a
   key stored once survives every webhook rebuild and names the source that
