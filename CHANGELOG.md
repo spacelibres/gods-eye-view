@@ -1,5 +1,16 @@
 # Changelog
 
+- Serve the production build with the app's own API routes. The deployed host
+  ran `vite preview`, which serves `dist/` as static files and never loads the
+  provider plugins, so every `/api/*` path answered the app's own 404 — the map
+  was only ever whatever the browser could fetch directly. `server/standalone/serve.js`
+  is now the entry point: it serves the same build with the same cache policy,
+  mounts the provider plugins through the `configureServer` shape every one of
+  them implements (`key-setup` had only that one, so its routes were missing
+  from preview as well), and answers unknown API paths with JSON before the
+  single-page fallback. The tile relay, Places lookups and every live source
+  work on the deployed host for the first time (spacelibres, #104).
+
 - Check Google's reachability at the very start of initialization, before the
   palette, the locale and the viewer, and run it alongside the rest of the boot.
   The loading screen says `Checking connectivity...` while it waits and reports

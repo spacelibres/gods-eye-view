@@ -175,7 +175,10 @@ Environment=GEV_TRUSTED_PROXY=1
 # Runtime credentials (the Google tile relay reads its key from here). The
 # leading dash keeps the unit valid before the file exists.
 EnvironmentFile=-$GEV_ENV_FILE
-ExecStart=$NODE_BIN $GEV_HOME/node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port $GEV_PORT --strictPort
+# `vite preview` serves dist/ as static files and never runs the provider
+# plugins, so every /api route answered 404 on the deployed host. This entry
+# point serves the same build and mounts those routes.
+ExecStart=$NODE_BIN $GEV_HOME/server/standalone/serve.js
 Restart=always
 RestartSec=5
 StandardOutput=journal

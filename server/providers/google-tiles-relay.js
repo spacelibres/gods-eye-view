@@ -45,6 +45,11 @@ const FORWARDED_HEADERS = Object.freeze([
 /** Strip the mount, keep Google's leading slash. */
 export function upstreamPath(requestPath, mount = GOOGLE_TILES_PATH) {
   const pathname = String(requestPath || '');
+  // Connect-style mounts strip the prefix before calling the handler, so a
+  // request to the mount itself arrives as '' or '/'. Google's root lives at
+  // /v1/3dtiles/root.json, which the client asks for explicitly; a bare mount
+  // is only ever the client's probe, answered before reaching here.
+  if (pathname === '' || pathname === '/') return '/';
   const index = pathname.indexOf(mount);
   const rest = index < 0 ? pathname : pathname.slice(index + mount.length);
   return rest.startsWith('/') ? rest : `/${rest}`;
