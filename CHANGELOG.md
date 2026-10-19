@@ -1,5 +1,10 @@
 # Changelog
 
+- Point Cesium at the relay with a string. `mapTilesApiEndpoint` is read by
+  string interpolation when the root URL is built, and a `Resource` object
+  stringifies to `[object Object]`, so every relayed tile request went to a
+  URL that resolved to nothing and the relay never served a tile.
+
 - Build the tileset through the relay when the probe chose it. The first
   attempt always called the direct Google loader, so a session that had
   correctly switched to `/api/google/tiles` still asked Google for every

@@ -95,7 +95,7 @@ test('relaying points Cesium at the same-origin mount', () => {
   };
   assert.equal(relayGoogleTiles(Cesium), true);
   assert.match(
-    String(Cesium.GoogleMaps.mapTilesApiEndpoint.url),
+    Cesium.GoogleMaps.mapTilesApiEndpoint,
     /\/api\/google\/tiles\/$/,
   );
   assert.equal(Cesium.GoogleMaps.defaultApiKey, 'relayed-by-server');
@@ -266,12 +266,9 @@ test('a failed relay puts the direct Google endpoint back', () => {
     },
   };
   relayGoogleTiles(Cesium);
-  assert.match(String(Cesium.GoogleMaps.mapTilesApiEndpoint.url), /\/api\//);
+  assert.match(Cesium.GoogleMaps.mapTilesApiEndpoint, /\/api\//);
   assert.equal(restoreDirectTiles(Cesium), true);
-  assert.equal(
-    String(Cesium.GoogleMaps.mapTilesApiEndpoint.url),
-    'https://tile.googleapis.com/',
-  );
+  assert.equal(Cesium.GoogleMaps.mapTilesApiEndpoint, 'https://tile.googleapis.com/');
 });
 
 test('the relay answers its own mount for GET, the probe this client sends', async () => {
@@ -293,4 +290,19 @@ test('the relay answers its own mount for GET, the probe this client sends', asy
   // Forwarding the empty path would put Google's own 404 page in front of the
   // client and look like the relay does not exist.
   assert.equal(called, false);
+});
+
+test('the endpoint is a string, so Cesium can interpolate it', () => {
+  const Cesium = {
+    GoogleMaps: { defaultApiKey: undefined, mapTilesApiEndpoint: null },
+  };
+  relayGoogleTiles(Cesium);
+  // `createGooglePhotorealistic3DTileset` builds the root URL as
+  // `${GoogleMaps.mapTilesApiEndpoint}v1/3dtiles/root.json`; anything that does
+  // not stringify to the origin produces an unusable URL.
+  assert.equal(typeof Cesium.GoogleMaps.mapTilesApiEndpoint, 'string');
+  assert.equal(
+    `${Cesium.GoogleMaps.mapTilesApiEndpoint}v1/3dtiles/root.json`,
+    `${globalThis.location?.origin ?? 'http://localhost'}/api/google/tiles/v1/3dtiles/root.json`,
+  );
 });

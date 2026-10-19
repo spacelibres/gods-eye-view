@@ -77,9 +77,11 @@ export function relayGoogleTiles(Cesium, relayPath = TILES_RELAY_PATH) {
   const google = Cesium?.GoogleMaps;
   if (!google) return false;
   const origin = globalThis.location?.origin ?? 'http://localhost';
-  google.mapTilesApiEndpoint = new Cesium.Resource({
-    url: new URL(`${relayPath}/`, origin).toString(),
-  });
+  // Cesium builds the tile URL by string interpolation
+  // (`${GoogleMaps.mapTilesApiEndpoint}v1/3dtiles/root.json`), so this has to be
+  // a string: a Resource here stringifies to "[object Object]" and every tile
+  // request goes to a URL that cannot resolve.
+  google.mapTilesApiEndpoint = new URL(`${relayPath}/`, origin).toString();
   google.defaultApiKey = 'relayed-by-server';
   return true;
 }
@@ -124,8 +126,6 @@ async function answers(fetchImpl, url, timeoutMs, accept) {
 export function restoreDirectTiles(Cesium) {
   const google = Cesium?.GoogleMaps;
   if (!google) return false;
-  google.mapTilesApiEndpoint = new Cesium.Resource({
-    url: 'https://tile.googleapis.com/',
-  });
+  google.mapTilesApiEndpoint = 'https://tile.googleapis.com/';
   return true;
 }
