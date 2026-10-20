@@ -269,18 +269,26 @@ export async function startWebSocketSession({
   signal?.addEventListener?.('abort', () => close(), { once: true });
 
   const openMicrophone = async () => {
-    if (microphone) return;
-    stream = await getUserMedia({
-      audio: {
-        echoCancellation: true,
-        noiseSuppression: true,
-        autoGainControl: true,
-        channelCount: 1,
-      },
-    });
+    if (microphone) return false;
+    try {
+      stream = await getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+          channelCount: 1,
+        },
+      });
+    } catch (error) {
+      // A missing or blocked microphone must not take the whole session down:
+      // typed questions and spoken replies work without one, and reporting the
+      // failure as a connection error told the user the network was broken.
+      callbacks.onMicrophoneError?.(error);
+      return false;
+    }
     if (closed) {
       stream.getTracks().forEach((track) => track.stop());
-      return;
+      return false;
     }
     microphone = new MicrophonePcmSource({
       context,
@@ -296,6 +304,7 @@ export async function startWebSocketSession({
         );
       },
     });
+    return true;
   };
 
   const closeMicrophone = () => {
@@ -306,14 +315,21 @@ export async function startWebSocketSession({
   };
 
   await context.resume?.();
-  await openMicrophone();
+  // Best effort. A browser with no microphone, or one that refuses the request
+  // outside a user gesture, still gets a working session for typed questions
+  // and spoken replies.
+  const microphoneOpen = await openMicrophone();
 
   return {
     socket,
     stop: close,
+    get microphoneOpen() {
+      return microphoneOpen || microphone !== null;
+    },
     setMicrophoneEnabled(enabled) {
-      if (enabled) void openMicrophone();
-      else closeMicrophone();
+      if (enabled) return openMicrophone();
+      closeMicrophone();
+      return true;
     },
     sendText(text) {
       backend.sendEvent(socket, {

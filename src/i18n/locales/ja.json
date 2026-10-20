@@ -2763,5 +2763,8 @@
   "Data": "データ",
   "Display": "表示",
   "Voice service": "音声サービス",
-  "Voice service — applies next session": "音声サービス — 次回のセッションから適用"
+  "Voice service — applies next session": "音声サービス — 次回のセッションから適用",
+  "Microphone support unavailable": "マイクを利用できません",
+  "Microphone unavailable — voice input is off": "マイクを利用できないため、音声入力はオフです",
+  "Listening": "聞き取り中"
 }

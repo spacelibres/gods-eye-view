@@ -2897,5 +2897,8 @@
   "Data": "Datos",
   "Display": "Visualización",
   "Voice service": "Servicio de voz",
-  "Voice service — applies next session": "Servicio de voz — se aplica en la próxima sesión"
+  "Voice service — applies next session": "Servicio de voz — se aplica en la próxima sesión",
+  "Microphone support unavailable": "Micrófono no disponible",
+  "Microphone unavailable — voice input is off": "Micrófono no disponible: la entrada de voz está desactivada",
+  "Listening": "Escuchando"
 }

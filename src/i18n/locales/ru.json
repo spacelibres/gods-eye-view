@@ -2964,5 +2964,8 @@
   "Data": "Данные",
   "Display": "Отображение",
   "Voice service": "Голосовой сервис",
-  "Voice service — applies next session": "Голосовой сервис — применится в следующей сессии"
+  "Voice service — applies next session": "Голосовой сервис — применится в следующей сессии",
+  "Microphone support unavailable": "Микрофон недоступен",
+  "Microphone unavailable — voice input is off": "Микрофон недоступен — голосовой ввод отключён",
+  "Listening": "Слушаю"
 }

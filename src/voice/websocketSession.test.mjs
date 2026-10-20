@@ -216,6 +216,32 @@ test('a malformed delta does not take the session down', async () => {
   assert.equal(socket.closed, false);
 });
 
+test('a missing microphone does not take the session down', async () => {
+  // "Requested device not found" is a device problem. Reporting it as a
+  // connection error sent the user to check a network that was fine, and the
+  // session had already connected.
+  const socket = fakeSocket();
+  const failures = [];
+  const session = await startWebSocketSession({
+    backend: fakeBackend(socket),
+    credential: { token: 't' },
+    callbacks: { onMicrophoneError: (error) => failures.push(error.name) },
+    AudioContextClass: fakeAudioContext,
+    getUserMedia: async () => {
+      const error = new Error('Requested device not found');
+      error.name = 'NotFoundError';
+      throw error;
+    },
+  });
+  assert.deepEqual(failures, ['NotFoundError']);
+  assert.equal(session.microphoneOpen, false);
+  // The socket is still usable: a typed question gets a spoken answer.
+  assert.equal(socket.closed, false);
+  session.sendText('你好');
+  assert.ok(socket.sent.length > 0, 'a text turn still goes out');
+  session.stop();
+});
+
 test('stopping releases the microphone and the context', async () => {
   const socket = fakeSocket();
   let tracksStopped = 0;

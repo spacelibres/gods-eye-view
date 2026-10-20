@@ -2763,5 +2763,8 @@
   "Data": "데이터",
   "Display": "표시",
   "Voice service": "음성 서비스",
-  "Voice service — applies next session": "음성 서비스 — 다음 세션부터 적용"
+  "Voice service — applies next session": "음성 서비스 — 다음 세션부터 적용",
+  "Microphone support unavailable": "마이크를 사용할 수 없습니다",
+  "Microphone unavailable — voice input is off": "마이크를 사용할 수 없어 음성 입력이 꺼져 있습니다",
+  "Listening": "듣는 중"
 }

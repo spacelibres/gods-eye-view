@@ -345,6 +345,19 @@ export class RealtimeConnection {
             });
             this.stop({ preserveStatus: true });
           },
+          onMicrophoneError: (error) => {
+            if (epoch !== this.startEpoch) return;
+            // Not a connection failure: the session is up and can answer typed
+            // questions. Say what actually happened rather than sending the
+            // user to check a network that is fine.
+            this.setStatus(
+              'listening',
+              t('Microphone unavailable — voice input is off'),
+            );
+            this.debugLog('session.microphone.failed', {
+              name: error?.name || null,
+            });
+          },
           onStopped: () => {
             if (epoch !== this.startEpoch) return;
             this.stop({ preserveStatus: true });
@@ -357,10 +370,16 @@ export class RealtimeConnection {
       }
       this.socketSession = session;
       // The shared microphone path drives the WebRTC tracks; a socket session
-      // owns its own capture, so push-to-talk is applied here.
+      // owns its own capture, so push-to-talk is applied here. The session has
+      // already tried to open the microphone; this only turns it off when the
+      // hold is not engaged, and re-opening later returns the cached result
+      // rather than prompting again.
       session.setMicrophoneEnabled?.(
         !pushToTalk || this.input.pushToTalkKeyHeld,
       );
+      if (!session.microphoneOpen) {
+        this.debugLog('session.microphone.absent', {});
+      }
       this.setStatus('listening', t('Listening'));
     } catch (error) {
       if (epoch !== this.startEpoch) return;

@@ -4,6 +4,19 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.48] — 2026-10-20 — A missing microphone is not a connection error
+
+- Stop reporting a missing microphone as a connection failure. `getUserMedia`
+  throwing `Requested device not found` aborted the whole session, so a page
+  with no microphone — or one that refused the request outside a user gesture —
+  told the user to check their network, which was fine, and threw away a
+  session that had already connected. The microphone is now best effort: the
+  status reads `Microphone unavailable — voice input is off`, typed questions
+  and spoken replies keep working, and the failure is logged for diagnosis.
+
+- Translate the three voice strings that shipped untranslated with the
+  WebSocket transport: the microphone notices and `Listening`.
+
 ## [0.2.47] — 2026-10-20 — Relay the Doubao socket through the server
 
 - Relay the Doubao socket through this server. The page cannot open it: the
