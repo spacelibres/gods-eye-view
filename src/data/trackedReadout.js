@@ -170,7 +170,8 @@ export function createTrackedOverlayEntry(entity) {
       : TRACKED_BILLBOARD_SCALE,
     minAnchorGapPx: 16,
     anchorGapPaddingPx: 10,
-    verticalOnly: true,
+    verticalOnly: model.verticalOnly !== false,
+    placement: model.placement || 'auto',
     viewportMargin: 6,
     edgeFade: 'keyhole',
     horizonCull: true,
@@ -223,6 +224,7 @@ const READOUT_CONTEXT_LAYERS = new Set([
   'alpr-cameras',
   'local-adsb',
   'airports',
+  'aviation-navaids',
 ]);
 
 /**

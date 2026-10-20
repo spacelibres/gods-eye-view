@@ -45,6 +45,52 @@ const duplicates = [
   make('7', 'QA North Airport', 'small_airport', { iataCode: 'DUP' }),
   make('8', 'QA South Airport', 'small_airport', { iataCode: 'DUP' }),
 ];
+const navaids = [
+  {
+    id: '501',
+    ident: 'LON',
+    name: 'London VOR-DME',
+    type: 'VOR-DME',
+    lat: 51.45,
+    lon: -0.49,
+    elevationM: 25,
+    countryCode: 'GB',
+    country: 'United Kingdom',
+    frequencyKhz: 113600,
+    dmeFrequencyKhz: 113600,
+    dmeChannel: '083X',
+    dmeLat: 51.45,
+    dmeLon: -0.49,
+    dmeElevationM: 25,
+    magneticVariationDeg: -1,
+    slavedVariationDeg: -2,
+    usageType: 'BOTH',
+    power: 'HIGH',
+    associatedAirport: 'EGLL',
+  },
+  {
+    id: '502',
+    ident: 'QA',
+    name: 'QA NDB',
+    type: 'NDB',
+    lat: 51.49,
+    lon: -0.43,
+    elevationM: null,
+    countryCode: 'GB',
+    country: 'United Kingdom',
+    frequencyKhz: 375,
+    dmeFrequencyKhz: null,
+    dmeChannel: '',
+    dmeLat: null,
+    dmeLon: null,
+    dmeElevationM: null,
+    magneticVariationDeg: null,
+    slavedVariationDeg: null,
+    usageType: 'TERMINAL',
+    power: 'LOW',
+    associatedAirport: '',
+  },
+];
 const all = [heathrow, small, closed];
 const meta = {
   revision: 'airport-browser-fixture-1',
@@ -99,6 +145,41 @@ page.on('request', (request) => {
       ],
     });
   if (url.origin !== new URL(base).origin) return void request.continue();
+  if (url.pathname === '/api/airports/navaids')
+    return void reply({
+      ...meta,
+      total: 2,
+      matched: 2,
+      truncated: false,
+      navaids,
+    });
+  if (url.pathname === '/api/airports/countries')
+    return void reply({
+      ...meta,
+      countries: [
+        {
+          code: 'GB',
+          name: 'United Kingdom',
+          continent: 'EU',
+          wikipedia: '',
+          keywords: '',
+        },
+        {
+          code: 'CN',
+          name: 'China',
+          continent: 'AS',
+          wikipedia: '',
+          keywords: '',
+        },
+        {
+          code: 'NA',
+          name: 'Namibia',
+          continent: 'AF',
+          wikipedia: '',
+          keywords: '',
+        },
+      ],
+    });
   if (url.pathname === '/api/airports/search') {
     searchReads++;
     const q = url.searchParams.get('q');
@@ -214,11 +295,31 @@ try {
     'world scale prioritizes large/medium facilities and excludes closed',
     s.ids.includes('2434') && !s.ids.includes('3') && !s.ids.includes('4'),
   );
+  check(
+    'world view displays country names and hides nearby navigation facilities',
+    s.stats.countryCount > 0 && s.stats.navaidCount === 0,
+  );
+  await page.screenshot({ path: `${shots}/country-names.png` });
   await camera(25000);
   s = await state();
   check(
     'nearby view includes small airfields and preserves provenance',
     s.ids.includes('3') && s.stats.revision === meta.revision,
+  );
+  check(
+    'nearby view displays VOR and NDB station symbols',
+    s.stats.navaidCount === 2 && s.stats.countryCount === 0,
+  );
+  check(
+    'airport marker is an aircraft billboard rather than a dot',
+    await page.evaluate(() => {
+      const e = window.__gevContextStore.entities.get('airport:2434').entity;
+      return (
+        !e.point &&
+        !!e.billboard &&
+        decodeURIComponent(e.billboard.image.getValue()).includes('<path')
+      );
+    }),
   );
   failViews = true;
   await camera(26000);
@@ -276,20 +377,74 @@ try {
       !!selected.active,
   );
   await page.screenshot({ path: `${shots}/desktop-details.png` });
+  const navClick = await page.evaluate(() => {
+    const v = window.__godsEyeView.viewer;
+    const e = window.__gevContextStore.entities.get('navaid:501').entity;
+    const p = v.scene.cartesianToCanvasCoordinates(e.gevDisplayPosition());
+    const rect = v.scene.canvas.getBoundingClientRect();
+    for (let x = -8; x <= 8; x += 2)
+      for (let y = -8; y <= 8; y += 2) {
+        const q = { x: p.x + x, y: p.y + y };
+        if (v.scene.pick(q)?.id === e)
+          return { x: q.x + rect.left, y: q.y + rect.top };
+      }
+    return null;
+  });
+  assert.ok(navClick, 'navigation station billboard is pickable');
+  await page.mouse.click(navClick.x, navClick.y);
+  await page.waitForFunction(
+    () => window.__gevContextStore.selectedEntityId === 'navaid:501',
+  );
+  check(
+    'selected navaid remains active through the Airports lifecycle',
+    await page.evaluate(async () => {
+      const { getSelectedEntityContext } =
+        await import('/src/data/contextStore.js');
+      return (
+        getSelectedEntityContext({
+          dataManager: window.__godsEyeView.dataManager,
+        })?.id === 'navaid:501'
+      );
+    }),
+  );
+  check(
+    'navaid click opens frequency, DME channel, country and source details',
+    await page.evaluate(() => {
+      const details = window.__gevContextStore.entities
+        .get('navaid:501')
+        .entity.gevLabelModel.details.join('\n');
+      return [
+        '113.6 MHz',
+        '083X',
+        'United Kingdom',
+        'OurAirports',
+        'EGLL',
+      ].every((v) => details.includes(v));
+    }),
+  );
+  await page.waitForFunction(async () => {
+    window.__godsEyeView.viewer.scene.requestRender();
+    const { getOverlayPaintRect } =
+      await import('/src/overlays/worldOverlay.js');
+    const r = getOverlayPaintRect('tracked', 'navaid:501');
+    return r && r.y >= 0 && r.y + r.h < innerHeight - 100;
+  });
+  check('full navigation detail card stays clear of bottom controls', true);
+  await page.screenshot({ path: `${shots}/navigation-details.png` });
   const readsBeforeTheme = viewReads;
   const colors = await page.evaluate(async () => {
     const runtime = await import('/src/ui/colorSystemRuntime.js');
     const { generatePalette } = await import('/src/ui/colorSystem.js');
     const r = () =>
       window.__gevContextStore.entities.get('airport:2434').entity;
-    const before = r().point.color.getValue().toCssColorString();
+    const before = r().billboard.color.getValue().toCssColorString();
     runtime.applyPalette(
       generatePalette('#8e44ad', 'triad'),
       document.documentElement,
       'triad',
     );
     await new Promise((resolve) => requestAnimationFrame(resolve));
-    return { before, after: r().point.color.getValue().toCssColorString() };
+    return { before, after: r().billboard.color.getValue().toCssColorString() };
   });
   check(
     'theme recolors points without a directory read',
@@ -403,7 +558,7 @@ try {
     !(await state()).enabled &&
       (await page.evaluate(() =>
         [...window.__gevContextStore.entities.values()].every(
-          (r) => r.layerId !== 'airports',
+          (r) => !['airports', 'aviation-navaids'].includes(r.layerId),
         ),
       )),
   );

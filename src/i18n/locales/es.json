@@ -2930,5 +2930,19 @@
   "Heliport": "Helipuerto",
   "Seaplane base": "Base de hidroaviones",
   "Balloonport": "Aeródromo de globos",
-  "Closed airport": "Aeropuerto cerrado"
+  "Closed airport": "Aeropuerto cerrado",
+  "Navaid": "Radioayuda",
+  "Navaids": "Radioayudas",
+  "Countries": "Países",
+  "Frequency": "Frecuencia",
+  "DME frequency": "Frecuencia DME",
+  "DME channel": "Canal DME",
+  "DME coordinates": "Coordenadas DME",
+  "DME elevation (m MSL)": "Elevación DME (m sobre el nivel del mar)",
+  "Magnetic variation (degrees)": "Variación magnética (grados)",
+  "Slaved variation (degrees)": "Variación calibrada (grados)",
+  "Usage": "Uso",
+  "Transmitter power": "Potencia del transmisor",
+  "Associated airport": "Aeropuerto asociado",
+  "Aviation reference source unavailable": "Fuente de referencias aeronáuticas no disponible"
 }

@@ -151,3 +151,104 @@ test(
     }
   },
 );
+
+test('reference source routes cache and bound navaid reads', async () => {
+  const calls = [];
+  const source = createAirportSource({
+    fetchImpl: async (url) => {
+      calls.push(url);
+      return Response.json(
+        url.includes('/countries')
+          ? {
+              ...list,
+              countries: [
+                {
+                  code: 'NA',
+                  name: 'Namibia',
+                  continent: 'AF',
+                  wikipedia: '',
+                  keywords: '',
+                },
+              ],
+            }
+          : {
+              ...list,
+              airports: undefined,
+              navaids: [],
+              matched: 0,
+              truncated: false,
+            },
+      );
+    },
+  });
+  await source.getNavaids({
+    bounds: { west: 170, east: -170, south: -90, north: 90 },
+    limit: 9999,
+    type: 'VOR',
+    q: 'ABC',
+  });
+  assert.match(calls[0], /limit=1200/);
+  assert.match(calls[0], /west=170/);
+  assert.equal((await source.getCountries()).countries[0].name, 'Namibia');
+  await source.getCountries();
+  assert.equal(calls.length, 2);
+  assert.throws(() => source.getNavaids({ type: 'bad' }));
+});
+
+test('navaid consumers cancel independently and malformed reference responses never enter cache', async () => {
+  let finish,
+    upstream,
+    calls = 0;
+  const source = createAirportSource({
+    fetchImpl: (_url, { signal }) => {
+      calls++;
+      upstream = signal;
+      return new Promise(
+        (resolve) =>
+          (finish = () =>
+            resolve(
+              Response.json({
+                ...list,
+                navaids: [],
+                matched: 0,
+                truncated: false,
+              }),
+            )),
+      );
+    },
+  });
+  const a = new AbortController(),
+    b = new AbortController();
+  const first = source.getNavaids({ signal: a.signal }),
+    second = source.getNavaids({ signal: b.signal });
+  await Promise.resolve();
+  a.abort();
+  await assert.rejects(first, { name: 'AbortError' });
+  assert.equal(upstream.aborted, false);
+  finish();
+  await second;
+  assert.equal(calls, 1);
+  let bad = true;
+  const malformed = createAirportSource({
+    fetchImpl: async () =>
+      Response.json({
+        ...list,
+        navaids: bad ? [{}] : [],
+        matched: bad ? 1 : 0,
+        truncated: false,
+      }),
+  });
+  await assert.rejects(malformed.getNavaids(), /Invalid navaid/);
+  bad = false;
+  await malformed.getNavaids();
+  const oversized = createAirportSource({
+    fetchImpl: async () =>
+      new Response('x', { headers: { 'content-length': '4000001' } }),
+  });
+  await assert.rejects(oversized.getCountries(), /large|limit|size/i);
+  const controller = new AbortController();
+  controller.abort();
+  assert.throws(() => source.getCountries({ signal: controller.signal }), {
+    name: 'AbortError',
+  });
+});

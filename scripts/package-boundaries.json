@@ -2700,7 +2700,8 @@
       "src/sources/airports/source.js",
       "src/layers/airports/index.js",
       "src/sources/airports/records.js",
-      "src/layers/airports/model.js"
+      "src/layers/airports/model.js",
+      "src/layers/airports/references.js"
     ],
     "external": [
       "hls.js",
@@ -3283,7 +3284,8 @@
       "src/sources/airports/records.js",
       "src/layers/airports/model.js",
       "src/ui/colorSystem.js",
-      "src/ui/paletteChoice.js"
+      "src/ui/paletteChoice.js",
+      "src/layers/airports/references.js"
     ],
     "external": [
       "hls.js",
@@ -4234,7 +4236,10 @@
     "modules": [
       "src/layers/airports/index.js",
       "src/layers/airports/model.js",
-      "src/data/inputOwnership.js"
+      "src/data/inputOwnership.js",
+      "src/layers/airports/references.js",
+      "src/data/bundledJson.js",
+      "src/data/local_data/natural_earth/countries.json"
     ],
     "external": ["cesium"]
   },

@@ -2997,5 +2997,19 @@
   "Heliport": "Вертодром",
   "Seaplane base": "Гидроаэродром",
   "Balloonport": "Аэростатная площадка",
-  "Closed airport": "Закрытый аэропорт"
+  "Closed airport": "Закрытый аэропорт",
+  "Navaid": "Радионавигационное средство",
+  "Navaids": "Радионавигационные средства",
+  "Countries": "Страны",
+  "Frequency": "Частота",
+  "DME frequency": "Частота DME",
+  "DME channel": "Канал DME",
+  "DME coordinates": "Координаты DME",
+  "DME elevation (m MSL)": "Высота DME (м над уровнем моря)",
+  "Magnetic variation (degrees)": "Магнитное склонение (градусы)",
+  "Slaved variation (degrees)": "Калиброванное склонение (градусы)",
+  "Usage": "Назначение",
+  "Transmitter power": "Мощность передатчика",
+  "Associated airport": "Связанный аэропорт",
+  "Aviation reference source unavailable": "Источник аэронавигационных данных недоступен"
 }

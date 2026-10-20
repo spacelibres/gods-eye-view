@@ -1087,5 +1087,6 @@
   "src/sources/airports/source.test.mjs",
   "src/search/airports.test.mjs",
   "src/layers/airports/index.test.mjs",
-  "src/ui/locationNavigation.test.mjs"
+  "src/ui/locationNavigation.test.mjs",
+  "src/layers/airports/references.test.mjs"
 ]

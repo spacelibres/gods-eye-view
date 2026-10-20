@@ -9,7 +9,33 @@ import {
   registerEntityContext,
   selectEntityContext,
   selectTrackedSubjectContext,
+  isContextRecordActive,
 } from './contextStore.js';
+
+test('aviation reference selection follows the Airports parent lifecycle', () => {
+  withWindow(() => {
+    let enabled = true;
+    const manager = { isEnabled: (id) => id === 'airports' && enabled };
+    const entity = { show: true };
+    const record = registerEntityContext(entity, {
+      id: 'navaid:501',
+      layerId: 'aviation-navaids',
+      ownerLayerId: 'airports',
+      label: 'London VOR-DME',
+      latitude: 51.45,
+      longitude: -0.49,
+    });
+    selectEntityContext(entity);
+    assert.equal(isContextRecordActive(record, manager), true);
+    assert.equal(
+      getSelectedEntityContext({ dataManager: manager })?.id,
+      'navaid:501',
+    );
+    enabled = false;
+    assert.equal(isContextRecordActive(record, manager), false);
+    assert.equal(getSelectedEntityContext({ dataManager: manager }), null);
+  });
+});
 
 /**
  * The tracking layers (aircraft) publish selection on their own awareness

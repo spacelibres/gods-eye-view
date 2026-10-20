@@ -50,3 +50,62 @@ export function isAirportRecord(r) {
     typeof r.scheduledService === 'boolean'
   );
 }
+
+export const NAVAID_TYPES = Object.freeze([
+  'DME',
+  'NDB',
+  'NDB-DME',
+  'TACAN',
+  'VOR',
+  'VOR-DME',
+  'VORTAC',
+]);
+const optionalNumber = (v) =>
+  v === null || (typeof v === 'number' && Number.isFinite(v));
+export function isCountryRecord(r) {
+  return (
+    !!r &&
+    ['code', 'name', 'continent', 'wikipedia', 'keywords'].every(
+      (k) => typeof r[k] === 'string',
+    ) &&
+    !!r.code.trim() &&
+    !!r.name.trim()
+  );
+}
+export function isNavaidRecord(r) {
+  return (
+    !!r &&
+    typeof r.id === 'string' &&
+    /^\d+$/.test(r.id) &&
+    NAVAID_TYPES.includes(r.type) &&
+    [
+      'ident',
+      'name',
+      'countryCode',
+      'country',
+      'dmeChannel',
+      'usageType',
+      'power',
+      'associatedAirport',
+    ].every((k) => typeof r[k] === 'string') &&
+    !!r.name.trim() &&
+    typeof r.lat === 'number' &&
+    Number.isFinite(r.lat) &&
+    Math.abs(r.lat) <= 90 &&
+    typeof r.lon === 'number' &&
+    Number.isFinite(r.lon) &&
+    Math.abs(r.lon) <= 180 &&
+    [
+      'elevationM',
+      'frequencyKhz',
+      'dmeFrequencyKhz',
+      'dmeLat',
+      'dmeLon',
+      'dmeElevationM',
+      'magneticVariationDeg',
+      'slavedVariationDeg',
+    ].every((k) => optionalNumber(r[k])) &&
+    (r.dmeLat === null || Math.abs(r.dmeLat) <= 90) &&
+    (r.dmeLon === null || Math.abs(r.dmeLon) <= 180)
+  );
+}

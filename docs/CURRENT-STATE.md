@@ -1,6 +1,13 @@
 # God's Eye View Current State
 
-The Airports layer reads a project-hosted global OurAirports directory. It is off
+The Airports layer reads a project-hosted global OurAirports directory and uses
+theme-aware aircraft symbols. The same atomic directory now
+includes 11,008 navigation stations and 249 country/territory reference records:
+nearby views show station symbols and full VOR/NDB/DME/TACAN details, while
+regional/global views show localized country labels from existing Natural Earth
+geometry. Navigation frequencies preserve source kHz and display appropriate
+kHz/MHz units. Reference displays share the Airports lifecycle, retained data on
+failure and explicit limits. The layer remains off
 by default, has permanent share token `5`, and appears under Infrastructure. The
 world view prioritizes larger airports; closer views include smaller facilities.
 Markers and labels are bounded. Airport details retain distinct source/ICAO/IATA

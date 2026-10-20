@@ -88,3 +88,55 @@ test('directory search and airport navigation share the same exact-name normaliz
   assert.equal(outcome.place.airportId, '1');
   assert.equal(outcome.place.exact, true);
 });
+
+test('navaid reference parser preserves kHz and missing optional data', async () => {
+  const { parseNavaidCsv, parseCountryCsv, queryNavaids } =
+    await import('./model.js');
+  const countries = parseCountryCsv(
+    'code,name,continent,wikipedia_link,keywords\nNA,Namibia,AF,,',
+  );
+  const header =
+    'id,filename,ident,name,type,frequency_khz,latitude_deg,longitude_deg,elevation_ft,iso_country,dme_frequency_khz,dme_channel,dme_latitude_deg,dme_longitude_deg,dme_elevation_ft,slaved_variation_deg,magnetic_variation_deg,usageType,power,associated_airport';
+  const navaids = parseNavaidCsv(
+    header +
+      '\n1,x,ABC,Beacon,VOR-DME,113500,1,175,100,NA,113500,081X,1,175,100,,0,BOTH,HIGH,FYAA\n2,y,ABC,Other,NDB,350,2,-175,,NA,,,,,,,,LO,LOW,',
+    countries,
+  );
+  assert.equal(navaids[0].frequencyKhz, 113500);
+  assert.equal(
+    parseNavaidCsv(
+      header + '\n3,z,X,Closed,NDB,-1,0,0,,NA,,,,,,,,LO,LOW,',
+      countries,
+    )[0].frequencyKhz,
+    -1,
+  );
+  assert.equal(navaids[0].dmeElevationM, 30.48);
+  assert.equal(navaids[0].slavedVariationDeg, null);
+  assert.equal(navaids[0].magneticVariationDeg, 0);
+  assert.equal(navaids[1].elevationM, null);
+  assert.equal(navaids[0].country, 'Namibia');
+  const s = { ...snapshot(), countries, navaids };
+  assert.equal(
+    queryNavaids(s, { west: 170, east: -170, q: 'ABC', limit: 1 }).matched,
+    2,
+  );
+  assert.equal(queryNavaids(s, { type: 'NDB' }).navaids[0].id, '2');
+  assert.throws(() => queryNavaids(s, { type: 'radio' }));
+  assert.throws(() => validateSnapshot({ ...s, countries: undefined }));
+  assert.throws(() =>
+    validateSnapshot({ ...s, navaids: [{ ...navaids[0], frequencyKhz: '' }] }),
+  );
+  assert.equal(
+    queryNavaids(
+      {
+        ...s,
+        navaids: Array.from({ length: 1300 }, (_, i) => ({
+          ...navaids[0],
+          id: String(i),
+        })),
+      },
+      { limit: 9999 },
+    ).navaids.length,
+    1200,
+  );
+});

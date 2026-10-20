@@ -13,6 +13,8 @@ import { homedir } from 'node:os';
 import { randomUUID, createHash } from 'node:crypto';
 import {
   parseAirportCsv,
+  parseCountryCsv,
+  parseNavaidCsv,
   validateAirportReferences,
   validateSnapshot,
 } from './model.js';
@@ -107,7 +109,7 @@ export async function downloadSnapshot({
   const sourceUrl =
     'https://github.com/davidmegginson/ourairports-data/tree/' + revision;
   const files = {};
-  for (const name of ['airports', 'countries', 'regions'])
+  for (const name of ['airports', 'countries', 'regions', 'navaids'])
     files[name] = await get(
       'https://raw.githubusercontent.com/davidmegginson/ourairports-data/' +
         revision +
@@ -116,6 +118,8 @@ export async function downloadSnapshot({
         '.csv',
       name === 'airports' ? 20000000 : 5000000,
     );
+  validateAirportReferences(files.countries, files.regions, []);
+  const countries = parseCountryCsv(files.countries);
   const snapshot = validateSnapshot(
     {
       schemaVersion: 1,
@@ -124,6 +128,8 @@ export async function downloadSnapshot({
       source: 'OurAirports',
       sourceUrl,
       records: parseAirportCsv(files.airports, files.countries, files.regions),
+      countries,
+      navaids: parseNavaidCsv(files.navaids, countries),
     },
     { production: true },
   );
@@ -138,6 +144,8 @@ export async function downloadSnapshot({
       retrievedAt: snapshot.updatedAt,
       sourceUrl,
       records: snapshot.records.length,
+      navaids: snapshot.navaids.length,
+      countries: snapshot.countries.length,
       snapshotSha256: createHash('sha256')
         .update(JSON.stringify(snapshot))
         .digest('hex'),
@@ -222,7 +230,12 @@ export function createAirportCollector(options = {}) {
             createHash('sha256').update(JSON.stringify(candidate)).digest('hex')
         )
           throw Error('Invalid airport envelope');
-        snapshot = candidate;
+        if (!(
+          snapshot?.revision === candidate.revision &&
+          snapshot?.navaids &&
+          !candidate.navaids
+        ))
+          snapshot = candidate;
         peerVersion = version;
       } catch {
         /* Keep the validated in-memory/bundled snapshot. */

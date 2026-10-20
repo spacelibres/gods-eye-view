@@ -2796,5 +2796,19 @@
   "Heliport": "直升机场",
   "Seaplane base": "水上机场",
   "Balloonport": "气球起降场",
-  "Closed airport": "已关闭机场"
+  "Closed airport": "已关闭机场",
+  "Navaid": "航空导航台",
+  "Navaids": "航空导航台",
+  "Countries": "国家",
+  "Frequency": "频率",
+  "DME frequency": "DME 频率",
+  "DME channel": "DME 信道",
+  "DME coordinates": "DME 坐标",
+  "DME elevation (m MSL)": "DME 海拔（米，平均海平面）",
+  "Magnetic variation (degrees)": "磁差（度）",
+  "Slaved variation (degrees)": "校准磁差（度）",
+  "Usage": "用途",
+  "Transmitter power": "发射功率",
+  "Associated airport": "关联机场",
+  "Aviation reference source unavailable": "航空参考数据源不可用"
 }

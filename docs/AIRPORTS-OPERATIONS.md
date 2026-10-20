@@ -1,7 +1,8 @@
 # Airport directory operations
 
 The project hosts a global OurAirports directory for the Airports map layer,
-details and name/ICAO/IATA search. Source data is public domain:
+details and name/ICAO/IATA search, aviation navigation stations and country names.
+Source data is public domain:
 https://ourairports.com/data/ and https://github.com/davidmegginson/ourairports-data.
 Field definitions: https://ourairports.com/help/data-dictionary.html.
 
@@ -52,11 +53,37 @@ restart. No airport API key, OpenSky credit or ADS-B request allowance is used.
 - `/api/airports/search?q=EGLL`: ranked directory matches; duplicate codes remain
   separate results for explicit selection.
 - `/api/airports/detail?id=2434`: one airport with source/version metadata.
+- `/api/airports/navaids`: bounded navigation stations, with viewport bounds,
+  `q`, `type` and `limit` filters. Identifiers may be shared by several stations.
+- `/api/airports/countries`: the complete country-code/name reference table.
+
+The same pinned revision supplies `airports.csv`, `navaids.csv`, `countries.csv`
+and `regions.csv`: 86,258 airport records, 11,008 navaids and 249 country/territory
+rows in the initial enriched directory. All records and source checksums publish
+in one atomic envelope. The enriched bundle can upgrade an airport-only durable
+snapshot of the same revision without another upstream check or changing the
+persisted deadline. A newer durable revision is never replaced by older data.
 
 The UI defaults to active facilities and prioritizes large/medium airports from
 far away. Closer views admit smaller airfields and heliports. The full directory
 also retains closed facilities marked as such. Runways and communication
 frequencies are not included in this feature.
+
+Airport markers use outlined aircraft silhouettes tinted by the active theme.
+Nearby views also show up to 600 VOR/NDB/DME/TACAN navigation stations with station
+symbols and selectable details. The layer row reports limited results. Published
+frequencies remain kHz in storage: NDB displays kHz and VHF/DME displays MHz;
+nonpositive frequency sentinels display as unknown. Details preserve DME channel,
+position and MSL elevation, magnetic and slaved variation, usage, transmitter
+power, associated airport and source metadata. Map positions use the terrain
+floor. Navigation stations are distinct from broadcast radio and airport
+communication-frequency data.
+
+Regional/global views show bounded localized country names using the directory's
+ISO table and existing Natural Earth geometry. Largest-landmass anchors, ISO
+deduplication and shared collision/horizon handling keep country labels useful.
+Zooming in hides country labels and shows local navaids. Disabling Airports
+clears both displays.
 
 OurAirports is a community directory, so coverage and individual fields can be
 incomplete. Elevation is metres above mean sea level after explicit conversion

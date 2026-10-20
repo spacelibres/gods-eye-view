@@ -3,6 +3,7 @@ import {
   airportIndexes,
   metadata,
   queryAirports,
+  queryNavaids,
   searchAirports,
 } from './model.js';
 export function airportsProxy(options = {}) {
@@ -25,6 +26,8 @@ export function airportsProxy(options = {}) {
         '/api/airports',
         '/api/airports/search',
         '/api/airports/detail',
+        '/api/airports/navaids',
+        '/api/airports/countries',
       ].includes(url.pathname)
     )
       return next();
@@ -49,6 +52,14 @@ export function airportsProxy(options = {}) {
     if (!snapshot) return send(503, { error: 'Airport directory unavailable' });
     const q = Object.fromEntries(url.searchParams);
     try {
+      if (url.pathname.endsWith('/countries'))
+        return snapshot.countries
+          ? send(200, { ...metadata(snapshot), countries: snapshot.countries })
+          : send(503, { error: 'Country directory unavailable' });
+      if (url.pathname.endsWith('/navaids'))
+        return snapshot.navaids
+          ? send(200, queryNavaids(snapshot, q))
+          : send(503, { error: 'Navaid directory unavailable' });
       if (url.pathname.endsWith('/detail')) {
         if (!q.id || q.id.length > 30)
           return send(400, { error: 'Airport ID required' });

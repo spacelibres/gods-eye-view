@@ -121,6 +121,21 @@ test('tracked entry factory pins the production protected-lane policy', () => {
   assert.equal(entry.edgeFade, 'keyhole');
 });
 
+test('long aviation cards can use side placement clear of the bottom controls', () => {
+  const entry = createTrackedOverlayEntry({
+    gevTrackedId: 'navaid:501',
+    gevDisplayPosition: () => ({ x: 1, y: 2, z: 3 }),
+    gevLabelModel: {
+      title: 'London VOR-DME',
+      details: ['Frequency: 113.6 MHz'],
+      placement: 'right',
+      verticalOnly: false,
+    },
+  });
+  assert.equal(entry.placement, 'right');
+  assert.equal(entry.verticalOnly, false);
+});
+
 test('selected camera readout carries tactical animation and fixed badge clearance', () => {
   const entry = createTrackedOverlayEntry({
     id: 'alpr:42', gevDisplayPosition: () => ({ x: 1, y: 2, z: 3 }),
@@ -304,14 +319,55 @@ test('civilian and military trail heads use the lower-centre model anchor and we
       `${name} keeps diffuse texture contribution weak through code-side MIX`);
   }
 });
-test('airport selection publishes shared detail card and clears on disable or sibling selection',()=>{
- const originalWindow=globalThis.window; const host=makeHostRecorder(); const win=new EventTarget();globalThis.window=win;_setTrackedOverlayHostForTest(host.host);
- const airport={gevTrackedId:'airport:2434',gevDisplayPosition:()=>({x:1,y:2,z:3}),gevLabelModel:{title:'Heathrow',details:['ICAO: EGLL','IATA: LHR','Elevation (m MSL): 25','Revision: abc']}};
- try {
- initTrackedReadout({trackedEntity:null,trackedEntityChanged:makeCesiumEvent()});
- const select=layerId=>win.dispatchEvent(new CustomEvent('gev:entity-selected',{detail:{layerId,entity:airport}}));
- select('airports');assert.equal(getActiveTrackedReadoutId(),'airport:2434');assert.deepEqual(host.calls.filter(c=>c.op==='set').at(-1).entries[0].details,airport.gevLabelModel.details);
- win.dispatchEvent(new CustomEvent('gev:entity-selection-cleared',{detail:{layerId:'airports'}}));assert.equal(getActiveTrackedReadoutId(),null);
- select('airports');select('military-installations');assert.equal(getActiveTrackedReadoutId(),null);
- }finally{destroyTrackedReadout();_setTrackedOverlayHostForTest();globalThis.window=originalWindow;}
-});
+for (const contextLayer of ['airports', 'aviation-navaids'])
+  test(`${contextLayer} selection publishes shared detail card and clears on disable or sibling selection`, () => {
+    const originalWindow = globalThis.window;
+    const host = makeHostRecorder();
+    const win = new EventTarget();
+    globalThis.window = win;
+    _setTrackedOverlayHostForTest(host.host);
+    const airport = {
+      gevTrackedId: 'airport:2434',
+      gevDisplayPosition: () => ({ x: 1, y: 2, z: 3 }),
+      gevLabelModel: {
+        title: 'Heathrow',
+        details: [
+          'ICAO: EGLL',
+          'IATA: LHR',
+          'Elevation (m MSL): 25',
+          'Revision: abc',
+        ],
+      },
+    };
+    try {
+      initTrackedReadout({
+        trackedEntity: null,
+        trackedEntityChanged: makeCesiumEvent(),
+      });
+      const select = (layerId) =>
+        win.dispatchEvent(
+          new CustomEvent('gev:entity-selected', {
+            detail: { layerId, entity: airport },
+          }),
+        );
+      select(contextLayer);
+      assert.equal(getActiveTrackedReadoutId(), 'airport:2434');
+      assert.deepEqual(
+        host.calls.filter((c) => c.op === 'set').at(-1).entries[0].details,
+        airport.gevLabelModel.details,
+      );
+      win.dispatchEvent(
+        new CustomEvent('gev:entity-selection-cleared', {
+          detail: { layerId: contextLayer },
+        }),
+      );
+      assert.equal(getActiveTrackedReadoutId(), null);
+      select(contextLayer);
+      select('military-installations');
+      assert.equal(getActiveTrackedReadoutId(), null);
+    } finally {
+      destroyTrackedReadout();
+      _setTrackedOverlayHostForTest();
+      globalThis.window = originalWindow;
+    }
+  });

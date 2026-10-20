@@ -372,3 +372,115 @@ test('production download rejects header-only references before replacing last-g
     await rm(dir, { recursive: true, force: true });
   }
 });
+
+test('same-revision enriched bundle supersedes old durable envelope without resetting daily reservation', async () => {
+  const { createHash } = await import('node:crypto');
+  const dir = await mkdtemp(join(tmpdir(), 'airports-'));
+  const old = { ...snapshot };
+  const enriched = { ...snapshot, countries: [], navaids: [] };
+  const nextCheckAt = Date.parse(snapshot.updatedAt) + 172800000;
+  try {
+    await writeFile(
+      join(dir, 'directory.json'),
+      JSON.stringify({
+        schemaVersion: 1,
+        snapshot: old,
+        provenance: {
+          revision: old.revision,
+          snapshotSha256: createHash('sha256')
+            .update(JSON.stringify(old))
+            .digest('hex'),
+        },
+      }),
+    );
+    await writeFile(
+      join(dir, 'state.json'),
+      JSON.stringify({ schemaVersion: 1, nextCheckAt }),
+    );
+    const c = createAirportCollector({
+      stateDir: dir,
+      bundledSnapshot: enriched,
+      production: false,
+      now: () => Date.parse(snapshot.updatedAt),
+      loadSnapshot: () => {
+        throw Error('must not fetch');
+      },
+    });
+    await c.ready;
+    await c.refresh();
+    assert.deepEqual((await c.readSnapshot()).navaids, []);
+    assert.equal(c.getState().nextCheckAt, nextCheckAt);
+    await c.close();
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test('production snapshot rejects truncated references while legacy airport snapshots remain usable', async () => {
+  const { validateSnapshot } = await import('./model.js');
+  const full = JSON.parse(
+    await readFile(
+      new URL('../../data/airports/snapshot.json', import.meta.url),
+      'utf8',
+    ),
+  );
+  assert.equal(
+    validateSnapshot(full, { production: true }).navaids.length,
+    11008,
+  );
+  assert.throws(
+    () =>
+      validateSnapshot(
+        { ...full, navaids: full.navaids.slice(0, 500) },
+        { production: true },
+      ),
+    /Incomplete/,
+  );
+  assert.throws(() =>
+    validateSnapshot(
+      { ...full, countries: full.countries.slice(0, 10) },
+      { production: true },
+    ),
+  );
+  const { countries, navaids, ...legacy } = full;
+  assert.ok(validateSnapshot(legacy, { production: true }));
+});
+
+test('navaids acquisition failure keeps complete last-good envelope', async () => {
+  const { downloadSnapshot } = await import('./collector.js');
+  const full = JSON.parse(
+    await readFile(
+      new URL('../../data/airports/snapshot.json', import.meta.url),
+      'utf8',
+    ),
+  );
+  const dir = await mkdtemp(join(tmpdir(), 'airports-'));
+  const seen = [];
+  try {
+    const c = createAirportCollector({
+      stateDir: dir,
+      bundledSnapshot: full,
+      now: () => Date.parse(full.updatedAt) + 86400001,
+      loadSnapshot: () =>
+        downloadSnapshot({
+          revision: full.revision,
+          fetchImpl: async (url) => {
+            seen.push(url);
+            if (url.endsWith('/navaids.csv')) throw Error('offline');
+            return new Response('unparsed');
+          },
+        }),
+    });
+    await c.ready;
+    await c.refresh();
+    assert.equal(c.getSnapshot(), full);
+    assert.equal(seen.length, 4);
+    assert.ok(seen.every((url) => url.includes(full.revision)));
+    await assert.rejects(readFile(join(dir, 'directory.json')), {
+      code: 'ENOENT',
+    });
+    await c.close();
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});

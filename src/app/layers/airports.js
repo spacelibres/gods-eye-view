@@ -8,7 +8,7 @@ import {
 } from '../../data/contextStore.js';
 import { getActivePalette } from '../../ui/colorSystemRuntime.js';
 import { governorRequestRender } from '../../renderGovernor.js';
-import { t } from '../../i18n/index.js';
+import { t, getLocale } from '../../i18n/index.js';
 import { refreshTrackedReadout } from '../../data/trackedReadout.js';
 /** Bind the portable airport layer to existing application presentation services. */
 export function createApplicationAirports({ surface, ...options }) {
@@ -30,6 +30,7 @@ export function createApplicationAirports({ surface, ...options }) {
     getGroundHeight: (lat, lon) =>
       surface?.groundFloor?.cachedGroundFloor(lat, lon),
     governorRequestRender,
+    getLocale,
     t,
     ...options,
   });

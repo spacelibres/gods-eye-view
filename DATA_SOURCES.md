@@ -17,7 +17,10 @@ The airport directory uses [OurAirports](https://ourairports.com/data/) public-d
 data, with an initial reproducible snapshot in `server/data/airports/` and daily
 server-side updates. It contains airport locations, names, distinct ICAO/IATA and
 source identifiers, facility types, administrative locations and optional MSL
-elevations. The original source revision is retained. Closed facilities stay
+elevations. The same pinned source revision supplies VOR/NDB/DME/TACAN navigation
+stations (frequencies, DME channels, variation, usage, transmitter power and
+associated airports), plus country names/codes. Country labels reuse the bundled
+Natural Earth geography. The original source revision is retained. Closed facilities stay
 marked closed and are omitted from the default map. Browsers query the project's
 own directory; they do not download from OurAirports. This community directory
 is not an operational aeronautical publication. Attribution: "OurAirports

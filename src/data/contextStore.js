@@ -194,7 +194,10 @@ export function isContextRecordActive(record, dataManager = null) {
   if (!record) return false;
   if (record.entity?.show === false) return false;
   if (record.dataSource && record.dataSource.show === false) return false;
-  if (dataManager && record.layerId && !dataManager.isEnabled(record.layerId))
+  // Internal reference displays retain their own selection/cleanup identity,
+  // while visibility is owned by the parent catalog layer.
+  const ownerLayerId = record.ownerLayerId || record.layerId;
+  if (dataManager && ownerLayerId && !dataManager.isEnabled(ownerLayerId))
     return false;
   return true;
 }

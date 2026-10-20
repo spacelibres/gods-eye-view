@@ -73,6 +73,24 @@ test('cache-only middleware serves search detail bounds and proper errors', asyn
     (await request('/api/airports/search?q=Airport')).body.matched,
     1,
   );
+  assert.equal((await request('/api/airports/navaids')).status, 503);
+  assert.equal((await request('/api/airports/countries')).status, 503);
+  snapshot.countries = [
+    {
+      code: 'NA',
+      name: 'Namibia',
+      continent: 'AF',
+      wikipedia: '',
+      keywords: '',
+    },
+  ];
+  snapshot.navaids = [];
+  assert.equal(
+    (await request('/api/airports/countries')).body.countries[0].name,
+    'Namibia',
+  );
+  assert.equal((await request('/api/airports/navaids')).body.total, 0);
+  assert.equal((await request('/api/airports/navaids?type=BAD')).status, 400);
   assert.equal((await request('/api/airports?limit=0')).status, 400);
   assert.equal((await request('/api/airports/detail?id=missing')).status, 404);
   assert.equal((await request('/api/airports', 'POST')).status, 405);

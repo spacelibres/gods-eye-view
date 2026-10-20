@@ -1,3 +1,4 @@
+import { createAviationReferences } from './references.js';
 import * as Cesium from 'cesium';
 import { isPointerFree as pointerFree } from '../../data/inputOwnership.js';
 import {
@@ -32,6 +33,8 @@ export function createAirportsLayer({
   getPalette = () => null,
   t = (value) => value,
   governorRequestRender = () => {},
+  getLocale = () => 'en',
+  loadCountries,
 } = {}) {
   if (typeof source?.getSnapshot !== 'function')
     throw new TypeError('Airports require a snapshot source');
@@ -51,6 +54,23 @@ export function createAirportsLayer({
     clickHandler = null,
     removeTheme = null,
     overlayEntries = [];
+  const references = createAviationReferences({
+    source,
+    overlayHost,
+    registerEntityContext,
+    removeEntityContextsForLayer,
+    clearSelectedEntityContextForLayer,
+    selectEntityContext,
+    isPointerFree,
+    createInputHandler,
+    getGroundHeight,
+    refreshSelectedReadout,
+    getPalette,
+    t,
+    governorRequestRender,
+    getLocale,
+    loadCountries,
+  });
   const accentColor = () => {
     const palette = getPalette();
     return (
@@ -61,6 +81,7 @@ export function createAirportsLayer({
   };
   function refreshTheme() {
     if (!enabled || !data) return;
+    references.refreshTheme();
     const accent = accentColor();
     for (const entity of data.entities.values) {
       entity.billboard.color = Cesium.Color.fromCssColorString(accent);
@@ -118,10 +139,12 @@ export function createAirportsLayer({
       data.show = false;
       viewer.dataSources.add(data);
       overlayHost.setVisible('airports', false);
+      references.init(viewer);
     },
     enable() {
       if (!viewer || enabled) return;
       enabled = true;
+      references.enable();
       data.show = true;
       overlayHost.setVisible('airports', true);
       removeTheme = subscribeTheme(refreshTheme);
@@ -142,6 +165,7 @@ export function createAirportsLayer({
       void layer.update();
     },
     disable() {
+      references.disable();
       enabled = false;
       request?.abort();
       request = null;
@@ -172,6 +196,10 @@ export function createAirportsLayer({
       const controller = new AbortController();
       request = controller;
       requestKey = key;
+      const referenceUpdate = references.update({
+        bounds: options.bounds,
+        height: viewer.camera.positionCartographic?.height ?? Infinity,
+      });
       pending = (async () => {
         try {
           const snapshot = await source.getSnapshot({
@@ -297,6 +325,9 @@ export function createAirportsLayer({
               snapshot.truncated === true ||
               snapshot.airports.length > next.length,
           };
+          await referenceUpdate;
+          if (controller.signal.aborted || request !== controller || !enabled)
+            return false;
           lastUpdate = Date.now();
           error = null;
           render();
@@ -317,6 +348,7 @@ export function createAirportsLayer({
     },
     destroy() {
       layer.disable();
+      references.destroy();
       if (data) viewer?.dataSources.remove(data, true);
       data = null;
       viewer = null;
@@ -326,22 +358,32 @@ export function createAirportsLayer({
       rowListener = null;
     },
     getStats() {
-      return { count: records.length, lastUpdate, error, ...metadata };
+      return {
+        count: records.length,
+        lastUpdate,
+        error,
+        ...metadata,
+        ...references.getStats(),
+      };
     },
     getRowControls() {
+      const ref = references.getStats();
+      const status = error
+        ? msg('Airport source unavailable')
+        : ref.referenceError
+          ? msg('Aviation reference source unavailable')
+          : metadata.truncated || ref.navaidTruncated
+            ? msg('Airport display limited')
+            : msg('Airport directory');
       return {
         readout: false,
-        info: `${t(error ? 'Airport source unavailable' : metadata.truncated ? 'Airport display limited' : 'Airport directory')} · ${records.length} / ${metadata.matched || 0}`,
+        info: `${t(status)} · ${records.length} / ${metadata.matched || 0} · ${t('Navaids')}: ${ref.navaidCount} / ${ref.navaidMatched || 0} · ${t('Countries')}: ${references.getStats().countryCount}`,
         summary: {
           label: t('Airports'),
           coverage: t('Current viewport'),
           validTime: metadata.updatedAt,
           detail: `OurAirports · ${metadata.revision || t('Unknown')}`,
-          status: error
-            ? t('Airport source unavailable')
-            : metadata.truncated
-              ? t('Airport display limited')
-              : t('Airport directory'),
+          status: t(status),
           units: t('Facilities'),
         },
       };

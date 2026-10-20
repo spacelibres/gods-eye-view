@@ -2796,5 +2796,19 @@
   "Heliport": "헬리포트",
   "Seaplane base": "수상 비행장",
   "Balloonport": "기구 이착륙장",
-  "Closed airport": "폐쇄 공항"
+  "Closed airport": "폐쇄 공항",
+  "Navaid": "항공 항행시설",
+  "Navaids": "항공 항행시설",
+  "Countries": "국가",
+  "Frequency": "주파수",
+  "DME frequency": "DME 주파수",
+  "DME channel": "DME 채널",
+  "DME coordinates": "DME 좌표",
+  "DME elevation (m MSL)": "DME 해발고도(m, 평균 해수면)",
+  "Magnetic variation (degrees)": "자기 편차(도)",
+  "Slaved variation (degrees)": "보정 자기 편차(도)",
+  "Usage": "용도",
+  "Transmitter power": "송신 출력",
+  "Associated airport": "연결된 공항",
+  "Aviation reference source unavailable": "항공 참조 데이터 소스를 사용할 수 없음"
 }

@@ -1,4 +1,9 @@
 import {
+  isCountryRecord,
+  isNavaidRecord,
+  NAVAID_TYPES,
+} from '../../../src/sources/airports/records.js';
+import {
   isAirportRecord,
   AIRPORT_TYPES,
   normalizeAirportName,
@@ -208,6 +213,27 @@ export function validateSnapshot(s, { production = false } = {}) {
       new Set(s.records.map((r) => r.countryCode)).size < 200)
   )
     throw Error('Incomplete global airport directory');
+  if (s.countries !== undefined || s.navaids !== undefined) {
+    if (
+      !Array.isArray(s.countries) ||
+      !Array.isArray(s.navaids) ||
+      !s.countries.every(isCountryRecord) ||
+      !s.navaids.every(isNavaidRecord) ||
+      new Set(s.countries.map((r) => r.code)).size !== s.countries.length ||
+      new Set(s.navaids.map((r) => r.id)).size !== s.navaids.length
+    )
+      throw Error('Invalid aviation references');
+    const codes = new Set(s.countries.map((r) => r.code));
+    if (s.navaids.some((r) => r.countryCode && !codes.has(r.countryCode)))
+      throw Error('Unresolved navaid reference');
+    if (
+      production &&
+      (s.countries.length < 200 ||
+        s.navaids.length < 8000 ||
+        new Set(s.navaids.map((r) => r.countryCode)).size < 150)
+    )
+      throw Error('Incomplete aviation references');
+  }
   return s;
 }
 export function metadata(s) {
@@ -315,4 +341,131 @@ export function searchAirports(s, query, { limit = 8 } = {}) {
         .map((v) => v.r)
     : [];
   return list(s, matches, limitValue(limit, 50));
+}
+
+export function parseCountryCsv(text) {
+  const result = table(text, [
+    'code',
+    'name',
+    'continent',
+    'wikipedia_link',
+    'keywords',
+  ]).map((r) => ({
+    code: r.code,
+    name: r.name,
+    continent: r.continent,
+    wikipedia: r.wikipedia_link,
+    keywords: r.keywords,
+  }));
+  if (
+    result.some((r) => !isCountryRecord(r)) ||
+    new Set(result.map((r) => r.code)).size !== result.length
+  )
+    throw Error('Invalid country references');
+  return result;
+}
+export function parseNavaidCsv(text, countries) {
+  const cn = new Map(countries.map((r) => [r.code, r.name])),
+    ids = new Set();
+  return table(text, [
+    'id',
+    'ident',
+    'name',
+    'type',
+    'frequency_khz',
+    'latitude_deg',
+    'longitude_deg',
+    'elevation_ft',
+    'iso_country',
+    'dme_frequency_khz',
+    'dme_channel',
+    'dme_latitude_deg',
+    'dme_longitude_deg',
+    'dme_elevation_ft',
+    'slaved_variation_deg',
+    'magnetic_variation_deg',
+    'usageType',
+    'power',
+    'associated_airport',
+  ]).map((r) => {
+    const metres = (v) => (numeric(v) === null ? null : numeric(v) * 0.3048);
+    const record = {
+      id: r.id,
+      ident: r.ident,
+      name: r.name,
+      type: r.type,
+      lat: numeric(r.latitude_deg),
+      lon: numeric(r.longitude_deg),
+      elevationM: metres(r.elevation_ft),
+      countryCode: r.iso_country,
+      country: cn.get(r.iso_country) || '',
+      frequencyKhz: numeric(r.frequency_khz),
+      dmeFrequencyKhz: numeric(r.dme_frequency_khz),
+      dmeChannel: r.dme_channel,
+      dmeLat: numeric(r.dme_latitude_deg),
+      dmeLon: numeric(r.dme_longitude_deg),
+      dmeElevationM: metres(r.dme_elevation_ft),
+      slavedVariationDeg: numeric(r.slaved_variation_deg),
+      magneticVariationDeg: numeric(r.magnetic_variation_deg),
+      usageType: r.usageType,
+      power: r.power,
+      associatedAirport: r.associated_airport,
+    };
+    if (
+      !isNavaidRecord(record) ||
+      ids.has(record.id) ||
+      (record.countryCode && !cn.has(record.countryCode))
+    )
+      throw Error('Invalid navaid reference ' + r.id);
+    ids.add(record.id);
+    return record;
+  });
+}
+export function queryNavaids(s, q = {}) {
+  if (!s.navaids) throw Error('Navaids unavailable');
+  const b = { west: -180, south: -90, east: 180, north: 90 };
+  for (const k of Object.keys(b))
+    if (q[k] !== undefined) {
+      if (
+        String(q[k]).trim() === '' ||
+        !Number.isFinite(Number(q[k])) ||
+        Math.abs(Number(q[k])) > (k === 'south' || k === 'north' ? 90 : 180)
+      )
+        throw Error('Invalid bounds');
+      b[k] = Number(q[k]);
+    }
+  if (b.south > b.north) throw Error('Invalid bounds');
+  if (q.type !== undefined && !NAVAID_TYPES.includes(q.type))
+    throw Error('Invalid navaid type');
+  const raw = String(q.q ?? '').trim();
+  if (raw.length > 200) throw Error('Query too long');
+  const query = normalizeAirportName(raw);
+  const records = s.navaids.filter(
+    (r) =>
+      (!q.type || q.type === r.type) &&
+      r.lat >= b.south &&
+      r.lat <= b.north &&
+      (b.west <= b.east
+        ? r.lon >= b.west && r.lon <= b.east
+        : r.lon >= b.west || r.lon <= b.east) &&
+      (!query ||
+        [r.ident, r.name, r.country, r.countryCode, r.associatedAirport].some(
+          (v) => normalizeAirportName(v).includes(query),
+        )),
+  );
+  records.sort(
+    (a, b) =>
+      (a.ident.toLowerCase() === raw.toLowerCase() ? 0 : 1) -
+        (b.ident.toLowerCase() === raw.toLowerCase() ? 0 : 1) ||
+      a.name.localeCompare(b.name) ||
+      a.id.localeCompare(b.id),
+  );
+  const limit = limitValue(q.limit, 1200);
+  return {
+    ...metadata(s),
+    total: s.navaids.length,
+    matched: records.length,
+    truncated: records.length > limit,
+    navaids: records.slice(0, limit),
+  };
 }

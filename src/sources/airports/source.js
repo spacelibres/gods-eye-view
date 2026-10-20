@@ -1,4 +1,10 @@
-import { isAirportRecord, AIRPORT_TYPES } from './records.js';
+import {
+  isAirportRecord,
+  AIRPORT_TYPES,
+  isNavaidRecord,
+  isCountryRecord,
+  NAVAID_TYPES,
+} from './records.js';
 import { readResponseJsonCapped } from '../httpBody.js';
 
 const limitValue = (value, fallback) =>
@@ -13,6 +19,31 @@ function validate(data, detail) {
     typeof data.sourceUrl !== 'string'
   )
     throw new Error('Invalid airport response');
+  if (detail === 'countries') {
+    if (
+      !Array.isArray(data.countries) ||
+      data.countries.length > 500 ||
+      !data.countries.every(isCountryRecord) ||
+      new Set(data.countries.map((r) => r.code)).size !== data.countries.length
+    )
+      throw new Error('Invalid country list');
+    return data;
+  }
+  if (detail === 'navaids') {
+    if (
+      !Array.isArray(data.navaids) ||
+      data.navaids.length > 1200 ||
+      !data.navaids.every(isNavaidRecord) ||
+      !Number.isInteger(data.total) ||
+      !Number.isInteger(data.matched) ||
+      data.total < data.matched ||
+      data.matched < data.navaids.length ||
+      typeof data.truncated !== 'boolean' ||
+      data.truncated !== data.matched > data.navaids.length
+    )
+      throw new Error('Invalid navaid list');
+    return data;
+  }
   if (detail) {
     if (!isAirportRecord(data.airport))
       throw new Error('Invalid airport detail');
@@ -84,7 +115,7 @@ export function createAirportSource({
             detail,
           );
           controller.signal.throwIfAborted();
-          if (detail && data.airport.id !== params.get('id'))
+          if (detail === true && data.airport.id !== params.get('id'))
             throw new Error('Mismatched airport detail');
           if (revision !== data.revision) {
             cache.clear();
@@ -129,6 +160,34 @@ export function createAirportSource({
     });
   }
   return {
+    getCountries({ signal } = {}) {
+      return read('/countries', new URLSearchParams(), signal, 'countries');
+    },
+    getNavaids({ bounds, limit, signal, q, type } = {}) {
+      const params = new URLSearchParams({
+        limit: Math.min(1200, limitValue(limit, 1200)),
+      });
+      if (bounds) {
+        for (const key of ['west', 'south', 'east', 'north']) {
+          const value = bounds[key];
+          if (
+            !Number.isFinite(value) ||
+            Math.abs(value) > (key === 'south' || key === 'north' ? 90 : 180)
+          )
+            throw new TypeError('Invalid navaid bounds');
+          params.set(key, value);
+        }
+        if (bounds.south > bounds.north)
+          throw new TypeError('Invalid navaid bounds');
+      }
+      if (type !== undefined) {
+        if (!NAVAID_TYPES.includes(type))
+          throw new TypeError('Invalid navaid type');
+        params.set('type', type);
+      }
+      if (q !== undefined) params.set('q', String(q).trim().slice(0, 200));
+      return read('/navaids', params, signal, 'navaids');
+    },
     getSnapshot({ bounds, types, limit, signal } = {}) {
       const params = new URLSearchParams({ limit: limitValue(limit, 1200) });
       if (bounds) {
