@@ -85,3 +85,18 @@
     transform: none;
   }
 }
+
+/*
+ * Phones: the swatch row is the widest thing in the bottom corner and it sat
+ * over the map, so a phone gives the bottom edge to the dock instead.
+ *
+ * The picker has a single mount point (#palette-picker in #corner-actions), so
+ * hiding it here takes the control away on phones entirely — nothing in the
+ * DISPLAY rail offers it. The stored choice still applies, since the palette
+ * is re-read from storage at boot; a phone just cannot change it.
+ */
+@media (max-width: 720px) {
+  #palette-picker {
+    display: none;
+  }
+}

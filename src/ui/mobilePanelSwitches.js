@@ -19,13 +19,15 @@ export const MOBILE_PANEL_GROUPS = Object.freeze([
   {
     id: 'left-panel-stack',
     label: 'Data',
-    // Names already shipped in the icon subset (index.html `icon_names`).
-    icon: 'layers_clear',
+    // A stack of layers, NOT `layers_clear`: that glyph is the "clear selected
+    // layers" action in the top row, and reusing it made two buttons look alike.
+    icon: 'layers',
   },
   {
     id: 'right-context-rail',
     label: 'Display',
-    icon: 'right_panel_open',
+    // Sliders, matching what the rail holds rather than which side it is on.
+    icon: 'tune',
   },
 ]);
 

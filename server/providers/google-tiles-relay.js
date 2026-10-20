@@ -54,7 +54,9 @@ const FORWARDED_HEADERS = Object.freeze([
  * @returns {boolean}
  */
 export function isMountRoot(requestUrl, mount = GOOGLE_TILES_PATH) {
-  const path = String(requestUrl || '').split('?')[0].replace(/\/+$/, '');
+  const path = String(requestUrl || '')
+    .split('?')[0]
+    .replace(/\/+$/, '');
   return path === '' || path === mount;
 }
 

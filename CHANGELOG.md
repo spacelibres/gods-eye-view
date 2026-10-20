@@ -1,5 +1,17 @@
 # Changelog
 
+- Stop the palette swatch row from covering the map on a phone. The row was
+  the widest thing in the bottom corner, so it steps aside below 720 px and
+  the dock owns the bottom edge. The picker has a single mount point, so a
+  phone can no longer change the colour scheme; the stored choice still
+  applies at boot. Wider viewports keep the row.
+
+- Give the two phone panel switches their own glyphs. The left stack used
+  `layers_clear`, which is already the "clear selected layers" action in the
+  top row, so the two buttons looked alike; it is now `layers`. The right rail
+  drops `right_panel_open` for `tune`, which matches what the rail holds
+  rather than which side of the screen it is on.
+
 - Bring the logo back on a phone and put both panel groups behind one
   thumb-sized switch each. A leftover rule hiding the last span of the title
   h1 removed the lockup, which is now the h1 itself. The left stack and the
