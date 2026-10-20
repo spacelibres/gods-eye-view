@@ -27,6 +27,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { localProviderPlugins } from '../providers/local.js';
+import { attachVoiceSocketRelay } from '../providers/voice-socket-relay.js';
 import { apiNotFoundPlugin } from './api-not-found.js';
 import {
   isAllowedHost,
@@ -270,6 +271,28 @@ const server = createServer(async (req, res) => {
   // The app is a single page: unknown paths and `/` both get the shell.
   sendFile(req, res, path.join(DIST, 'index.html'));
 });
+
+// The browser cannot put headers on a WebSocket, and Volcengine signs its
+// socket with `X-Api-*` headers. This same-origin relay is that missing hop.
+// Without a credential it refuses before upgrading, which the page reports as
+// a failed connect rather than a silent session.
+const voiceSocketRelay = attachVoiceSocketRelay({
+  server,
+  upstreamUrl: 'wss://openspeech.bytedance.com/api/v3/realtime/dialogue',
+  upstreamHeaders: () => {
+    const appId = String(process.env.DOUBAO_APP_ID || '').trim();
+    const accessToken = String(process.env.DOUBAO_ACCESS_TOKEN || '').trim();
+    if (!appId || !accessToken) return null;
+    return {
+      'X-Api-App-ID': appId,
+      'X-Api-Access-Key': accessToken,
+      'X-Api-Resource-Id': 'volc.speech.dialog',
+      'X-Api-App-Key': 'PlgvMymc7f3tQnJ6',
+      'X-Api-Connect-Id': globalThis.crypto.randomUUID(),
+    };
+  },
+});
+server.on('close', () => voiceSocketRelay.close());
 
 server.listen(PORT, HOST, () => {
   console.log(`[serve] ${ROOT} on http://${HOST}:${PORT}`);

@@ -288,7 +288,12 @@ export async function startWebSocketSession({
       inputHz: audio.inputHz,
       onChunk: (bytes) => {
         if (closed) return;
-        backend.appendAudio(socket, toBase64(bytes));
+        // A vendor that streams binary frames wants the bytes; one that speaks
+        // JSON wants them base64-encoded in an event field.
+        backend.appendAudio(
+          socket,
+          backend.audioEncoding === 'pcm' ? bytes : toBase64(bytes),
+        );
       },
     });
   };

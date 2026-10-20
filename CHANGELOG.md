@@ -4,6 +4,36 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.47] — 2026-10-20 — Relay the Doubao socket through the server
+
+- Relay the Doubao socket through this server. The page cannot open it: the
+  browser's `WebSocket` constructor takes `(url, protocols)` and nothing else,
+  so the `{ headers }` object Node's `ws` accepts reaches it as a protocol and
+  throws `The subprotocol '[object Object]' is invalid`. Volcengine signs its
+  socket with `X-Api-*` headers, so `/api/doubao/socket` now relays: the page
+  connects same-origin, the server adds the credential, and frames pass through
+  untouched in both directions.
+
+- Fix three faults the relay exposed, each of which produced a session that
+  connected and then did nothing:
+
+  - Frames the page sends during the upstream handshake were dropped for
+    arriving before the vendor socket opened. They are queued and flushed on
+    open; without that, StartConnection was lost and the session timed out with
+    no error.
+  - Both directions now force binary frames. `ws` and browsers send a byte
+    array as *text* by default, so the vendor received a payload it could not
+    decode.
+  - The codec uses `Uint8Array` instead of Node's `Buffer`, which does not
+    exist in the browser; and microphone audio now reaches a binary vendor as
+    raw PCM rather than base64 inside a JSON event.
+
+- Move `ws` from devDependencies to dependencies. The standalone server imports
+  it at runtime, and a production install would have omitted it.
+
+  Verified end to end through the relay: handshake, a real Chinese reply, and
+  1.1 MB of PCM audio.
+
 ## [0.2.46] — 2026-10-20 — Volcengine Doubao voice, verified live
 
 - Add Volcengine Doubao as a third voice service, verified against the live

@@ -10,61 +10,79 @@ import {
   translateDoubaoFrame,
 } from './doubaoBackend.js';
 
+/** Read a big-endian u32 the way the codec writes one. */
+const u32At = (bytes, offset) =>
+  new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength).getUint32(
+    offset,
+    false,
+  );
+
+/** Build a server frame the way the service does. */
+function serverFrame({ event, sessionId = '', body }) {
+  const enc = new TextEncoder();
+  const payload =
+    body instanceof Uint8Array ? body : enc.encode(String(body ?? ''));
+  const id = sessionId ? enc.encode(sessionId) : new Uint8Array(0);
+  const header = new Uint8Array([0x11, 0xb4, 0x00, 0x00]);
+  const parts = [header, new Uint8Array(4)];
+  new DataView(parts[1].buffer).setUint32(0, event, false);
+  if (id.length) {
+    const length = new Uint8Array(4);
+    new DataView(length.buffer).setUint32(0, id.length, false);
+    parts.push(length, id);
+  }
+  const length = new Uint8Array(4);
+  new DataView(length.buffer).setUint32(0, payload.length, false);
+  parts.push(length, payload);
+  const total = parts.reduce((sum, part) => sum + part.length, 0);
+  const out = new Uint8Array(total);
+  let offset = 0;
+  for (const part of parts) {
+    out.set(part, offset);
+    offset += part.length;
+  }
+  return out;
+}
+
 test('a JSON frame has the header the service accepts', () => {
-  // The live service rejects every other header: gzipped bodies answer
+  // The live service rejects every other header: compressed bodies answer
   // "invalid char \x1f\x8b", and an 8-byte header desynchronises the reader.
   const frame = encodeJsonFrame(1, { dialogue: { bot_name: 'x' } });
   assert.equal(frame[0], 0x11, 'version 1, header size 1 word');
   assert.equal(frame[1], 0x14, 'message type 1 (full client), flags 4 (JSON)');
   assert.equal(frame[2], 0x10, 'serialization JSON, no compression');
   assert.equal(frame[3], 0x00);
-  // The body must be plain JSON, never a gzip stream.
+  // The body must be plain JSON, never a compression stream.
   assert.notEqual(frame[12], 0x1f);
   assert.notEqual(frame[13], 0x8b);
 });
 
 test('the event id is big-endian right after the header', () => {
-  const frame = encodeJsonFrame(501, { content: 'hi' });
-  assert.equal(frame.readUInt32BE(4), 501);
+  assert.equal(u32At(encodeJsonFrame(501, { content: 'hi' }), 4), 501);
 });
 
 test('a session frame carries the id between event and payload', () => {
   const frame = encodeJsonFrame(200, { a: 1 }, 'sess-1');
-  assert.equal(frame.readUInt32BE(8), 6, 'session id length');
-  assert.equal(frame.subarray(12, 18).toString(), 'sess-1');
-  const payloadLength = frame.readUInt32BE(18);
+  assert.equal(u32At(frame, 8), 6, 'session id length');
   assert.equal(
-    frame.subarray(22, 22 + payloadLength).toString(),
+    new TextDecoder().decode(frame.subarray(12, 18)),
+    'sess-1',
+  );
+  const payloadLength = u32At(frame, 18);
+  assert.equal(
+    new TextDecoder().decode(frame.subarray(22, 22 + payloadLength)),
     JSON.stringify({ a: 1 }),
   );
 });
 
 test('an audio frame uses the audio message type and raw payload', () => {
-  const pcm = Buffer.from([0x00, 0x3b, 0x00, 0x1a]);
+  const pcm = new Uint8Array([0x00, 0x3b, 0x00, 0x1a]);
   const frame = encodeAudioFrame(200, pcm);
   assert.equal(frame[1], 0x20, 'message type 2 (audio-only client)');
-  assert.equal(frame.readUInt32BE(4), 200);
-  const length = frame.readUInt32BE(8);
-  assert.equal(length, pcm.length);
+  assert.equal(u32At(frame, 4), 200);
+  assert.equal(u32At(frame, 8), pcm.length);
   assert.deepEqual([...frame.subarray(12, 16)], [0x00, 0x3b, 0x00, 0x1a]);
 });
-
-/** Build a server frame the way the service does. */
-function serverFrame({ event, sessionId = '', body }) {
-  const parts = [Buffer.from([0x11, 0xb4, 0x00, 0x00]), Buffer.alloc(4)];
-  parts[1].writeUInt32BE(event);
-  if (sessionId) {
-    const id = Buffer.from(sessionId);
-    const length = Buffer.alloc(4);
-    length.writeUInt32BE(id.length);
-    parts.push(length, id);
-  }
-  const payload = Buffer.isBuffer(body) ? body : Buffer.from(body);
-  const length = Buffer.alloc(4);
-  length.writeUInt32BE(payload.length);
-  parts.push(length, payload);
-  return Buffer.concat(parts);
-}
 
 test('a text event is parsed with its session id', () => {
   const frame = decodeServerFrame(
@@ -83,14 +101,21 @@ test('a text event is parsed with its session id', () => {
 test('an audio event yields raw PCM, not a JSON parse failure', () => {
   // 32768 bytes of PCM16 — the size the live service actually sends. Its first
   // bytes are not valid UTF-8 JSON, so treating it as text would corrupt it.
-  const pcm = Buffer.alloc(32768);
-  pcm.writeInt16LE(0x163b, 0);
+  const pcm = new Uint8Array(32768);
+  new DataView(pcm.buffer).setInt16(0, 0x163b, true);
   const frame = decodeServerFrame(
-    serverFrame({ event: DOUBAO_EVENTS.ttsResponse, sessionId: 'abc12345-6789-4abc-8def-0123456789ab', body: pcm }),
+    serverFrame({
+      event: DOUBAO_EVENTS.ttsResponse,
+      sessionId: 'abc12345-6789-4abc-8def-0123456789ab',
+      body: pcm,
+    }),
   );
   assert.equal(frame.event, 352);
   assert.equal(frame.audio.length, 32768);
-  assert.equal(frame.audio.readInt16LE(0), 0x163b);
+  assert.equal(
+    new DataView(frame.audio.buffer, frame.audio.byteOffset).getInt16(0, true),
+    0x163b,
+  );
   assert.equal(frame.json, null);
 });
 
@@ -104,17 +129,23 @@ test('a connection-level frame without a session id still decodes', () => {
 });
 
 test('an error frame is surfaced as a message, not as a failed parse', () => {
-  const body = Buffer.from(
+  const body = new TextEncoder().encode(
     JSON.stringify({ error: 'sami error: DialogAudioIdleTimeoutError' }),
   );
-  const frame = decodeServerFrame(
-    Buffer.concat([Buffer.from([0x11, 0xf0, 0x10, 0x00, 0, 0, 0, 1]), body]),
-  );
-  assert.equal(frame.type, 0xf);
-  assert.match(frame.error, /DialogAudioIdleTimeoutError/);
+  // Error frames put their message straight after the header, with no event
+  // or session id, so the reader must not try to parse a length first.
+  const frame = new Uint8Array(8 + body.length);
+  frame.set([0x11, 0xf0, 0x10, 0x00], 0);
+  frame.set(body, 8);
+  const decoded = decodeServerFrame(frame);
+  assert.equal(decoded.type, 0xf);
+  assert.match(decoded.error, /DialogAudioIdleTimeoutError/);
 });
 
-test('authentication travels in headers, never in the URL', () => {
+test('the page connects to the relay, never to the vendor', () => {
+  // The browser cannot attach headers to a WebSocket: a second argument is the
+  // protocol list, so `{ headers }` throws "The subprotocol '[object Object]'
+  // is invalid". The credential is added by the server on the way out.
   let opened = null;
   const socket = {
     send() {},
@@ -123,20 +154,45 @@ test('authentication travels in headers, never in the URL', () => {
     removeEventListener() {},
   };
   const backend = createDoubaoBackend({
-    WebSocketImpl: (url, options) => {
-      opened = { url, options };
+    origin: 'https://godseye.example',
+    WebSocketImpl: (url) => {
+      opened = url;
       return socket;
     },
   });
   void backend
-    .openSocket({
-      credential: { appId: '4010351512', token: 'secret-token' },
-    })
+    .openSocket({ credential: { appId: '1', token: 't' } })
     .catch(() => {});
-  assert.match(opened.url, /^wss:\/\/openspeech\.bytedance\.com/);
-  assert.doesNotMatch(opened.url, /secret-token/);
-  assert.equal(opened.options.headers['X-Api-App-ID'], '4010351512');
-  assert.equal(opened.options.headers['X-Api-Access-Key'], 'secret-token');
+  // An https page must produce a wss URL; a plain ws one is mixed content.
+  assert.match(
+    opened,
+    /^wss:\/\/.*\/api\/doubao\/socket$/,
+    'a same-origin relay path over wss',
+  );
+  assert.doesNotMatch(opened, /openspeech\.bytedance\.com/);
+});
+
+test('the web socket receives one argument, never an options object', () => {
+  // A second argument is what produced the browser error; this pins that the
+  // opener passes exactly one.
+  let argCount = null;
+  const socket = {
+    send() {},
+    close() {},
+    addEventListener() {},
+    removeEventListener() {},
+  };
+  const backend = createDoubaoBackend({
+    origin: 'https://godseye.example',
+    WebSocketImpl: (...args) => {
+      argCount = args.length;
+      return socket;
+    },
+  });
+  void backend
+    .openSocket({ credential: { appId: '1', token: 't' } })
+    .catch(() => {});
+  assert.equal(argCount, 1, 'one argument: the URL');
 });
 
 test('the audio rates match what the session asks the service for', () => {
@@ -175,9 +231,7 @@ test('the vendor vocabulary is translated into the shared event names', () => {
 });
 
 test('a frame with nothing to say translates to null', () => {
-  const frame = decodeServerFrame(
-    serverFrame({ event: 999, body: '{}' }),
-  );
+  const frame = decodeServerFrame(serverFrame({ event: 999, body: '{}' }));
   assert.equal(translateDoubaoFrame(frame), null);
   assert.equal(translateDoubaoFrame(null), null);
 });

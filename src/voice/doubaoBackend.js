@@ -14,23 +14,37 @@ const newSessionId = () => globalThis.crypto.randomUUID();
  * Frame layout (big-endian lengths):
  *
  *   byte 0  version(4 bits) | header size(4 bits)      always 0x11
- *   byte 1  message type(4) | flags(4)                 0x14 = full client JSON
+ *   byte 1  message type(4) | flags(4)                 0x1/0x2 = client frames
  *   byte 2  serialization(4) | compression(4)          0x10 = JSON, 0 = none
  *   byte 3  reserved                                    0x00
  *   u32     event id
  *   ...     event-specific body
  *
- * Two rules that cost the most time:
+ * Four findings that cost the most time, each now a test:
  *
- * - The body is **never gzipped**. The public examples gzip it; this service
- *   answers `invalid char \x1f\x8b` and closes.
+ * - The body is **never compressed**. The samples gzip it; this service answers
+ *   `invalid char \x1f\x8b` and closes.
+ * - The header is **four bytes**, not the eight the samples imply.
  * - The connection frame's payload must be real JSON. An empty `{}` is refused
  *   with `unexpected end of JSON input`.
+ * - Every frame is sent **binary**. A `Uint8Array`/`Buffer` handed to a
+ *   WebSocket's `send` goes out as a *text* frame unless it is wrapped, and the
+ *   service then sees a payload it cannot decode and never answers.
+ *
+ * The module runs in the browser, so it uses `Uint8Array` throughout rather
+ * than Node's `Buffer`.
  */
 
-/** The realtime dialogue endpoint. */
-const DEFAULT_SOCKET_URL =
-  'wss://openspeech.bytedance.com/api/v3/realtime/dialogue';
+/**
+ * A same-origin path the server relays to the vendor.
+ *
+ * The browser cannot attach headers to a WebSocket — `new WebSocket(url,
+ * { headers })` throws `The subprotocol '[object Object]' is invalid`, because
+ * the second argument is the protocol list. Volcengine signs its socket with
+ * `X-Api-*` headers, so the page connects here and the server's relay adds the
+ * credential on the way out.
+ */
+const DEFAULT_SOCKET_URL = '/api/doubao/socket';
 
 /** Event ids, as the service numbers them. */
 export const DOUBAO_EVENTS = Object.freeze({
@@ -38,9 +52,7 @@ export const DOUBAO_EVENTS = Object.freeze({
   startSession: 100,
   finishSession: 102,
   taskRequest: 200,
-  sayHello: 300,
   chatTextQuery: 501,
-  chatTTSText: 500,
   connectionStarted: 50,
   connectionFailed: 51,
   sessionStarted: 150,
@@ -50,31 +62,41 @@ export const DOUBAO_EVENTS = Object.freeze({
   ttsResponse: 352,
   ttsSentenceEnd: 351,
   ttsEnded: 359,
-  asrInfo: 450,
   asrResponse: 451,
   asrEnded: 459,
   chatResponse: 550,
   chatEnded: 559,
-  subvTitle: 553,
 });
 
-/** Message types in the header's high nibble of byte 1. */
-const MSG = Object.freeze({
-  fullClient: 0x1,
-  audioOnly: 0x2,
-  ack: 0xb,
-  error: 0xf,
-});
+const MSG = Object.freeze({ error: 0xf });
 
 /** Header bytes for a JSON client frame. */
 const JSON_HEADER = Object.freeze([0x11, 0x14, 0x10, 0x00]);
 /** Header bytes for a raw audio client frame. */
 const AUDIO_HEADER = Object.freeze([0x11, 0x20, 0x00, 0x00]);
 
+/** Concatenate byte arrays into one `Uint8Array`. */
+function concat(parts) {
+  const total = parts.reduce((sum, part) => sum + part.length, 0);
+  const out = new Uint8Array(total);
+  let offset = 0;
+  for (const part of parts) {
+    out.set(part, offset);
+    offset += part.length;
+  }
+  return out;
+}
+
+/** A big-endian u32. */
 function u32(value) {
-  const buffer = Buffer.alloc(4);
-  buffer.writeUInt32BE(value >>> 0);
-  return buffer;
+  const out = new Uint8Array(4);
+  new DataView(out.buffer).setUint32(0, value >>> 0, false);
+  return out;
+}
+
+/** UTF-8 bytes of a string. */
+function utf8(text) {
+  return new TextEncoder().encode(text);
 }
 
 /**
@@ -83,37 +105,43 @@ function u32(value) {
  * @param {number} event
  * @param {object} payload
  * @param {string} [sessionId] Present on everything after StartSession.
+ * @returns {Uint8Array}
  */
 export function encodeJsonFrame(event, payload, sessionId = '') {
-  const body = Buffer.from(JSON.stringify(payload));
-  const parts = [Buffer.from(JSON_HEADER), u32(event)];
+  const body = utf8(JSON.stringify(payload));
+  const parts = [new Uint8Array(JSON_HEADER), u32(event)];
   if (sessionId) {
-    const id = Buffer.from(sessionId);
+    const id = utf8(sessionId);
     parts.push(u32(id.length), id);
   }
   parts.push(u32(body.length), body);
-  return Buffer.concat(parts);
+  return concat(parts);
 }
 
 /**
  * A client audio frame.
  *
  * `event` 200 is the task request this service expects for streamed audio.
+ *
+ * @param {number} event
+ * @param {Uint8Array} pcm
+ * @param {string} [sessionId]
+ * @returns {Uint8Array}
  */
 export function encodeAudioFrame(event, pcm, sessionId = '') {
-  const parts = [Buffer.from(AUDIO_HEADER), u32(event)];
+  const parts = [new Uint8Array(AUDIO_HEADER), u32(event)];
   if (sessionId) {
-    const id = Buffer.from(sessionId);
+    const id = utf8(sessionId);
     parts.push(u32(id.length), id);
   }
   parts.push(u32(pcm.length), pcm);
-  return Buffer.concat(parts);
+  return concat(parts);
 }
 
 /** True for the UUID shape the service uses for session ids. */
 function isSessionId(bytes) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-    bytes.toString(),
+    new TextDecoder().decode(bytes),
   );
 }
 
@@ -124,58 +152,66 @@ function isSessionId(bytes) {
  * json`; audio events carry `event + sessionId + pcm`. The declared length is
  * what distinguishes them, so the reader trusts the frame rather than a table.
  *
- * @param {Buffer} bytes
- * @returns {{type: number, flags: number, event: number| null,
- *   sessionId: string, json: object|null, audio: Buffer|null, error: string|null}}
+ * @param {ArrayBuffer|Uint8Array} data
+ * @returns {{type: number, flags: number, event: number|null,
+ *   sessionId: string, json: object|null, audio: Uint8Array|null,
+ *   error: string|null}}
  */
-export function decodeServerFrame(bytes) {
-  const buffer = Buffer.isBuffer(bytes) ? bytes : Buffer.from(bytes);
-  const type = buffer[1] >> 4;
-  const flags = buffer[1] & 0x0f;
+export function decodeServerFrame(data) {
+  const buffer =
+    data instanceof Uint8Array
+      ? data
+      : new Uint8Array(data ?? new ArrayBuffer(0));
+  const view = new DataView(
+    buffer.buffer,
+    buffer.byteOffset,
+    buffer.byteLength,
+  );
   const frame = {
-    type,
-    flags,
+    type: (buffer[1] ?? 0) >> 4,
+    flags: (buffer[1] ?? 0) & 0x0f,
     event: null,
     sessionId: '',
     json: null,
     audio: null,
     error: null,
   };
-  if (type === MSG.error) {
-    // Error frames put the message straight after the header.
-    frame.error = buffer.subarray(8).toString('utf8').replace(/^\0+/, '');
+  if (frame.type === MSG.error) {
+    frame.error = new TextDecoder()
+      .decode(buffer.subarray(8))
+      .replace(/^\0+/, '');
     return frame;
   }
   if (buffer.length < 8) return frame;
-  frame.event = buffer.readUInt32BE(4);
+  frame.event = view.getUint32(4, false);
   let offset = 8;
   // A session id is a UUID, and every text event after StartSession carries
-  // one. The length field alone cannot tell it apart from a short payload —
-  // a two-byte `{}` body reads as a two-byte id — so the shape is checked
-  // too. Connection-level frames have none.
+  // one. The length field alone cannot tell it apart from a short payload — a
+  // two-byte `{}` body reads as a two-byte id — so the shape is checked too.
   if (buffer.length >= offset + 4) {
-    const idLength = buffer.readUInt32BE(offset);
+    const idLength = view.getUint32(offset, false);
     if (
       idLength === 36 &&
       buffer.length >= offset + 4 + idLength &&
       isSessionId(buffer.subarray(offset + 4, offset + 4 + idLength))
     ) {
-      frame.sessionId = buffer
-        .subarray(offset + 4, offset + 4 + idLength)
-        .toString();
+      frame.sessionId = new TextDecoder().decode(
+        buffer.subarray(offset + 4, offset + 4 + idLength),
+      );
       offset += 4 + idLength;
     }
   }
   if (buffer.length < offset + 4) return frame;
-  const payloadLength = buffer.readUInt32BE(offset);
+  const payloadLength = view.getUint32(offset, false);
   offset += 4;
-  const body = buffer.subarray(offset, offset + payloadLength);
+  const end = Math.min(buffer.length, offset + payloadLength);
+  const body = buffer.subarray(offset, end);
   if (frame.event === DOUBAO_EVENTS.ttsResponse) {
     // Audio: the body is PCM16, no JSON wrapper.
     frame.audio = body;
     return frame;
   }
-  const text = body.toString('utf8');
+  const text = new TextDecoder().decode(body);
   if (text.trimStart().startsWith('{') || text.trimStart().startsWith('[')) {
     try {
       frame.json = JSON.parse(text);
@@ -195,7 +231,7 @@ export function decodeServerFrame(bytes) {
  * carries nothing the UI acts on (it is still counted for diagnostics).
  *
  * @param {ReturnType<typeof decodeServerFrame>} frame
- * @returns {{type: string, delta?: string, text?: string} | null}
+ * @returns {{type: string, delta?: string} | null}
  */
 export function translateDoubaoFrame(frame) {
   if (!frame || frame.event == null) return null;
@@ -223,23 +259,31 @@ export function translateDoubaoFrame(frame) {
 }
 
 /**
+ * Send bytes as a binary WebSocket frame.
+ *
+ * A `Uint8Array` handed straight to `send` goes out as *text* in browsers, and
+ * the vendor then receives a frame it cannot decode. Wrapping the exact slice
+ * in an `ArrayBuffer` is what marks it binary.
+ */
+function sendBinary(socket, bytes) {
+  socket.send(
+    bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength),
+  );
+}
+
+/**
  * Create the Doubao backend.
  *
- * Unlike DashScope, this service authenticates the socket with the account's
- * App ID and access token rather than a minted credential, so `requestToken`
- * asks this app's server for the pair and `openSocket` sends it in the headers.
- *
- * @param {{tokenEndpoint?: string, socketUrl?: string, resourceId?: string,
- *   appKey?: string, tokenTransport?: Function, WebSocketImpl?: Function,
- *   timeoutMs?: number, signal?: AbortSignal}} [options]
+ * @param {{tokenEndpoint?: string, socketUrl?: string, tokenTransport?: Function,
+ *   WebSocketImpl?: Function, origin?: string, timeoutMs?: number,
+ *   signal?: AbortSignal}} [options]
  */
 export function createDoubaoBackend({
   tokenEndpoint = '/api/doubao/token',
   socketUrl = DEFAULT_SOCKET_URL,
-  resourceId = 'volc.speech.dialog',
-  appKey = 'PlgvMymc7f3tQnJ6',
   tokenTransport = (...args) => fetch(...args),
   WebSocketImpl = (...args) => new WebSocket(...args),
+  origin = globalThis.location?.origin,
   timeoutMs = 30_000,
   signal: lifetime,
 } = {}) {
@@ -253,8 +297,9 @@ export function createDoubaoBackend({
     transport: 'websocket',
     // The session asks for 24 kHz PCM out; input is 16 kHz PCM16.
     audio: { inputHz: 16_000, outputHz: 24_000 },
-    // Doubao's own event vocabulary; the shared handler translates by `type`
-    // so sessions look the same to the UI.
+    // Microphone audio goes on the wire as raw PCM in a binary frame, not as
+    // base64 inside a JSON event.
+    audioEncoding: 'pcm',
     events: DOUBAO_EVENTS,
     // Binary transport: the session hands raw frames here, and audio arrives as
     // PCM blocks rather than base64 in a JSON field.
@@ -300,18 +345,17 @@ export function createDoubaoBackend({
      * Waiting for the answer matters: sending both at once is silently
      * ignored.
      */
-    openSocket({ credential, model, signal, onSession }) {
+    openSocket({ model, signal, onSession }) {
       signal = scoped(signal);
       signal.throwIfAborted();
-      const socket = WebSocketImpl(socketUrl, {
-        headers: {
-          'X-Api-App-ID': credential.appId,
-          'X-Api-Access-Key': credential.token,
-          'X-Api-Resource-Id': resourceId,
-          'X-Api-App-Key': appKey,
-          'X-Api-Connect-Id': newSessionId(),
-        },
-      });
+      // A relative path is resolved against the page's own origin; the server's
+      // relay then adds the headers the vendor requires, which this code
+      // cannot do. Outside a page (tests, a worker) the origin may be absent.
+      const target =
+        socketUrl.startsWith('/') && origin
+          ? `${origin.replace(/^http/, 'ws')}${socketUrl}`
+          : socketUrl;
+      const socket = WebSocketImpl(target);
       socket.binaryType = 'arraybuffer';
       const sessionId = newSessionId();
       let started = false;
@@ -336,7 +380,8 @@ export function createDoubaoBackend({
         socket.addEventListener('error', onError);
         socket.addEventListener('open', () => {
           // A non-empty payload: an empty object is refused outright.
-          socket.send(
+          sendBinary(
+            socket,
             encodeJsonFrame(DOUBAO_EVENTS.startConnection, {
               dialogue: { bot_name: 'Gev' },
             }),
@@ -352,7 +397,8 @@ export function createDoubaoBackend({
           if (frame.event !== DOUBAO_EVENTS.connectionStarted) return;
           started = true;
           cleanup();
-          socket.send(
+          sendBinary(
+            socket,
             encodeJsonFrame(
               DOUBAO_EVENTS.startSession,
               {
@@ -379,12 +425,16 @@ export function createDoubaoBackend({
     },
 
     sendEvent(socket, event, payload = {}) {
-      socket.send(encodeJsonFrame(event, payload, socket.sessionId ?? ''));
+      sendBinary(
+        socket,
+        encodeJsonFrame(event, payload, socket.sessionId ?? ''),
+      );
     },
 
     /** Stream one PCM chunk of microphone audio. */
     appendAudio(socket, pcmBytes) {
-      socket.send(
+      sendBinary(
+        socket,
         encodeAudioFrame(
           DOUBAO_EVENTS.taskRequest,
           pcmBytes,
