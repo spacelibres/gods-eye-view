@@ -93,6 +93,47 @@ test('a CHANGELOG without the heading is refused rather than prepended to', () =
   );
 });
 
+test('a batch lands inside the newest release section, not above its heading', () => {
+  // Grouped changelogs put entries under `## [version] — date — summary`.
+  // A batch belongs to the release being cut, so it must not end up between
+  // the intro paragraph and the newest heading, where it would read as
+  // belonging to no version at all.
+  const grouped = [
+    '# Changelog',
+    '',
+    'Entries are grouped by release.',
+    '',
+    '## [0.2.31] — 2026-10-20 — Older release',
+    '',
+    '- An entry from the older release.',
+    '',
+    '## [0.2.30] — 2026-10-19 — Even older',
+    '',
+    '- An older one.',
+    '',
+  ].join('\n');
+  const result = assembleChangelog(grouped, ['- The new entry.']);
+  assert.equal(
+    result,
+    [
+      '# Changelog',
+      '',
+      'Entries are grouped by release.',
+      '',
+      '## [0.2.31] — 2026-10-20 — Older release',
+      '',
+      '- The new entry.',
+      '',
+      '- An entry from the older release.',
+      '',
+      '## [0.2.30] — 2026-10-19 — Even older',
+      '',
+      '- An older one.',
+      '',
+    ].join('\n'),
+  );
+});
+
 test('assembling consumes the fragments and leaves the README', async (t) => {
   const root = await fixture(t, {
     '20-second.md': '- Second (someone, #20).',

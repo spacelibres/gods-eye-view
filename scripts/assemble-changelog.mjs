@@ -56,15 +56,35 @@ export function orderFragmentNames(names) {
     .map(([, name]) => name);
 }
 
-/** Splice fragment bodies above the existing entries, newest batch on top. */
+/**
+ * Splice fragment bodies into the newest release section.
+ *
+ * Entries are grouped under `## [x.y.z] — date — summary` headings, newest
+ * first. A batch belongs to the release about to be cut, so it goes at the top
+ * of the newest section — under that heading and above its existing entries —
+ * rather than between the heading and the intro paragraph that precedes it.
+ * A file with no release heading (an older layout, or a fresh file) keeps the
+ * previous behaviour and takes the batch directly under `# Changelog`.
+ */
 export function assembleChangelog(changelog, fragments) {
   if (!fragments.length) return changelog;
   if (!changelog.startsWith(HEADING)) {
     throw new Error('CHANGELOG.md must start with "# Changelog"');
   }
-  const entries = changelog.slice(HEADING.length).replace(/^\n+/, '');
   const batch = fragments.map((text) => text.replace(/\s+$/, '')).join('\n\n');
-  return `${HEADING}\n${batch}\n\n${entries}`;
+  const rest = changelog.slice(HEADING.length);
+  const firstHeading = /^## \[/m.exec(rest);
+  if (!firstHeading) {
+    const entries = rest.replace(/^\n+/, '');
+    return `${HEADING}\n${batch}\n\n${entries}`;
+  }
+  // Insert after the newest heading line and its blank line.
+  const at = firstHeading.index + firstHeading[0].length;
+  const lineEnd = rest.indexOf('\n', at);
+  const after = lineEnd < 0 ? rest.length : lineEnd + 1;
+  const before = rest.slice(0, after).replace(/\s+$/, '');
+  const tail = rest.slice(after).replace(/^\n+/, '');
+  return `${HEADING}${before}\n\n${batch}\n\n${tail}`;
 }
 
 /**

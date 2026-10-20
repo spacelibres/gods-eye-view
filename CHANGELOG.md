@@ -1,5 +1,26 @@
 # Changelog
 
+Entries are grouped by release, newest first. Each heading names the version it
+was tagged with and the date of that tag, so any line here can be traced back to
+`git log vX.Y.Z`.
+
+## [0.2.32] — 2026-10-20 — Changelog grouped by release
+
+- Group the changelog by release. Every entry now sits under the
+  `## [x.y.z] — date — summary` heading of the version that shipped it, newest
+  first, and the flat `[Unreleased]` block that held thirty releases is gone.
+  The headings carry the tag date, so an entry can be traced back to
+  `git log vX.Y.Z`. Entry text is unchanged apart from that grouping.
+
+- Put a new fragment inside the newest release section rather than above it.
+  `npm run changelog` used to splice a batch directly under `# Changelog`, which
+  in a grouped file would have placed it between the intro paragraph and the
+  newest heading, belonging to no version. It now inserts after the newest
+  heading and above that section's existing entries, and still falls back to
+  the old behaviour for a file with no release heading.
+
+## [0.2.31] — 2026-10-20 — Clear the phone's bottom corner
+
 - Stop the palette swatch row from covering the map on a phone. The row was
   the widest thing in the bottom corner, so it steps aside below 720 px and
   the dock owns the bottom edge. The picker has a single mount point, so a
@@ -12,6 +33,8 @@
   drops `right_panel_open` for `tune`, which matches what the rail holds
   rather than which side of the screen it is on.
 
+## [0.2.30] — 2026-10-20 — Phone logo and panel switches
+
 - Bring the logo back on a phone and put both panel groups behind one
   thumb-sized switch each. A leftover rule hiding the last span of the title
   h1 removed the lockup, which is now the h1 itself. The left stack and the
@@ -19,10 +42,14 @@
   again, and widening past the phone breakpoint closes both. Wider viewports
   are unchanged.
 
+## [0.2.29] — 2026-10-20 — Hidden credits
+
 - Hide Cesium and Google attribution on every viewport, not just phones. The
   block is a licence notice rather than decoration, so the rule carries the
   owner decision and a `.credits-visible` opt-in keeps the original styling
   reachable for a host that turns it back on.
+
+## [0.2.28] — 2026-10-20 — Mobile layout
 
 - Give a phone its screen back. The left panel stack occupied 37% of a
   390 x 844 viewport and sat under the first-run card; it now shrinks to its
@@ -32,10 +59,14 @@
   the dock carry the identity), and Cesium credit block is hidden there too
   at the deployment owner request. Wider viewports are unchanged.
 
+## [0.2.27] — 2026-10-19 — `av` in share links
+
 - Record the app version in share links as `av`. `v` stays the link format
   that decides which fields exist; `av` only names the build the link was
   made with, so a copied URL answers "which release is this from?" without
   changing how any other parameter decodes.
+
+## [0.2.26] — 2026-10-19 — Satellite occlusion
 
 - Hide satellites on the far side of the planet, and their labels with them.
   Google 3D Tiles replace the globe (`scene.globe.show = false`), so the depth
@@ -45,14 +76,20 @@
   ISS label no longer opts out of occlusion. The orbit ring already stopped at
   the limb.
 
+## [0.2.25] — 2026-10-19 — Orbit occlusion
+
 - Hide the part of a satellite orbit that passes behind the Earth. It was
   dimmed rather than removed, so a ring still drew a faint line across the
   globe disc and read as passing in front of it.
+
+## [0.2.24] — 2026-10-19 — Probe after stripping
 
 - Answer the relay probe after the mount is stripped. The middleware now
   hands handlers the path with the mount removed, so a probe arrives as `/`;
   it was compared against the full route, missed, and forwarded to Google
   root — which answers its own 404 and made the relay look broken.
+
+## [0.2.23] — 2026-10-19 — Mount is stripped
 
 - Strip the route mount before a handler runs, as Vite does. Passing the full
   URL made every mounted route decline: `/api/flights` answered 404, the
@@ -60,10 +97,14 @@
   local-receivers returned without answering. Every data layer was affected.
   The receivers route relies on the stripped form again.
 
+## [0.2.22] — 2026-10-19 — JSON length
+
 - Recompute Content-Length for a rewritten tile-set document. The relay
   rewrites child URIs and then answered with the upstream length, so the body
   was cut at the old size and the JSON arrived truncated — the client parsed
   a broken document and asked for no tiles at all.
+
+## [0.2.21] — 2026-10-19 — Relay child URIs
 
 - Keep relayed tile-set children inside the relay. Google names them with
   root-relative URIs (`/v1/3dtiles/…`), and a client resolving one against
@@ -72,10 +113,14 @@
   session loaded the root document and stopped there. The relay now rewrites
   those URIs to stay under its mount on the way out.
 
+## [0.2.20] — 2026-10-19 — Endpoint is a string
+
 - Point Cesium at the relay with a string. `mapTilesApiEndpoint` is read by
   string interpolation when the root URL is built, and a `Resource` object
   stringifies to `[object Object]`, so every relayed tile request went to a
   URL that resolved to nothing and the relay never served a tile.
+
+## [0.2.19] — 2026-10-19 — Relay is used
 
 - Build the tileset through the relay when the probe chose it. The first
   attempt always called the direct Google loader, so a session that had
@@ -83,6 +128,8 @@
   tile and the relay never carried a byte. The route is now named for what
   actually served it (`google-relay`), and only a failed relayed load falls
   back to the direct endpoint.
+
+## [0.2.18] — 2026-10-19 — Route next
 
 - Let a route decline a request. The production server passed every handler
   an inert `next`, so local-receivers — which declines any path but its own —
@@ -92,20 +139,28 @@
   receivers route compares the full URL instead of assuming its mount was
   stripped (spacelibres, #111).
 
+## [0.2.17] — 2026-10-19 — Key setup hostname gate
+
 - Stop asking the loopback-only Provider Settings endpoint from a public
   host. The panel already treated its 403 as "not available" and removed
   itself, but every visitor still sent the request and saw a failure in the
   network log. The hostname check now runs first, so a deployed page never
   makes a call that can only be refused.
 
+## [0.2.16] — 2026-10-19 — Relay probe answers GET
+
 - Answer the relay probe for GET, not just HEAD. The client asks the mount
   itself with GET, and the route only special-cased HEAD, so the empty path
   was forwarded to Google root — which replies with its own 404 page, making
   the relay look missing and sending the session back to direct access.
 
+## [0.2.15] — 2026-10-19 — Startup crash fix
+
 - Import the translator in the application shell. The connectivity status lines
   called `t` without importing it, so every page threw `t is not defined`
   immediately after the probe and the globe never finished starting.
+
+## [0.2.14] — 2026-10-19 — Versioned asset names
 
 - Name every built asset after the release (`assets/index-v0.2.14.js`) instead
   of its content hash, so a deployed page is identifiable from any URL and a
@@ -113,6 +168,8 @@
   request for an asset this release does not have now answers 404 instead of
   the app shell, which used to hand a script request an HTML document. The
   running page records its release as `<html data-app-version>`.
+
+## [0.2.13] — 2026-10-19 — Probe with the real key
 
 - Probe Google with the real key. The reachability check asked for
   `?key=probe`, and Google answers an invalid key with `400` — the same answer
@@ -123,6 +180,8 @@
   and the key works, and anything else sends the session to the relay
   (spacelibres, #105).
 
+## [0.2.12] — 2026-10-19 — Probe ignores proxy errors
+
 - Tell Google's tiles apart from a local proxy that refuses them. The
   reachability probe accepted any HTTP answer, so a browser behind a
   localhost-only proxy — which answers `400 Bad Request` from `127.0.0.1` and
@@ -132,6 +191,8 @@
   Google's CORS grant, which is the one header a stopgap proxy does not
   produce and without which the browser could not read the tiles anyway
   (spacelibres, #105).
+
+## [0.2.11] — 2026-10-19 — Streaming routes own the request
 
 - Serve the production build with the app's own API routes. The deployed host
   ran `vite preview`, which serves `dist/` as static files and never loads the
@@ -144,6 +205,8 @@
   single-page fallback. The tile relay, Places lookups and every live source
   work on the deployed host for the first time (spacelibres, #104).
 
+## [0.2.10] — 2026-10-19 — Production server with API routes
+
 - Check Google's reachability at the very start of initialization, before the
   palette, the locale and the viewer, and run it alongside the rest of the boot.
   The loading screen says `Checking connectivity...` while it waits and reports
@@ -152,6 +215,9 @@
   GET rather than HEAD: Google's edge answers HEAD with a network failure on
   connections that serve GET in a few hundred milliseconds, which routed those
   visitors through the relay for no reason (spacelibres, #103).
+
+## [0.2.9] — 2026-10-19 — Connectivity probe at init, trusted proxy
+
 - Accept requests from the reverse proxy the deployment runs behind. The
   same-site gate refused every visitor behind Caddy, because Caddy's forwarding
   headers mean "this did not originate here" and its hop to the app is plain
@@ -161,6 +227,26 @@
   `Sec-Fetch-Site` are still refused. This also unblocks the Google Places and
   HUD-summary routes on the deployed host, which had been answering 403 to
   every browser (spacelibres, #103).
+
+## [0.2.8] — 2026-10-19 — App service reads the env file
+
+- Give the app service the environment file, so the server started by the unit
+  sees the keys instead of an empty environment (`fix(deploy): give the app
+  service the env file`).
+
+## [0.2.7] — 2026-10-19 — Caddy header syntax
+
+- Clear the forwarded headers one by one, matching Caddy 2.6's directive syntax;
+  the combined form was rejected (`fix(deploy): clear forwarding headers one by
+  one`).
+
+## [0.2.6] — 2026-10-19 — Relay referrer and proxy headers
+
+- Present the key's referrer on relayed tile requests, and stop Caddy forwarding
+  the proxy headers toward the app (`fix(tiles): present the key's referrer and
+  stop Caddy's forwarding headers`).
+
+## [0.2.5] — 2026-10-19 — Tile relay with runtime probe
 
 - Route Google's 3D tiles through this server only when the browser cannot reach
   them itself. Each page load measures `tile.googleapis.com` once, with a
@@ -172,12 +258,16 @@
   `GOOGLE_MAPS_API_KEY` on the server and answers 404 without it, which is how
   the client learns there is nothing to fall back to (spacelibres, #102).
 
+## [0.2.4] — 2026-10-19 — Google Maps key in the deploy
+
 - Build with a Google Maps key from `/etc/gods-eye-view.env`. The installer now
   reads `GOOGLE_MAPS_API_KEY` the same way it reads the Cesium ion token, so a
   key stored once survives every webhook rebuild and names the source that
   actually serves the photoreal globe. The build reports whether each credential
   was found; with no Google key the app still loads Google 3D through Cesium ion,
   and with neither it falls back to the keyless globe (spacelibres, #101).
+
+## [0.2.3] — 2026-10-19 — Cesium ion token in the deploy
 
 - Build with a Cesium ion token from `/etc/gods-eye-view.env`. The installer
   now reads `CESIUM_ION_TOKEN` from the environment or, when unset, from that
@@ -186,145 +276,7 @@
   reports whether it found one; without it the app still runs on Cesium's
   keyless terrain (spacelibres, #100).
 
-- Add nine Spanish city bike systems to Bike Share and `get_bike_share`: BiciMAD
-  (Madrid), Valenbisi (Valencia), Bizi Zaragoza, Sevici (Seville), BIKI
-  (Valladolid), BiciCoruña, Dbizi (Donostia-San Sebastián), Bilbao Bizi and
-  BicinRivas, about 1,840 stations. Station names read underscores as word
-  breaks, and station capacity counts docks rather than PBSC's geofenced area
-  (ulihhhh, #1190).
-
-- Keep missing launch-pad coordinates unknown so launches use the location
-  fallback or stay off the map instead of appearing at 0°N 0°E. Missing stage
-  flight numbers no longer show "FLIGHT 0"
-  (Rudy Celekli, @rudycelekli, #1186).
-
-- Flights' ground floor works across the antimeridian. The viewer-distance
-  check behind the 150 km floor radius and its copy in the photoreal mesh-floor
-  sampler subtracted longitudes without wrapping, so two points 21 km apart
-  across 180° measured about 38,000 km and low or grounded aircraft just across
-  the line from the viewer were never floored. A contact's display corridor
-  walked a segment across 180° the long way round, spending its cell budget on
-  ground behind the contact, and a contact on the seam lost its cell hysteresis.
-  SEARCH NEARBY SITES on a view across 180° searched Google Places around
-  longitude 0, on the far side of the globe, with a radius sized from the view's
-  height alone; it now searches the view (Aditya, @Rohilalala, #1173).
-
-- Keep missing CCTV numbers unknown instead of reading them as zero. `Number`
-  turns null, blank strings and booleans into 0 or 1, and the camera source
-  list sends an unknown number as JSON null, so a source-pack camera that left
-  out its pose reached the browser as zeros clamped to each field's floor —
-  facing north, pitch −2°, FOV 20°, range 120 m, mount 6 m and ground 0 m —
-  instead of the defaults (id-hash heading, −17°, 74°, 700 m, 24 m and the
-  city's ground); a null or blank position placed the camera at 0,0. The
-  server's `toFiniteNumber` and the browser's `safeNumber` now treat absent,
-  blank and boolean values as missing. The same conversion also stops a
-  Tallinn row with a null heading reading as a confident north-facing camera,
-  a Caltrans camera with a blank elevation losing its 150 m ground prior, and
-  a TfL or Catalonia camera with a null or blank coordinate being kept at 0,0
-  or on the zero meridian (omerbberk, #1172).
-
-- Director shot actions land on the requested shot. A seek to a shot's start
-  could round a hair below it and select the end of the previous shot for some
-  shot counts and durations (Aditya, @Rohilalala, #1171).
-
-- Fire-perimeter queries handle outlines and holes crossing the antimeridian:
-  areas enclosed near ±180° are included, areas at the opposite meridian are
-  excluded, and returned perimeter coordinates stay near the dateline. Incident
-  cards use the same circular longitude mean and compare multipart outline
-  areas along short longitude edges, keeping the card on the largest polygon
-  (Arianna Method, @ariannamethod, #1142).
-
-- Scenes keep the "Scene not saved" status when a capture, update, append or
-  import cannot be saved, and an unreadable saved project no longer overwrites
-  the recovery checkpoint. `startScene()` resolves to its documented result,
-  `afterShotId` works without an explicit scene, and `scenesRun` counts the
-  distinct scenes queued (djabhi31, #1135).
-
-- Label camera-tool Street View fallbacks as historical Google imagery rather
-  than the current camera view; keep unknown frame provenance explicit
-  (rudycelekli, #1118).
-
-- Release superseded Google Street View open waits and suppress metadata
-  requests whose viewer was unmounted while the service loaded (rudycelekli,
-  #1117).
-
-- Exclude aircraft without a reported altitude from requested altitude bands;
-  unfiltered aircraft queries still retain them (rudycelekli, #1115).
-
-- A failed Esri Satellite or keyless terrain load still shows OSM or flat terrain
-  at once, but no longer lasts the whole session: while the fallback is on
-  screen, the real provider is retried in the background (30 seconds, doubling
-  to a 10-minute cap) and replaces it live once it loads. Map switches never
-  wait for a retry (Aditya, @Rohilalala, #1111).
-
-- Skip TLE sets whose line 1 and line 2 carry different catalog numbers, so a
-  spliced catalog cannot pair one satellite's elements with another's; the next
-  valid set still parses (VG31OP, #1101).
-
-- Overpass data whose element tags contain a failure phrase ("timed out",
-  "runtime error", "too many requests" and similar, e.g. a place named "Timed
-  Out Escape Rooms") is returned as data instead of being refused and putting
-  the endpoint on cooldown; upstream failures are read from the remark (Aditya,
-  @Rohilalala, #1097).
-
-- Military aircraft keep their last heading and speed when an adsb.lol row omits
-  `track` or `gs`, instead of turning north and stopping; a grounded row without
-  a speed still reads 0 (Aditya, @Rohilalala, #1096).
-
-- Update DOMPurify to 3.4.17, Sharp to 0.35.5 and source-map-js to 1.2.2 for
-  GHSA-p98j-92pf-mc4p, GHSA-6688-9rhm-gjv2, GHSA-wq5f-xc86-pv6w and
-  GHSA-68fv-2mgg-jv7q; `npm audit` now reports no vulnerabilities (NurstarK,
-  #1094).
-
-- Location search accepts two-dimensional WGS84 `geo:` URIs offline, with
-  the existing coordinate framing and label. Unsupported URI fields are passed
-  to the remaining search providers unchanged (cj-vana, #1071).
-
-- On Windows, `npm run doctor` and the Pinokio install no longer print Node's
-  DEP0190 warning ("Passing args to a child process with shell option true can
-  lead to security vulnerabilities"): npm.cmd's fixed subcommand is now part of
-  the shell command string instead of an argument array (quanticsoul4772, #1057).
-
-- Cross-site browser requests can no longer spend the TomTom traffic-tile
-  budget through `/api/tomtom/*`. The shared same-site gate runs before status,
-  cache, and upstream work; same-origin app requests and non-browser local
-  callers remain supported (Sunil56224972, #973).
-
-- Recent Imagery: opening DETAILS scrolls its card into view when it opens below
-  the fold. The panel used to restore the previous scroll position right after
-  the reveal, so the card stayed out of sight (Ian Blenke, #970).
-
-- Changelog entries are now one file per pull request. A change adds
-  `changelog.d/<pull request>-<slug>.md` instead of editing the top of
-  `CHANGELOG.md`, which two pull requests in flight could not share — it was the
-  most frequent merge conflict in the open queue, and for six of them the only
-  one. `npm run changelog` splices the directory into `CHANGELOG.md` at release
-  time and empties it; `npm run changelog:check` reports the batch and changes
-  nothing. Fragment text is copied through unchanged (daikaginza, #787).
-
-- Read satellite catalog numbers written in Alpha-5, the TLE spelling of
-  numbers above 99999: a letter for the first two digits, skipping I and O
-  (`A0000` is 100000, `Z9999` is 339999). The satellites layer converted such a
-  field to `NaN`, so every Alpha-5 satellite shared one catalog entry and all
-  but the first were dropped as duplicates; the satellite tools read the same
-  field as no number, so such a satellite could not be found by it. The layer
-  and the tools now decode the field in `src/sources/tle.js`, and reject a
-  malformed one (a sign, decimal point, hex, embedded space or stray letter)
-  instead of reading part of it as a number. This is Alpha-5 TLE
-  compatibility: CelesTrak's TLE feed carries no satellite above 99999, which
-  needs the OMM feed (#1191) (Honorius Neogy, #767, fixes #751).
-
-- The dev server no longer watches `.gev-cache` and `.gev-logs`. Providers write
-  cache files and logs there while the app runs, and none of it is source, so
-  the watcher now skips it; this guards against the DNS-lookup delays heavy
-  cache writes have caused, though no difference was measured on current main
-  (monwiss, #761).
-
-- The client's great-circle distances now come from one shared
-  `src/geoDistance.js` (`greatCircleKm`/`greatCircleMeters`, `{lat, lon}`
-  points). The Earth radius is standardized on 6371.0088 km, so distances shift
-  by about 1.4 ppm and region areas by about 2.8 ppm, and missing or
-  out-of-range points return `Infinity` (onionviolet, #287; Rajojha-1, #749).
+## [0.2.2] — 2026-10-19 — spacelibre identity, localisation and VPS deployment
 
 - The site wears the spacelibre identity. The official lockup from the visual
   identity manual is used as one unmodified vector (symbol and wordmark
@@ -352,509 +304,753 @@
   a region resolve in order: exact tag, then bare code, then the browser's
   region (spacelibres, #1).
 
-- The tracked-aircraft descriptor now publishes `verticalRateMps`, on both the
-  civil and military layers, so a consumer reading `getTrackedInfo()` no longer
-  has to reach past it into the raw poll record for climb/descent. Reported,
-  never derived: an aircraft that has not transmitted a rate reads as `null`
-  rather than a level-flight `0`.
-
-- Add nine Ontario transit feeds: TTC, MiWay, Hamilton HSR, Durham Region,
-  YRT/Viva, Guelph, Burlington, Barrie and Kingston, each carrying its own
-  licence quote and attribution. A feed can now name its own modes, so Toronto's
-  trams read "Streetcar" while Helsinki's stay "Tram", and a feed whose route ids
-  are internal keys can translate them to the number a rider would say. TTC
-  vehicles take their mode from the fleet number first, so replacement buses on
-  streetcar routes read as buses and out-of-service streetcars stay streetcars.
-
-- CCTV cameras with identified hardware show the model's datasheet specs. When a
-  source names a camera model found in the vendored CCTV Camera Database records
-  (CC0), the HUD meta line adds its resolution, night vision and PTZ capability.
-  A fixed single-lens model's horizontal FOV fills in when the source states no
-  FOV and the pose is not curated (`FOV n° (DATASHEET)`); a PTZ or varifocal
-  range is what the lens can do, not its current zoom, so those cameras keep the
-  estimate and show `SPEC FOV min–max° (CAPABILITY)` beside it (bassem chagra,
-  #452).
-
-- Ship a web app manifest and raster home-screen icons, so adding the app to a
-  phone home screen or installing it on desktop uses the God's Eye View mark
-  instead of a blank tile. The icons are generated from `public/logo.svg` by
-  `node scripts/generate-icons.mjs` and committed, so a plain `vite build` needs
-  no image toolchain. The existing SVG favicon still serves the browser tab.
-  Manifest paths are relative to the manifest, so a build served under a path
-  prefix installs and launches inside that prefix.
-
-- Cyclone advisories no longer go dark while NHC publishes an advisory ahead
-  of its nominal time: advisory and position times up to 90 minutes ahead of
-  the server clock are accepted (previously 5 minutes), so the whole feed is
-  not rejected for about half an hour each advisory cycle.
-
-- Flights age out vanished aircraft again. OpenSky's routine position-less rows
-  no longer mark every snapshot partial, which had kept vanished and landed
-  aircraft at full opacity for up to five minutes; those rows retain only their
-  own aircraft, and a likely-landed one still leaves on the landed limit.
-
-- Add WSDOT highway cameras (Washington State) as a keyless CCTV source pack:
-  WSDOT's official Travel Center camera layer, with frames registered only on
-  WSDOT's own image host (partner-hosted cameras such as Oregon DOT and City of
-  Seattle are skipped). Cameras with a single cardinal `CompassDirection` get
-  a high-confidence heading; `B` (both directions), `O`, and unset directions
-  use the shared id-hash fallback at low confidence. By default the 250
-  cameras nearest Seattle and Spokane load; `CCTV_WSDOT_MAX_SOURCES` sets the
-  cap (8–1,200) and `CCTV_WSDOT_ENABLED=0` turns the pack off (bassem chagra,
-  #644).
-
-- Refuse still-image cameras on the CCTV media relay. `/api/cctv/media` is the
-  live-feed route, but it also relayed any registered still camera through an
-  ordinary fetch that followed redirects to any host, passed through whatever
-  content type came back and had no cap on the body, bypassing every protection
-  `/api/cctv/frame` applies to the same URL. Only HLS, MP4, WebM and MJPEG
-  feeds are relayed now; a still camera, or an unknown id, gets a JSON 404
-  without an upstream request and is served only through `/api/cctv/frame`.
-  The client already loaded stills through `/frame`, so nothing it requests
-  changes.
-
-- Add Lithuania's public Via Lietuva / Eismoinfo road cameras to CCTV, with published coordinates, on-demand snapshots, attribution and bounded catalog requests. No API key is required. The pack is opt-in (`CCTV_LITHUANIA_ENABLED=1`) because its camera endpoints are the eismoinfo.lt website backend, not a service listed in Via Lietuva's open-data statement, so the licence for the photos is unconfirmed.
-
-- Add King County road cameras (Washington State) as a keyless CCTV source
-  pack: one public King County DOT ArcGIS layer, fetched with an explicit field
-  list so its staff-name columns are never requested, and frames pinned to the
-  county's own image host and upgraded to HTTPS. WSDOT-owned rows are skipped,
-  and city-owned cameras the county hosts credit their owner. The layer
-  publishes no facing, so headings use the shared id-hash fallback at low
-  confidence. It does publish each camera's hardware, which is served on
-  `/api/cctv/sources` as `model` and `manufacturer`. `CCTV_KINGCOUNTY_MAX_SOURCES`
-  sets the cap and `CCTV_KINGCOUNTY_ENABLED=0` turns the pack off
-  (bassem chagra, #645).
-
-- Add City of Toronto RESCU traffic cameras as a keyless CCTV source pack: the
-  ~336 municipal cameras the Ontario 511 pack does not carry — downtown
-  arterials plus the Gardiner, DVP, Allen and Lake Shore. The list is the
-  City's own open data feed; frames are built from the documented
-  `loc####.jpg` convention and a digits-only camera number, so the frame proxy
-  is pinned to the portal origin by construction. The dataset publishes no
-  camera facing — its `D1`-`D4` fields describe static 2016 comparison images,
-  not the live pan-tilt-zoom frame — so headings use the shared id-hash
-  fallback at low confidence and are corrected with the calibration gizmo.
-  Carries the required Open Government Licence – Toronto attribution. Disable
-  with `CCTV_TORONTO_ENABLED=0`.
-
-- Stop one retired bikeshare feed from reporting the whole layer as failed.
-  City feeds are fetched independently, but failure was recorded in a single
-  flag that only a successful *activation* cleared — and an already-loaded city
-  never activates again. A dead feed re-entering camera range therefore latched
-  LOAD FAILED permanently over a map still drawing every other city's stations.
-  Failure is now tracked per city: a city that fails beside others still
-  drawing marks the layer DEGRADED, polls that all fail over previously drawn
-  points read STALE without advancing freshness, and LOAD FAILED is reported
-  only when nothing is left to draw. A city that recovers clears its own
-  failure, a failure is dropped once its city leaves range or the camera rises
-  above the activation altitude, and late results from superseded requests are
-  ignored.
-
-  Repointed the three feeds whose operators had moved: Reddy Bikeshare (Buffalo)
-  to Social Bicycles, Tugo (Tucson) and Trinity Metro (Fort Worth) to PBSC.
-  Dropped CoGo (Columbus) and Broward B-cycle (Fort Lauderdale), whose systems
-  have wound down — CoGo's feed reports no stations and last moved a bike in
-  March 2025. The three repointed feeds were verified live.
-
-- Add seven Brazilian Bike Itaú (Tembici) cities to the GBFS bikeshare registry:
-  São Paulo, Rio de Janeiro, Salvador, Recife, Porto Alegre, Brasília and
-  Curitiba (about 1,000 stations in total). These are the layer's first stations
-  in South America.
-
-- Add Bike Share Toronto (1,069 stations) to the bikeshare registry. The system
-  publishes the same PBSC GBFS v2 feeds as the Austin, Honolulu and Chattanooga
-  entries, so it needs no new plumbing; a registry test now holds every city's
-  feed URLs against the proxy host and path allowlists, so a city the proxy
-  would refuse fails the suite instead of rendering an empty layer.
-
-- GBFS v3 station names use English translations when available, then the first
-  usable translation or short name. Empty or malformed names no longer appear as
-  `[object Object]` or interrupt station loading; legacy string names remain
-  supported in the globe and bike-share tools. Thanks to
-  [Kristóf Kékesi](https://github.com/KristofKekesi) (#61).
-
-- Overpass and military-installation disk caches no longer serve answers from a
-  previously configured `OVERPASS_UPSTREAMS` instance after it is repointed.
-
-- A Radio Browser mirror answering 204, 205 or 304, or a status outside
-  200–599, no longer crashes the local dev/preview server. Null-body statuses
-  get an empty body; anything else that cannot become a response fails that
-  mirror so the next one is tried.
-
-- Snow flakes sway within a fixed range instead of drifting sideways faster the
-  longer the app runs; the Wind setting still scales the sway.
-
-- The right rail ignores panels that other CSS hides, such as during an event
-  view, so they no longer force one-panel-at-a-time layout or collapse visible
-  panels. Panels the rail collapses itself are still restored.
-
-- Coordinate searches refuse empty latitude or longitude components instead of navigating to an unintended location.
-
-- Bing Aerial and Bing Labels request HTTPS tiles on HTTP localhost through
-  their ion-backed providers, retaining ion and per-tile attribution without
-  widening the Content Security Policy.
-
-- Add New York City traffic cameras from the NYC DOT Traffic Management Center
-  as an opt-in CCTV pack. NYC DOT requires a data-sharing agreement for the
-  camera feed, so the pack is off unless `CCTV_NYC_ENABLED=1` is set by an
-  operator who holds one; otherwise no request reaches NYC DOT. NYC DOT's
-  requested disclaimer is in the Data attribution popover. The camera list is one keyless JSON request to
-  `webcams.nyctmc.org/api/cameras`; frames are stills synthesized from each
-  camera UUID on that same host, so a catalog field cannot steer the proxy
-  off-host. Offline cameras are dropped. Once enabled, the 250 cameras nearest
-  the five borough cores load and `CCTV_NYC_MAX_SOURCES` changes the cap. The catalog-wide ceiling is
-  unchanged; extra cameras share it round-robin with the other packs.
-
-- Spanish interface (`es`), translated by @meirm (#602) and reviewed against the
-  current English.
-
-- Interface localization, starting with Russian. UI text is marked with
-  `t()`, `tn()` (plurals) and `msg()` in code and `data-i18n*` in markup, keyed
-  by the English text itself; each language is one flat JSON catalog
-  (`src/i18n/locales/ru.json`). The language comes from `?lang=`, the language
-  picker (the globe button in the bottom-right corner), then the browser
-  language; English stays the default and the fallback. `npm run i18n`, also
-  run by `npm test`, fails on missing, unused or broken translations. Built on
-  the i18n foundation by @meirm (#601), with the Russian catalog started
-  from #312. It also fails on UI text that is not marked at all.
-- Street Level counts unique tiles before ranking so overlapping dateline halves
-  in polar views do not waste slots in the 16-tile overview budget.
-
-- Directions no longer shows a truncation notice for a route with exactly 200
-  turns, and a roundabout at the 200th turn keeps its exit distance.
-
-- Weather records keep missing conditions unknown and refuse summaries without a measured temperature.
-
-- Tool string length validation counts Unicode characters correctly, including characters outside the basic multilingual plane.
-
-- Director timeline seeks cross the dateline along the short longitude arc.
-
-- Keep unknown GBFS availability counts neutral instead of turning null or empty
-  values into zero bikes.
-
-- Recent Imagery continues past malformed records in full catalog pages, respects the requested record limit, and reports results as truncated when that limit drops valid records.
-
-- Regional articles retain unknown publication times when compact source dates do not identify a real calendar instant.
-
-- Add Detroit (MoGo), Pittsburgh (POGOH), Aspen (WE-cycle) and Kona & Hilo
-  (HIBike) to the GBFS bikeshare registry, the layer's first stations in
-  Michigan.
-
-- Treat explicitly current, complete empty vessel coverage as a successful update,
-  clearing obsolete contacts while retaining stale or incomplete snapshots.
-
-- Custom Street Level provider switches survive share links and stored state
-  using URL-safe stable provider IDs and a shared boolean-switch codec; existing
-  Mapillary links keep their meaning. Explicit provider toggles reach durable
-  state without adopting unrelated live switch changes.
-
-- Directions and Recent Imagery accept replaceable acquisition sources, including
-  route transport, imagery catalog, thumbnails, tile templates and attribution.
-  Explicitly removing either source leaves its layer unavailable; standalone
-  defaults preserve the existing providers.
-
-- Catalog source availability no longer modifies layer objects; unavailable
-  tooltips use layer display names.
-
-- Street Level with no providers uses the shared unavailable state and refuses
-  activation before initialization, while keeping its layer identity visible.
-
-- Application source configuration accepts replacements and explicit removal.
-  Missing catalog feeds leave their layers unavailable without blocking startup
-  or making fallback requests; malformed supplied feeds remain configuration errors.
-
-- Street Level providers are optional in application composition. Omitting a
-  Mapillary source no longer prevents startup; callers can inject a different
-  provider list or an empty list without changing layer identities or share links.
-
-- Vector tile sources take their allowed tile origin from the configured
-  `tileJsonUrl`, so repointing only that URL at a mirror loads tiles from the
-  mirror or fails visibly instead of silently using OpenFreeMap. Thanks to
-  [daikaginza](https://github.com/daikaginza) (#935).
-
-- MCP setup examples use the app's default port, `4173`. Thanks to
-  [Huanyi Xie](https://github.com/xiehuanyi) (#934) and
-  [shirunjies8-png](https://github.com/shirunjies8-png) (#959) for the same fix.
-
-- Voice revisits numbered analyst records through current layer snapshots and
-  preserves resolved pin coordinates. Requested analyst lists and rankings can
-  speak returned items alongside the exact count and coverage caveats. Failed
-  actions settle the voice card without reviving cancelled turns. Coverage
-  benchmarks reject invalid calls before accepting semantic matches.
-
-- Street Level is included in the voice layer manifest for visibility toggles;
-  imagery is not exposed as countable analyst records.
-
-- Voice debug logs omit complete tool-result bodies and serialized function
-  outputs by default, including location queries and generated spoken replies.
-  `GEV_VOICE_LOG_CONTENT=1` retains them for explicit content debugging.
-
-- Unqualified Alps searches use the bundled European range for navigation
-  and annotations instead of a same-named peak returned by a geocoder.
-  Coordinates, supplied presets and geographically qualified place names
-  keep their precedence; annotation proximity and containment guards remain.
-- Contacts analyst follow-ups retain the snapshot's distance ranking rather
-  than switching to the camera. Requested radii and explicit scopes remain
-  authoritative, and a request for a list still requires an analyst query.
-  Analyst speech names stale or degraded feeds and withholds authoritative
-  counts when unavailable. The existing NOTES disclosure preserves complete,
-  deduplicated coverage and source caveats, including crowded results.
-- The voice card shows analyst counts ("At least 250,000 aircraft …") with
-  their scope, feed window and caveats, and marks partial answers. Analyst
-  speech uses the same deterministic headline, preserves lower bounds and says
-  when an answer is partial. Follow-ups retain unanswered-layer coverage, and
-  keep the original scope label when they narrow a remembered result.
-  Contacts-window answers read one immutable panel snapshot, mark a 20,000-row
-  layer cap as a lower bound, and commit that displayed cohort only after
-  cancellation checks pass. Concurrent analyst calls from one model response
-  remain independent; a stopped or replaced user turn still cancels them.
-- Voice answers are shorter and fill slow work instead of going silent. Slow
-  or multi-step requests may open with one short spoken plan; instant ones
-  just happen. Tool results carry a code-built `say` line and a `display`
-  card: sources and notes stay on screen, a caveat is spoken only when it
-  changes the answer, and "at least" and partial answers are always said. A card above the mic shows captions, the plan's steps and the
-  result. When a tool that reports steps (layers, place lookups, outlines,
-  nearest-aircraft) is still running after 1.5 s its current step is spoken
-  once; others say "still working" once after 8 s. A soft
-  tick plays in push-to-talk. Holding Space while the assistant talks cuts it
-  off. Each turn writes latency and speech figures to the debug log
-  (`node scripts/voice-turn-spans.mjs`). Captions of what you say are
-  counted in the voice cost meter; the debug log leaves out what was said
-  unless `GEV_VOICE_LOG_CONTENT=1`.
-- Point and ask: hold Space with the cursor on an aircraft, ship or spot on
-  the map and say "what's that", "track that one" or "how many flights
-  around here". A reticle marks the point and the voice card shows what
-  "this" meant. In open mic it works when you have just moved the cursor
-  there. "The second one" picks from the last numbered list. Asking about
-  "the last one" resolves to the last of the five rows actually shown, and
-  referent-only tracking calls are accepted while empty targets are rejected.
-  Asking about
-  bare ground up close gives the assistant a small crop of the map around the
-  point. A slow render gets one bounded second frame request, while hidden,
-  stale, moved-camera, invalid and oversized captures still fail closed.
-
-## [Unreleased]
-
-- Add a keyless Air quality layer to the Weather group, with Environment and
-  Climate Change Canada's AQHI as the first registered provider. Readings carry
-  `{ provider, scale, value, band }` so another network can be added without
-  inventing a shared numeric meaning across indices that do not share one; the
-  row and readout both state that coverage is Canada only. The WEATHER card
-  shows the band legend and the highest readings currently in view. AQHI is
-  reported as an integer from 1 with an open-ended "10+", so readings round to
-  that published form rather than the decimal precision the API returns.
-  Readings older than six hours are dropped, and the layer reports `stale`
-  through `getStats()` (also when every observation was dropped) so feed
-  provenance cannot describe an aged feed as live. Voice can switch it on and
-  query readings by value, band, station and observation time.
-
-- Bound six upstream body reads (FIRMS CSV, CelesTrak TLE groups, adsb.lol
-  `/v2/mil`, TomTom flow tiles, OpenSky `states/all` and adsbdb lookups) with
-  streaming size caps that cancel the body at the cap or the route's deadline;
-  the adsb.lol military poll gains a deadline of its own. An oversized OpenSky
-  snapshot is not retried, and an OpenSky 429 starts its cooldown before the
-  body is read.
-
-- Keep later satellites when a TLE catalog entry is missing an orbital line.
-  The parser skips the incomplete set and resumes at the next complete named
-  set, instead of losing the rest of the group (#906).
-
-- Satellite clouds keep Clouds only / Full as quick endpoints and add a continuous
-  cloud-filter slider: 0% is Full, 100% is the existing brightness key, and
-  intermediate values blend the keyed alpha. The slider commits on release to
-  avoid restaging imagery for every drag event. Filter percentages round-trip in
-  share links; legacy mode codes retain their old endpoint meanings. Background
-  panel refreshes preserve the pending drag value until release. Contributed by
-  [NotProniss](https://github.com/NotProniss) (#1084).
-
-- Street Level: Panoramax is the fourth provider, keyless. Light its chip
-  (orange; off by default, one provider at a time): from orbit dots show
-  where the federated commons has pictures, and below about 60 km its
-  sequences draw as lines from `api.panoramax.xyz` vector tiles. A click on a
-  line opens that sequence's picture nearest the click without moving the
-  camera, flat or 360°, with cones along the sequence around it and ‹ › /
-  ← → following the picture's own links. The 360° and since filters apply,
-  in the lines and in the lookup. The caption names each picture's author
-  and licence (CC BY-SA 4.0, Licence Ouverte 2.0…) and links to it in the
-  Panoramax viewer. HD originals load once, only when the viewer is wider
-  than the 2,048 px version (a panorama: expanded), and every download stops
-  when the photo changes; an image whose header declares more than 64 MP is
-  refused before it decodes. Share links carry it as
-  `0.m.0_0.r.google-0*kartaview-0*panoramax-1` (`0.m.0_0.r.panoramax-1` works
-  too). KartaView's photo viewer
-  is now shared (`photoViewer.js`, `panorama.js`); in it, for KartaView too,
-  Esc clears the selected drive before it collapses the panel. Lines are
-  simplified and drawn within a point budget (a tile's unsimplified lines
-  over Paris hung the tab), decoded in slices so the globe keeps moving,
-  and kept; the cones' tiles have their own connection, and the open
-  picture's tile draws its cones before its neighbours arrive.
-
-- Flights and Military Flights highlight emergency transponder broadcasts in
-  fleet billboards, 3D models and Cockpit contacts. Colors update when a status
-  starts or clears. Emergency squawks outrank ADS-B priority statuses; GEV
-  reports minimum fuel and lifeguard without red tint. Cockpit names the code
-  or ADS-B status, and analyst/voice results retain broadcast provenance and
-  the latest known contact time. One omitted ADS-B status poll during a source
-  switch may retain the previous status if the squawk is unchanged; an explicit
-  clear takes effect immediately. Broadcasts are not confirmed incidents.
-  Contributed by [Leo Pechnicki](https://github.com/leopechnicki) (#856).
-
-- Street Level: KartaView is the third provider, keyless. Light its chip
-  (purple; off by default, one provider at a time) and zoom in below about
-  6 km: the lines are the streets KartaView has photos of (z13–14 tiles from
-  `api.kartaview.org`). A click on a line opens the photo nearest the click
-  without moving the camera, flat or 360° (a small WebGL panorama: drag to
-  look, wheel to zoom), with cones along its drive and ‹ › / ← → to step
-  through it. The caption links to the full-size photo (KartaView's photo
-  pages fail for signed-out visitors), and the globe credits "© KartaView
-  contributors, CC BY-SA 4.0". Share links carry it in the provider
-  switches (`0.m.0_0.r.google-0*kartaview-1`). Archived photos (KartaView
-  answers 409) are skipped by the click and by ‹ ›. Shift+← →, ↑ ↓, + − and
-  pinch look around a 360° photo. The open photo's marker is a purple view
-  cone pointing along the drive (KartaView's own compass headings are often
-  0 or far off). The IMAGERY (ALL / 360° / FLAT) and SINCE filters apply to
-  KartaView as to Mapillary: its lines are filtered by KartaView's own
-  server (its filtered PNG tiles, as a mask over the JSON lines), and the
-  photo a click opens, and the cones, by each photo's projection and upload
-  date. KartaView's SINCE is the upload date (all its server can filter by);
-  a note under the slider says so while KartaView is lit (`sinceBasis:
-  'upload'` in the provider contract).
-  Mapillary's line coverage and sequence cones are now shared by both
-  (`lineCoverage.js`, `sequenceCones.js`).
-
-- Street Level: Google Street View is the second provider. On the Google 3D
-  map (Google's terms keep it off other maps), light its chip (off by
-  default: every panorama is billed to the Google Maps key, which needs the
-  Maps JavaScript API) and click a street, or press OPEN STREET VIEW, to
-  open Google's own panorama in
-  the panel, with its arrows, the address and month in the caption, a link
-  to Google Maps and FOLLOW. Share links carry it in the provider switches
-  (`r.google-1`). One provider is lit at a time (lighting one switches the
-  other off), Mapillary by default since it is free. Street View's panoramas
-  are all 360°, so the IMAGERY and SINCE filters and the legend apply to
-  Mapillary only and hide while GOOGLE STREET VIEW is lit; its globe marker
-  is a Google-blue view cone.
-
-- Add an experimental ChatGPT/Codex OAuth option for cloud voice in Provider
-  Settings. API-key voice remains the default. Local sign-in can start from
-  the auth button and reports completion, failure, timeout, or expired
-  credentials. OAuth credentials stay on the server; local routes require
-  loopback access and same-site requests. OAuth sessions retain usage data
-  and show unknown cost; caption transcriptions are counted rather than
-  priced into the API-key cap. The auth button keeps keyboard focus after a
-  mode change, and pending sign-in does not discard text in the key fields.
-  Thanks to [Shayan Khan](https://github.com/devv-shayan) for #621 and
-  [TheSmokeDev](https://github.com/TheSmokeDev) for the credential handling
-  from #653.
-
-- **Docker install path.** `docker compose up` builds on CI's Node 24.14.0 image,
-  pinned by digest, and serves the app on `http://localhost:4173` with no local
-  Node install. The repo is bind-mounted and the container runs as the host user
-  (never root), so `.env`,
-  `.gev-cache`, and `.gev-logs` persist on the host exactly as they do under
-  `npm run dev` — Provider Settings included. The launcher
-  (`scripts/docker-start.mjs`) trusts the container's gateway address for that
-  panel, since that is where Docker delivers the host's own browser from; the
-  opt-in behind it, `GEV_KEY_SETUP_TRUSTED_PEERS`, takes exact addresses only
-  and is unset (so loopback-only, unchanged) under every other launcher.
-  Thanks to [jklaze](https://github.com/jklaze) for finding and diagnosing the
-  container-to-host 403, and to [14traits](https://github.com/14traits),
-  [PoBruno](https://github.com/PoBruno) and [milu70hub](https://github.com/milu70hub)
-  for testing on Apple silicon, Docker Engine on Linux, and NAS hosts.
-
-- Stdio servers from one install share a panel key so a page read from one
-  process can make requests through another. Concurrent malformed-key repairs
-  now select one winner; unavailable storage or a busy repair retains the
-  logged per-process fallback. Thanks to [Jibran Tahir](https://github.com/jibraaan)
-  for #958, [MarvinNL046](https://github.com/MarvinNL046) for the report and
-  proposed diagnosis in #927, and [kvnloo](https://github.com/kvnloo) for identifying
-  the repair race. Windows/Claude Desktop Cowork confirmation remains outstanding.
-
-- Street Level: a street-level imagery layer modelled on the iD editor's photo
-  overlay, with Mapillary as its first provider (free client token, CC BY-SA 4.0
-  imagery). One right-rail panel holds a chip per provider, shared 360°/flat and
-  captured-since filters, and an embedded viewer with EXPAND, FIT/FILL and
-  FOLLOW (Google 3D only). Coverage lines and image cones are drawn from orbit
-  down to a single street; on Google 3D they sit on the bare earth, refined
-  against the rendered mesh near the camera, so trees and buildings hide them.
-  Share links carry the provider switches, the filters and the panel's collapsed
-  state. A server proxy caches Mapillary coverage tiles (24 h, 1 GiB on disk),
-  refuses cross-site requests, rate-limits per IP and backs off when Mapillary
-  rejects the token or rate-limits.
-
-- The CCTV and Street Level panels are portable: drag the header to float the
-  panel, resize it from any edge or corner, and double-click the header to dock
-  it again. The position persists across reloads.
-
-- Add Norway's city bikes to the Bike Share layer: Oslo, Bergen and
-  Trondheim Bysykkel (Urban Sharing), Kolumbus Bysykkel in Stavanger and
-  Farte Bysykkel in Skien/Porsgrunn (Entur Mobility), and Bysykkel
-  Lillestrøm (JCDecaux), about 760 stations in all. Every feed is keyless
-  GBFS. `gbfs.urbansharing.com`, `api.entur.io` and `api.cyclocity.fr` join
-  the proxy allowlist; the last two are kept to their GBFS paths. The proxy
-  now sends `Client-Identifier: gods-eye-view` on every request and
-  `ET-Client-Name: gods-eye-view-bikeshare` to Entur, as the operators ask,
-  and accepts Entur's extensionless feed paths. Attributed under NLOD and
-  Licence Ouverte. `get_bike_share` covers the six systems too.
-
-- Add Norway's road cameras from Statens vegvesen as a CCTV pack. The camera
-  list is one keyless GeoJSON request to the agency's OGC API view of its
-  DATEX 3.1 CCTV table, so no DATEX account is needed. Every working camera
-  loads (~850; faulty ones are dropped) under one "Norway" category, and the
-  ~135 working cameras that publish HLS play as live video through the existing in-memory
-  relay with the still as fallback. Frames and manifests are pinned to each
-  camera's own path on the agency hosts. `CCTV_VEGVESEN_ENABLED=0` disables
-  the pack, `CCTV_VEGVESEN_MAX_SOURCES` caps it (keeping cameras nearest the
-  largest cities) and `CCTV_VEGVESEN_VIDEO=0` keeps stills only. Attributed
-  under NLOD 2.0.
-
-- Add Catalonia (Servei Català de Trànsit) as a keyless CCTV source pack: ~130
-  cameras from a WFS/GML feed that aggregates SCT's own highway cameras with
-  hotlinked Barcelona and Terrassa municipal cameras, each partner named as a
-  credit beside the shared provider. Ambient-card refresh paced to 3 minutes,
-  matching the empirically observed upstream cadence. `CCTV_CATALONIA_MAX_SOURCES`
-  sets the cap and `CCTV_CATALONIA_ENABLED=0` turns the pack off. The catalog
-  is fetched over https with redirects refused and a 1 MiB body cap, and frame
-  links carrying userinfo or an explicit port, or outside the publisher's frame
-  directory, are rejected even on an allowlisted host. Camera ids come from
-  each frame's SCT camera file or image path rather than the feed's
-  restart-dependent feature id, and rows the feed repeats collapse to one.
-
-- Import your own GeoJSON, KML, KMZ and GPX files from DISPLAY or by dropping
-  them onto the app. Show, hide, fly to or remove each file for the session.
-  GeoJSON/GPX draw on the ground; KML retains its styles and explicit heights.
-  Large repeated-style exports use shared local pins, while recorded track
-  vertices and segment gaps stay intact. Imports respect newer camera gestures,
-  leave the shared clock alone, and report malformed or oversized files.
-  File bytes stay on the device; rendered overlays may appear in shared map
-  screenshots. Thanks to [Chase Mills](https://github.com/kapturner) (#925).
-
-- GNSS Integrity (Events, voice-addressable, share token `3`) draws navigation
-  accuracy scores from a keyless regional adsb.lol sample; aircraft-level analyst
-  queries are unavailable for these aggregate cells. Cells do not intercept
-  map clicks. Pan/zoom refreshes automatically; feed failures retain the display
-  and explain the next retry. Aircraft-reported quality includes MLAT-positioned
-  contacts after GPS loss, excludes TIS-B/MLAT-derived quality, and locates GPS-loss
-  evidence at the last good GNSS position when available. Scores discount one
-  bad aircraft per cell and retain 30 minutes of visited-view evidence; they
-  do not confirm jamming. See [method and limits](DATA_SOURCES.md#gnss-integrity).
-  Contributed by [Leo Pechnicki](https://github.com/leopechnicki) (#855).
-
-- Live HLS cameras play on a page opened over plain HTTP from another machine
-  (`HOST=0.0.0.0`). The client lease id came from `crypto.randomUUID`, which
-  browsers only expose in secure contexts, so starting a live feed threw
-  before playback. The id now falls back to a v4 UUID built from
-  `crypto.getRandomValues`, which the server's lease check accepts.
-
-- Move Google geocoding behind the local server. Forward and reverse lookups now
-  go through `/api/google/geocode` and `/api/google/reverse-geocode` with the
-  server key, joining Places and Street View. Google's Geocoding web service
-  refuses referrer-restricted keys, so the previous browser call left
-  `SECURITY.md`'s advice and working search mutually exclusive: the bundled
-  browser key had to be unrestricted for search to work at all. That key now
-  needs only the Map Tiles API and the Maps JavaScript API (Street View). Keyless sessions and the Photon/Nominatim
-  fallback order are unchanged.
+- Accept requests from the reverse proxy the deployment runs behind. The
+  same-site gate refused every visitor behind Caddy, because Caddy's forwarding
+  headers mean "this did not originate here" and its hop to the app is plain
+  HTTP, so an `https:` Origin never matched. `GEV_TRUSTED_PROXY=1`, which the
+  installer now sets on the app service, admits those headers and restores the
+  visitor's scheme from `X-Forwarded-Proto`; a foreign Origin and a hostile
+  `Sec-Fetch-Site` are still refused. This also unblocks the Google Places and
+  HUD-summary routes on the deployed host, which had been answering 403 to
+  every browser (spacelibres, #103).
+
+This release also merges the upstream history that accumulated since
+0.2.1. Those entries follow, unchanged, so the merge is traceable from
+here.
+
+  - Add nine Spanish city bike systems to Bike Share and `get_bike_share`: BiciMAD
+    (Madrid), Valenbisi (Valencia), Bizi Zaragoza, Sevici (Seville), BIKI
+    (Valladolid), BiciCoruña, Dbizi (Donostia-San Sebastián), Bilbao Bizi and
+    BicinRivas, about 1,840 stations. Station names read underscores as word
+    breaks, and station capacity counts docks rather than PBSC's geofenced area
+    (ulihhhh, #1190).
+
+
+  - Keep missing launch-pad coordinates unknown so launches use the location
+    fallback or stay off the map instead of appearing at 0°N 0°E. Missing stage
+    flight numbers no longer show "FLIGHT 0"
+    (Rudy Celekli, @rudycelekli, #1186).
+
+
+  - Flights' ground floor works across the antimeridian. The viewer-distance
+    check behind the 150 km floor radius and its copy in the photoreal mesh-floor
+    sampler subtracted longitudes without wrapping, so two points 21 km apart
+    across 180° measured about 38,000 km and low or grounded aircraft just across
+    the line from the viewer were never floored. A contact's display corridor
+    walked a segment across 180° the long way round, spending its cell budget on
+    ground behind the contact, and a contact on the seam lost its cell hysteresis.
+    SEARCH NEARBY SITES on a view across 180° searched Google Places around
+    longitude 0, on the far side of the globe, with a radius sized from the view's
+    height alone; it now searches the view (Aditya, @Rohilalala, #1173).
+
+
+  - Keep missing CCTV numbers unknown instead of reading them as zero. `Number`
+    turns null, blank strings and booleans into 0 or 1, and the camera source
+    list sends an unknown number as JSON null, so a source-pack camera that left
+    out its pose reached the browser as zeros clamped to each field's floor —
+    facing north, pitch −2°, FOV 20°, range 120 m, mount 6 m and ground 0 m —
+    instead of the defaults (id-hash heading, −17°, 74°, 700 m, 24 m and the
+    city's ground); a null or blank position placed the camera at 0,0. The
+    server's `toFiniteNumber` and the browser's `safeNumber` now treat absent,
+    blank and boolean values as missing. The same conversion also stops a
+    Tallinn row with a null heading reading as a confident north-facing camera,
+    a Caltrans camera with a blank elevation losing its 150 m ground prior, and
+    a TfL or Catalonia camera with a null or blank coordinate being kept at 0,0
+    or on the zero meridian (omerbberk, #1172).
+
+
+  - Director shot actions land on the requested shot. A seek to a shot's start
+    could round a hair below it and select the end of the previous shot for some
+    shot counts and durations (Aditya, @Rohilalala, #1171).
+
+
+  - Fire-perimeter queries handle outlines and holes crossing the antimeridian:
+    areas enclosed near ±180° are included, areas at the opposite meridian are
+    excluded, and returned perimeter coordinates stay near the dateline. Incident
+    cards use the same circular longitude mean and compare multipart outline
+    areas along short longitude edges, keeping the card on the largest polygon
+    (Arianna Method, @ariannamethod, #1142).
+
+
+  - Scenes keep the "Scene not saved" status when a capture, update, append or
+    import cannot be saved, and an unreadable saved project no longer overwrites
+    the recovery checkpoint. `startScene()` resolves to its documented result,
+    `afterShotId` works without an explicit scene, and `scenesRun` counts the
+    distinct scenes queued (djabhi31, #1135).
+
+
+  - Label camera-tool Street View fallbacks as historical Google imagery rather
+    than the current camera view; keep unknown frame provenance explicit
+    (rudycelekli, #1118).
+
+
+  - Release superseded Google Street View open waits and suppress metadata
+    requests whose viewer was unmounted while the service loaded (rudycelekli,
+    #1117).
+
+
+  - Exclude aircraft without a reported altitude from requested altitude bands;
+    unfiltered aircraft queries still retain them (rudycelekli, #1115).
+
+
+  - A failed Esri Satellite or keyless terrain load still shows OSM or flat terrain
+    at once, but no longer lasts the whole session: while the fallback is on
+    screen, the real provider is retried in the background (30 seconds, doubling
+    to a 10-minute cap) and replaces it live once it loads. Map switches never
+    wait for a retry (Aditya, @Rohilalala, #1111).
+
+
+  - Skip TLE sets whose line 1 and line 2 carry different catalog numbers, so a
+    spliced catalog cannot pair one satellite's elements with another's; the next
+    valid set still parses (VG31OP, #1101).
+
+
+  - Overpass data whose element tags contain a failure phrase ("timed out",
+    "runtime error", "too many requests" and similar, e.g. a place named "Timed
+    Out Escape Rooms") is returned as data instead of being refused and putting
+    the endpoint on cooldown; upstream failures are read from the remark (Aditya,
+    @Rohilalala, #1097).
+
+
+  - Military aircraft keep their last heading and speed when an adsb.lol row omits
+    `track` or `gs`, instead of turning north and stopping; a grounded row without
+    a speed still reads 0 (Aditya, @Rohilalala, #1096).
+
+
+  - Update DOMPurify to 3.4.17, Sharp to 0.35.5 and source-map-js to 1.2.2 for
+    GHSA-p98j-92pf-mc4p, GHSA-6688-9rhm-gjv2, GHSA-wq5f-xc86-pv6w and
+    GHSA-68fv-2mgg-jv7q; `npm audit` now reports no vulnerabilities (NurstarK,
+    #1094).
+
+
+  - Location search accepts two-dimensional WGS84 `geo:` URIs offline, with
+    the existing coordinate framing and label. Unsupported URI fields are passed
+    to the remaining search providers unchanged (cj-vana, #1071).
+
+
+  - On Windows, `npm run doctor` and the Pinokio install no longer print Node's
+    DEP0190 warning ("Passing args to a child process with shell option true can
+    lead to security vulnerabilities"): npm.cmd's fixed subcommand is now part of
+    the shell command string instead of an argument array (quanticsoul4772, #1057).
+
+
+  - Cross-site browser requests can no longer spend the TomTom traffic-tile
+    budget through `/api/tomtom/*`. The shared same-site gate runs before status,
+    cache, and upstream work; same-origin app requests and non-browser local
+    callers remain supported (Sunil56224972, #973).
+
+
+  - Recent Imagery: opening DETAILS scrolls its card into view when it opens below
+    the fold. The panel used to restore the previous scroll position right after
+    the reveal, so the card stayed out of sight (Ian Blenke, #970).
+
+
+  - Changelog entries are now one file per pull request. A change adds
+    `changelog.d/<pull request>-<slug>.md` instead of editing the top of
+    `CHANGELOG.md`, which two pull requests in flight could not share — it was the
+    most frequent merge conflict in the open queue, and for six of them the only
+    one. `npm run changelog` splices the directory into `CHANGELOG.md` at release
+    time and empties it; `npm run changelog:check` reports the batch and changes
+    nothing. Fragment text is copied through unchanged (daikaginza, #787).
+
+
+  - Read satellite catalog numbers written in Alpha-5, the TLE spelling of
+    numbers above 99999: a letter for the first two digits, skipping I and O
+    (`A0000` is 100000, `Z9999` is 339999). The satellites layer converted such a
+    field to `NaN`, so every Alpha-5 satellite shared one catalog entry and all
+    but the first were dropped as duplicates; the satellite tools read the same
+    field as no number, so such a satellite could not be found by it. The layer
+    and the tools now decode the field in `src/sources/tle.js`, and reject a
+    malformed one (a sign, decimal point, hex, embedded space or stray letter)
+    instead of reading part of it as a number. This is Alpha-5 TLE
+    compatibility: CelesTrak's TLE feed carries no satellite above 99999, which
+    needs the OMM feed (#1191) (Honorius Neogy, #767, fixes #751).
+
+
+  - The dev server no longer watches `.gev-cache` and `.gev-logs`. Providers write
+    cache files and logs there while the app runs, and none of it is source, so
+    the watcher now skips it; this guards against the DNS-lookup delays heavy
+    cache writes have caused, though no difference was measured on current main
+    (monwiss, #761).
+
+
+  - The client's great-circle distances now come from one shared
+    `src/geoDistance.js` (`greatCircleKm`/`greatCircleMeters`, `{lat, lon}`
+    points). The Earth radius is standardized on 6371.0088 km, so distances shift
+    by about 1.4 ppm and region areas by about 2.8 ppm, and missing or
+    out-of-range points return `Infinity` (onionviolet, #287; Rajojha-1, #749).
+
+
+  - The tracked-aircraft descriptor now publishes `verticalRateMps`, on both the
+    civil and military layers, so a consumer reading `getTrackedInfo()` no longer
+    has to reach past it into the raw poll record for climb/descent. Reported,
+    never derived: an aircraft that has not transmitted a rate reads as `null`
+    rather than a level-flight `0`.
+
+
+  - Add nine Ontario transit feeds: TTC, MiWay, Hamilton HSR, Durham Region,
+    YRT/Viva, Guelph, Burlington, Barrie and Kingston, each carrying its own
+    licence quote and attribution. A feed can now name its own modes, so Toronto's
+    trams read "Streetcar" while Helsinki's stay "Tram", and a feed whose route ids
+    are internal keys can translate them to the number a rider would say. TTC
+    vehicles take their mode from the fleet number first, so replacement buses on
+    streetcar routes read as buses and out-of-service streetcars stay streetcars.
+
+
+  - CCTV cameras with identified hardware show the model's datasheet specs. When a
+    source names a camera model found in the vendored CCTV Camera Database records
+    (CC0), the HUD meta line adds its resolution, night vision and PTZ capability.
+    A fixed single-lens model's horizontal FOV fills in when the source states no
+    FOV and the pose is not curated (`FOV n° (DATASHEET)`); a PTZ or varifocal
+    range is what the lens can do, not its current zoom, so those cameras keep the
+    estimate and show `SPEC FOV min–max° (CAPABILITY)` beside it (bassem chagra,
+    #452).
+
+
+  - Ship a web app manifest and raster home-screen icons, so adding the app to a
+    phone home screen or installing it on desktop uses the God's Eye View mark
+    instead of a blank tile. The icons are generated from `public/logo.svg` by
+    `node scripts/generate-icons.mjs` and committed, so a plain `vite build` needs
+    no image toolchain. The existing SVG favicon still serves the browser tab.
+    Manifest paths are relative to the manifest, so a build served under a path
+    prefix installs and launches inside that prefix.
+
+
+  - Cyclone advisories no longer go dark while NHC publishes an advisory ahead
+    of its nominal time: advisory and position times up to 90 minutes ahead of
+    the server clock are accepted (previously 5 minutes), so the whole feed is
+    not rejected for about half an hour each advisory cycle.
+
+
+  - Flights age out vanished aircraft again. OpenSky's routine position-less rows
+    no longer mark every snapshot partial, which had kept vanished and landed
+    aircraft at full opacity for up to five minutes; those rows retain only their
+    own aircraft, and a likely-landed one still leaves on the landed limit.
+
+
+  - Add WSDOT highway cameras (Washington State) as a keyless CCTV source pack:
+    WSDOT's official Travel Center camera layer, with frames registered only on
+    WSDOT's own image host (partner-hosted cameras such as Oregon DOT and City of
+    Seattle are skipped). Cameras with a single cardinal `CompassDirection` get
+    a high-confidence heading; `B` (both directions), `O`, and unset directions
+    use the shared id-hash fallback at low confidence. By default the 250
+    cameras nearest Seattle and Spokane load; `CCTV_WSDOT_MAX_SOURCES` sets the
+    cap (8–1,200) and `CCTV_WSDOT_ENABLED=0` turns the pack off (bassem chagra,
+    #644).
+
+
+  - Refuse still-image cameras on the CCTV media relay. `/api/cctv/media` is the
+    live-feed route, but it also relayed any registered still camera through an
+    ordinary fetch that followed redirects to any host, passed through whatever
+    content type came back and had no cap on the body, bypassing every protection
+    `/api/cctv/frame` applies to the same URL. Only HLS, MP4, WebM and MJPEG
+    feeds are relayed now; a still camera, or an unknown id, gets a JSON 404
+    without an upstream request and is served only through `/api/cctv/frame`.
+    The client already loaded stills through `/frame`, so nothing it requests
+    changes.
+
+
+  - Add Lithuania's public Via Lietuva / Eismoinfo road cameras to CCTV, with published coordinates, on-demand snapshots, attribution and bounded catalog requests. No API key is required. The pack is opt-in (`CCTV_LITHUANIA_ENABLED=1`) because its camera endpoints are the eismoinfo.lt website backend, not a service listed in Via Lietuva's open-data statement, so the licence for the photos is unconfirmed.
+
+
+  - Add King County road cameras (Washington State) as a keyless CCTV source
+    pack: one public King County DOT ArcGIS layer, fetched with an explicit field
+    list so its staff-name columns are never requested, and frames pinned to the
+    county's own image host and upgraded to HTTPS. WSDOT-owned rows are skipped,
+    and city-owned cameras the county hosts credit their owner. The layer
+    publishes no facing, so headings use the shared id-hash fallback at low
+    confidence. It does publish each camera's hardware, which is served on
+    `/api/cctv/sources` as `model` and `manufacturer`. `CCTV_KINGCOUNTY_MAX_SOURCES`
+    sets the cap and `CCTV_KINGCOUNTY_ENABLED=0` turns the pack off
+    (bassem chagra, #645).
+
+
+  - Add City of Toronto RESCU traffic cameras as a keyless CCTV source pack: the
+    ~336 municipal cameras the Ontario 511 pack does not carry — downtown
+    arterials plus the Gardiner, DVP, Allen and Lake Shore. The list is the
+    City's own open data feed; frames are built from the documented
+    `loc####.jpg` convention and a digits-only camera number, so the frame proxy
+    is pinned to the portal origin by construction. The dataset publishes no
+    camera facing — its `D1`-`D4` fields describe static 2016 comparison images,
+    not the live pan-tilt-zoom frame — so headings use the shared id-hash
+    fallback at low confidence and are corrected with the calibration gizmo.
+    Carries the required Open Government Licence – Toronto attribution. Disable
+    with `CCTV_TORONTO_ENABLED=0`.
+
+
+  - Stop one retired bikeshare feed from reporting the whole layer as failed.
+    City feeds are fetched independently, but failure was recorded in a single
+    flag that only a successful *activation* cleared — and an already-loaded city
+    never activates again. A dead feed re-entering camera range therefore latched
+    LOAD FAILED permanently over a map still drawing every other city's stations.
+    Failure is now tracked per city: a city that fails beside others still
+    drawing marks the layer DEGRADED, polls that all fail over previously drawn
+    points read STALE without advancing freshness, and LOAD FAILED is reported
+    only when nothing is left to draw. A city that recovers clears its own
+    failure, a failure is dropped once its city leaves range or the camera rises
+    above the activation altitude, and late results from superseded requests are
+    ignored.
+
+    Repointed the three feeds whose operators had moved: Reddy Bikeshare (Buffalo)
+    to Social Bicycles, Tugo (Tucson) and Trinity Metro (Fort Worth) to PBSC.
+    Dropped CoGo (Columbus) and Broward B-cycle (Fort Lauderdale), whose systems
+    have wound down — CoGo's feed reports no stations and last moved a bike in
+    March 2025. The three repointed feeds were verified live.
+
+
+  - Add seven Brazilian Bike Itaú (Tembici) cities to the GBFS bikeshare registry:
+    São Paulo, Rio de Janeiro, Salvador, Recife, Porto Alegre, Brasília and
+    Curitiba (about 1,000 stations in total). These are the layer's first stations
+    in South America.
+
+
+  - Add Bike Share Toronto (1,069 stations) to the bikeshare registry. The system
+    publishes the same PBSC GBFS v2 feeds as the Austin, Honolulu and Chattanooga
+    entries, so it needs no new plumbing; a registry test now holds every city's
+    feed URLs against the proxy host and path allowlists, so a city the proxy
+    would refuse fails the suite instead of rendering an empty layer.
+
+
+  - GBFS v3 station names use English translations when available, then the first
+    usable translation or short name. Empty or malformed names no longer appear as
+    `[object Object]` or interrupt station loading; legacy string names remain
+    supported in the globe and bike-share tools. Thanks to
+    [Kristóf Kékesi](https://github.com/KristofKekesi) (#61).
+
+
+  - Overpass and military-installation disk caches no longer serve answers from a
+    previously configured `OVERPASS_UPSTREAMS` instance after it is repointed.
+
+
+  - A Radio Browser mirror answering 204, 205 or 304, or a status outside
+    200–599, no longer crashes the local dev/preview server. Null-body statuses
+    get an empty body; anything else that cannot become a response fails that
+    mirror so the next one is tried.
+
+
+  - Snow flakes sway within a fixed range instead of drifting sideways faster the
+    longer the app runs; the Wind setting still scales the sway.
+
+
+  - The right rail ignores panels that other CSS hides, such as during an event
+    view, so they no longer force one-panel-at-a-time layout or collapse visible
+    panels. Panels the rail collapses itself are still restored.
+
+
+  - Coordinate searches refuse empty latitude or longitude components instead of navigating to an unintended location.
+
+
+  - Bing Aerial and Bing Labels request HTTPS tiles on HTTP localhost through
+    their ion-backed providers, retaining ion and per-tile attribution without
+    widening the Content Security Policy.
+
+
+  - Add New York City traffic cameras from the NYC DOT Traffic Management Center
+    as an opt-in CCTV pack. NYC DOT requires a data-sharing agreement for the
+    camera feed, so the pack is off unless `CCTV_NYC_ENABLED=1` is set by an
+    operator who holds one; otherwise no request reaches NYC DOT. NYC DOT's
+    requested disclaimer is in the Data attribution popover. The camera list is one keyless JSON request to
+    `webcams.nyctmc.org/api/cameras`; frames are stills synthesized from each
+    camera UUID on that same host, so a catalog field cannot steer the proxy
+    off-host. Offline cameras are dropped. Once enabled, the 250 cameras nearest
+    the five borough cores load and `CCTV_NYC_MAX_SOURCES` changes the cap. The catalog-wide ceiling is
+    unchanged; extra cameras share it round-robin with the other packs.
+
+
+  - Spanish interface (`es`), translated by @meirm (#602) and reviewed against the
+    current English.
+
+
+  - Interface localization, starting with Russian. UI text is marked with
+    `t()`, `tn()` (plurals) and `msg()` in code and `data-i18n*` in markup, keyed
+    by the English text itself; each language is one flat JSON catalog
+    (`src/i18n/locales/ru.json`). The language comes from `?lang=`, the language
+    picker (the globe button in the bottom-right corner), then the browser
+    language; English stays the default and the fallback. `npm run i18n`, also
+    run by `npm test`, fails on missing, unused or broken translations. Built on
+    the i18n foundation by @meirm (#601), with the Russian catalog started
+    from #312. It also fails on UI text that is not marked at all.
+
+  - Street Level counts unique tiles before ranking so overlapping dateline halves
+    in polar views do not waste slots in the 16-tile overview budget.
+
+
+  - Directions no longer shows a truncation notice for a route with exactly 200
+    turns, and a roundabout at the 200th turn keeps its exit distance.
+
+
+  - Weather records keep missing conditions unknown and refuse summaries without a measured temperature.
+
+
+  - Tool string length validation counts Unicode characters correctly, including characters outside the basic multilingual plane.
+
+
+  - Director timeline seeks cross the dateline along the short longitude arc.
+
+
+  - Keep unknown GBFS availability counts neutral instead of turning null or empty
+    values into zero bikes.
+
+
+  - Recent Imagery continues past malformed records in full catalog pages, respects the requested record limit, and reports results as truncated when that limit drops valid records.
+
+
+  - Regional articles retain unknown publication times when compact source dates do not identify a real calendar instant.
+
+
+  - Add Detroit (MoGo), Pittsburgh (POGOH), Aspen (WE-cycle) and Kona & Hilo
+    (HIBike) to the GBFS bikeshare registry, the layer's first stations in
+    Michigan.
+
+
+  - Treat explicitly current, complete empty vessel coverage as a successful update,
+    clearing obsolete contacts while retaining stale or incomplete snapshots.
+
+
+  - Custom Street Level provider switches survive share links and stored state
+    using URL-safe stable provider IDs and a shared boolean-switch codec; existing
+    Mapillary links keep their meaning. Explicit provider toggles reach durable
+    state without adopting unrelated live switch changes.
+
+
+  - Directions and Recent Imagery accept replaceable acquisition sources, including
+    route transport, imagery catalog, thumbnails, tile templates and attribution.
+    Explicitly removing either source leaves its layer unavailable; standalone
+    defaults preserve the existing providers.
+
+
+  - Catalog source availability no longer modifies layer objects; unavailable
+    tooltips use layer display names.
+
+
+  - Street Level with no providers uses the shared unavailable state and refuses
+    activation before initialization, while keeping its layer identity visible.
+
+
+  - Application source configuration accepts replacements and explicit removal.
+    Missing catalog feeds leave their layers unavailable without blocking startup
+    or making fallback requests; malformed supplied feeds remain configuration errors.
+
+
+  - Street Level providers are optional in application composition. Omitting a
+    Mapillary source no longer prevents startup; callers can inject a different
+    provider list or an empty list without changing layer identities or share links.
+
+
+  - Vector tile sources take their allowed tile origin from the configured
+    `tileJsonUrl`, so repointing only that URL at a mirror loads tiles from the
+    mirror or fails visibly instead of silently using OpenFreeMap. Thanks to
+    [daikaginza](https://github.com/daikaginza) (#935).
+
+
+  - MCP setup examples use the app's default port, `4173`. Thanks to
+    [Huanyi Xie](https://github.com/xiehuanyi) (#934) and
+    [shirunjies8-png](https://github.com/shirunjies8-png) (#959) for the same fix.
+
+
+  - Voice revisits numbered analyst records through current layer snapshots and
+    preserves resolved pin coordinates. Requested analyst lists and rankings can
+    speak returned items alongside the exact count and coverage caveats. Failed
+    actions settle the voice card without reviving cancelled turns. Coverage
+    benchmarks reject invalid calls before accepting semantic matches.
+
+
+  - Street Level is included in the voice layer manifest for visibility toggles;
+    imagery is not exposed as countable analyst records.
+
+
+  - Voice debug logs omit complete tool-result bodies and serialized function
+    outputs by default, including location queries and generated spoken replies.
+    `GEV_VOICE_LOG_CONTENT=1` retains them for explicit content debugging.
+
+
+  - Unqualified Alps searches use the bundled European range for navigation
+    and annotations instead of a same-named peak returned by a geocoder.
+    Coordinates, supplied presets and geographically qualified place names
+    keep their precedence; annotation proximity and containment guards remain.
+
+  - Contacts analyst follow-ups retain the snapshot's distance ranking rather
+    than switching to the camera. Requested radii and explicit scopes remain
+    authoritative, and a request for a list still requires an analyst query.
+    Analyst speech names stale or degraded feeds and withholds authoritative
+    counts when unavailable. The existing NOTES disclosure preserves complete,
+    deduplicated coverage and source caveats, including crowded results.
+
+  - The voice card shows analyst counts ("At least 250,000 aircraft …") with
+    their scope, feed window and caveats, and marks partial answers. Analyst
+    speech uses the same deterministic headline, preserves lower bounds and says
+    when an answer is partial. Follow-ups retain unanswered-layer coverage, and
+    keep the original scope label when they narrow a remembered result.
+    Contacts-window answers read one immutable panel snapshot, mark a 20,000-row
+    layer cap as a lower bound, and commit that displayed cohort only after
+    cancellation checks pass. Concurrent analyst calls from one model response
+    remain independent; a stopped or replaced user turn still cancels them.
+
+  - Voice answers are shorter and fill slow work instead of going silent. Slow
+    or multi-step requests may open with one short spoken plan; instant ones
+    just happen. Tool results carry a code-built `say` line and a `display`
+    card: sources and notes stay on screen, a caveat is spoken only when it
+    changes the answer, and "at least" and partial answers are always said. A card above the mic shows captions, the plan's steps and the
+    result. When a tool that reports steps (layers, place lookups, outlines,
+    nearest-aircraft) is still running after 1.5 s its current step is spoken
+    once; others say "still working" once after 8 s. A soft
+    tick plays in push-to-talk. Holding Space while the assistant talks cuts it
+    off. Each turn writes latency and speech figures to the debug log
+    (`node scripts/voice-turn-spans.mjs`). Captions of what you say are
+    counted in the voice cost meter; the debug log leaves out what was said
+    unless `GEV_VOICE_LOG_CONTENT=1`.
+
+  - Point and ask: hold Space with the cursor on an aircraft, ship or spot on
+    the map and say "what's that", "track that one" or "how many flights
+    around here". A reticle marks the point and the voice card shows what
+    "this" meant. In open mic it works when you have just moved the cursor
+    there. "The second one" picks from the last numbered list. Asking about
+    "the last one" resolves to the last of the five rows actually shown, and
+    referent-only tracking calls are accepted while empty targets are rejected.
+    Asking about
+    bare ground up close gives the assistant a small crop of the map around the
+    point. A slow render gets one bounded second frame request, while hidden,
+    stale, moved-camera, invalid and oversized captures still fail closed.
+
+
+  - Add a keyless Air quality layer to the Weather group, with Environment and
+    Climate Change Canada's AQHI as the first registered provider. Readings carry
+    `{ provider, scale, value, band }` so another network can be added without
+    inventing a shared numeric meaning across indices that do not share one; the
+    row and readout both state that coverage is Canada only. The WEATHER card
+    shows the band legend and the highest readings currently in view. AQHI is
+    reported as an integer from 1 with an open-ended "10+", so readings round to
+    that published form rather than the decimal precision the API returns.
+    Readings older than six hours are dropped, and the layer reports `stale`
+    through `getStats()` (also when every observation was dropped) so feed
+    provenance cannot describe an aged feed as live. Voice can switch it on and
+    query readings by value, band, station and observation time.
+
+
+  - Bound six upstream body reads (FIRMS CSV, CelesTrak TLE groups, adsb.lol
+    `/v2/mil`, TomTom flow tiles, OpenSky `states/all` and adsbdb lookups) with
+    streaming size caps that cancel the body at the cap or the route's deadline;
+    the adsb.lol military poll gains a deadline of its own. An oversized OpenSky
+    snapshot is not retried, and an OpenSky 429 starts its cooldown before the
+    body is read.
+
+
+  - Keep later satellites when a TLE catalog entry is missing an orbital line.
+    The parser skips the incomplete set and resumes at the next complete named
+    set, instead of losing the rest of the group (#906).
+
+
+  - Satellite clouds keep Clouds only / Full as quick endpoints and add a continuous
+    cloud-filter slider: 0% is Full, 100% is the existing brightness key, and
+    intermediate values blend the keyed alpha. The slider commits on release to
+    avoid restaging imagery for every drag event. Filter percentages round-trip in
+    share links; legacy mode codes retain their old endpoint meanings. Background
+    panel refreshes preserve the pending drag value until release. Contributed by
+    [NotProniss](https://github.com/NotProniss) (#1084).
+
+
+  - Street Level: Panoramax is the fourth provider, keyless. Light its chip
+    (orange; off by default, one provider at a time): from orbit dots show
+    where the federated commons has pictures, and below about 60 km its
+    sequences draw as lines from `api.panoramax.xyz` vector tiles. A click on a
+    line opens that sequence's picture nearest the click without moving the
+    camera, flat or 360°, with cones along the sequence around it and ‹ › /
+    ← → following the picture's own links. The 360° and since filters apply,
+    in the lines and in the lookup. The caption names each picture's author
+    and licence (CC BY-SA 4.0, Licence Ouverte 2.0…) and links to it in the
+    Panoramax viewer. HD originals load once, only when the viewer is wider
+    than the 2,048 px version (a panorama: expanded), and every download stops
+    when the photo changes; an image whose header declares more than 64 MP is
+    refused before it decodes. Share links carry it as
+    `0.m.0_0.r.google-0*kartaview-0*panoramax-1` (`0.m.0_0.r.panoramax-1` works
+    too). KartaView's photo viewer
+    is now shared (`photoViewer.js`, `panorama.js`); in it, for KartaView too,
+    Esc clears the selected drive before it collapses the panel. Lines are
+    simplified and drawn within a point budget (a tile's unsimplified lines
+    over Paris hung the tab), decoded in slices so the globe keeps moving,
+    and kept; the cones' tiles have their own connection, and the open
+    picture's tile draws its cones before its neighbours arrive.
+
+
+  - Flights and Military Flights highlight emergency transponder broadcasts in
+    fleet billboards, 3D models and Cockpit contacts. Colors update when a status
+    starts or clears. Emergency squawks outrank ADS-B priority statuses; GEV
+    reports minimum fuel and lifeguard without red tint. Cockpit names the code
+    or ADS-B status, and analyst/voice results retain broadcast provenance and
+    the latest known contact time. One omitted ADS-B status poll during a source
+    switch may retain the previous status if the squawk is unchanged; an explicit
+    clear takes effect immediately. Broadcasts are not confirmed incidents.
+    Contributed by [Leo Pechnicki](https://github.com/leopechnicki) (#856).
+
+
+  - Street Level: KartaView is the third provider, keyless. Light its chip
+    (purple; off by default, one provider at a time) and zoom in below about
+    6 km: the lines are the streets KartaView has photos of (z13–14 tiles from
+    `api.kartaview.org`). A click on a line opens the photo nearest the click
+    without moving the camera, flat or 360° (a small WebGL panorama: drag to
+    look, wheel to zoom), with cones along its drive and ‹ › / ← → to step
+    through it. The caption links to the full-size photo (KartaView's photo
+    pages fail for signed-out visitors), and the globe credits "© KartaView
+    contributors, CC BY-SA 4.0". Share links carry it in the provider
+    switches (`0.m.0_0.r.google-0*kartaview-1`). Archived photos (KartaView
+    answers 409) are skipped by the click and by ‹ ›. Shift+← →, ↑ ↓, + − and
+    pinch look around a 360° photo. The open photo's marker is a purple view
+    cone pointing along the drive (KartaView's own compass headings are often
+    0 or far off). The IMAGERY (ALL / 360° / FLAT) and SINCE filters apply to
+    KartaView as to Mapillary: its lines are filtered by KartaView's own
+    server (its filtered PNG tiles, as a mask over the JSON lines), and the
+    photo a click opens, and the cones, by each photo's projection and upload
+    date. KartaView's SINCE is the upload date (all its server can filter by);
+    a note under the slider says so while KartaView is lit (`sinceBasis:
+    'upload'` in the provider contract).
+    Mapillary's line coverage and sequence cones are now shared by both
+    (`lineCoverage.js`, `sequenceCones.js`).
+
+
+  - Street Level: Google Street View is the second provider. On the Google 3D
+    map (Google's terms keep it off other maps), light its chip (off by
+    default: every panorama is billed to the Google Maps key, which needs the
+    Maps JavaScript API) and click a street, or press OPEN STREET VIEW, to
+    open Google's own panorama in
+    the panel, with its arrows, the address and month in the caption, a link
+    to Google Maps and FOLLOW. Share links carry it in the provider switches
+    (`r.google-1`). One provider is lit at a time (lighting one switches the
+    other off), Mapillary by default since it is free. Street View's panoramas
+    are all 360°, so the IMAGERY and SINCE filters and the legend apply to
+    Mapillary only and hide while GOOGLE STREET VIEW is lit; its globe marker
+    is a Google-blue view cone.
+
+
+  - Add an experimental ChatGPT/Codex OAuth option for cloud voice in Provider
+    Settings. API-key voice remains the default. Local sign-in can start from
+    the auth button and reports completion, failure, timeout, or expired
+    credentials. OAuth credentials stay on the server; local routes require
+    loopback access and same-site requests. OAuth sessions retain usage data
+    and show unknown cost; caption transcriptions are counted rather than
+    priced into the API-key cap. The auth button keeps keyboard focus after a
+    mode change, and pending sign-in does not discard text in the key fields.
+    Thanks to [Shayan Khan](https://github.com/devv-shayan) for #621 and
+    [TheSmokeDev](https://github.com/TheSmokeDev) for the credential handling
+    from #653.
+
+
+  - **Docker install path.** `docker compose up` builds on CI's Node 24.14.0 image,
+    pinned by digest, and serves the app on `http://localhost:4173` with no local
+    Node install. The repo is bind-mounted and the container runs as the host user
+    (never root), so `.env`,
+    `.gev-cache`, and `.gev-logs` persist on the host exactly as they do under
+    `npm run dev` — Provider Settings included. The launcher
+    (`scripts/docker-start.mjs`) trusts the container's gateway address for that
+    panel, since that is where Docker delivers the host's own browser from; the
+    opt-in behind it, `GEV_KEY_SETUP_TRUSTED_PEERS`, takes exact addresses only
+    and is unset (so loopback-only, unchanged) under every other launcher.
+    Thanks to [jklaze](https://github.com/jklaze) for finding and diagnosing the
+    container-to-host 403, and to [14traits](https://github.com/14traits),
+    [PoBruno](https://github.com/PoBruno) and [milu70hub](https://github.com/milu70hub)
+    for testing on Apple silicon, Docker Engine on Linux, and NAS hosts.
+
+
+  - Stdio servers from one install share a panel key so a page read from one
+    process can make requests through another. Concurrent malformed-key repairs
+    now select one winner; unavailable storage or a busy repair retains the
+    logged per-process fallback. Thanks to [Jibran Tahir](https://github.com/jibraaan)
+    for #958, [MarvinNL046](https://github.com/MarvinNL046) for the report and
+    proposed diagnosis in #927, and [kvnloo](https://github.com/kvnloo) for identifying
+    the repair race. Windows/Claude Desktop Cowork confirmation remains outstanding.
+
+
+  - Street Level: a street-level imagery layer modelled on the iD editor's photo
+    overlay, with Mapillary as its first provider (free client token, CC BY-SA 4.0
+    imagery). One right-rail panel holds a chip per provider, shared 360°/flat and
+    captured-since filters, and an embedded viewer with EXPAND, FIT/FILL and
+    FOLLOW (Google 3D only). Coverage lines and image cones are drawn from orbit
+    down to a single street; on Google 3D they sit on the bare earth, refined
+    against the rendered mesh near the camera, so trees and buildings hide them.
+    Share links carry the provider switches, the filters and the panel's collapsed
+    state. A server proxy caches Mapillary coverage tiles (24 h, 1 GiB on disk),
+    refuses cross-site requests, rate-limits per IP and backs off when Mapillary
+    rejects the token or rate-limits.
+
+
+  - The CCTV and Street Level panels are portable: drag the header to float the
+    panel, resize it from any edge or corner, and double-click the header to dock
+    it again. The position persists across reloads.
+
+
+  - Add Norway's city bikes to the Bike Share layer: Oslo, Bergen and
+    Trondheim Bysykkel (Urban Sharing), Kolumbus Bysykkel in Stavanger and
+    Farte Bysykkel in Skien/Porsgrunn (Entur Mobility), and Bysykkel
+    Lillestrøm (JCDecaux), about 760 stations in all. Every feed is keyless
+    GBFS. `gbfs.urbansharing.com`, `api.entur.io` and `api.cyclocity.fr` join
+    the proxy allowlist; the last two are kept to their GBFS paths. The proxy
+    now sends `Client-Identifier: gods-eye-view` on every request and
+    `ET-Client-Name: gods-eye-view-bikeshare` to Entur, as the operators ask,
+    and accepts Entur's extensionless feed paths. Attributed under NLOD and
+    Licence Ouverte. `get_bike_share` covers the six systems too.
+
+
+  - Add Norway's road cameras from Statens vegvesen as a CCTV pack. The camera
+    list is one keyless GeoJSON request to the agency's OGC API view of its
+    DATEX 3.1 CCTV table, so no DATEX account is needed. Every working camera
+    loads (~850; faulty ones are dropped) under one "Norway" category, and the
+    ~135 working cameras that publish HLS play as live video through the existing in-memory
+    relay with the still as fallback. Frames and manifests are pinned to each
+    camera's own path on the agency hosts. `CCTV_VEGVESEN_ENABLED=0` disables
+    the pack, `CCTV_VEGVESEN_MAX_SOURCES` caps it (keeping cameras nearest the
+    largest cities) and `CCTV_VEGVESEN_VIDEO=0` keeps stills only. Attributed
+    under NLOD 2.0.
+
+
+  - Add Catalonia (Servei Català de Trànsit) as a keyless CCTV source pack: ~130
+    cameras from a WFS/GML feed that aggregates SCT's own highway cameras with
+    hotlinked Barcelona and Terrassa municipal cameras, each partner named as a
+    credit beside the shared provider. Ambient-card refresh paced to 3 minutes,
+    matching the empirically observed upstream cadence. `CCTV_CATALONIA_MAX_SOURCES`
+    sets the cap and `CCTV_CATALONIA_ENABLED=0` turns the pack off. The catalog
+    is fetched over https with redirects refused and a 1 MiB body cap, and frame
+    links carrying userinfo or an explicit port, or outside the publisher's frame
+    directory, are rejected even on an allowlisted host. Camera ids come from
+    each frame's SCT camera file or image path rather than the feed's
+    restart-dependent feature id, and rows the feed repeats collapse to one.
+
+
+  - Import your own GeoJSON, KML, KMZ and GPX files from DISPLAY or by dropping
+    them onto the app. Show, hide, fly to or remove each file for the session.
+    GeoJSON/GPX draw on the ground; KML retains its styles and explicit heights.
+    Large repeated-style exports use shared local pins, while recorded track
+    vertices and segment gaps stay intact. Imports respect newer camera gestures,
+    leave the shared clock alone, and report malformed or oversized files.
+    File bytes stay on the device; rendered overlays may appear in shared map
+    screenshots. Thanks to [Chase Mills](https://github.com/kapturner) (#925).
+
+
+  - GNSS Integrity (Events, voice-addressable, share token `3`) draws navigation
+    accuracy scores from a keyless regional adsb.lol sample; aircraft-level analyst
+    queries are unavailable for these aggregate cells. Cells do not intercept
+    map clicks. Pan/zoom refreshes automatically; feed failures retain the display
+    and explain the next retry. Aircraft-reported quality includes MLAT-positioned
+    contacts after GPS loss, excludes TIS-B/MLAT-derived quality, and locates GPS-loss
+    evidence at the last good GNSS position when available. Scores discount one
+    bad aircraft per cell and retain 30 minutes of visited-view evidence; they
+    do not confirm jamming. See [method and limits](DATA_SOURCES.md#gnss-integrity).
+    Contributed by [Leo Pechnicki](https://github.com/leopechnicki) (#855).
+
+
+  - Live HLS cameras play on a page opened over plain HTTP from another machine
+    (`HOST=0.0.0.0`). The client lease id came from `crypto.randomUUID`, which
+    browsers only expose in secure contexts, so starting a live feed threw
+    before playback. The id now falls back to a v4 UUID built from
+    `crypto.getRandomValues`, which the server's lease check accepts.
+
+
+  - Move Google geocoding behind the local server. Forward and reverse lookups now
+    go through `/api/google/geocode` and `/api/google/reverse-geocode` with the
+    server key, joining Places and Street View. Google's Geocoding web service
+    refuses referrer-restricted keys, so the previous browser call left
+    `SECURITY.md`'s advice and working search mutually exclusive: the bundled
+    browser key had to be unrestricted for search to work at all. That key now
+    needs only the Map Tiles API and the Maps JavaScript API (Street View). Keyless sessions and the Photon/Nominatim
+    fallback order are unchanged.
 
 ## [0.2.1] — 2026-10-02 — God's Eye View through Your Agent (with security fixes and other features)
 
