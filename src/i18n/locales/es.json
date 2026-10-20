@@ -2944,5 +2944,14 @@
   "Usage": "Uso",
   "Transmitter power": "Potencia del transmisor",
   "Associated airport": "Aeropuerto asociado",
-  "Aviation reference source unavailable": "Fuente de referencias aeronáuticas no disponible"
+  "Aviation reference source unavailable": "Fuente de referencias aeronáuticas no disponible",
+  "Civil aviation service confirmed": "Servicio de aviación civil confirmado",
+  "Joint-use airfield": "Aeródromo de uso conjunto",
+  "Airport usage unconfirmed": "Uso del aeropuerto sin confirmar",
+  "Visible airports only": "Solo aeropuertos visibles",
+  "Airport use": "Uso del aeropuerto",
+  "Usage classification source": "Fuente de clasificación de uso",
+  "Usage source URL": "URL de la fuente de uso",
+  "Usage evidence": "Evidencia de uso",
+  "Usage checked": "Fecha de consulta del uso"
 }

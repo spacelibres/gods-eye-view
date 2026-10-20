@@ -41,6 +41,34 @@ heathrow.lat = 51.4706;
 const small = make('3', 'QA Small Airfield', 'small_airport');
 small.lat = heathrow.lat + 0.025;
 const closed = make('4', 'QA Closed Airport', 'closed');
+const heliport = make('600', 'QA Helicopter Landing Pad', 'heliport', {
+  scheduledService: false,
+});
+heliport.lat = 51.48;
+heliport.lon = -0.52;
+const militaryAirport = make('601', 'QA Military Airfield', 'medium_airport', {
+  icaoCode: 'KEDW',
+  wikipedia: 'https://en.wikipedia.org/wiki/Edwards_Air_Force_Base',
+  countryCode: 'US',
+  country: 'United States',
+  scheduledService: false,
+});
+militaryAirport.lat = 34.910781;
+militaryAirport.lon = -117.886391;
+const jointAirport = make('602', 'QA Joint-use Airfield', 'medium_airport', {
+  icaoCode: 'ZBZJ',
+  wikipedia: 'https://en.wikipedia.org/wiki/Zhangjiakou_Ningyuan_Airport',
+  countryCode: 'CN',
+  country: 'China',
+  scheduledService: false,
+});
+jointAirport.lat = 40.738664;
+jointAirport.lon = 114.933395;
+const unknownAirport = make('606', 'QA General Airfield', 'small_airport', {
+  scheduledService: false,
+});
+unknownAirport.lat = 51.44;
+unknownAirport.lon = -0.52;
 const duplicates = [
   make('7', 'QA North Airport', 'small_airport', { iataCode: 'DUP' }),
   make('8', 'QA South Airport', 'small_airport', { iataCode: 'DUP' }),
@@ -91,7 +119,15 @@ const navaids = [
     associatedAirport: '',
   },
 ];
-const all = [heathrow, small, closed];
+const all = [
+  heathrow,
+  small,
+  closed,
+  heliport,
+  militaryAirport,
+  jointAirport,
+  unknownAirport,
+];
 const meta = {
   revision: 'airport-browser-fixture-1',
   updatedAt: '2026-10-21T00:00:00Z',
@@ -239,19 +275,22 @@ const state = () =>
       height: viewer.camera.positionCartographic.height,
     };
   });
-const camera = (height) =>
-  page.evaluate(async (h) => {
-    const C = await import('/node_modules/cesium/Build/Cesium/index.js');
-    const v = window.__godsEyeView.viewer;
-    v.camera.setView({
-      destination: C.Cartesian3.fromDegrees(-0.461941, 51.4706, h),
-      orientation: { heading: 0, pitch: -Math.PI / 2, roll: 0 },
-    });
-    await window.__godsEyeView.dataManager.layers
-      .get('airports')
-      .module.update();
-    v.scene.requestRender();
-  }, height);
+const camera = (height, lat = 51.4706, lon = -0.461941) =>
+  page.evaluate(
+    async ({ height: h, lat, lon }) => {
+      const C = await import('/node_modules/cesium/Build/Cesium/index.js');
+      const v = window.__godsEyeView.viewer;
+      v.camera.setView({
+        destination: C.Cartesian3.fromDegrees(lon, lat, h),
+        orientation: { heading: 0, pitch: -Math.PI / 2, roll: 0 },
+      });
+      await window.__godsEyeView.dataManager.layers
+        .get('airports')
+        .module.update();
+      v.scene.requestRender();
+    },
+    { height, lat, lon },
+  );
 const search = async (query) => {
   await page.evaluate((q) => {
     document.querySelector('#location-bar-toggle').click();
@@ -321,6 +360,68 @@ try {
       );
     }),
   );
+  check(
+    'facility and usage categories have distinct map symbols',
+    await page.evaluate(() => {
+      const ids = ['2434', '600', '601', '602', '606'];
+      const entities = ids.map(
+        (id) => window.__gevContextStore.entities.get(`airport:${id}`).entity,
+      );
+      return (
+        new Set(entities.map((e) => e.billboard.image.getValue())).size === 5 &&
+        entities[1].properties.airportSymbol
+          .getValue()
+          .startsWith('helicopter:') &&
+        entities[2].properties.airportUsage.getValue() === 'military' &&
+        entities[3].properties.airportUsage.getValue() === 'joint'
+      );
+    }),
+  );
+  check(
+    'layer legend displays actual facility and usage icons',
+    await page.$$eval(
+      '[data-layer-id="airports"] .data-toggle-legend-icon',
+      (imgs) =>
+        imgs.length === 7 &&
+        imgs.every(
+          (img) => img.alt === '' && img.getAttribute('aria-hidden') === 'true',
+        ),
+    ),
+  );
+  await page.screenshot({ path: `${shots}/airport-categories.png` });
+  for (const [record, label] of [
+    [militaryAirport, 'military'],
+    [jointAirport, 'joint-use'],
+  ]) {
+    await camera(25000, record.lat, record.lon);
+    await page.waitForFunction(
+      (id) => {
+        const v = window.__godsEyeView.viewer;
+        const entity = window.__gevContextStore.entities.get(
+          `airport:${id}`,
+        )?.entity;
+        if (!entity) return false;
+        const p = v.scene.cartesianToCanvasCoordinates(
+          entity.gevDisplayPosition(),
+        );
+        v.scene.requestRender();
+        if (!p) return false;
+        for (let x = -10; x <= 10; x += 2)
+          for (let y = -10; y <= 10; y += 2)
+            if (v.scene.pick({ x: p.x + x, y: p.y + y })?.id === entity)
+              return true;
+        return false;
+      },
+      { timeout: 30000 },
+      record.id,
+    );
+    check(
+      `${label} airport symbol renders and is pickable at its real facility location`,
+      true,
+    );
+    await page.screenshot({ path: `${shots}/${label}-airport.png` });
+  }
+  await camera(25000);
   failViews = true;
   await camera(26000);
   s = await state();

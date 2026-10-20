@@ -69,7 +69,31 @@ far away. Closer views admit smaller airfields and heliports. The full directory
 also retains closed facilities marked as such. Runways and communication
 frequencies are not included in this feature.
 
-Airport markers use outlined aircraft silhouettes tinted by the active theme.
+Airport markers use outlined facility/use symbols tinted by the active theme.
+Heliports always show a helicopter; seaplane bases and balloonports retain their
+own shapes. Fixed-wing facilities distinguish confirmed civil service (airliner),
+military classification (fighter), joint use (combined aircraft), and unconfirmed
+use (general-airfield aircraft with a question badge). Military/joint-use
+helicopters retain the helicopter shape with a usage badge. The layer legend
+uses the same SVG symbols and counts only the currently displayed records.
+
+Usage evidence is a bundled, provenance-bearing Wikidata CC0 snapshot joined by
+explicit ICAO, audited coordinates and current English Wikipedia article
+identity. Known ended/deprecated/dissolved statements and obsolete source items
+are excluded; conflicting or incomplete identities fail closed. OurAirports
+scheduled service confirms civil service, but does not establish exclusively
+civil use. Civil service combined with current, matched airbase evidence is
+presented as joint use. Classification/source/check date appear in details; full
+evidence and URLs are retained in the entity context and description.
+
+Missing classifications never become military simply because scheduled service
+is absent, a facility is small, or its name contains military words. This
+supplement is incomplete community evidence, not a global operational registry.
+Refresh it deliberately using `scripts/import-airport-usage.mjs` with cached
+structured responses and audits; the browser never calls Wikidata. The importer
+rejects missing/truncated inputs before replacing the supplemental table. See
+`src/sources/airports/usage-data.json` for queries, dates and limitations.
+
 Nearby views also show up to 600 VOR/NDB/DME/TACAN navigation stations with station
 symbols and selectable details. The layer row reports limited results. Published
 frequencies remain kHz in storage: NDB displays kHz and VHF/DME displays MHz;

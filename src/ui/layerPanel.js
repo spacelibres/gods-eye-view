@@ -530,9 +530,10 @@ export class LayerPanel {
     syncChipGroup(container, chips, { before: firstLegend || info });
 
     const legendSignature = JSON.stringify(
-      legend.map(({ label, color, count, blurb }) => [
+      legend.map(({ label, color, icon, count, blurb }) => [
         label,
         color,
+        icon,
         count,
         blurb,
       ]),
@@ -545,9 +546,25 @@ export class LayerPanel {
         const entry = document.createElement('span');
         entry.className = 'data-toggle-legend-item';
         if (item.blurb) entry.title = item.blurb;
-        const swatch = document.createElement('span');
-        swatch.className = 'data-toggle-legend-swatch';
-        swatch.style.background = item.color;
+        // Icons come from the layer's cached SVG generator. Keep them in an
+        // image context and accept only SVG data URLs, never arbitrary URLs.
+        const hasIcon =
+          typeof item.icon === 'string' &&
+          /^data:image\/svg\+xml(?:;[^,]*)?,/i.test(item.icon);
+        const swatch = document.createElement(hasIcon ? 'img' : 'span');
+        if (hasIcon) {
+          swatch.className = 'data-toggle-legend-icon';
+          swatch.src = item.icon;
+          swatch.alt = '';
+          swatch.setAttribute('aria-hidden', 'true');
+          swatch.width = 20;
+          swatch.height = 20;
+          swatch.style.objectFit = 'contain';
+          swatch.style.flexShrink = '0';
+        } else {
+          swatch.className = 'data-toggle-legend-swatch';
+          swatch.style.background = item.color;
+        }
         const text = document.createElement('span');
         text.textContent =
           item.count == null

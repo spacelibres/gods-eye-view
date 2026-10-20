@@ -1,0 +1,7 @@
+# Airport category symbols
+
+User requires distinct heliport, civil aircraft, military and joint-use airport symbols. Implement orthogonal facility and usage classification: heliports always show a helicopter with a usage badge when known; seaplane bases and balloonports retain their physical type; confirmed civil-service airports use airliner, military uses fighter, joint uses combined aircraft, unknown uses neutral general-airfield symbol. Never infer military or joint use from names, size or absent scheduled service.
+
+Use a provenance-bearing supplemental classification table matched by explicit stable identifier/ICAO. Evidence may come from published structured Wikidata airport classification and explicit current official sources. Source OurAirports scheduledService confirms civil service but cannot rule out military use; label that evidence precisely. Unresolved facilities remain usage-unconfirmed. Retain military/dual metadata and source in detail cards. No per-airport browser calls to third parties. Shared cached SVGs, current palette and outlined contrast. Add actual-symbol legend to layer controls and localized facility/usage labels. Preserve all navigation-station, country, search, cache, lifecycle and theme behavior.
+
+Verify adversarial name cases, civil service vs exclusive civil use, heliport precedence, distinct category SVGs and legend. Browser QA desktop/mobile/theme/detail/selection; package boundaries/i18n/format/build; patch commit push and authorized VPS deploy.

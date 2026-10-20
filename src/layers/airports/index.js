@@ -9,14 +9,12 @@ import {
   airportContext,
   airportDescription,
   airportDetailRows,
+  airportSymbol,
+  airportLegend,
+  resolveAirportUsage,
 } from './model.js';
 export * from './model.js';
 const msg = (value) => value;
-// One shared, outlined aircraft silhouette stays legible on imagery. Cesium
-// tints the white fill with the active palette without regenerating textures.
-const AIRPORT_AIRCRAFT_IMAGE = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
-  '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 32 32"><path d="M16 2c-1 0-2 1-2 3v7L3 20v3l11-4v6l-4 3v2l6-2 6 2v-2l-4-3v-6l11 4v-3l-11-8V5c0-2-1-3-2-3Z" fill="white" stroke="black" stroke-width="1.5" stroke-linejoin="round"/></svg>',
-)}`;
 /** One viewport-scoped, bounded directory display. MSL elevation is metadata only. */
 export function createAirportsLayer({
   source,
@@ -214,6 +212,8 @@ export function createAirportsLayer({
           const entries = [];
           const contexts = [];
           const entities = next.map((a, i) => {
+            const usage = resolveAirportUsage(a);
+            const symbol = airportSymbol(a, usage.kind);
             const context = airportContext(a, snapshot);
             // Directory elevations are MSL, never render heights. Use the same
             // cached ellipsoidal surface floor as other application geometry.
@@ -238,7 +238,7 @@ export function createAirportsLayer({
               position,
               description: airportDescription(a, context.properties, t),
               billboard: {
-                image: AIRPORT_AIRCRAFT_IMAGE,
+                image: symbol.image,
                 width:
                   a.type === 'large_airport'
                     ? 28
@@ -257,13 +257,21 @@ export function createAirportsLayer({
                 heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                 disableDepthTestDistance: 50000,
               },
-              properties: { airportId: a.id },
+              properties: {
+                airportId: a.id,
+                airportSymbol: symbol.kind,
+                airportUsage: usage.kind,
+              },
             });
             entity.gevTrackedId = context.id;
             entity.gevDisplayPosition = () => position;
             entity.gevLabelModel = {
               title: a.name,
               details: airportDetailRows(a, context.properties, t)
+                .filter(
+                  ([label]) =>
+                    !['Usage evidence', 'Usage source URL'].includes(label),
+                )
                 .slice(1)
                 .map(
                   ([label, value]) =>
@@ -271,6 +279,8 @@ export function createAirportsLayer({
                 ),
               accent,
               anchorRadiusScale: null,
+              placement: 'right',
+              verticalOnly: false,
             };
             contexts.push([entity, context]);
             if (i < AIRPORT_LABEL_LIMIT)
@@ -377,6 +387,7 @@ export function createAirportsLayer({
             : msg('Airport directory');
       return {
         readout: false,
+        legend: enabled ? airportLegend(records, t, accentColor()) : [],
         info: `${t(status)} · ${records.length} / ${metadata.matched || 0} · ${t('Navaids')}: ${ref.navaidCount} / ${ref.navaidMatched || 0} · ${t('Countries')}: ${references.getStats().countryCount}`,
         summary: {
           label: t('Airports'),

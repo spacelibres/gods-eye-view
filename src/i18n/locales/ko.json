@@ -2810,5 +2810,14 @@
   "Usage": "용도",
   "Transmitter power": "송신 출력",
   "Associated airport": "연결된 공항",
-  "Aviation reference source unavailable": "항공 참조 데이터 소스를 사용할 수 없음"
+  "Aviation reference source unavailable": "항공 참조 데이터 소스를 사용할 수 없음",
+  "Civil aviation service confirmed": "민간 항공 서비스 확인",
+  "Joint-use airfield": "군민 공용 비행장",
+  "Airport usage unconfirmed": "공항 용도 미확인",
+  "Visible airports only": "현재 표시된 공항만",
+  "Airport use": "공항 용도",
+  "Usage classification source": "용도 분류 출처",
+  "Usage source URL": "용도 출처 URL",
+  "Usage evidence": "용도 분류 근거",
+  "Usage checked": "용도 자료 확인일"
 }

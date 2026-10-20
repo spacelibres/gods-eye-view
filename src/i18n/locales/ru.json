@@ -3011,5 +3011,14 @@
   "Usage": "Назначение",
   "Transmitter power": "Мощность передатчика",
   "Associated airport": "Связанный аэропорт",
-  "Aviation reference source unavailable": "Источник аэронавигационных данных недоступен"
+  "Aviation reference source unavailable": "Источник аэронавигационных данных недоступен",
+  "Civil aviation service confirmed": "Подтверждено гражданское авиасообщение",
+  "Joint-use airfield": "Аэродром совместного использования",
+  "Airport usage unconfirmed": "Назначение аэропорта не подтверждено",
+  "Visible airports only": "Только видимые аэропорты",
+  "Airport use": "Назначение аэропорта",
+  "Usage classification source": "Источник классификации назначения",
+  "Usage source URL": "URL источника назначения",
+  "Usage evidence": "Основание классификации",
+  "Usage checked": "Дата проверки сведений"
 }

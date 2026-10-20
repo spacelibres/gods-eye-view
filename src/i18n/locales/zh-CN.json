@@ -2810,5 +2810,14 @@
   "Usage": "用途",
   "Transmitter power": "发射功率",
   "Associated airport": "关联机场",
-  "Aviation reference source unavailable": "航空参考数据源不可用"
+  "Aviation reference source unavailable": "航空参考数据源不可用",
+  "Civil aviation service confirmed": "已确认民航服务",
+  "Joint-use airfield": "军民合用机场",
+  "Airport usage unconfirmed": "机场用途未确认",
+  "Visible airports only": "仅统计当前显示的机场",
+  "Airport use": "机场用途",
+  "Usage classification source": "用途分类来源",
+  "Usage source URL": "用途来源网址",
+  "Usage evidence": "用途分类依据",
+  "Usage checked": "用途资料核对日期"
 }

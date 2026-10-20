@@ -2810,5 +2810,14 @@
   "Usage": "用途",
   "Transmitter power": "發射功率",
   "Associated airport": "關聯機場",
-  "Aviation reference source unavailable": "航空參考資料來源無法使用"
+  "Aviation reference source unavailable": "航空參考資料來源無法使用",
+  "Civil aviation service confirmed": "已確認民航服務",
+  "Joint-use airfield": "軍民合用機場",
+  "Airport usage unconfirmed": "機場用途未確認",
+  "Visible airports only": "僅統計目前顯示的機場",
+  "Airport use": "機場用途",
+  "Usage classification source": "用途分類來源",
+  "Usage source URL": "用途來源網址",
+  "Usage evidence": "用途分類依據",
+  "Usage checked": "用途資料核對日期"
 }

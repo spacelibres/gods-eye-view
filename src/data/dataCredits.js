@@ -103,6 +103,10 @@ export const DATA_CREDITS = [
     key: 'ourairports',
     html: 'Airport directory: <a href="https://ourairports.com/data/" target="_blank" rel="noopener">OurAirports</a> (public domain)',
   },
+  {
+    key: 'wikidata-airport-use',
+    html: 'Airport-use classifications: <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a> (CC0)',
+  },
   // ── Live sources ────────────────────────────────────────────────
   {
     key: 'opensky',

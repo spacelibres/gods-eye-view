@@ -26,6 +26,15 @@ own directory; they do not download from OurAirports. This community directory
 is not an operational aeronautical publication. Attribution: "OurAirports
 (public domain)". See [airport operations](docs/AIRPORTS-OPERATIONS.md).
 
+Airport-use symbols also use a bundled [Wikidata](https://www.wikidata.org/)
+CC0 classification supplement. Explicit airbase/joint-use statements are matched
+by ICAO and checked against current facility identity, rather than inferred from
+names or airport size. Missing, ambiguous or historical matches remain
+unconfirmed. Scheduled civil service does not prove exclusive civil use. The
+supplement records its source queries, audit date and coverage limitations in
+`src/sources/airports/usage-data.json`; browsers make no Wikidata requests.
+Attribution: "Wikidata (CC0)".
+
 | Source                                                                | Used for                                                                                                                            | License / terms                                                                                                                                                                                                                                                                                                                                       | Attribution                                                                                                                                 |
 | --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | **NOAA GFS (wind)** (`noaa-gfs-bdp-pds.s3.amazonaws.com`) | Global 10 m wind, optional 2 m temperature and mean sea-level pressure for Wind. Keyless; latest 6-hourly 0.25° cycle, byte-range GRIB2 reads, cached for an hour | U.S. public domain (NOAA); keyless via NOAA Open Data on AWS | "NOAA Global Forecast System (GFS)" (courtesy; not an endorsement) |

@@ -2810,5 +2810,14 @@
   "Usage": "用途",
   "Transmitter power": "送信出力",
   "Associated airport": "関連空港",
-  "Aviation reference source unavailable": "航空参考データを利用できません"
+  "Aviation reference source unavailable": "航空参考データを利用できません",
+  "Civil aviation service confirmed": "民間定期便の運航を確認",
+  "Joint-use airfield": "軍民共用飛行場",
+  "Airport usage unconfirmed": "空港用途は未確認",
+  "Visible airports only": "表示中の空港のみ",
+  "Airport use": "空港の用途",
+  "Usage classification source": "用途分類の出典",
+  "Usage source URL": "用途出典のURL",
+  "Usage evidence": "用途分類の根拠",
+  "Usage checked": "用途資料の確認日"
 }

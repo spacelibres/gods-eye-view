@@ -178,6 +178,68 @@ test('airports use shared aircraft silhouettes rather than point dots and tint w
   );
   h.layer.destroy();
 });
+test('layer distinguishes heliports, civil service, military, joint use and unknown with a matching legend', async () => {
+  const h = harness({
+    getSnapshot: async () => ({
+      airports: [
+        { ...airport('1'), scheduledService: true },
+        {
+          ...airport('2'),
+          icaoCode: 'KEDW',
+          lat: 34.910781,
+          lon: -117.886391,
+          wikipedia: 'https://en.wikipedia.org/wiki/Edwards_Air_Force_Base',
+          scheduledService: false,
+        },
+        {
+          ...airport('3'),
+          icaoCode: 'ZBZJ',
+          lat: 40.738664,
+          lon: 114.933395,
+          wikipedia:
+            'https://en.wikipedia.org/wiki/Zhangjiakou_Ningyuan_Airport',
+          scheduledService: false,
+        },
+        { ...airport('4', 'heliport'), scheduledService: false },
+        { ...airport('5', 'small_airport'), scheduledService: false },
+      ],
+    }),
+  });
+  h.viewer.camera.positionCartographic.height = 10000;
+  h.layer.enable();
+  await h.layer.update();
+  const entities = h.sources[0].entities.values;
+  assert.equal(
+    new Set(entities.map((e) => e.billboard.image.getValue())).size,
+    5,
+  );
+  assert.equal(
+    entities
+      .find((e) => e.properties.airportId.getValue() === '4')
+      .properties.airportSymbol.getValue()
+      .split(':')[0],
+    'helicopter',
+  );
+  const legend = h.layer.getRowControls().legend;
+  for (const label of [
+    'Heliport',
+    'Military airfield',
+    'Joint-use airfield',
+    'Civil aviation service confirmed',
+    'Airport usage unconfirmed',
+  ]) {
+    const row = legend.find((r) => r.label === label);
+    assert.ok(row, label);
+    assert.equal(row.count, 1);
+    assert.match(row.icon, /^data:image\/svg\+xml/);
+  }
+  assert.ok(
+    entities
+      .find((e) => e.properties.airportId.getValue() === '2')
+      .gevLabelModel.details.some((line) => line.includes('Wikidata')),
+  );
+  h.layer.destroy();
+});
 test('bounded labels, ground anchors, failure keeps display and disable clears', async () => {
   let fail = false;
   const h = harness({

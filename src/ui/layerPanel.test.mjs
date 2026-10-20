@@ -3,6 +3,71 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 
+test('legend icons retain visible labels, refresh with their source and preserve color swatches', async () => {
+  const { LayerPanel } = await import('./layerPanel.js');
+  const { railFixture } = await import('./railTestFixture.mjs');
+  const f = railFixture();
+  const previousDocument = globalThis.document;
+  globalThis.document = f.document;
+  const icon =
+    'data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns="http://www.w3.org/2000/svg"/%3E';
+  const legend = [
+    { label: 'Heliport', icon, count: 1234, blurb: 'Helicopter landing site' },
+    { label: 'Rain', color: '#abcdef' },
+  ];
+  const panel = new LayerPanel({ getRowControls: () => ({ legend }) });
+  const layer = { id: 'airports', enabled: true };
+  try {
+    panel._syncRowControls(f.container, layer);
+    const entry = f.container.children[0];
+    const image = entry.children[0];
+    assert.equal(image.tagName, 'IMG');
+    assert.equal(image.src, icon);
+    assert.equal(image.alt, '');
+    assert.equal(image.getAttribute('aria-hidden'), 'true');
+    assert.equal(image.width, 20);
+    assert.equal(image.height, 20);
+    assert.equal(entry.children[1].textContent, 'Heliport 1.2K');
+    assert.equal(entry.title, 'Helicopter landing site');
+    const swatch = f.container.children[1].children[0];
+    assert.equal(swatch.className, 'data-toggle-legend-swatch');
+    assert.equal(swatch.style.background, '#abcdef');
+    panel._syncRowControls(f.container, layer);
+    assert.equal(f.container.children[0], entry);
+    legend[0].icon = `${icon}%20`;
+    panel._syncRowControls(f.container, layer);
+    assert.notEqual(f.container.children[0], entry);
+    assert.equal(f.container.children[0].children[0].src, legend[0].icon);
+  } finally {
+    globalThis.document = previousDocument;
+  }
+});
+
+test('legend icons reject non-SVG sources without losing the visible label', async () => {
+  const { LayerPanel } = await import('./layerPanel.js');
+  const { railFixture } = await import('./railTestFixture.mjs');
+  const f = railFixture();
+  const previousDocument = globalThis.document;
+  globalThis.document = f.document;
+  const legend = [
+    'javascript:alert(1)',
+    'data:text/html,<svg/>',
+    'https://example.com/icon.svg',
+    'data:image/svg+xml-unsafe,<svg/>',
+  ].map((icon) => ({ icon, label: 'Airport', color: '#123456' }));
+  const panel = new LayerPanel({ getRowControls: () => ({ legend }) });
+  try {
+    panel._syncRowControls(f.container, { id: 'airports', enabled: true });
+    for (const entry of f.container.children) {
+      assert.equal(entry.children[0].tagName, 'SPAN');
+      assert.equal(entry.children[0].style.background, '#123456');
+      assert.equal(entry.children[1].textContent, 'Airport');
+    }
+  } finally {
+    globalThis.document = previousDocument;
+  }
+});
+
 test('panel presentation places Transit between Street Traffic and Bike Share in Movement', () => {
   const source = readFileSync(
     new URL('./layerPanel.js', import.meta.url),

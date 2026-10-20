@@ -1,3 +1,6 @@
+import { resolveAirportUsage } from '../../sources/airports/usage.js';
+import { airportSymbol, airportLegendImage } from './symbols.js';
+export { resolveAirportUsage, airportSymbol };
 export const AIRPORT_POINT_LIMIT = 1200;
 export const AIRPORT_LABEL_LIMIT = 96;
 // Portable extraction marker: application translation is injected by the host.
@@ -36,6 +39,7 @@ export function selectAirports(records, types) {
     .slice(0, AIRPORT_POINT_LIMIT);
 }
 export function airportContext(airport, snapshot) {
+  const usage = resolveAirportUsage(airport);
   return {
     id: `airport:${airport.id}`,
     layerId: 'airports',
@@ -46,6 +50,11 @@ export function airportContext(airport, snapshot) {
     longitude: airport.lon,
     properties: {
       ...airport,
+      usageKind: usage.kind,
+      usageSource: usage.source,
+      usageSourceUrl: usage.sourceUrl,
+      usageCheckedAt: usage.checkedAt,
+      usageEvidence: usage.evidence,
       icaoCode: airport.icaoCode || null,
       iataCode: airport.iataCode || null,
       elevationM: Number.isFinite(airport.elevationM)
@@ -75,8 +84,46 @@ const TYPE_LABELS = Object.freeze({
   balloonport: msg('Balloonport'),
   closed: msg('Closed airport'),
 });
+const USAGE_LABELS = Object.freeze({
+  civil: msg('Civil aviation service confirmed'),
+  military: msg('Military airfield'),
+  joint: msg('Joint-use airfield'),
+  unknown: msg('Airport usage unconfirmed'),
+});
+export function airportLegend(records, t = (v) => v, color) {
+  const definitions = [
+    ['large_airport', 'civil'],
+    ['large_airport', 'military'],
+    ['large_airport', 'joint'],
+    ['small_airport', 'unknown'],
+    ['heliport', 'unknown'],
+    ['seaplane_base', 'unknown'],
+    ['balloonport', 'unknown'],
+  ];
+  const counts = new Map();
+  for (const record of records) {
+    const symbol = airportSymbol(record, resolveAirportUsage(record).kind);
+    const key = ['helicopter', 'seaplane', 'balloon'].includes(symbol.facility)
+      ? symbol.facility
+      : symbol.kind;
+    counts.set(key, (counts.get(key) || 0) + 1);
+  }
+  return definitions.map(([type, usage]) => {
+    const symbol = airportSymbol({ type }, usage);
+    const key = ['helicopter', 'seaplane', 'balloon'].includes(symbol.facility)
+      ? symbol.facility
+      : symbol.kind;
+    return {
+      label: t(symbol.label),
+      icon: airportLegendImage(symbol, color),
+      count: counts.get(key) || 0,
+      blurb: t('Visible airports only'),
+    };
+  });
+}
 export function airportDetailRows(a, p, t = (value) => value) {
   const date = p.updatedAt ? new Date(p.updatedAt) : null;
+  const usage = resolveAirportUsage(a);
   return [
     [msg('Airport'), a.name],
     [msg('OurAirports ID'), a.id],
@@ -86,6 +133,17 @@ export function airportDetailRows(a, p, t = (value) => value) {
     [msg('GPS code'), a.gpsCode],
     [msg('Local code'), a.localCode],
     [msg('Type'), t(TYPE_LABELS[a.type] || msg('Unknown'))],
+    [msg('Airport use'), t(USAGE_LABELS[usage.kind])],
+    ...(usage.source
+      ? [[msg('Usage classification source'), usage.source]]
+      : []),
+    ...(usage.sourceUrl ? [[msg('Usage source URL'), usage.sourceUrl]] : []),
+    ...(usage.evidence.length
+      ? [[msg('Usage evidence'), usage.evidence.join(' · ')]]
+      : []),
+    ...(usage.checkedAt || (usage.kind === 'civil' && p.updatedAt)
+      ? [[msg('Usage checked'), usage.checkedAt || p.updatedAt]]
+      : []),
     [msg('Municipality'), a.municipality],
     [msg('Country'), a.country || a.countryCode],
     [msg('Coordinates'), `${a.lat}, ${a.lon}`],

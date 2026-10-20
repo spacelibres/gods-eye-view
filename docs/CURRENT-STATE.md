@@ -1,7 +1,10 @@
 # God's Eye View Current State
 
 The Airports layer reads a project-hosted global OurAirports directory and uses
-theme-aware aircraft symbols. The same atomic directory now
+theme-aware facility/use symbols and an actual-symbol legend: helicopters,
+civil-service airliners, military fighters, joint-use aircraft, unconfirmed
+general airfields, seaplanes and balloons. Usage classifications retain their
+evidence and fail closed when current identity cannot be established. The same atomic directory now
 includes 11,008 navigation stations and 249 country/territory reference records:
 nearby views show station symbols and full VOR/NDB/DME/TACAN details, while
 regional/global views show localized country labels from existing Natural Earth

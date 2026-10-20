@@ -1,0 +1,6866 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-21",
+  "manualEvidence": [
+    {
+      "item": "Q8070469",
+      "checkedAt": "2026-10-21",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q8070469"
+    }
+  ],
+  "audit": {
+    "entityCount": 577,
+    "excludedStatements": 51,
+    "sourceUrl": "https://www.wikidata.org/w/api.php",
+    "identityToleranceKm": 5,
+    "sitelinkEntityCount": 500,
+    "sitelinkLimitations": "API returned HTTP 429 after 500 entities; remaining missing links fail closed."
+  },
+  "source": "Wikidata",
+  "sourceUrl": "https://query.wikidata.org/",
+  "license": "CC0-1.0",
+  "classes": {
+    "military": "Q695850",
+    "joint": "Q5124659"
+  },
+  "queries": {
+    "military": "SELECT ?item ?icao WHERE { ?item wdt:P31 wd:Q695850; wdt:P239 ?icao. }",
+    "joint": "SELECT ?item ?icao WHERE { ?item wdt:P31 wd:Q5124659; wdt:P239 ?icao. }"
+  },
+  "publicationDate": "",
+  "limitations": [
+    "Direct truthy P31 class and P239 ICAO statements only; no names, IATA codes, subclass inference or proximity matching.",
+    "Community-maintained structured evidence can be incomplete or stale and does not establish exclusive military use.",
+    "Bulk discovery covers the direct airbase class. Joint-use coverage includes active Q5124659 P31 claims found during entity audits, scheduled civil service combined with airbase evidence, and independently checked Q8070469.",
+    "Audited entities exclude deprecated or ended P31/P239 claims and dissolved entities. Classification requires exact ICAO, matching English Wikipedia article identity, and a location within 5 km. These checks validate facility identity and never infer usage; absent or different article links and absent coordinates suppress classification.",
+    "No original publication date is asserted: Wikidata is a continuously edited database; checkedAt is the retrieval date.",
+    "Multiple class statements for one item retain all evidence; joint classification takes precedence only after unambiguous identity matching.",
+    "Only exact explicit icaoCode joins are accepted. Missing ICAO and unmatched records remain unconfirmed unless scheduled civil service is present."
+  ],
+  "records": [
+    {
+      "icaoCode": "AYEE",
+      "kind": "military",
+      "item": "Q5372593",
+      "lat": -1.64166667,
+      "lon": 149.975,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Emirau_Airport"
+    },
+    {
+      "icaoCode": "BGBW",
+      "kind": "military",
+      "item": "Q2915005",
+      "lat": 61.160555555556,
+      "lon": -45.425555555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Narsarsuaq_Airport"
+    },
+    {
+      "icaoCode": "BGTL",
+      "kind": "military",
+      "item": "Q940576",
+      "lat": 76.531389,
+      "lon": -68.703333,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "CYAW",
+      "kind": "military",
+      "item": "Q1032134",
+      "lat": 44.6372,
+      "lon": -63.5022,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Shearwater_Heliport"
+    },
+    {
+      "icaoCode": "CYBG",
+      "kind": "military",
+      "item": "Q1032113",
+      "lat": 48.3306,
+      "lon": -70.9969,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/CFB_Bagotville"
+    },
+    {
+      "icaoCode": "CYBN",
+      "kind": "military",
+      "item": "Q1032107"
+    },
+    {
+      "icaoCode": "CYED",
+      "kind": "military",
+      "item": "Q652085"
+    },
+    {
+      "icaoCode": "CYFB",
+      "kind": "military",
+      "item": "Q2415100",
+      "lat": 63.7567,
+      "lon": -68.5561,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Iqaluit_Airport"
+    },
+    {
+      "icaoCode": "CYMJ",
+      "kind": "military",
+      "item": "Q1837933",
+      "lat": 50.330277777778,
+      "lon": -105.55916666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/CFB_Moose_Jaw"
+    },
+    {
+      "icaoCode": "CYOD",
+      "kind": "military",
+      "item": "Q1032108",
+      "lat": 54.405,
+      "lon": -110.279,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/CFB_Cold_Lake"
+    },
+    {
+      "icaoCode": "CYQQ",
+      "kind": "military",
+      "item": "Q1836424",
+      "lat": 49.7108,
+      "lon": -124.887,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/CFB_Comox"
+    },
+    {
+      "icaoCode": "CYQX",
+      "kind": "military",
+      "item": "Q1836818",
+      "lat": 48.936944,
+      "lon": -54.568056,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/CFB_Gander"
+    },
+    {
+      "icaoCode": "CYSD",
+      "kind": "military",
+      "item": "Q1023455",
+      "lat": 50.2733,
+      "lon": -111.175,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/CFB_Suffield"
+    },
+    {
+      "icaoCode": "CYTR",
+      "kind": "military",
+      "item": "Q1032133",
+      "lat": 44.118888888889,
+      "lon": -77.528055555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/CFB_Trenton"
+    },
+    {
+      "icaoCode": "CYWG",
+      "kind": "military",
+      "item": "Q1836849",
+      "lat": 49.888888888889,
+      "lon": -97.234722222222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/CFB_Winnipeg"
+    },
+    {
+      "icaoCode": "CYYR",
+      "kind": "military",
+      "item": "Q1032124",
+      "lat": 53.319166666667,
+      "lon": -60.425833333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/CFB_Goose_Bay"
+    },
+    {
+      "icaoCode": "CYZX",
+      "kind": "military",
+      "item": "Q1032127",
+      "lat": 44.9844,
+      "lon": -64.9169,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/CFB_Greenwood"
+    },
+    {
+      "icaoCode": "DAAK",
+      "kind": "military",
+      "item": "Q3813457",
+      "lat": 36.545833,
+      "lon": 2.87611,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Boufarik_Airport"
+    },
+    {
+      "icaoCode": "DAAM",
+      "kind": "military",
+      "item": "Q6588452",
+      "lat": 36.108694444444,
+      "lon": 6.36425,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Telergma_Airport"
+    },
+    {
+      "icaoCode": "DAAP",
+      "kind": "military",
+      "item": "Q2875776",
+      "lat": 26.723611111111,
+      "lon": 8.6224722222222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Takhamalt_Airport"
+    },
+    {
+      "icaoCode": "DAAQ",
+      "kind": "military",
+      "item": "Q12691457",
+      "lat": 35.525413,
+      "lon": 2.878713,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/A%C3%AFn_Oussera_Airport"
+    },
+    {
+      "icaoCode": "DABO",
+      "kind": "military",
+      "item": "Q16896254"
+    },
+    {
+      "icaoCode": "DAOE",
+      "kind": "military",
+      "item": "Q12474043",
+      "lat": 35.7345,
+      "lon": -0.804364,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Bousfer_Air_Base"
+    },
+    {
+      "icaoCode": "DAOL",
+      "kind": "joint",
+      "item": "Q6588435",
+      "lat": 35.541069444444,
+      "lon": -0.53389444444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Oran_Tafraoui_Airport"
+    },
+    {
+      "icaoCode": "DAOL",
+      "kind": "military",
+      "item": "Q6588435",
+      "lat": 35.541069444444,
+      "lon": -0.53389444444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Oran_Tafraoui_Airport"
+    },
+    {
+      "icaoCode": "DAOS",
+      "kind": "military",
+      "item": "Q14932979",
+      "lat": 35.171775,
+      "lon": -0.593275,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Sidi_Bel_Abb%C3%A8s_Airport"
+    },
+    {
+      "icaoCode": "DAUZ",
+      "kind": "military",
+      "item": "Q2876003",
+      "lat": 28.051444444444,
+      "lon": 9.6427777777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/In_Amenas_Airport"
+    },
+    {
+      "icaoCode": "DRRN",
+      "kind": "military",
+      "item": "Q19406831",
+      "lat": 13.4817,
+      "lon": 2.17028,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "DRRN",
+      "kind": "military",
+      "item": "Q905933",
+      "lat": 13.481666666667,
+      "lon": 2.1702777777778,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "DTTD",
+      "kind": "military",
+      "item": "Q18210886",
+      "lat": 32.306155,
+      "lon": 10.382108,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Remada_Air_Base"
+    },
+    {
+      "icaoCode": "EBBE",
+      "kind": "military",
+      "item": "Q547627",
+      "lat": 50.75861,
+      "lon": 4.76833,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Beauvechain_Air_Base"
+    },
+    {
+      "icaoCode": "EBBL",
+      "kind": "military",
+      "item": "Q1857706"
+    },
+    {
+      "icaoCode": "EBBX",
+      "kind": "military",
+      "item": "Q133626",
+      "lat": 49.89167,
+      "lon": 5.22389,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Jehonville_Air_Base"
+    },
+    {
+      "icaoCode": "EBCV",
+      "kind": "military",
+      "item": "Q43363",
+      "lat": 50.57583,
+      "lon": 3.83111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Chi%C3%A8vres_Air_Base"
+    },
+    {
+      "icaoCode": "EBFN",
+      "kind": "military",
+      "item": "Q24116",
+      "lat": 51.09028,
+      "lon": 2.65278,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Koksijde_Air_Base"
+    },
+    {
+      "icaoCode": "EBFS",
+      "kind": "military",
+      "item": "Q1581914"
+    },
+    {
+      "icaoCode": "EBLH",
+      "kind": "military",
+      "item": "Q2886530"
+    },
+    {
+      "icaoCode": "EBMB",
+      "kind": "military",
+      "item": "Q651419",
+      "lat": 50.901388888889,
+      "lon": 4.4844444444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Melsbroek_Air_Base"
+    },
+    {
+      "icaoCode": "EBMO",
+      "kind": "military",
+      "item": "Q2669351"
+    },
+    {
+      "icaoCode": "EBSL",
+      "kind": "military",
+      "item": "Q8075444"
+    },
+    {
+      "icaoCode": "EBST",
+      "kind": "military",
+      "item": "Q240119"
+    },
+    {
+      "icaoCode": "EBSU",
+      "kind": "military",
+      "item": "Q133955"
+    },
+    {
+      "icaoCode": "EBUL",
+      "kind": "military",
+      "item": "Q2930455"
+    },
+    {
+      "icaoCode": "EBWE",
+      "kind": "military",
+      "item": "Q1944310"
+    },
+    {
+      "icaoCode": "EDAF",
+      "kind": "military",
+      "item": "Q455936"
+    },
+    {
+      "icaoCode": "EDAN",
+      "kind": "military",
+      "item": "Q2886623",
+      "lat": 48.36925,
+      "lon": 7.827722,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Canadian_Forces_Base_Lahr"
+    },
+    {
+      "icaoCode": "EDEK",
+      "kind": "military",
+      "item": "Q811581"
+    },
+    {
+      "icaoCode": "EDES",
+      "kind": "military",
+      "item": "Q14518819"
+    },
+    {
+      "icaoCode": "EDUC",
+      "kind": "military",
+      "item": "Q1411234"
+    },
+    {
+      "icaoCode": "EEEI",
+      "kind": "military",
+      "item": "Q938047",
+      "lat": 59.26,
+      "lon": 24.208333333333,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "EEHU",
+      "kind": "military",
+      "item": "Q3914434"
+    },
+    {
+      "icaoCode": "EENI",
+      "kind": "military",
+      "item": "Q3017118"
+    },
+    {
+      "icaoCode": "EERE",
+      "kind": "military",
+      "item": "Q15088339",
+      "lat": 59.36472222222222,
+      "lon": 26.359166666666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Rakvere_Airfield"
+    },
+    {
+      "icaoCode": "EFHA",
+      "kind": "military",
+      "item": "Q2627988",
+      "lat": 61.85638889,
+      "lon": 24.78916667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Halli_Airport"
+    },
+    {
+      "icaoCode": "EFJY",
+      "kind": "military",
+      "item": "Q143224",
+      "lat": 62.400833333333,
+      "lon": 25.672777777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Jyv%C3%A4skyl%C3%A4_Airport"
+    },
+    {
+      "icaoCode": "EFUT",
+      "kind": "military",
+      "item": "Q2660813",
+      "lat": 60.896388888889,
+      "lon": 26.938055555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Utti_Air_Base"
+    },
+    {
+      "icaoCode": "EGCI",
+      "kind": "military",
+      "item": "Q7275280"
+    },
+    {
+      "icaoCode": "EGCY",
+      "kind": "military",
+      "item": "Q10853538"
+    },
+    {
+      "icaoCode": "EGDA",
+      "kind": "military",
+      "item": "Q7275201"
+    },
+    {
+      "icaoCode": "EGDG",
+      "kind": "military",
+      "item": "Q7275582"
+    },
+    {
+      "icaoCode": "EGDM",
+      "kind": "military",
+      "item": "Q3566434"
+    },
+    {
+      "icaoCode": "EGDV",
+      "kind": "military",
+      "item": "Q7275397"
+    },
+    {
+      "icaoCode": "EGDW",
+      "kind": "military",
+      "item": "Q16932169"
+    },
+    {
+      "icaoCode": "EGDY",
+      "kind": "military",
+      "item": "Q1647117",
+      "lat": 51.009444444444,
+      "lon": -2.6388888888889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RNAS_Yeovilton"
+    },
+    {
+      "icaoCode": "EGFA",
+      "kind": "military",
+      "item": "Q3915757"
+    },
+    {
+      "icaoCode": "EGFD",
+      "kind": "military",
+      "item": "Q6661105"
+    },
+    {
+      "icaoCode": "EGKH",
+      "kind": "military",
+      "item": "Q3914269"
+    },
+    {
+      "icaoCode": "EGKL",
+      "kind": "military",
+      "item": "Q7275270"
+    },
+    {
+      "icaoCode": "EGKM",
+      "kind": "military",
+      "item": "Q7275671"
+    },
+    {
+      "icaoCode": "EGLD",
+      "kind": "military",
+      "item": "Q1656739"
+    },
+    {
+      "icaoCode": "EGLJ",
+      "kind": "military",
+      "item": "Q1836709"
+    },
+    {
+      "icaoCode": "EGLM",
+      "kind": "military",
+      "item": "Q3914750"
+    },
+    {
+      "icaoCode": "EGLS",
+      "kind": "military",
+      "item": "Q3915612"
+    },
+    {
+      "icaoCode": "EGMH",
+      "kind": "military",
+      "item": "Q3415044"
+    },
+    {
+      "icaoCode": "EGNA",
+      "kind": "military",
+      "item": "Q3207377"
+    },
+    {
+      "icaoCode": "EGNO",
+      "kind": "military",
+      "item": "Q3914827",
+      "lat": 53.745,
+      "lon": -2.8838888888889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Warton_Aerodrome"
+    },
+    {
+      "icaoCode": "EGOE",
+      "kind": "military",
+      "item": "Q7275626"
+    },
+    {
+      "icaoCode": "EGOJ",
+      "kind": "military",
+      "item": "Q7275408"
+    },
+    {
+      "icaoCode": "EGOW",
+      "kind": "military",
+      "item": "Q7275691",
+      "lat": 53.581666666667,
+      "lon": -3.0555555555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAF_Woodvale"
+    },
+    {
+      "icaoCode": "EGPY",
+      "kind": "military",
+      "item": "Q7275282"
+    },
+    {
+      "icaoCode": "EGQB",
+      "kind": "military",
+      "item": "Q7460182"
+    },
+    {
+      "icaoCode": "EGQK",
+      "kind": "military",
+      "item": "Q2876000"
+    },
+    {
+      "icaoCode": "EGQM",
+      "kind": "military",
+      "item": "Q7275191"
+    },
+    {
+      "icaoCode": "EGQS",
+      "kind": "military",
+      "item": "Q1164139",
+      "lat": 57.705277777778,
+      "lon": -3.3391666666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAF_Lossiemouth"
+    },
+    {
+      "icaoCode": "EGSE",
+      "kind": "military",
+      "item": "Q3016802"
+    },
+    {
+      "icaoCode": "EGTN",
+      "kind": "military",
+      "item": "Q5380061",
+      "lat": 51.9297,
+      "lon": -1.4275,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Enstone_Airfield"
+    },
+    {
+      "icaoCode": "EGTO",
+      "kind": "military",
+      "item": "Q3915777",
+      "lat": 51.351944444444,
+      "lon": 0.50277777777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Rochester_Airport_(Kent)"
+    },
+    {
+      "icaoCode": "EGUD",
+      "kind": "military",
+      "item": "Q7275122"
+    },
+    {
+      "icaoCode": "EGUN",
+      "kind": "military",
+      "item": "Q772162",
+      "lat": 52.365,
+      "lon": 0.48083333333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAF_Mildenhall"
+    },
+    {
+      "icaoCode": "EGUP",
+      "kind": "military",
+      "item": "Q6946027"
+    },
+    {
+      "icaoCode": "EGUW",
+      "kind": "military",
+      "item": "Q7275662"
+    },
+    {
+      "icaoCode": "EGUY",
+      "kind": "military",
+      "item": "Q7275708",
+      "lat": 52.3572,
+      "lon": -0.107778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAF_Wyton"
+    },
+    {
+      "icaoCode": "EGVA",
+      "kind": "military",
+      "item": "Q1427413",
+      "lat": 51.6822,
+      "lon": -1.79,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAF_Fairford"
+    },
+    {
+      "icaoCode": "EGVI",
+      "kind": "military",
+      "item": "Q7275353"
+    },
+    {
+      "icaoCode": "EGVL",
+      "kind": "military",
+      "item": "Q7275442"
+    },
+    {
+      "icaoCode": "EGVN",
+      "kind": "military",
+      "item": "Q1420053",
+      "lat": 51.75,
+      "lon": -1.5836111111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAF_Brize_Norton"
+    },
+    {
+      "icaoCode": "EGVP",
+      "kind": "military",
+      "item": "Q2900811"
+    },
+    {
+      "icaoCode": "EGVT",
+      "kind": "military",
+      "item": "Q649866"
+    },
+    {
+      "icaoCode": "EGWC",
+      "kind": "military",
+      "item": "Q4120040"
+    },
+    {
+      "icaoCode": "EGWE",
+      "kind": "military",
+      "item": "Q2123956"
+    },
+    {
+      "icaoCode": "EGWE",
+      "kind": "military",
+      "item": "Q7275373"
+    },
+    {
+      "icaoCode": "EGWZ",
+      "kind": "military",
+      "item": "Q564876"
+    },
+    {
+      "icaoCode": "EGXB",
+      "kind": "military",
+      "item": "Q138896"
+    },
+    {
+      "icaoCode": "EGXC",
+      "kind": "military",
+      "item": "Q1164127",
+      "lat": 53.093055555556,
+      "lon": -0.16611111111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAF_Coningsby"
+    },
+    {
+      "icaoCode": "EGXD",
+      "kind": "military",
+      "item": "Q7275279"
+    },
+    {
+      "icaoCode": "EGXG",
+      "kind": "military",
+      "item": "Q55641527"
+    },
+    {
+      "icaoCode": "EGXH",
+      "kind": "military",
+      "item": "Q2875400",
+      "lat": 52.3425,
+      "lon": 0.77305555555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAF_Honington"
+    },
+    {
+      "icaoCode": "EGXI",
+      "kind": "military",
+      "item": "Q7275319"
+    },
+    {
+      "icaoCode": "EGXJ",
+      "kind": "military",
+      "item": "Q7275257"
+    },
+    {
+      "icaoCode": "EGXN",
+      "kind": "military",
+      "item": "Q7275499"
+    },
+    {
+      "icaoCode": "EGXT",
+      "kind": "military",
+      "item": "Q1754901",
+      "lat": 52.6125,
+      "lon": -0.476389,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAF_Wittering"
+    },
+    {
+      "icaoCode": "EGXV",
+      "kind": "military",
+      "item": "Q7275431"
+    },
+    {
+      "icaoCode": "EGXW",
+      "kind": "military",
+      "item": "Q2123976",
+      "lat": 53.1725,
+      "lon": -0.53083333333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAF_Waddington"
+    },
+    {
+      "icaoCode": "EGXZ",
+      "kind": "military",
+      "item": "Q7275637"
+    },
+    {
+      "icaoCode": "EGYC",
+      "kind": "military",
+      "item": "Q7275252"
+    },
+    {
+      "icaoCode": "EHDL",
+      "kind": "military",
+      "item": "Q3027840",
+      "lat": 52.060278,
+      "lon": 5.8725,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Deelen_Air_Base"
+    },
+    {
+      "icaoCode": "EHEH",
+      "kind": "military",
+      "item": "Q56289584",
+      "lat": 51.451679,
+      "lon": 5.38313,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "EHGR",
+      "kind": "military",
+      "item": "Q1446578",
+      "lat": 51.566389,
+      "lon": 4.938056,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Gilze-Rijen_Air_Base"
+    },
+    {
+      "icaoCode": "EHLW",
+      "kind": "military",
+      "item": "Q2872473",
+      "lat": 53.227778,
+      "lon": 5.755833,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Leeuwarden_Air_Base"
+    },
+    {
+      "icaoCode": "EHSB",
+      "kind": "military",
+      "item": "Q2533007"
+    },
+    {
+      "icaoCode": "EHVK",
+      "kind": "military",
+      "item": "Q2271372",
+      "lat": 51.657195,
+      "lon": 5.707833,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Volkel_Air_Base"
+    },
+    {
+      "icaoCode": "EHWO",
+      "kind": "military",
+      "item": "Q2334993",
+      "lat": 51.449444,
+      "lon": 4.342222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Woensdrecht_Air_Base"
+    },
+    {
+      "icaoCode": "EIME",
+      "kind": "military",
+      "item": "Q350195"
+    },
+    {
+      "icaoCode": "EKVA",
+      "kind": "military",
+      "item": "Q12311720"
+    },
+    {
+      "icaoCode": "EKVL",
+      "kind": "military",
+      "item": "Q12010266"
+    },
+    {
+      "icaoCode": "EKYT",
+      "kind": "military",
+      "item": "Q2886531",
+      "lat": 57.092788888889,
+      "lon": 9.8491638888889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Aalborg_Air_Base"
+    },
+    {
+      "icaoCode": "ENBO",
+      "kind": "military",
+      "item": "Q4380750",
+      "lat": 67.269166666667,
+      "lon": 14.365277777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Bod%C3%B8_Main_Air_Station"
+    },
+    {
+      "icaoCode": "ENBR",
+      "kind": "military",
+      "item": "Q19574887",
+      "lat": 60.2936,
+      "lon": 5.21806,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Flesland_Air_Station"
+    },
+    {
+      "icaoCode": "ENDU",
+      "kind": "military",
+      "item": "Q4860232",
+      "lat": 69.056111111111,
+      "lon": 18.540277777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Bardufoss_Air_Station"
+    },
+    {
+      "icaoCode": "ENEV",
+      "kind": "military",
+      "item": "Q17770259",
+      "lat": 68.482222,
+      "lon": 16.694722,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Evenes_Air_Station"
+    },
+    {
+      "icaoCode": "ENLI",
+      "kind": "military",
+      "item": "Q18618942"
+    },
+    {
+      "icaoCode": "ENNA",
+      "kind": "military",
+      "item": "Q6516685",
+      "lat": 70.066666666667,
+      "lon": 24.973888888889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Station_Group_Banak"
+    },
+    {
+      "icaoCode": "ENOL",
+      "kind": "military",
+      "item": "Q3271311",
+      "lat": 63.698908333333,
+      "lon": 9.6040027777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/%C3%98rland_Main_Air_Station"
+    },
+    {
+      "icaoCode": "ENRY",
+      "kind": "military",
+      "item": "Q1780219",
+      "lat": 59.378888888889,
+      "lon": 10.785555555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Rygge_Air_Force_Base"
+    },
+    {
+      "icaoCode": "ENVA",
+      "kind": "military",
+      "item": "Q7944502",
+      "lat": 63.4575,
+      "lon": 10.924166666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/V%C3%A6rnes_Air_Station"
+    },
+    {
+      "icaoCode": "ENZV",
+      "kind": "military",
+      "item": "Q3271063",
+      "lat": 58.876666666667,
+      "lon": 5.6377777777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Sola_Air_Station"
+    },
+    {
+      "icaoCode": "EPKS",
+      "kind": "military",
+      "item": "Q4634896"
+    },
+    {
+      "icaoCode": "EPMB",
+      "kind": "military",
+      "item": "Q4631351"
+    },
+    {
+      "icaoCode": "ESCF",
+      "kind": "military",
+      "item": "Q6744357",
+      "lat": 58.397777777777776,
+      "lon": 15.522777777777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Malmen_Airbase"
+    },
+    {
+      "icaoCode": "ESCK",
+      "kind": "military",
+      "item": "Q10602788"
+    },
+    {
+      "icaoCode": "ESCM",
+      "kind": "military",
+      "item": "Q1015314",
+      "lat": 59.897222222222,
+      "lon": 17.588611111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/%C3%84rna_Air_Base"
+    },
+    {
+      "icaoCode": "ESCN",
+      "kind": "military",
+      "item": "Q10680437"
+    },
+    {
+      "icaoCode": "ESFH",
+      "kind": "military",
+      "item": "Q10518493"
+    },
+    {
+      "icaoCode": "ESFI",
+      "kind": "military",
+      "item": "Q10546669"
+    },
+    {
+      "icaoCode": "ESFJ",
+      "kind": "military",
+      "item": "Q12700190"
+    },
+    {
+      "icaoCode": "ESFM",
+      "kind": "military",
+      "item": "Q10587493"
+    },
+    {
+      "icaoCode": "ESFQ",
+      "kind": "military",
+      "item": "Q12700166"
+    },
+    {
+      "icaoCode": "ESFR",
+      "kind": "military",
+      "item": "Q10658636",
+      "lat": 58.50666667,
+      "lon": 13.05444444,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "ESFU",
+      "kind": "military",
+      "item": "Q10711148"
+    },
+    {
+      "icaoCode": "ESFY",
+      "kind": "military",
+      "item": "Q10438216"
+    },
+    {
+      "icaoCode": "ESHT",
+      "kind": "military",
+      "item": "Q18332893"
+    },
+    {
+      "icaoCode": "ESIA",
+      "kind": "military",
+      "item": "Q10543817"
+    },
+    {
+      "icaoCode": "ESIB",
+      "kind": "military",
+      "item": "Q10561379"
+    },
+    {
+      "icaoCode": "ESIC",
+      "kind": "military",
+      "item": "Q17366636"
+    },
+    {
+      "icaoCode": "ESKA",
+      "kind": "military",
+      "item": "Q3274268"
+    },
+    {
+      "icaoCode": "ESKT",
+      "kind": "military",
+      "item": "Q10697797"
+    },
+    {
+      "icaoCode": "ESMD",
+      "kind": "military",
+      "item": "Q19978459"
+    },
+    {
+      "icaoCode": "ESMV",
+      "kind": "military",
+      "item": "Q10516024",
+      "lat": 57.29222222,
+      "lon": 14.13694444,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "ESNI",
+      "kind": "military",
+      "item": "Q1710539"
+    },
+    {
+      "icaoCode": "ESNJ",
+      "kind": "military",
+      "item": "Q10540702"
+    },
+    {
+      "icaoCode": "ESNT",
+      "kind": "military",
+      "item": "Q19978787"
+    },
+    {
+      "icaoCode": "ESPE",
+      "kind": "military",
+      "item": "Q7928149"
+    },
+    {
+      "icaoCode": "ESPG",
+      "kind": "military",
+      "item": "Q10431979"
+    },
+    {
+      "icaoCode": "ESPJ",
+      "kind": "military",
+      "item": "Q12700153"
+    },
+    {
+      "icaoCode": "ESQP",
+      "kind": "military",
+      "item": "Q10428335"
+    },
+    {
+      "icaoCode": "ESUA",
+      "kind": "military",
+      "item": "Q10726517"
+    },
+    {
+      "icaoCode": "ESUF",
+      "kind": "military",
+      "item": "Q10500698"
+    },
+    {
+      "icaoCode": "ESUK",
+      "kind": "military",
+      "item": "Q10542635",
+      "lat": 67.76472222,
+      "lon": 20.25722222,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "ESVB",
+      "kind": "military",
+      "item": "Q10437750",
+      "lat": 57.85,
+      "lon": 19.03416667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Bunge_Airbase"
+    },
+    {
+      "icaoCode": "ETAD",
+      "kind": "military",
+      "item": "Q656939",
+      "lat": 49.9727,
+      "lon": 6.6925,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Spangdahlem_Air_Base"
+    },
+    {
+      "icaoCode": "ETAR",
+      "kind": "military",
+      "item": "Q161348",
+      "lat": 49.43694444444444,
+      "lon": 7.6,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ramstein_Air_Base"
+    },
+    {
+      "icaoCode": "ETHI",
+      "kind": "military",
+      "item": "Q12693051"
+    },
+    {
+      "icaoCode": "ETHL",
+      "kind": "military",
+      "item": "Q322130",
+      "lat": 48.220108333333336,
+      "lon": 9.910208333333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Laupheim_Air_Base"
+    },
+    {
+      "icaoCode": "ETHT",
+      "kind": "military",
+      "item": "Q1433561"
+    },
+    {
+      "icaoCode": "ETIC",
+      "kind": "military",
+      "item": "Q1433605",
+      "lat": 49.6987,
+      "lon": 11.9402,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Grafenw%C3%B6hr_Army_Airfield"
+    },
+    {
+      "icaoCode": "ETID",
+      "kind": "military",
+      "item": "Q1428521"
+    },
+    {
+      "icaoCode": "ETIE",
+      "kind": "military",
+      "item": "Q1316831"
+    },
+    {
+      "icaoCode": "ETIH",
+      "kind": "military",
+      "item": "Q20449526",
+      "lat": 49.2165,
+      "lon": 11.836166666666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Hohenfels_Army_Airfield"
+    },
+    {
+      "icaoCode": "ETIK",
+      "kind": "military",
+      "item": "Q1433649",
+      "lat": 49.4733,
+      "lon": 10.3864,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Illesheim_Army_Heliport"
+    },
+    {
+      "icaoCode": "ETME",
+      "kind": "military",
+      "item": "Q1303603"
+    },
+    {
+      "icaoCode": "ETMK",
+      "kind": "military",
+      "item": "Q1602573"
+    },
+    {
+      "icaoCode": "ETMN",
+      "kind": "military",
+      "item": "Q322119",
+      "lat": 53.7672,
+      "lon": 8.65861,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Nordholz_Naval_Airbase"
+    },
+    {
+      "icaoCode": "ETNA",
+      "kind": "military",
+      "item": "Q1433432"
+    },
+    {
+      "icaoCode": "ETND",
+      "kind": "military",
+      "item": "Q834001",
+      "lat": 52.5855,
+      "lon": 8.340666666666667,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "ETNG",
+      "kind": "military",
+      "item": "Q329095",
+      "lat": 50.960833333333,
+      "lon": 6.0425,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/NATO_Air_Base_Geilenkirchen"
+    },
+    {
+      "icaoCode": "ETNH",
+      "kind": "military",
+      "item": "Q780114",
+      "lat": 54.3136,
+      "lon": 9.53817,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Hohn_Air_Base"
+    },
+    {
+      "icaoCode": "ETNJ",
+      "kind": "military",
+      "item": "Q1428519"
+    },
+    {
+      "icaoCode": "ETNL",
+      "kind": "military",
+      "item": "Q443758",
+      "lat": 54.7917,
+      "lon": 8.95556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Leck_Air_Base"
+    },
+    {
+      "icaoCode": "ETNL",
+      "kind": "military",
+      "item": "Q820223",
+      "lat": 53.918085,
+      "lon": 12.279288333333334,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "ETNN",
+      "kind": "military",
+      "item": "Q320266",
+      "lat": 50.831166666667,
+      "lon": 6.6581666666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/N%C3%B6rvenich_Air_Base"
+    },
+    {
+      "icaoCode": "ETNO",
+      "kind": "military",
+      "item": "Q1428523"
+    },
+    {
+      "icaoCode": "ETNP",
+      "kind": "military",
+      "item": "Q994759"
+    },
+    {
+      "icaoCode": "ETNR",
+      "kind": "military",
+      "item": "Q1433810"
+    },
+    {
+      "icaoCode": "ETNS",
+      "kind": "military",
+      "item": "Q325692",
+      "lat": 54.45935,
+      "lon": 9.516363333333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Schleswig_Air_Base"
+    },
+    {
+      "icaoCode": "ETNT",
+      "kind": "military",
+      "item": "Q316344",
+      "lat": 53.5478,
+      "lon": 7.66733,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Wittmundhafen_Air_Base"
+    },
+    {
+      "icaoCode": "ETNW",
+      "kind": "military",
+      "item": "Q833642",
+      "lat": 52.457333333333,
+      "lon": 9.4271666666667,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "ETOI",
+      "kind": "military",
+      "item": "Q12695496",
+      "lat": 49.633667,
+      "lon": 11.767167,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "ETOR",
+      "kind": "military",
+      "item": "Q872084"
+    },
+    {
+      "icaoCode": "ETOU",
+      "kind": "military",
+      "item": "Q327689",
+      "lat": 50.0498,
+      "lon": 8.3254,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Lucius_D._Clay_Kaserne"
+    },
+    {
+      "icaoCode": "ETSA",
+      "kind": "military",
+      "item": "Q465260"
+    },
+    {
+      "icaoCode": "ETSB",
+      "kind": "military",
+      "item": "Q320257",
+      "lat": 50.1738,
+      "lon": 7.06333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/B%C3%BCchel_Air_Base"
+    },
+    {
+      "icaoCode": "ETSE",
+      "kind": "military",
+      "item": "Q473702"
+    },
+    {
+      "icaoCode": "ETSF",
+      "kind": "military",
+      "item": "Q554451"
+    },
+    {
+      "icaoCode": "ETSH",
+      "kind": "military",
+      "item": "Q834045",
+      "lat": 51.7678,
+      "lon": 13.1677,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "ETSI",
+      "kind": "military",
+      "item": "Q472400",
+      "lat": 48.71563,
+      "lon": 11.5337,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ingolstadt_Manching_Airport"
+    },
+    {
+      "icaoCode": "ETSK",
+      "kind": "military",
+      "item": "Q835715"
+    },
+    {
+      "icaoCode": "ETSN",
+      "kind": "military",
+      "item": "Q538648",
+      "lat": 48.7117,
+      "lon": 11.2117,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Neuburg_Air_Base"
+    },
+    {
+      "icaoCode": "ETUR",
+      "kind": "military",
+      "item": "Q441476"
+    },
+    {
+      "icaoCode": "ETWM",
+      "kind": "military",
+      "item": "Q1298295",
+      "lat": 52.7232,
+      "lon": 7.32633,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "EVEA",
+      "kind": "military",
+      "item": "Q2903352"
+    },
+    {
+      "icaoCode": "EVFA",
+      "kind": "military",
+      "item": "Q8214589"
+    },
+    {
+      "icaoCode": "EVGA",
+      "kind": "military",
+      "item": "Q3271618",
+      "lat": 56.77833333,
+      "lon": 24.85333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Lielv%C4%81rde_Air_Base"
+    },
+    {
+      "icaoCode": "EVKA",
+      "kind": "military",
+      "item": "Q2902118"
+    },
+    {
+      "icaoCode": "EVNA",
+      "kind": "military",
+      "item": "Q20404277"
+    },
+    {
+      "icaoCode": "EVRC",
+      "kind": "military",
+      "item": "Q4992267"
+    },
+    {
+      "icaoCode": "EYKR",
+      "kind": "military",
+      "item": "Q3497001"
+    },
+    {
+      "icaoCode": "EYPP",
+      "kind": "military",
+      "item": "Q5732371",
+      "lat": 55.73,
+      "lon": 24.46,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Panev%C4%97%C5%BEys_Air_Base"
+    },
+    {
+      "icaoCode": "FABL",
+      "kind": "military",
+      "item": "Q4651415",
+      "lat": -29.093888888889,
+      "lon": 26.303888888889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Air_Force_Base_Bloemspruit"
+    },
+    {
+      "icaoCode": "FADN",
+      "kind": "military",
+      "item": "Q4651413"
+    },
+    {
+      "icaoCode": "FAHS",
+      "kind": "military",
+      "item": "Q4651416",
+      "lat": -24.354722222222,
+      "lon": 31.050277777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Air_Force_Base_Hoedspruit"
+    },
+    {
+      "icaoCode": "FALM",
+      "kind": "military",
+      "item": "Q4651418",
+      "lat": -23.16,
+      "lon": 29.696666666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Air_Force_Base_Makhado"
+    },
+    {
+      "icaoCode": "FALT",
+      "kind": "military",
+      "item": "Q12700172"
+    },
+    {
+      "icaoCode": "FALW",
+      "kind": "military",
+      "item": "Q10860391",
+      "lat": -32.968888888889,
+      "lon": 18.165277777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Air_Force_Base_Langebaanweg"
+    },
+    {
+      "icaoCode": "FAOB",
+      "kind": "military",
+      "item": "Q4651419",
+      "lat": -34.554722222222,
+      "lon": 20.250555555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Air_Force_Base_Overberg"
+    },
+    {
+      "icaoCode": "FAPE",
+      "kind": "military",
+      "item": "Q4651612",
+      "lat": -33.99,
+      "lon": 25.61027778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Air_Force_Station_Port_Elizabeth"
+    },
+    {
+      "icaoCode": "FASK",
+      "kind": "military",
+      "item": "Q4651421",
+      "lat": -25.806944444444,
+      "lon": 28.164444444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Air_Force_Base_Swartkop"
+    },
+    {
+      "icaoCode": "FAVS",
+      "kind": "military",
+      "item": "Q7917003"
+    },
+    {
+      "icaoCode": "FAWK",
+      "kind": "military",
+      "item": "Q10860394",
+      "lat": -25.83,
+      "lon": 28.2225,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Air_Force_Base_Waterkloof"
+    },
+    {
+      "icaoCode": "FAYP",
+      "kind": "military",
+      "item": "Q4651424",
+      "lat": -33.906388888889,
+      "lon": 18.495,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Air_Force_Base_Ysterplaat"
+    },
+    {
+      "icaoCode": "FHAW",
+      "kind": "military",
+      "item": "Q1968916",
+      "lat": -7.969667,
+      "lon": -14.393667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAF_Ascension_Island"
+    },
+    {
+      "icaoCode": "FLSK",
+      "kind": "military",
+      "item": "Q1432149",
+      "lat": -12.99583333,
+      "lon": 28.66194444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Peter_Zuze_Air_Force_Base"
+    },
+    {
+      "icaoCode": "FMMA",
+      "kind": "military",
+      "item": "Q4791166",
+      "lat": -19.02916667,
+      "lon": 47.17194444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Arivonimamo_Air_Base"
+    },
+    {
+      "icaoCode": "FMNK",
+      "kind": "military",
+      "item": "Q12691546",
+      "lat": -12.253333,
+      "lon": 49.253333,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "FTTA",
+      "kind": "military",
+      "item": "Q3495920",
+      "lat": 9.1511111111111,
+      "lon": 18.379444444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Sarh_Airport"
+    },
+    {
+      "icaoCode": "FTTC",
+      "kind": "military",
+      "item": "Q3495936",
+      "lat": 13.846944444444,
+      "lon": 20.844166666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ab%C3%A9ch%C3%A9_Airport"
+    },
+    {
+      "icaoCode": "FTTJ",
+      "kind": "military",
+      "item": "Q979272",
+      "lat": 12.125,
+      "lon": 15.024722222222,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "FVTL",
+      "kind": "military",
+      "item": "Q5623569",
+      "lat": -19.436388888889,
+      "lon": 29.861944444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Josiah_Tungamirai_Air_Force_Base"
+    },
+    {
+      "icaoCode": "FZAI",
+      "kind": "military",
+      "item": "Q6418282"
+    },
+    {
+      "icaoCode": "FZIA",
+      "kind": "military",
+      "item": "Q7517735",
+      "lat": 0.51805555555556,
+      "lon": 25.155277777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Simisini_Air_Base"
+    },
+    {
+      "icaoCode": "FZSA",
+      "kind": "military",
+      "item": "Q6358138",
+      "lat": -8.64194444,
+      "lon": 25.25277778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Kamina_Air_Base"
+    },
+    {
+      "icaoCode": "GMMA",
+      "kind": "military",
+      "item": "Q10850030",
+      "lat": 26.73166667,
+      "lon": -11.68444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Smara_Airport"
+    },
+    {
+      "icaoCode": "GMMK",
+      "kind": "military",
+      "item": "Q35270629"
+    },
+    {
+      "icaoCode": "GMMY",
+      "kind": "military",
+      "item": "Q2876099"
+    },
+    {
+      "icaoCode": "GMMY",
+      "kind": "military",
+      "item": "Q2886566"
+    },
+    {
+      "icaoCode": "GMSL",
+      "kind": "military",
+      "item": "Q7508820",
+      "lat": 34.230555555556,
+      "lon": -6.0502777777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Sidi_Slimane_Air_Base"
+    },
+    {
+      "icaoCode": "GOOY",
+      "kind": "military",
+      "item": "Q513689",
+      "lat": 14.743833,
+      "lon": -17.479305,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/L%C3%A9opold_S%C3%A9dar_Senghor_International_Airport"
+    },
+    {
+      "icaoCode": "HAAL",
+      "kind": "military",
+      "item": "Q2876087",
+      "lat": 9.00361,
+      "lon": 38.726,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Lideta_Army_Airport"
+    },
+    {
+      "icaoCode": "HANG",
+      "kind": "military",
+      "item": "Q15261480",
+      "lat": 5.28333333,
+      "lon": 39.75,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Neghelle_Airport"
+    },
+    {
+      "icaoCode": "HDCH",
+      "kind": "military",
+      "item": "Q5066007",
+      "lat": 11.516666666667,
+      "lon": 43.066666666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Chabelley_Airport"
+    },
+    {
+      "icaoCode": "HEAZ",
+      "kind": "military",
+      "item": "Q11824207"
+    },
+    {
+      "icaoCode": "HEBR",
+      "kind": "joint",
+      "item": "Q97279714",
+      "lat": 23.98574,
+      "lon": 35.459503,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "HEBR",
+      "kind": "military",
+      "item": "Q97279714",
+      "lat": 23.98574,
+      "lon": 35.459503,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "HHMS",
+      "kind": "military",
+      "item": "Q651210",
+      "lat": 15.671138,
+      "lon": 39.368,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Massawa_International_Airport"
+    },
+    {
+      "icaoCode": "HHSB",
+      "kind": "military",
+      "item": "Q607789",
+      "lat": 13.071666666667,
+      "lon": 42.645,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Assab_International_Airport"
+    },
+    {
+      "icaoCode": "HSSP",
+      "kind": "military",
+      "item": "Q1934952",
+      "lat": 19.566666666667,
+      "lon": 37.216666666667,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "HSWS",
+      "kind": "military",
+      "item": "Q2886547"
+    },
+    {
+      "icaoCode": "HTNG",
+      "kind": "military",
+      "item": "Q18666272"
+    },
+    {
+      "icaoCode": "ICAO",
+      "kind": "military",
+      "item": "Q3696011"
+    },
+    {
+      "icaoCode": "ISFU",
+      "kind": "military",
+      "item": "Q10711148"
+    },
+    {
+      "icaoCode": "ISKX",
+      "kind": "military",
+      "item": "Q16502674"
+    },
+    {
+      "icaoCode": "KADW",
+      "kind": "military",
+      "item": "Q768542",
+      "lat": 38.81081,
+      "lon": -76.86703,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Joint_Base_Andrews"
+    },
+    {
+      "icaoCode": "KAFF",
+      "kind": "military",
+      "item": "Q49751599",
+      "lat": 38.96944,
+      "lon": -104.81331,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/United_States_Air_Force_Academy_Airfield"
+    },
+    {
+      "icaoCode": "KAGR",
+      "kind": "military",
+      "item": "Q74841786"
+    },
+    {
+      "icaoCode": "KAHC",
+      "kind": "military",
+      "item": "Q4742089",
+      "lat": 40.2658,
+      "lon": -120.151,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Amedee_Army_Airfield"
+    },
+    {
+      "icaoCode": "KAPH",
+      "kind": "military",
+      "item": "Q4647271",
+      "lat": 38.0689,
+      "lon": -77.3183,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Mary_Walker_Landing_Zone"
+    },
+    {
+      "icaoCode": "KAYE",
+      "kind": "military",
+      "item": "Q3612309"
+    },
+    {
+      "icaoCode": "KAYX",
+      "kind": "military",
+      "item": "Q2863339"
+    },
+    {
+      "icaoCode": "KBAB",
+      "kind": "military",
+      "item": "Q812921",
+      "lat": 39.136111111111,
+      "lon": -121.43638888889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Beale_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KBAD",
+      "kind": "military",
+      "item": "Q808307",
+      "lat": 32.5019,
+      "lon": -93.6628,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Barksdale_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KBIF",
+      "kind": "military",
+      "item": "Q597859",
+      "lat": 31.849444444444,
+      "lon": -106.38,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Biggs_Army_Airfield"
+    },
+    {
+      "icaoCode": "KBIX",
+      "kind": "military",
+      "item": "Q1045919",
+      "lat": 30.4114,
+      "lon": -88.9236,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Keesler_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KBKF",
+      "kind": "military",
+      "item": "Q3499338",
+      "lat": 39.7017,
+      "lon": -104.752,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Buckley_Space_Force_Base"
+    },
+    {
+      "icaoCode": "KBLV",
+      "kind": "military",
+      "item": "Q576617",
+      "lat": 38.545177777778,
+      "lon": -89.835183333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Scott_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KBOF",
+      "kind": "military",
+      "item": "Q891455"
+    },
+    {
+      "icaoCode": "KBOW",
+      "kind": "military",
+      "item": "Q2789540",
+      "lat": 27.9433,
+      "lon": -81.7833,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Bartow_Executive_Airport"
+    },
+    {
+      "icaoCode": "KCBM",
+      "kind": "military",
+      "item": "Q1657653",
+      "lat": 33.6439,
+      "lon": -88.4439,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Columbus_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KCEF",
+      "kind": "military",
+      "item": "Q1636887"
+    },
+    {
+      "icaoCode": "KCHS",
+      "kind": "military",
+      "item": "Q14709491",
+      "lat": 32.8986,
+      "lon": -80.0406,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Charleston_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KCOF",
+      "kind": "military",
+      "item": "Q1230410",
+      "lat": 28.235007,
+      "lon": -80.609978,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Patrick_Space_Force_Base"
+    },
+    {
+      "icaoCode": "KCVS",
+      "kind": "military",
+      "item": "Q2187683",
+      "lat": 34.39806,
+      "lon": -103.32778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Cannon_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KDLF",
+      "kind": "military",
+      "item": "Q982089",
+      "lat": 29.359444444444,
+      "lon": -100.77805555556,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "KDMA",
+      "kind": "military",
+      "item": "Q1177897",
+      "lat": 32.166388888889,
+      "lon": -110.88305555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Davis%E2%80%93Monthan_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KDOV",
+      "kind": "military",
+      "item": "Q755023",
+      "lat": 39.1283,
+      "lon": -75.4647,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Dover_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KDSM",
+      "kind": "military",
+      "item": "Q1654635",
+      "lat": 41.5339,
+      "lon": -93.6631,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "KDYS",
+      "kind": "military",
+      "item": "Q1268666",
+      "lat": 32.4208,
+      "lon": -99.8547,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Dyess_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KEDW",
+      "kind": "military",
+      "item": "Q217563",
+      "lat": 34.923890144074896,
+      "lon": -117.89125635635864,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Edwards_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KEFD",
+      "kind": "military",
+      "item": "Q5365417",
+      "lat": 29.6072,
+      "lon": -95.1589,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ellington_Field_Joint_Reserve_Base"
+    },
+    {
+      "icaoCode": "KEGI",
+      "kind": "military",
+      "item": "Q5312782",
+      "lat": 30.648586944444446,
+      "lon": -86.52195936111112,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Duke_Field"
+    },
+    {
+      "icaoCode": "KEND",
+      "kind": "military",
+      "item": "Q3497392",
+      "lat": 36.339444444444,
+      "lon": -97.917222222222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Vance_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KFAR",
+      "kind": "military",
+      "item": "Q19873178",
+      "lat": 46.920638888889,
+      "lon": -96.81575,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Fargo_Air_National_Guard_Base"
+    },
+    {
+      "icaoCode": "KFEW",
+      "kind": "military",
+      "item": "Q1956149"
+    },
+    {
+      "icaoCode": "KFFO",
+      "kind": "military",
+      "item": "Q730187",
+      "lat": 39.823055555556,
+      "lon": -84.049444444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Wright-Patterson_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KFHU",
+      "kind": "joint",
+      "item": "Q7511619",
+      "lat": 31.588333333333,
+      "lon": -110.34444444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Sierra_Vista_Municipal_Airport"
+    },
+    {
+      "icaoCode": "KFHU",
+      "kind": "military",
+      "item": "Q7511619",
+      "lat": 31.588333333333,
+      "lon": -110.34444444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Sierra_Vista_Municipal_Airport"
+    },
+    {
+      "icaoCode": "KFOE",
+      "kind": "military",
+      "item": "Q5467244",
+      "lat": 38.950833333333,
+      "lon": -95.663611111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Topeka_Regional_Airport"
+    },
+    {
+      "icaoCode": "KGFA",
+      "kind": "military",
+      "item": "Q956022"
+    },
+    {
+      "icaoCode": "KGOV",
+      "kind": "military",
+      "item": "Q3913284"
+    },
+    {
+      "icaoCode": "KGRK",
+      "kind": "military",
+      "item": "Q16899355",
+      "lat": 31.361,
+      "lon": -97.673,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Robert_Gray_Army_Airfield"
+    },
+    {
+      "icaoCode": "KGSB",
+      "kind": "military",
+      "item": "Q1766303",
+      "lat": 35.3394,
+      "lon": -77.9606,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Seymour_Johnson_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KGTB",
+      "kind": "military",
+      "item": "Q7992189",
+      "lat": 44.055555555556,
+      "lon": -75.719444444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Wheeler-Sack_Army_Airfield"
+    },
+    {
+      "icaoCode": "KGVW",
+      "kind": "military",
+      "item": "Q7330272"
+    },
+    {
+      "icaoCode": "KHAA",
+      "kind": "military",
+      "item": "Q3275444"
+    },
+    {
+      "icaoCode": "KHEY",
+      "kind": "military",
+      "item": "Q3886916"
+    },
+    {
+      "icaoCode": "KHIF",
+      "kind": "military",
+      "item": "Q3105846",
+      "lat": 41.1239,
+      "lon": -111.973,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Hill_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KHLR",
+      "kind": "military",
+      "item": "Q16892446",
+      "lat": 31.14,
+      "lon": -97.715,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Yoakum%E2%80%93DeFrenn_Army_Heliport"
+    },
+    {
+      "icaoCode": "KHMN",
+      "kind": "military",
+      "item": "Q681505",
+      "lat": 32.8525,
+      "lon": -106.106,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Holloman_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KHRT",
+      "kind": "military",
+      "item": "Q1638450"
+    },
+    {
+      "icaoCode": "KHST",
+      "kind": "military",
+      "item": "Q3139697",
+      "lat": 25.4883,
+      "lon": -80.3836,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Homestead_Air_Reserve_Base"
+    },
+    {
+      "icaoCode": "KHUF",
+      "kind": "military",
+      "item": "Q7703348"
+    },
+    {
+      "icaoCode": "KIAB",
+      "kind": "military",
+      "item": "Q652649",
+      "lat": 37.6231,
+      "lon": -97.2672,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/McConnell_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KIKR",
+      "kind": "military",
+      "item": "Q577946"
+    },
+    {
+      "icaoCode": "KILG",
+      "kind": "military",
+      "item": "Q10860387",
+      "lat": 39.6853,
+      "lon": -75.5992,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/New_Castle_Air_National_Guard_Base"
+    },
+    {
+      "icaoCode": "KINS",
+      "kind": "military",
+      "item": "Q1658047",
+      "lat": 36.5922,
+      "lon": -115.667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Creech_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KLCK",
+      "kind": "military",
+      "item": "Q7331905",
+      "lat": 39.8136,
+      "lon": -82.9467,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Rickenbacker_Air_National_Guard_Base"
+    },
+    {
+      "icaoCode": "KLFI",
+      "kind": "military",
+      "item": "Q19828268",
+      "lat": 37.082778,
+      "lon": -76.360556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Joint_Base_Langley%E2%80%93Eustis"
+    },
+    {
+      "icaoCode": "KLFI",
+      "kind": "military",
+      "item": "Q650056",
+      "lat": 37.0828,
+      "lon": -76.3606,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Langley_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KLIZ",
+      "kind": "military",
+      "item": "Q1893607"
+    },
+    {
+      "icaoCode": "KLMT",
+      "kind": "military",
+      "item": "Q6413305",
+      "lat": 42.1561,
+      "lon": -121.733,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Kingsley_Field_Air_National_Guard_Base"
+    },
+    {
+      "icaoCode": "KLRF",
+      "kind": "military",
+      "item": "Q1784194",
+      "lat": 34.913055555556,
+      "lon": -92.147777777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Little_Rock_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KLSV",
+      "kind": "military",
+      "item": "Q735912",
+      "lat": 36.236197222222,
+      "lon": -115.03425277778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Nellis_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KLTS",
+      "kind": "military",
+      "item": "Q2560021",
+      "lat": 34.6639,
+      "lon": -99.2681,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Altus_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KLUF",
+      "kind": "military",
+      "item": "Q1346991",
+      "lat": 33.535,
+      "lon": -112.38305555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Luke_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KMCF",
+      "kind": "military",
+      "item": "Q1583022",
+      "lat": 27.8494,
+      "lon": -82.5211,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/MacDill_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KMEI",
+      "kind": "military",
+      "item": "Q6398040",
+      "lat": 32.3161,
+      "lon": -88.7519,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "KMGE",
+      "kind": "military",
+      "item": "Q1655754",
+      "lat": 33.9153,
+      "lon": -84.5164,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Dobbins_Air_Reserve_Base"
+    },
+    {
+      "icaoCode": "KMGM",
+      "kind": "military",
+      "item": "Q3612693",
+      "lat": 32.3006,
+      "lon": -86.3939,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Montgomery_Air_National_Guard_Base"
+    },
+    {
+      "icaoCode": "KMIB",
+      "kind": "military",
+      "item": "Q1114128",
+      "lat": 48.415572222222,
+      "lon": -101.35766111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Minot_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KMRB",
+      "kind": "military",
+      "item": "Q761001",
+      "lat": 39.4019,
+      "lon": -77.9844,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Shepherd_Field_Air_National_Guard_Base"
+    },
+    {
+      "icaoCode": "KMTN",
+      "kind": "military",
+      "item": "Q7969333",
+      "lat": 39.3257,
+      "lon": -76.4138,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "KMUI",
+      "kind": "military",
+      "item": "Q1528445",
+      "lat": 40.4347,
+      "lon": -76.5692,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Muir_Army_Heliport"
+    },
+    {
+      "icaoCode": "KMUO",
+      "kind": "military",
+      "item": "Q1407551",
+      "lat": 43.043602777778,
+      "lon": -115.87243055556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Mountain_Home_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KMXF",
+      "kind": "military",
+      "item": "Q1785757",
+      "lat": 32.3792,
+      "lon": -86.3625,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Maxwell_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KNBC",
+      "kind": "military",
+      "item": "Q1031183"
+    },
+    {
+      "icaoCode": "KNBU",
+      "kind": "military",
+      "item": "Q3015150"
+    },
+    {
+      "icaoCode": "KNCA",
+      "kind": "military",
+      "item": "Q1030738",
+      "lat": 34.70842,
+      "lon": -77.43967,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Marine_Corps_Air_Station_New_River"
+    },
+    {
+      "icaoCode": "KNEA",
+      "kind": "military",
+      "item": "Q3015119"
+    },
+    {
+      "icaoCode": "KNEL",
+      "kind": "military",
+      "item": "Q6981695",
+      "lat": 40.03333333333333,
+      "lon": -74.3536111111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Lakehurst_Maxfield_Field"
+    },
+    {
+      "icaoCode": "KNFG",
+      "kind": "military",
+      "item": "Q1031279"
+    },
+    {
+      "icaoCode": "KNFJ",
+      "kind": "military",
+      "item": "Q5103724"
+    },
+    {
+      "icaoCode": "KNGS",
+      "kind": "military",
+      "item": "Q3017107"
+    },
+    {
+      "icaoCode": "KNHZ",
+      "kind": "military",
+      "item": "Q3015041"
+    },
+    {
+      "icaoCode": "KNID",
+      "kind": "military",
+      "item": "Q3014558"
+    },
+    {
+      "icaoCode": "KNIP",
+      "kind": "military",
+      "item": "Q3017076",
+      "lat": 30.23583,
+      "lon": -81.68056,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Naval_Air_Station_Jacksonville"
+    },
+    {
+      "icaoCode": "KNKL",
+      "kind": "military",
+      "item": "Q28449604"
+    },
+    {
+      "icaoCode": "KNKT",
+      "kind": "military",
+      "item": "Q1031594",
+      "lat": 34.9008,
+      "lon": -76.8808,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Marine_Corps_Air_Station_Cherry_Point"
+    },
+    {
+      "icaoCode": "KNKX",
+      "kind": "military",
+      "item": "Q1029503",
+      "lat": 32.872777777778,
+      "lon": -117.13972222222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Marine_Corps_Air_Station_Miramar"
+    },
+    {
+      "icaoCode": "KNOG",
+      "kind": "military",
+      "item": "Q3016361"
+    },
+    {
+      "icaoCode": "KNPA",
+      "kind": "military",
+      "item": "Q321162",
+      "lat": 30.354166666667,
+      "lon": -87.305555555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Naval_Air_Station_Pensacola"
+    },
+    {
+      "icaoCode": "KNRS",
+      "kind": "military",
+      "item": "Q3014320",
+      "lat": 32.5633,
+      "lon": -117.112,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Naval_Outlying_Landing_Field_Imperial_Beach"
+    },
+    {
+      "icaoCode": "KNTD",
+      "kind": "military",
+      "item": "Q17082712",
+      "lat": 34.12027778,
+      "lon": -119.1211111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Naval_Base_Ventura_County"
+    },
+    {
+      "icaoCode": "KNTK",
+      "kind": "military",
+      "item": "Q6764074"
+    },
+    {
+      "icaoCode": "KNUU",
+      "kind": "military",
+      "item": "Q3015564"
+    },
+    {
+      "icaoCode": "KNYL",
+      "kind": "military",
+      "item": "Q1030442",
+      "lat": 32.656666666667,
+      "lon": -114.60611111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Marine_Corps_Air_Station_Yuma"
+    },
+    {
+      "icaoCode": "KNZC",
+      "kind": "military",
+      "item": "Q3015462"
+    },
+    {
+      "icaoCode": "KOFF",
+      "kind": "military",
+      "item": "Q626985",
+      "lat": 41.118333333333,
+      "lon": -95.912511111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Offutt_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KPAM",
+      "kind": "military",
+      "item": "Q1498314",
+      "lat": 30.069566666667,
+      "lon": -85.575416666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Tyndall_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KPIT",
+      "kind": "military",
+      "item": "Q7199307",
+      "lat": 40.4944,
+      "lon": -80.2153,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Pittsburgh_IAP_Air_Reserve_Station"
+    },
+    {
+      "icaoCode": "KPQI",
+      "kind": "military",
+      "item": "Q7058696",
+      "lat": 46.688888888889,
+      "lon": -68.044722222222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Presque_Isle_International_Airport"
+    },
+    {
+      "icaoCode": "KPSM",
+      "kind": "military",
+      "item": "Q7158431",
+      "lat": 43.0781,
+      "lon": -70.8233,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Pease_Air_National_Guard_Base"
+    },
+    {
+      "icaoCode": "KRBM",
+      "kind": "military",
+      "item": "Q7352987",
+      "lat": 34.85,
+      "lon": -92.3003,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Robinson_Army_Airfield"
+    },
+    {
+      "icaoCode": "KRCA",
+      "kind": "military",
+      "item": "Q960480",
+      "lat": 44.145041666667,
+      "lon": -103.10356666667,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "KRDR",
+      "kind": "military",
+      "item": "Q2577056",
+      "lat": 47.9639,
+      "lon": -97.4011,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Grand_Forks_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KRIV",
+      "kind": "military",
+      "item": "Q1031829",
+      "lat": 33.89861,
+      "lon": -117.27611,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/March_Air_Reserve_Base"
+    },
+    {
+      "icaoCode": "KRND",
+      "kind": "military",
+      "item": "Q980034",
+      "lat": 29.529675,
+      "lon": -98.2789,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "KSAV",
+      "kind": "military",
+      "item": "Q7427836",
+      "lat": 32.1275,
+      "lon": -81.2019,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "KSGH",
+      "kind": "military",
+      "item": "Q7580932",
+      "lat": 39.8403,
+      "lon": -83.8403,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "KSKA",
+      "kind": "military",
+      "item": "Q1513045",
+      "lat": 47.615,
+      "lon": -117.656,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Fairchild_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KSKF",
+      "kind": "military",
+      "item": "Q10860401",
+      "lat": 29.38003,
+      "lon": -98.58649,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Kelly_Field"
+    },
+    {
+      "icaoCode": "KSKF",
+      "kind": "military",
+      "item": "Q1416857",
+      "lat": 29.384166666667,
+      "lon": -98.581111111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Lackland_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KSLI",
+      "kind": "military",
+      "item": "Q3298050",
+      "lat": 33.79,
+      "lon": -118.05138888889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Joint_Forces_Training_Base_%E2%80%93_Los_Alamitos"
+    },
+    {
+      "icaoCode": "KSPS",
+      "kind": "military",
+      "item": "Q176146",
+      "lat": 33.9889,
+      "lon": -98.4919,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Sheppard_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KSPS",
+      "kind": "military",
+      "item": "Q7998131",
+      "lat": 33.988888888889,
+      "lon": -98.491944444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Wichita_Falls_Regional_Airport"
+    },
+    {
+      "icaoCode": "KSRQ",
+      "kind": "military",
+      "item": "Q1284157",
+      "lat": 27.395555555556,
+      "lon": -82.554444444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Sarasota%E2%80%93Bradenton_International_Airport"
+    },
+    {
+      "icaoCode": "KSSC",
+      "kind": "military",
+      "item": "Q3100400",
+      "lat": 33.9731,
+      "lon": -80.4728,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Shaw_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KSTJ",
+      "kind": "military",
+      "item": "Q7368132",
+      "lat": 39.7719,
+      "lon": -94.9094,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Rosecrans_Air_National_Guard_Base"
+    },
+    {
+      "icaoCode": "KSUU",
+      "kind": "military",
+      "item": "Q3497425",
+      "lat": 38.262777777778,
+      "lon": -121.9275,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Travis_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KSVN",
+      "kind": "military",
+      "item": "Q3085119",
+      "lat": 32.01,
+      "lon": -81.14555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Hunter_Army_Airfield"
+    },
+    {
+      "icaoCode": "KSYL",
+      "kind": "military",
+      "item": "Q7351984"
+    },
+    {
+      "icaoCode": "KSZL",
+      "kind": "military",
+      "item": "Q1940767",
+      "lat": 38.730305555556,
+      "lon": -93.547863888889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Whiteman_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KTCM",
+      "kind": "military",
+      "item": "Q1520213",
+      "lat": 47.1378,
+      "lon": -122.476,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/McChord_Field"
+    },
+    {
+      "icaoCode": "KTIK",
+      "kind": "military",
+      "item": "Q1999664",
+      "lat": 35.414738888889,
+      "lon": -97.386633333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Tinker_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KTYS",
+      "kind": "military",
+      "item": "Q649929",
+      "lat": 35.810833333333,
+      "lon": -83.993888888889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/McGhee_Tyson_Air_National_Guard_Base"
+    },
+    {
+      "icaoCode": "KVAD",
+      "kind": "military",
+      "item": "Q2625576",
+      "lat": 30.968611111111112,
+      "lon": -83.19305555555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Moody_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KVBG",
+      "kind": "military",
+      "item": "Q461492",
+      "lat": 34.73788888888889,
+      "lon": -120.53738888888888,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Vandenberg_Space_Force_Base"
+    },
+    {
+      "icaoCode": "KVPS",
+      "kind": "military",
+      "item": "Q1298115",
+      "lat": 30.489444444444,
+      "lon": -86.542222222222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Eglin_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KWRB",
+      "kind": "military",
+      "item": "Q2318365",
+      "lat": 32.64,
+      "lon": -83.591666666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Robins_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KWRI",
+      "kind": "military",
+      "item": "Q10860392",
+      "lat": 40.027988,
+      "lon": -74.587795,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/McGuire_Air_Force_Base"
+    },
+    {
+      "icaoCode": "KXMR",
+      "kind": "military",
+      "item": "Q3275436",
+      "lat": 28.467777777778,
+      "lon": -80.566944444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Cape_Canaveral_Air_Force_Station_Skid_Strip"
+    },
+    {
+      "icaoCode": "KXTA",
+      "kind": "military",
+      "item": "Q177397"
+    },
+    {
+      "icaoCode": "KYNG",
+      "kind": "military",
+      "item": "Q8058641",
+      "lat": 41.2607,
+      "lon": -80.6791,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Youngstown_Air_Reserve_Station"
+    },
+    {
+      "icaoCode": "LAGJ",
+      "kind": "military",
+      "item": "Q3275924"
+    },
+    {
+      "icaoCode": "LAKV",
+      "kind": "military",
+      "item": "Q12474076",
+      "lat": 40.771888,
+      "lon": 19.901888,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ku%C3%A7ov%C3%AB_Aerodrome"
+    },
+    {
+      "icaoCode": "LAVL",
+      "kind": "military",
+      "item": "Q7939089"
+    },
+    {
+      "icaoCode": "LBHS",
+      "kind": "military",
+      "item": "Q5240741"
+    },
+    {
+      "icaoCode": "LBIA",
+      "kind": "military",
+      "item": "Q4900372"
+    },
+    {
+      "icaoCode": "LBPG",
+      "kind": "military",
+      "item": "Q3914569",
+      "lat": 42.290277777778,
+      "lon": 24.713888888889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Graf_Ignatievo_Air_Base"
+    },
+    {
+      "icaoCode": "LBPL",
+      "kind": "military",
+      "item": "Q11824677",
+      "lat": 43.4516,
+      "lon": 24.5037,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Dolna_Mitropoliya_Air_Base"
+    },
+    {
+      "icaoCode": "LBPS",
+      "kind": "military",
+      "item": "Q26261002"
+    },
+    {
+      "icaoCode": "LBSD",
+      "kind": "military",
+      "item": "Q1654111"
+    },
+    {
+      "icaoCode": "LBSF",
+      "kind": "military",
+      "item": "Q7942651",
+      "lat": 42.6953,
+      "lon": 23.4397,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Vrazhdebna_Air_Base"
+    },
+    {
+      "icaoCode": "LBSW",
+      "kind": "military",
+      "item": "Q12694631",
+      "lat": 42.44425,
+      "lon": 22.9835,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LCGK",
+      "kind": "military",
+      "item": "Q1413700",
+      "lat": 35.236037,
+      "lon": 33.719928,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ge%C3%A7itkale_Air_Base"
+    },
+    {
+      "icaoCode": "LCIK",
+      "kind": "military",
+      "item": "Q25477715",
+      "lat": 35.27472222222222,
+      "lon": 33.268055555555556,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LCRA",
+      "kind": "military",
+      "item": "Q60509",
+      "lat": 34.59041667,
+      "lon": 32.98786111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAF_Akrotiri"
+    },
+    {
+      "icaoCode": "LCRE",
+      "kind": "military",
+      "item": "Q1433669",
+      "lat": 35.01430556,
+      "lon": 33.71605556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Kingsfield_Airfield"
+    },
+    {
+      "icaoCode": "LEAB",
+      "kind": "military",
+      "item": "Q660972",
+      "lat": 38.948611111111,
+      "lon": -1.8633333333333,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LEBZ",
+      "kind": "military",
+      "item": "Q8243340",
+      "lat": 38.8925,
+      "lon": -6.82,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LECU",
+      "kind": "military",
+      "item": "Q1431985",
+      "lat": 40.370555555556,
+      "lon": -3.785,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Madrid%E2%80%93Cuatro_Vientos_Airport"
+    },
+    {
+      "icaoCode": "LEGA",
+      "kind": "military",
+      "item": "Q3196747"
+    },
+    {
+      "icaoCode": "LEGT",
+      "kind": "military",
+      "item": "Q1339056",
+      "lat": 40.294138,
+      "lon": -3.723833,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Getafe_Air_Base"
+    },
+    {
+      "icaoCode": "LELN",
+      "kind": "military",
+      "item": "Q5659239",
+      "lat": 42.588611111111,
+      "lon": -5.6561111111111,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LEMO",
+      "kind": "military",
+      "item": "Q924498",
+      "lat": 37.17472222,
+      "lon": -5.61583333,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LEPO",
+      "kind": "military",
+      "item": "Q15106269"
+    },
+    {
+      "icaoCode": "LERI",
+      "kind": "military",
+      "item": "Q3207184"
+    },
+    {
+      "icaoCode": "LEST",
+      "kind": "military",
+      "item": "Q8190944",
+      "lat": 42.90023333,
+      "lon": -8.42151389,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LETO",
+      "kind": "military",
+      "item": "Q2602457",
+      "lat": 40.496666666667,
+      "lon": -3.4458333333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Torrej%C3%B3n_Air_Base"
+    },
+    {
+      "icaoCode": "LETU",
+      "kind": "military",
+      "item": "Q21848659"
+    },
+    {
+      "icaoCode": "LEZG",
+      "kind": "military",
+      "item": "Q4381026",
+      "lat": 41.666111111111,
+      "lon": -1.0416666666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Zaragoza_Air_Base"
+    },
+    {
+      "icaoCode": "LFBC",
+      "kind": "military",
+      "item": "Q973830"
+    },
+    {
+      "icaoCode": "LFBD",
+      "kind": "military",
+      "item": "Q2886451",
+      "lat": 44.828336111111,
+      "lon": -0.71555555555556,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LFBG",
+      "kind": "military",
+      "item": "Q1655761",
+      "lat": 45.65833333,
+      "lon": -0.3175,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Cognac_%E2%80%93_Ch%C3%A2teaubernard_Air_Base"
+    },
+    {
+      "icaoCode": "LFBM",
+      "kind": "military",
+      "item": "Q1934997",
+      "lat": 43.91166667,
+      "lon": -0.50916667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Mont-de-Marsan_Air_Base"
+    },
+    {
+      "icaoCode": "LFBP",
+      "kind": "military",
+      "item": "Q2886460",
+      "lat": 43.3809,
+      "lon": -0.418425,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LFDN",
+      "kind": "military",
+      "item": "Q2886509",
+      "lat": 45.88944444,
+      "lon": -0.9825,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LFJA",
+      "kind": "military",
+      "item": "Q947089",
+      "lat": 48.09166666666667,
+      "lon": 5.05,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LFKS",
+      "kind": "military",
+      "item": "Q2886476",
+      "lat": 41.92444444444445,
+      "lon": 9.405555555555555,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Solenzara_Air_Base"
+    },
+    {
+      "icaoCode": "LFMI",
+      "kind": "military",
+      "item": "Q2886471",
+      "lat": 43.524444444444,
+      "lon": 4.9416666666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Istres-Le_Tub%C3%A9_Air_Base"
+    },
+    {
+      "icaoCode": "LFMO",
+      "kind": "military",
+      "item": "Q2886463",
+      "lat": 44.14,
+      "lon": 4.8686111111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Orange-Caritat_Air_Base"
+    },
+    {
+      "icaoCode": "LFMY",
+      "kind": "military",
+      "item": "Q2886512"
+    },
+    {
+      "icaoCode": "LFOA",
+      "kind": "military",
+      "item": "Q2386868"
+    },
+    {
+      "icaoCode": "LFOE",
+      "kind": "military",
+      "item": "Q2886452",
+      "lat": 49.02861111,
+      "lon": 1.21972222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/%C3%89vreux-Fauville_Air_Base"
+    },
+    {
+      "icaoCode": "LFOJ",
+      "kind": "military",
+      "item": "Q1338960"
+    },
+    {
+      "icaoCode": "LFOK",
+      "kind": "military",
+      "item": "Q10860405",
+      "lat": 48.776944444444,
+      "lon": 4.1955555555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Vatry_Air_Base"
+    },
+    {
+      "icaoCode": "LFOT",
+      "kind": "military",
+      "item": "Q2886504",
+      "lat": 47.4321,
+      "lon": 0.723209,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LFPA",
+      "kind": "military",
+      "item": "Q2875572"
+    },
+    {
+      "icaoCode": "LFPC",
+      "kind": "military",
+      "item": "Q2886449",
+      "lat": 49.2534,
+      "lon": 2.51913,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LFPM",
+      "kind": "military",
+      "item": "Q650315"
+    },
+    {
+      "icaoCode": "LFPV",
+      "kind": "military",
+      "item": "Q1894366"
+    },
+    {
+      "icaoCode": "LFPY",
+      "kind": "military",
+      "item": "Q284434"
+    },
+    {
+      "icaoCode": "LFQE",
+      "kind": "military",
+      "item": "Q2886527"
+    },
+    {
+      "icaoCode": "LFQI",
+      "kind": "military",
+      "item": "Q2886441"
+    },
+    {
+      "icaoCode": "LFQP",
+      "kind": "military",
+      "item": "Q2392019"
+    },
+    {
+      "icaoCode": "LFRH",
+      "kind": "military",
+      "item": "Q2886568",
+      "lat": 47.760555555555555,
+      "lon": -3.44,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LFRL",
+      "kind": "military",
+      "item": "Q1934990"
+    },
+    {
+      "icaoCode": "LFSC",
+      "kind": "military",
+      "item": "Q2713594"
+    },
+    {
+      "icaoCode": "LFSF",
+      "kind": "military",
+      "item": "Q2886473"
+    },
+    {
+      "icaoCode": "LFSI",
+      "kind": "military",
+      "item": "Q1618726"
+    },
+    {
+      "icaoCode": "LFSL",
+      "kind": "military",
+      "item": "Q2886486",
+      "lat": 48.78,
+      "lon": 5.98,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Toul-Rosi%C3%A8res_Air_Base"
+    },
+    {
+      "icaoCode": "LFSO",
+      "kind": "military",
+      "item": "Q2886478"
+    },
+    {
+      "icaoCode": "LFSR",
+      "kind": "military",
+      "item": "Q2886466"
+    },
+    {
+      "icaoCode": "LFSX",
+      "kind": "military",
+      "item": "Q2886464"
+    },
+    {
+      "icaoCode": "LFTH",
+      "kind": "military",
+      "item": "Q2886563",
+      "lat": 43.0973,
+      "lon": 6.14603,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LFXA",
+      "kind": "military",
+      "item": "Q2875364"
+    },
+    {
+      "icaoCode": "LFXA",
+      "kind": "military",
+      "item": "Q2886505"
+    },
+    {
+      "icaoCode": "LFXI",
+      "kind": "military",
+      "item": "Q2875598"
+    },
+    {
+      "icaoCode": "LFXM",
+      "kind": "military",
+      "item": "Q2886470"
+    },
+    {
+      "icaoCode": "LFYK",
+      "kind": "military",
+      "item": "Q2886538"
+    },
+    {
+      "icaoCode": "LFYR",
+      "kind": "military",
+      "item": "Q12694537"
+    },
+    {
+      "icaoCode": "LFYT",
+      "kind": "military",
+      "item": "Q2886544"
+    },
+    {
+      "icaoCode": "LGAD",
+      "kind": "military",
+      "item": "Q4754715",
+      "lat": 37.93333333,
+      "lon": 21.28333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Andravida_Air_Base"
+    },
+    {
+      "icaoCode": "LGAG",
+      "kind": "military",
+      "item": "Q4694132",
+      "lat": 38.601944444444,
+      "lon": 21.351111111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Agrinion_Airport"
+    },
+    {
+      "icaoCode": "LGEL",
+      "kind": "military",
+      "item": "Q20456361",
+      "lat": 38.068333,
+      "lon": 23.553612,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Elefsina_Air_Base"
+    },
+    {
+      "icaoCode": "LGKM",
+      "kind": "military",
+      "item": "Q20453817",
+      "lat": 40.97277777777778,
+      "lon": 24.341666666666665,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LGLR",
+      "kind": "military",
+      "item": "Q6489500",
+      "lat": 39.6491,
+      "lon": 22.465452777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Larissa_National_Airport"
+    },
+    {
+      "icaoCode": "LGSD",
+      "kind": "military",
+      "item": "Q7445211",
+      "lat": 40.533841666667,
+      "lon": 23.024119444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Sedes_Air_Base"
+    },
+    {
+      "icaoCode": "LGSP",
+      "kind": "military",
+      "item": "Q7573946"
+    },
+    {
+      "icaoCode": "LGTG",
+      "kind": "military",
+      "item": "Q20456171",
+      "lat": 38.33984722,
+      "lon": 23.56495833,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Tanagra_Air_Base"
+    },
+    {
+      "icaoCode": "LGVO",
+      "kind": "military",
+      "item": "Q7940661"
+    },
+    {
+      "icaoCode": "LHKE",
+      "kind": "military",
+      "item": "Q834404",
+      "lat": 46.917222222222,
+      "lon": 19.749444444444,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LHPA",
+      "kind": "military",
+      "item": "Q681570"
+    },
+    {
+      "icaoCode": "LHSN",
+      "kind": "military",
+      "item": "Q572010",
+      "lat": 47.122777777778,
+      "lon": 20.235277777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Szolnok_Air_Base"
+    },
+    {
+      "icaoCode": "LHTA",
+      "kind": "military",
+      "item": "Q939039"
+    },
+    {
+      "icaoCode": "LIBA",
+      "kind": "military",
+      "item": "Q1365543",
+      "lat": 41.538611,
+      "lon": 15.713333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Amendola_Air_Base"
+    },
+    {
+      "icaoCode": "LIBJ",
+      "kind": "military",
+      "item": "Q28670273",
+      "lat": 38.641388888889,
+      "lon": 16.045277777778,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LIBN",
+      "kind": "military",
+      "item": "Q1934995",
+      "lat": 40.239227777778,
+      "lon": 18.133325,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Galatina_Air_Base"
+    },
+    {
+      "icaoCode": "LIBV",
+      "kind": "military",
+      "item": "Q1445322",
+      "lat": 40.767833333333,
+      "lon": 16.933333333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Gioia_del_Colle_Air_Base"
+    },
+    {
+      "icaoCode": "LICB",
+      "kind": "military",
+      "item": "Q3635552",
+      "lat": 36.9917,
+      "lon": 14.6069,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LICS",
+      "kind": "military",
+      "item": "Q3635556",
+      "lat": 37.5611,
+      "lon": 13.0872,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LICZ",
+      "kind": "military",
+      "item": "Q938394",
+      "lat": 37.401666666667,
+      "lon": 14.922222222222,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LIDK",
+      "kind": "military",
+      "item": "Q1297947",
+      "lat": 45.95305556,
+      "lon": 12.81888889,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LIED",
+      "kind": "military",
+      "item": "Q320196",
+      "lat": 39.354222222222,
+      "lon": 8.9724805555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Decimomannu_Air_Base"
+    },
+    {
+      "icaoCode": "LIFM",
+      "kind": "military",
+      "item": "Q3791994"
+    },
+    {
+      "icaoCode": "LIMN",
+      "kind": "military",
+      "item": "Q1726667",
+      "lat": 45.52959167,
+      "lon": 8.669225,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LIMS",
+      "kind": "military",
+      "item": "Q821000",
+      "lat": 44.91305556,
+      "lon": 9.72333333,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LIPA",
+      "kind": "military",
+      "item": "Q790794",
+      "lat": 46.031888888889,
+      "lon": 12.596472222222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Aviano_Air_Base"
+    },
+    {
+      "icaoCode": "LIPC",
+      "kind": "military",
+      "item": "Q1145170",
+      "lat": 44.224175,
+      "lon": 12.30720278,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Cervia_Air_Base"
+    },
+    {
+      "icaoCode": "LIPI",
+      "kind": "military",
+      "item": "Q1493010",
+      "lat": 45.97875,
+      "lon": 13.04933,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Rivolto_Air_Base"
+    },
+    {
+      "icaoCode": "LIPL",
+      "kind": "military",
+      "item": "Q1934972",
+      "lat": 45.43216667,
+      "lon": 10.26766667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ghedi_Air_Base"
+    },
+    {
+      "icaoCode": "LIPS",
+      "kind": "military",
+      "item": "Q206640",
+      "lat": 45.68486667,
+      "lon": 12.08288056,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Istrana_Air_Base"
+    },
+    {
+      "icaoCode": "LIPX",
+      "kind": "military",
+      "item": "Q1433197",
+      "lat": 45.396388,
+      "lon": 10.888055,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Verona_Villafranca_Airport"
+    },
+    {
+      "icaoCode": "LIQW",
+      "kind": "military",
+      "item": "Q1935016",
+      "lat": 44.08888889,
+      "lon": 9.98888889,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LIRB",
+      "kind": "military",
+      "item": "Q16524671"
+    },
+    {
+      "icaoCode": "LIRC",
+      "kind": "military",
+      "item": "Q1914901"
+    },
+    {
+      "icaoCode": "LIRE",
+      "kind": "military",
+      "item": "Q1475096",
+      "lat": 41.65452222,
+      "lon": 12.44518333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Pratica_di_Mare_Air_Base"
+    },
+    {
+      "icaoCode": "LIRG",
+      "kind": "military",
+      "item": "Q1494074",
+      "lat": 41.99027778,
+      "lon": 12.74083333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Guidonia_Air_Base"
+    },
+    {
+      "icaoCode": "LIRH",
+      "kind": "military",
+      "item": "Q1934979",
+      "lat": 41.64805556,
+      "lon": 13.29388889,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LIRL",
+      "kind": "military",
+      "item": "Q1584082",
+      "lat": 41.54243611,
+      "lon": 12.90901944,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Latina_Air_Base"
+    },
+    {
+      "icaoCode": "LIRM",
+      "kind": "military",
+      "item": "Q383124",
+      "lat": 41.06083333,
+      "lon": 14.08194444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Grazzanise_Air_Base"
+    },
+    {
+      "icaoCode": "LIRS",
+      "kind": "military",
+      "item": "Q1054219",
+      "lat": 42.759722222222,
+      "lon": 11.071666666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Grosseto_Airport"
+    },
+    {
+      "icaoCode": "LIRV",
+      "kind": "military",
+      "item": "Q1729854",
+      "lat": 42.430183333333,
+      "lon": 12.064155555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Rome_Viterbo_Airport"
+    },
+    {
+      "icaoCode": "LIVD",
+      "kind": "military",
+      "item": "Q1433904",
+      "lat": 46.72698333333334,
+      "lon": 12.231516666666666,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Toblach_Airport"
+    },
+    {
+      "icaoCode": "LJCE",
+      "kind": "military",
+      "item": "Q7583980"
+    },
+    {
+      "icaoCode": "LKBC",
+      "kind": "military",
+      "item": "Q12033112"
+    },
+    {
+      "icaoCode": "LKKB",
+      "kind": "military",
+      "item": "Q1935013",
+      "lat": 50.12166667,
+      "lon": 14.54527778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Prague-Kbely_Airport"
+    },
+    {
+      "icaoCode": "LKNA",
+      "kind": "military",
+      "item": "Q12033117",
+      "lat": 49.16620833333333,
+      "lon": 16.124383333333334,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LLEK",
+      "kind": "military",
+      "item": "Q1229630",
+      "lat": 31.83947222,
+      "lon": 34.82184444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Tel_Nof_Airbase"
+    },
+    {
+      "icaoCode": "LLHB",
+      "kind": "military",
+      "item": "Q1283490",
+      "lat": 31.233358333333,
+      "lon": 34.662558333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Hatzerim_Airbase"
+    },
+    {
+      "icaoCode": "LLHS",
+      "kind": "military",
+      "item": "Q2629807",
+      "lat": 31.7625,
+      "lon": 34.727222222222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Hatzor_Airbase"
+    },
+    {
+      "icaoCode": "LLNV",
+      "kind": "military",
+      "item": "Q1935038",
+      "lat": 31.208347222222,
+      "lon": 35.0123,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Nevatim_Airbase"
+    },
+    {
+      "icaoCode": "LLRD",
+      "kind": "military",
+      "item": "Q2629816",
+      "lat": 32.666602777778,
+      "lon": 35.183325,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ramat_David_Airbase"
+    },
+    {
+      "icaoCode": "LLRM",
+      "kind": "military",
+      "item": "Q2361539",
+      "lat": 30.774722222222,
+      "lon": 34.667777777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ramon_Airbase"
+    },
+    {
+      "icaoCode": "LOXA",
+      "kind": "military",
+      "item": "Q2695260",
+      "lat": 47.535805555555555,
+      "lon": 14.14188888888889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Military_Airport_Aigen_im_Ennstal"
+    },
+    {
+      "icaoCode": "LOXL",
+      "kind": "military",
+      "item": "Q1267464"
+    },
+    {
+      "icaoCode": "LOXT",
+      "kind": "military",
+      "item": "Q445642",
+      "lat": 48.32,
+      "lon": 16.113333333333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Figl_Air_Base"
+    },
+    {
+      "icaoCode": "LOXZ",
+      "kind": "military",
+      "item": "Q172864",
+      "lat": 47.203888888889,
+      "lon": 14.747777777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Zeltweg_Air_Base"
+    },
+    {
+      "icaoCode": "LPAR",
+      "kind": "military",
+      "item": "Q15120481",
+      "lat": 38.883278,
+      "lon": -9.030097,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LPBJ",
+      "kind": "military",
+      "item": "Q1657595",
+      "lat": 38.078888888889,
+      "lon": -7.9325,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Beja_Airbase"
+    },
+    {
+      "icaoCode": "LPLA",
+      "kind": "military",
+      "item": "Q1800787",
+      "lat": 38.761944444444,
+      "lon": -27.090833333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Lajes_Field"
+    },
+    {
+      "icaoCode": "LPMR",
+      "kind": "military",
+      "item": "Q284107",
+      "lat": 39.82831,
+      "lon": -8.885097,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Monte_Real_Air_Base"
+    },
+    {
+      "icaoCode": "LPMT",
+      "kind": "military",
+      "item": "Q6906023"
+    },
+    {
+      "icaoCode": "LPOV",
+      "kind": "military",
+      "item": "Q9586748"
+    },
+    {
+      "icaoCode": "LPST",
+      "kind": "military",
+      "item": "Q9650494"
+    },
+    {
+      "icaoCode": "LPTN",
+      "kind": "military",
+      "item": "Q18473818"
+    },
+    {
+      "icaoCode": "LRCK",
+      "kind": "military",
+      "item": "Q5753943",
+      "lat": 44.36299722,
+      "lon": 28.48699722,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RoAF_57th_Air_Base"
+    },
+    {
+      "icaoCode": "LRCT",
+      "kind": "military",
+      "item": "Q5733880",
+      "lat": 46.50333333,
+      "lon": 23.88527778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RoAF_71st_Air_Base"
+    },
+    {
+      "icaoCode": "LRFT",
+      "kind": "military",
+      "item": "Q5754946",
+      "lat": 44.39555556,
+      "lon": 27.72555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RoAF_86th_Air_Base"
+    },
+    {
+      "icaoCode": "LROP",
+      "kind": "military",
+      "item": "Q5733903",
+      "lat": 44.56166667,
+      "lon": 26.08916667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RoAF_90th_Airlift_Base"
+    },
+    {
+      "icaoCode": "LSFR",
+      "kind": "military",
+      "item": "Q23783845"
+    },
+    {
+      "icaoCode": "LSMA",
+      "kind": "military",
+      "item": "Q1934947",
+      "lat": 46.9439,
+      "lon": 8.28417,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Alpnach_Air_Base"
+    },
+    {
+      "icaoCode": "LSMC",
+      "kind": "military",
+      "item": "Q18411652"
+    },
+    {
+      "icaoCode": "LSMD",
+      "kind": "military",
+      "item": "Q137762940",
+      "lat": 47.403665,
+      "lon": 8.632404,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LSMD",
+      "kind": "military",
+      "item": "Q1934964",
+      "lat": 47.398644444444,
+      "lon": 8.6482305555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/D%C3%BCbendorf_Air_Base"
+    },
+    {
+      "icaoCode": "LSME",
+      "kind": "military",
+      "item": "Q1170117",
+      "lat": 47.09219444,
+      "lon": 8.30441667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Emmen_Air_Base"
+    },
+    {
+      "icaoCode": "LSMJ",
+      "kind": "military",
+      "item": "Q20463622"
+    },
+    {
+      "icaoCode": "LSML",
+      "kind": "military",
+      "item": "Q17332225"
+    },
+    {
+      "icaoCode": "LSMM",
+      "kind": "military",
+      "item": "Q2497207"
+    },
+    {
+      "icaoCode": "LSMO",
+      "kind": "military",
+      "item": "Q1433959"
+    },
+    {
+      "icaoCode": "LSMP",
+      "kind": "military",
+      "item": "Q10853633",
+      "lat": 46.843333333333,
+      "lon": 6.915,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Payerne_Air_Base"
+    },
+    {
+      "icaoCode": "LSXV",
+      "kind": "military",
+      "item": "Q23783850"
+    },
+    {
+      "icaoCode": "LTAB",
+      "kind": "military",
+      "item": "Q4765979",
+      "lat": 39.93495,
+      "lon": 32.740775,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ankara_G%C3%BCvercinlik_Army_Air_Base"
+    },
+    {
+      "icaoCode": "LTAE",
+      "kind": "military",
+      "item": "Q4702112",
+      "lat": 40.078888888889,
+      "lon": 32.565555555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/M%C3%BCrted_Airfield_Command"
+    },
+    {
+      "icaoCode": "LTAG",
+      "kind": "military",
+      "item": "Q1083424",
+      "lat": 37.001944444444,
+      "lon": 35.425833333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Incirlik_Air_Base"
+    },
+    {
+      "icaoCode": "LTAV",
+      "kind": "military",
+      "item": "Q20463995",
+      "lat": 39.45,
+      "lon": 31.365,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LTBG",
+      "kind": "military",
+      "item": "Q1430926",
+      "lat": 40.317777777778,
+      "lon": 27.9775,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Band%C4%B1rma_Airport"
+    },
+    {
+      "icaoCode": "LTBK",
+      "kind": "military",
+      "item": "Q3274927",
+      "lat": 38.31910556,
+      "lon": 27.15935278,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Gaziemir_Air_Base"
+    },
+    {
+      "icaoCode": "LTBN",
+      "kind": "military",
+      "item": "Q5469363",
+      "lat": 39.42666667,
+      "lon": 30.01666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/K%C3%BCtahya_Air_Base"
+    },
+    {
+      "icaoCode": "LTBP",
+      "kind": "military",
+      "item": "Q20466455",
+      "lat": 40.683888,
+      "lon": 29.376112,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LTBQ",
+      "kind": "military",
+      "item": "Q1961428",
+      "lat": 40.73502778,
+      "lon": 30.08333611,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Cengiz_Topel_Naval_Air_Station"
+    },
+    {
+      "icaoCode": "LTBT",
+      "kind": "military",
+      "item": "Q12700132",
+      "lat": 38.808333,
+      "lon": 27.834445,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LTFA",
+      "kind": "military",
+      "item": "Q20457677"
+    },
+    {
+      "icaoCode": "LUBM",
+      "kind": "military",
+      "item": "Q1031458",
+      "lat": 47.8625,
+      "lon": 28.2125,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/M%C4%83rcule%C8%99ti_Air_Force_Base"
+    },
+    {
+      "icaoCode": "LUTR",
+      "kind": "military",
+      "item": "Q4458055",
+      "lat": 46.8725,
+      "lon": 29.58444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Tiraspol_Airfield"
+    },
+    {
+      "icaoCode": "LYBI",
+      "kind": "military",
+      "item": "Q640410"
+    },
+    {
+      "icaoCode": "LYBT",
+      "kind": "military",
+      "item": "Q948600",
+      "lat": 44.935277777778,
+      "lon": 20.2575,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "LYBV",
+      "kind": "military",
+      "item": "Q2788431"
+    },
+    {
+      "icaoCode": "LYPT",
+      "kind": "military",
+      "item": "Q915348"
+    },
+    {
+      "icaoCode": "LYSJ",
+      "kind": "military",
+      "item": "Q3543822"
+    },
+    {
+      "icaoCode": "LYSO",
+      "kind": "military",
+      "item": "Q5306927"
+    },
+    {
+      "icaoCode": "LZMC",
+      "kind": "military",
+      "item": "Q4177405",
+      "lat": 48.401944444444,
+      "lon": 17.118333333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Malacky_Air_Base"
+    },
+    {
+      "icaoCode": "LZPW",
+      "kind": "military",
+      "item": "Q7242494",
+      "lat": 49.0297,
+      "lon": 21.3156,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Pre%C5%A1ov_Air_Base"
+    },
+    {
+      "icaoCode": "LZSL",
+      "kind": "military",
+      "item": "Q1432898",
+      "lat": 48.638055555556,
+      "lon": 19.134166666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Slia%C4%8D_Air_Base"
+    },
+    {
+      "icaoCode": "MDSI",
+      "kind": "military",
+      "item": "Q3545302"
+    },
+    {
+      "icaoCode": "MHSC",
+      "kind": "military",
+      "item": "Q747620"
+    },
+    {
+      "icaoCode": "MMES",
+      "kind": "military",
+      "item": "Q5379973",
+      "lat": 31.795277777778,
+      "lon": -116.6025,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ensenada_Airport"
+    },
+    {
+      "icaoCode": "MMGD",
+      "kind": "military",
+      "item": "Q68421244"
+    },
+    {
+      "icaoCode": "MMIT",
+      "kind": "military",
+      "item": "Q12693155",
+      "lat": 16.445555555556,
+      "lon": -95.093055555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ixtepec_Airport"
+    },
+    {
+      "icaoCode": "MMSG",
+      "kind": "military",
+      "item": "Q28008676"
+    },
+    {
+      "icaoCode": "MMTB",
+      "kind": "military",
+      "item": "Q5659042",
+      "lat": 16.73998,
+      "lon": -93.173237,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Tuxtla_Guti%C3%A9rrez_Air_Force_Base"
+    },
+    {
+      "icaoCode": "MMTU",
+      "kind": "military",
+      "item": "Q17538851",
+      "lat": 20.2273,
+      "lon": -87.4382,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "MMZP",
+      "kind": "military",
+      "item": "Q12695655",
+      "lat": 20.7333,
+      "lon": -103.459,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Zapopan_Air_Force_Base"
+    },
+    {
+      "icaoCode": "MPHO",
+      "kind": "military",
+      "item": "Q1298028"
+    },
+    {
+      "icaoCode": "MSSS",
+      "kind": "military",
+      "item": "Q588038",
+      "lat": 13.694572222222222,
+      "lon": -89.11729722222222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ilopango_International_Airport"
+    },
+    {
+      "icaoCode": "MUMG",
+      "kind": "military",
+      "item": "Q28225518"
+    },
+    {
+      "icaoCode": "MXNT",
+      "kind": "military",
+      "item": "Q28024962"
+    },
+    {
+      "icaoCode": "NGFO",
+      "kind": "military",
+      "item": "Q11762732"
+    },
+    {
+      "icaoCode": "NTAA",
+      "kind": "military",
+      "item": "Q2886489",
+      "lat": -17.5532,
+      "lon": -149.607,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "NWWW",
+      "kind": "military",
+      "item": "Q2886488",
+      "lat": -22.016,
+      "lon": 166.216,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "NZWB",
+      "kind": "military",
+      "item": "Q7277289",
+      "lat": -41.5179,
+      "lon": 173.87,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RNZAF_Base_Woodbourne"
+    },
+    {
+      "icaoCode": "NZWG",
+      "kind": "military",
+      "item": "Q7999704",
+      "lat": -43.5511,
+      "lon": 172.553,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Wigram_Aerodrome"
+    },
+    {
+      "icaoCode": "NZWP",
+      "kind": "military",
+      "item": "Q7277288",
+      "lat": -36.787777777778,
+      "lon": 174.63027777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RNZAF_Base_Auckland"
+    },
+    {
+      "icaoCode": "OAIX",
+      "kind": "military",
+      "item": "Q800126",
+      "lat": 34.946388888889,
+      "lon": 69.265,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Bagram_Airfield"
+    },
+    {
+      "icaoCode": "OAKB",
+      "kind": "military",
+      "item": "Q744802",
+      "lat": 34.565861111111,
+      "lon": 69.212305555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Kabul_International_Airport"
+    },
+    {
+      "icaoCode": "OASD",
+      "kind": "military",
+      "item": "Q2886559",
+      "lat": 33.391330555556,
+      "lon": 62.260975,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Shindand_Air_Base"
+    },
+    {
+      "icaoCode": "OASH",
+      "kind": "military",
+      "item": "Q5473246",
+      "lat": 33.92249,
+      "lon": 69.07731,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Forward_Operating_Base_Shank"
+    },
+    {
+      "icaoCode": "OAZI",
+      "kind": "military",
+      "item": "Q784017",
+      "lat": 31.86644,
+      "lon": 64.19239,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Camp_Shorabak"
+    },
+    {
+      "icaoCode": "OBBS",
+      "kind": "military",
+      "item": "Q82928",
+      "lat": 25.918333333333,
+      "lon": 50.590555555556,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "OEDR",
+      "kind": "military",
+      "item": "Q1658031",
+      "lat": 26.265277777778,
+      "lon": 50.151944444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/King_Abdulaziz_Air_Base"
+    },
+    {
+      "icaoCode": "OEOM",
+      "kind": "military",
+      "item": "Q7881616",
+      "lat": 19.1157,
+      "lon": 50.1289,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Umm_Al_Melh_Border_Guards_Airport"
+    },
+    {
+      "icaoCode": "OEPS",
+      "kind": "military",
+      "item": "Q4116941",
+      "lat": 24.0625,
+      "lon": 47.580277777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Prince_Sultan_Air_Base"
+    },
+    {
+      "icaoCode": "OERY",
+      "kind": "military",
+      "item": "Q4118296",
+      "lat": 24.709722222222,
+      "lon": 46.725277777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/King_Salman_Air_Base"
+    },
+    {
+      "icaoCode": "OESN",
+      "kind": "military",
+      "item": "Q4118296",
+      "lat": 24.709722222222,
+      "lon": 46.725277777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/King_Salman_Air_Base"
+    },
+    {
+      "icaoCode": "OIAJ",
+      "kind": "military",
+      "item": "Q3448553",
+      "lat": 30.835277777778,
+      "lon": 49.535,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Omidiyeh_Air_Base"
+    },
+    {
+      "icaoCode": "OICC",
+      "kind": "military",
+      "item": "Q1151984",
+      "lat": 34.345852777778,
+      "lon": 47.158127777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Kermanshah_Airport"
+    },
+    {
+      "icaoCode": "OIID",
+      "kind": "military",
+      "item": "Q3448848"
+    },
+    {
+      "icaoCode": "OIIF",
+      "kind": "military",
+      "item": "Q60647922"
+    },
+    {
+      "icaoCode": "OIIG",
+      "kind": "military",
+      "item": "Q20461415"
+    },
+    {
+      "icaoCode": "OJHF",
+      "kind": "military",
+      "item": "Q7244055"
+    },
+    {
+      "icaoCode": "OJHR",
+      "kind": "military",
+      "item": "Q3914634",
+      "lat": 32.5392,
+      "lon": 38.195,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/H-4_Air_Base"
+    },
+    {
+      "icaoCode": "OJKF",
+      "kind": "military",
+      "item": "Q86659984",
+      "lat": 30.342583333333334,
+      "lon": 36.14713888888889,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "OJMF",
+      "kind": "military",
+      "item": "Q11824199",
+      "lat": 32.356353,
+      "lon": 36.259182,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/King_Hussein_Air_Base"
+    },
+    {
+      "icaoCode": "OJMS",
+      "kind": "military",
+      "item": "Q2886524",
+      "lat": 31.83361111,
+      "lon": 36.78305556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Muwaffaq_Salti_Air_Base"
+    },
+    {
+      "icaoCode": "OKAJ",
+      "kind": "military",
+      "item": "Q4582023",
+      "lat": 28.934916666667,
+      "lon": 47.791972222222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ahmad_al-Jaber_Air_Base"
+    },
+    {
+      "icaoCode": "OKAS",
+      "kind": "military",
+      "item": "Q4115518",
+      "lat": 29.346666666667,
+      "lon": 47.520555555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ali_Al_Salem_Air_Base"
+    },
+    {
+      "icaoCode": "OLKA",
+      "kind": "joint",
+      "item": "Q1421837",
+      "lat": 34.589444444444,
+      "lon": 36.011388888889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ren%C3%A9_Mouawad_Airport"
+    },
+    {
+      "icaoCode": "OLKA",
+      "kind": "military",
+      "item": "Q1421837",
+      "lat": 34.589444444444,
+      "lon": 36.011388888889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ren%C3%A9_Mouawad_Airport"
+    },
+    {
+      "icaoCode": "OLRA",
+      "kind": "military",
+      "item": "Q2916270"
+    },
+    {
+      "icaoCode": "OMAD",
+      "kind": "military",
+      "item": "Q11824251",
+      "lat": 24.42833333,
+      "lon": 54.45805556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Al_Bateen_Executive_Airport"
+    },
+    {
+      "icaoCode": "OMAM",
+      "kind": "military",
+      "item": "Q2886453",
+      "lat": 24.24805556,
+      "lon": 54.5475,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Al_Dhafra_Air_Base"
+    },
+    {
+      "icaoCode": "OMAW",
+      "kind": "military",
+      "item": "Q12691423",
+      "lat": 24.518855,
+      "lon": 54.980063333333334,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Abu_Dhabi_Northeast_Airport"
+    },
+    {
+      "icaoCode": "OMDB",
+      "kind": "military",
+      "item": "Q193439",
+      "lat": 25.252777777778,
+      "lon": 55.364444444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Dubai_International_Airport"
+    },
+    {
+      "icaoCode": "OMDM",
+      "kind": "military",
+      "item": "Q1934988",
+      "lat": 25.03333333,
+      "lon": 55.4,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Al_Minhad_Air_Base"
+    },
+    {
+      "icaoCode": "OMNK",
+      "kind": "military",
+      "item": "Q139060420",
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "OMSM",
+      "kind": "military",
+      "item": "Q60747438"
+    },
+    {
+      "icaoCode": "OOFQ",
+      "kind": "military",
+      "item": "Q12692709"
+    },
+    {
+      "icaoCode": "OOMA",
+      "kind": "military",
+      "item": "Q650099",
+      "lat": 20.67527778,
+      "lon": 58.89027778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAFO_Masirah"
+    },
+    {
+      "icaoCode": "OOTH",
+      "kind": "military",
+      "item": "Q7275116",
+      "lat": 17.665833333333,
+      "lon": 54.024444444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAFO_Thumrait"
+    },
+    {
+      "icaoCode": "OPMI",
+      "kind": "military",
+      "item": "Q6147872",
+      "lat": 32.563055555556,
+      "lon": 71.570833333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/PAF_Base_M.M._Alam"
+    },
+    {
+      "icaoCode": "OPMR",
+      "kind": "military",
+      "item": "Q3273828"
+    },
+    {
+      "icaoCode": "OPMS",
+      "kind": "military",
+      "item": "Q3696026"
+    },
+    {
+      "icaoCode": "OPQS",
+      "kind": "military",
+      "item": "Q1655437"
+    },
+    {
+      "icaoCode": "OPRN",
+      "kind": "military",
+      "item": "Q10860390"
+    },
+    {
+      "icaoCode": "ORAA",
+      "kind": "military",
+      "item": "Q4703502",
+      "lat": 33.8,
+      "lon": 42.43333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Al-Asad_Airbase"
+    },
+    {
+      "icaoCode": "ORAI",
+      "kind": "military",
+      "item": "Q4702553",
+      "lat": 32.96527778,
+      "lon": 44.27888889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Al-Iskandariyah_New_Air_Base"
+    },
+    {
+      "icaoCode": "ORAT",
+      "kind": "military",
+      "item": "Q4703278",
+      "lat": 33.339444,
+      "lon": 43.59,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Al-Taqaddum_Air_Base"
+    },
+    {
+      "icaoCode": "ORBB",
+      "kind": "military",
+      "item": "Q6029447",
+      "lat": 37.09875,
+      "lon": 43.266583,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Bamarni_Air_Base"
+    },
+    {
+      "icaoCode": "ORJA",
+      "kind": "military",
+      "item": "Q113549157"
+    },
+    {
+      "icaoCode": "ORSH",
+      "kind": "military",
+      "item": "Q5013269"
+    },
+    {
+      "icaoCode": "ORTF",
+      "kind": "military",
+      "item": "Q7679911",
+      "lat": 36.28444444,
+      "lon": 42.40472222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Tal_Afar_Air_Base"
+    },
+    {
+      "icaoCode": "ORTK",
+      "kind": "military",
+      "item": "Q7801974",
+      "lat": 34.61027778,
+      "lon": 43.77333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Tikrit_East_Air_Base"
+    },
+    {
+      "icaoCode": "ORTL",
+      "kind": "military",
+      "item": "Q4062227"
+    },
+    {
+      "icaoCode": "OTBH",
+      "kind": "military",
+      "item": "Q542588",
+      "lat": 25.117316666666667,
+      "lon": 51.315,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Al_Udeid_Air_Base"
+    },
+    {
+      "icaoCode": "PAAM",
+      "kind": "military",
+      "item": "Q1656460"
+    },
+    {
+      "icaoCode": "PABU",
+      "kind": "military",
+      "item": "Q3885002"
+    },
+    {
+      "icaoCode": "PAED",
+      "kind": "military",
+      "item": "Q14679983",
+      "lat": 61.2514,
+      "lon": -149.806,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Elmendorf_Air_Force_Base"
+    },
+    {
+      "icaoCode": "PAEH",
+      "kind": "military",
+      "item": "Q3274144",
+      "lat": 58.6464,
+      "lon": -162.063,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Cape_Newenham_LRRS_Airport"
+    },
+    {
+      "icaoCode": "PAEI",
+      "kind": "military",
+      "item": "Q2722822",
+      "lat": 64.6656,
+      "lon": -147.101,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Eielson_Air_Force_Base"
+    },
+    {
+      "icaoCode": "PAFB",
+      "kind": "military",
+      "item": "Q6469287",
+      "lat": 64.8375,
+      "lon": -147.614,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ladd_Army_Airfield"
+    },
+    {
+      "icaoCode": "PALU",
+      "kind": "military",
+      "item": "Q3273947",
+      "lat": 68.875,
+      "lon": -166.111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Cape_Lisburne_LRRS_Airport"
+    },
+    {
+      "icaoCode": "PAWT",
+      "kind": "military",
+      "item": "Q7960223",
+      "lat": 70.613377777778,
+      "lon": -159.86027777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Wainwright_Air_Station"
+    },
+    {
+      "icaoCode": "PGUA",
+      "kind": "military",
+      "item": "Q491372",
+      "lat": 13.583952777778,
+      "lon": 144.930025,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Andersen_Air_Force_Base"
+    },
+    {
+      "icaoCode": "PHBK",
+      "kind": "military",
+      "item": "Q10860388",
+      "lat": 22.025,
+      "lon": -159.78472222222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Pacific_Missile_Range_Facility"
+    },
+    {
+      "icaoCode": "PHHI",
+      "kind": "military",
+      "item": "Q2546471",
+      "lat": 21.48,
+      "lon": -158.04,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Wheeler_Army_Airfield"
+    },
+    {
+      "icaoCode": "PHIK",
+      "kind": "military",
+      "item": "Q1617253",
+      "lat": 21.318680555556,
+      "lon": -157.92242777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Hickam_Air_Force_Base"
+    },
+    {
+      "icaoCode": "PHNL",
+      "kind": "military",
+      "item": "Q5669602",
+      "lat": 21.34916667,
+      "lon": -157.9438889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Joint_Base_Pearl_Harbor%E2%80%93Hickam"
+    },
+    {
+      "icaoCode": "PHNP",
+      "kind": "military",
+      "item": "Q3016387"
+    },
+    {
+      "icaoCode": "PHSF",
+      "kind": "military",
+      "item": "Q61671760",
+      "lat": 19.760013388889,
+      "lon": -155.55376619444,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "PJON",
+      "kind": "military",
+      "item": "Q12693202"
+    },
+    {
+      "icaoCode": "PKRO",
+      "kind": "military",
+      "item": "Q3087341",
+      "lat": 9.396886111111112,
+      "lon": 167.47086944444445,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Dyess_Army_Airfield"
+    },
+    {
+      "icaoCode": "PKWA",
+      "kind": "military",
+      "item": "Q3886454",
+      "lat": 8.72011111111111,
+      "lon": 167.73166666666665,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Bucholz_Army_Airfield"
+    },
+    {
+      "icaoCode": "RCAY",
+      "kind": "military",
+      "item": "Q11472101",
+      "lat": 22.782508,
+      "lon": 120.262169,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "RCBS",
+      "kind": "military",
+      "item": "Q646013",
+      "lat": 24.427777777778,
+      "lon": 118.35916666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Kinmen_Airport"
+    },
+    {
+      "icaoCode": "RCDC",
+      "kind": "military",
+      "item": "Q12694441",
+      "lat": 22.67237,
+      "lon": 120.46173,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "RCFN",
+      "kind": "military",
+      "item": "Q708576",
+      "lat": 22.754722222222,
+      "lon": 121.10166666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Taitung_Airport"
+    },
+    {
+      "icaoCode": "RCKU",
+      "kind": "military",
+      "item": "Q21005896",
+      "lat": 23.46166667,
+      "lon": 120.39277778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Chiayi_Air_Base"
+    },
+    {
+      "icaoCode": "RCMQ",
+      "kind": "military",
+      "item": "Q2963771",
+      "lat": 24.26,
+      "lon": 120.62,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ching_Chuan_Kang_Air_Base"
+    },
+    {
+      "icaoCode": "RCQS",
+      "kind": "military",
+      "item": "Q20447726",
+      "lat": 22.793333,
+      "lon": 121.181667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Chihhang_Air_Base"
+    },
+    {
+      "icaoCode": "RCSQ",
+      "kind": "military",
+      "item": "Q708555",
+      "lat": 22.674192434946963,
+      "lon": 120.46105176909417,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Pingtung_Airport"
+    },
+    {
+      "icaoCode": "RJAO",
+      "kind": "military",
+      "item": "Q1708271"
+    },
+    {
+      "icaoCode": "RJAW",
+      "kind": "military",
+      "item": "Q5061076",
+      "lat": 24.786666666667,
+      "lon": 141.32416666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Central_Field_(Iwo_Jima)"
+    },
+    {
+      "icaoCode": "RJCJ",
+      "kind": "military",
+      "item": "Q3275012"
+    },
+    {
+      "icaoCode": "RJCS",
+      "kind": "military",
+      "item": "Q11631036"
+    },
+    {
+      "icaoCode": "RJCY",
+      "kind": "military",
+      "item": "Q1827124"
+    },
+    {
+      "icaoCode": "RJDM",
+      "kind": "military",
+      "item": "Q652293"
+    },
+    {
+      "icaoCode": "RJDU",
+      "kind": "military",
+      "item": "Q11436069",
+      "lat": 32.92990278,
+      "lon": 129.93246944,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "RJFN",
+      "kind": "military",
+      "item": "Q3015913"
+    },
+    {
+      "icaoCode": "RJFY",
+      "kind": "military",
+      "item": "Q8214194"
+    },
+    {
+      "icaoCode": "RJNG",
+      "kind": "military",
+      "item": "Q3275507"
+    },
+    {
+      "icaoCode": "RJNH",
+      "kind": "military",
+      "item": "Q860035"
+    },
+    {
+      "icaoCode": "RJNY",
+      "kind": "military",
+      "item": "Q7499477"
+    },
+    {
+      "icaoCode": "RJOI",
+      "kind": "military",
+      "item": "Q1030389",
+      "lat": 34.145,
+      "lon": 132.24416666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Marine_Corps_Air_Station_Iwakuni"
+    },
+    {
+      "icaoCode": "RJOP",
+      "kind": "military",
+      "item": "Q11461119"
+    },
+    {
+      "icaoCode": "RJSH",
+      "kind": "military",
+      "item": "Q2901111",
+      "lat": 40.55194444,
+      "lon": 141.46722222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/JMSDF_Hachinohe_Air_Base"
+    },
+    {
+      "icaoCode": "RJSH",
+      "kind": "military",
+      "item": "Q2902006",
+      "lat": 40.5567,
+      "lon": 141.466,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/JGSDF_Camp_Hachinohe"
+    },
+    {
+      "icaoCode": "RJSM",
+      "kind": "military",
+      "item": "Q1350451",
+      "lat": 40.705277777778,
+      "lon": 141.37194444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Misawa_Air_Base"
+    },
+    {
+      "icaoCode": "RJSO",
+      "kind": "military",
+      "item": "Q11437527"
+    },
+    {
+      "icaoCode": "RJST",
+      "kind": "military",
+      "item": "Q652699"
+    },
+    {
+      "icaoCode": "RJSU",
+      "kind": "military",
+      "item": "Q6374904"
+    },
+    {
+      "icaoCode": "RJTA",
+      "kind": "military",
+      "item": "Q3016710",
+      "lat": 35.454722222222,
+      "lon": 139.45,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Naval_Air_Facility_Atsugi"
+    },
+    {
+      "icaoCode": "RJTE",
+      "kind": "military",
+      "item": "Q2901121"
+    },
+    {
+      "icaoCode": "RJTJ",
+      "kind": "military",
+      "item": "Q3015843"
+    },
+    {
+      "icaoCode": "RJTK",
+      "kind": "military",
+      "item": "Q3245032"
+    },
+    {
+      "icaoCode": "RJTL",
+      "kind": "military",
+      "item": "Q7496958"
+    },
+    {
+      "icaoCode": "RJTS",
+      "kind": "military",
+      "item": "Q11582483"
+    },
+    {
+      "icaoCode": "RJTY",
+      "kind": "military",
+      "item": "Q1806489",
+      "lat": 35.748611111111,
+      "lon": 139.34861111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Yokota_Air_Base"
+    },
+    {
+      "icaoCode": "RKJK",
+      "kind": "military",
+      "item": "Q7966282",
+      "lat": 35.903611111111,
+      "lon": 126.61583333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Kunsan_Air_Base"
+    },
+    {
+      "icaoCode": "RKJM",
+      "kind": "military",
+      "item": "Q491213"
+    },
+    {
+      "icaoCode": "RKND",
+      "kind": "military",
+      "item": "Q493039"
+    },
+    {
+      "icaoCode": "RKNN",
+      "kind": "military",
+      "item": "Q491220",
+      "lat": 37.75333333,
+      "lon": 128.94361111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Gangneung_Air_Base"
+    },
+    {
+      "icaoCode": "RKPK",
+      "kind": "military",
+      "item": "Q15221694",
+      "lat": 35.17944444,
+      "lon": 128.93833333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Gimhae_Air_Base"
+    },
+    {
+      "icaoCode": "RKSG",
+      "kind": "military",
+      "item": "Q22284731",
+      "lat": 36.962213888889,
+      "lon": 127.03107222222,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "RKSM",
+      "kind": "military",
+      "item": "Q492992"
+    },
+    {
+      "icaoCode": "RKSO",
+      "kind": "military",
+      "item": "Q492965",
+      "lat": 37.090555555556,
+      "lon": 127.02972222222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Osan_Air_Base"
+    },
+    {
+      "icaoCode": "RKSW",
+      "kind": "military",
+      "item": "Q11252889",
+      "lat": 37.235555555556,
+      "lon": 127.00944444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Suwon_Air_Base"
+    },
+    {
+      "icaoCode": "RKTI",
+      "kind": "military",
+      "item": "Q15229863",
+      "lat": 37.03,
+      "lon": 127.88527778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Jungwon_Air_Base"
+    },
+    {
+      "icaoCode": "RKTP",
+      "kind": "military",
+      "item": "Q12694955",
+      "lat": 36.70555556,
+      "lon": 126.48722222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Seosan_Air_Base"
+    },
+    {
+      "icaoCode": "RKTY",
+      "kind": "military",
+      "item": "Q625830",
+      "lat": 36.631722,
+      "lon": 128.355055,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Yecheon_Air_Base"
+    },
+    {
+      "icaoCode": "ROAH",
+      "kind": "military",
+      "item": "Q1529149",
+      "lat": 26.19583333,
+      "lon": 127.64583333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Naha_Air_Base"
+    },
+    {
+      "icaoCode": "RODE",
+      "kind": "military",
+      "item": "Q4392259"
+    },
+    {
+      "icaoCode": "RODN",
+      "kind": "military",
+      "item": "Q608289",
+      "lat": 26.351666666667,
+      "lon": 127.76944444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Kadena_Air_Base"
+    },
+    {
+      "icaoCode": "ROTM",
+      "kind": "military",
+      "item": "Q1031547"
+    },
+    {
+      "icaoCode": "RPLC",
+      "kind": "military",
+      "item": "Q1095676",
+      "lat": 15.185833,
+      "lon": 120.560278,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Clark_Air_Base"
+    },
+    {
+      "icaoCode": "RPLS",
+      "kind": "military",
+      "item": "Q1707982",
+      "lat": 14.49131667,
+      "lon": 120.89388611,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Danilo_Atienza_Air_Base"
+    },
+    {
+      "icaoCode": "RPLV",
+      "kind": "military",
+      "item": "Q12692740",
+      "lat": 15.433888,
+      "lon": 121.087222,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "RPMB",
+      "kind": "military",
+      "item": "Q18393232",
+      "lat": 6.10639,
+      "lon": 125.235,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Rajah_Buayan_Air_Station"
+    },
+    {
+      "icaoCode": "RPMC",
+      "kind": "military",
+      "item": "Q127220619",
+      "lat": 10.329722222222223,
+      "lon": 123.90722222222222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Lahug_Airport"
+    },
+    {
+      "icaoCode": "RPML",
+      "kind": "military",
+      "item": "Q3344253",
+      "lat": 8.4155555555556,
+      "lon": 124.61111111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Godofredo_Juliano_Air_Base"
+    },
+    {
+      "icaoCode": "RPMZ",
+      "kind": "military",
+      "item": "Q18206746",
+      "lat": 6.9225,
+      "lon": 122.06,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Edwin_Andrews_Air_Base"
+    },
+    {
+      "icaoCode": "RPUF",
+      "kind": "military",
+      "item": "Q2343940"
+    },
+    {
+      "icaoCode": "RPVM",
+      "kind": "military",
+      "item": "Q2360285",
+      "lat": 10.31333333,
+      "lon": 123.98277778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Mactan%E2%80%93Benito_Ebuen_Air_Base"
+    },
+    {
+      "icaoCode": "RPVP",
+      "kind": "military",
+      "item": "Q17512364",
+      "lat": 9.74222,
+      "lon": 118.759,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Antonio_Bautista_Air_Base"
+    },
+    {
+      "icaoCode": "SADO",
+      "kind": "military",
+      "item": "Q16851238"
+    },
+    {
+      "icaoCode": "SAWB",
+      "kind": "military",
+      "item": "Q5659189"
+    },
+    {
+      "icaoCode": "SBAF",
+      "kind": "military",
+      "item": "Q1763149",
+      "lat": -22.875,
+      "lon": -43.38472222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Afonsos_Air_Force_Base"
+    },
+    {
+      "icaoCode": "SBAN",
+      "kind": "military",
+      "item": "Q9650446",
+      "lat": -16.22626111,
+      "lon": -48.96408056,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "SBCC",
+      "kind": "military",
+      "item": "Q5028481"
+    },
+    {
+      "icaoCode": "SBCO",
+      "kind": "military",
+      "item": "Q3276024"
+    },
+    {
+      "icaoCode": "SBFL",
+      "kind": "military",
+      "item": "Q8214013",
+      "lat": -27.67027778,
+      "lon": -48.54694444,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "SBGL",
+      "kind": "military",
+      "item": "Q3275411",
+      "lat": -22.8249,
+      "lon": -43.2371,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Gale%C3%A3o_Air_Force_Base"
+    },
+    {
+      "icaoCode": "SBLS",
+      "kind": "military",
+      "item": "Q12693520"
+    },
+    {
+      "icaoCode": "SBMN",
+      "kind": "military",
+      "item": "Q6747097",
+      "lat": -3.14611111,
+      "lon": -59.98638889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Manaus_Air_Force_Base"
+    },
+    {
+      "icaoCode": "SBMN",
+      "kind": "military",
+      "item": "Q7228049",
+      "lat": -3.1461111111111,
+      "lon": -59.986388888889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ponta_Pelada_Airport"
+    },
+    {
+      "icaoCode": "SBNT",
+      "kind": "military",
+      "item": "Q3565073",
+      "lat": -5.91138889,
+      "lon": -35.2475,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Natal_Air_Force_Base"
+    },
+    {
+      "icaoCode": "SBSC",
+      "kind": "military",
+      "item": "Q2786857"
+    },
+    {
+      "icaoCode": "SBSC",
+      "kind": "military",
+      "item": "Q7419397"
+    },
+    {
+      "icaoCode": "SBST",
+      "kind": "military",
+      "item": "Q18499978",
+      "lat": -23.9275,
+      "lon": -46.299167,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Santos_Air_Force_Base"
+    },
+    {
+      "icaoCode": "SBTA",
+      "kind": "military",
+      "item": "Q9650554"
+    },
+    {
+      "icaoCode": "SBYS",
+      "kind": "military",
+      "item": "Q12692104",
+      "lat": -21.98456,
+      "lon": -47.33476,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "SCBQ",
+      "kind": "military",
+      "item": "Q578040"
+    },
+    {
+      "icaoCode": "SCCD",
+      "kind": "military",
+      "item": "Q16894299"
+    },
+    {
+      "icaoCode": "SCER",
+      "kind": "military",
+      "item": "Q9586386"
+    },
+    {
+      "icaoCode": "SCPZ",
+      "kind": "military",
+      "item": "Q21003451",
+      "lat": -79.766958,
+      "lon": -83.266862,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "SETA",
+      "kind": "military",
+      "item": "Q20458161"
+    },
+    {
+      "icaoCode": "SFDW",
+      "kind": "military",
+      "item": "Q16527287"
+    },
+    {
+      "icaoCode": "SFPI",
+      "kind": "military",
+      "item": "Q16911664"
+    },
+    {
+      "icaoCode": "SKAP",
+      "kind": "military",
+      "item": "Q5036722",
+      "lat": 4.076072222,
+      "lon": -73.56269444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Captain_Luis_F._G%C3%B3mez_Ni%C3%B1o_Air_Base"
+    },
+    {
+      "icaoCode": "SKBN",
+      "kind": "military",
+      "item": "Q12692044"
+    },
+    {
+      "icaoCode": "SKCV",
+      "kind": "military",
+      "item": "Q12692332",
+      "lat": 9.401027778,
+      "lon": -75.69133611,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Cove%C3%B1as_Airport"
+    },
+    {
+      "icaoCode": "SKFJ",
+      "kind": "military",
+      "item": "Q87031481"
+    },
+    {
+      "icaoCode": "SKGB",
+      "kind": "military",
+      "item": "Q1029924"
+    },
+    {
+      "icaoCode": "SKJC",
+      "kind": "military",
+      "item": "Q28450837"
+    },
+    {
+      "icaoCode": "SKLR",
+      "kind": "military",
+      "item": "Q5507213"
+    },
+    {
+      "icaoCode": "SKMA",
+      "kind": "military",
+      "item": "Q6738110"
+    },
+    {
+      "icaoCode": "SKME",
+      "kind": "military",
+      "item": "Q6544396"
+    },
+    {
+      "icaoCode": "SKNA",
+      "kind": "military",
+      "item": "Q6463566",
+      "lat": 2.17916667,
+      "lon": -73.7875,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/La_Macarena_Airport"
+    },
+    {
+      "icaoCode": "SKPQ",
+      "kind": "military",
+      "item": "Q3274234",
+      "lat": 5.48361111,
+      "lon": -74.65722222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Captain_Germ%C3%A1n_Olano_Moreno_Air_Base"
+    },
+    {
+      "icaoCode": "SKTI",
+      "kind": "military",
+      "item": "Q5309000"
+    },
+    {
+      "icaoCode": "SKTQ",
+      "kind": "military",
+      "item": "Q2919849",
+      "lat": 0.745833333,
+      "lon": -75.23388889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Captain_Ernesto_Esguerra_Cubides_Air_Base"
+    },
+    {
+      "icaoCode": "SKUA",
+      "kind": "military",
+      "item": "Q1655841"
+    },
+    {
+      "icaoCode": "SKUL",
+      "kind": "military",
+      "item": "Q3887249",
+      "lat": 4.09450278,
+      "lon": -76.22393333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Heriberto_G%C3%ADl_Mart%C3%ADnez_Airport"
+    },
+    {
+      "icaoCode": "SKVL",
+      "kind": "military",
+      "item": "Q20465162",
+      "lat": 5.939043,
+      "lon": -74.456967,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Velasquez_Airport"
+    },
+    {
+      "icaoCode": "SLSU",
+      "kind": "military",
+      "item": "Q555944",
+      "lat": -19.01242,
+      "lon": -65.29386,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Juana_Azurduy_de_Padilla_International_Airport"
+    },
+    {
+      "icaoCode": "SPID",
+      "kind": "military",
+      "item": "Q15242330"
+    },
+    {
+      "icaoCode": "SPIL",
+      "kind": "military",
+      "item": "Q12694595",
+      "lat": -13.23194444,
+      "lon": -70.75277778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Quince_Mil_Airport"
+    },
+    {
+      "icaoCode": "SPLP",
+      "kind": "military",
+      "item": "Q5721609"
+    },
+    {
+      "icaoCode": "SPTP",
+      "kind": "military",
+      "item": "Q8243405"
+    },
+    {
+      "icaoCode": "SUDU",
+      "kind": "military",
+      "item": "Q1432740",
+      "lat": -33.35638888888889,
+      "lon": -56.49611111111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Santa_Bernardina_International_Airport"
+    },
+    {
+      "icaoCode": "SVBL",
+      "kind": "military",
+      "item": "Q2026702"
+    },
+    {
+      "icaoCode": "SVFM",
+      "kind": "military",
+      "item": "Q3274614"
+    },
+    {
+      "icaoCode": "SVLO",
+      "kind": "military",
+      "item": "Q4337257"
+    },
+    {
+      "icaoCode": "TJNR",
+      "kind": "military",
+      "item": "Q3850219"
+    },
+    {
+      "icaoCode": "UAAL",
+      "kind": "military",
+      "item": "Q4479287",
+      "lat": 46.19027778,
+      "lon": 80.83138889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Usharal_Airport"
+    },
+    {
+      "icaoCode": "UAFM",
+      "kind": "military",
+      "item": "Q2886552"
+    },
+    {
+      "icaoCode": "UAFW",
+      "kind": "military",
+      "item": "Q2426665"
+    },
+    {
+      "icaoCode": "UHKK",
+      "kind": "military",
+      "item": "Q2071461",
+      "lat": 50.408333333333,
+      "lon": 136.93333333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Komsomolsk-on-Amur_Airport"
+    },
+    {
+      "icaoCode": "UHMA",
+      "kind": "military",
+      "item": "Q1843329",
+      "lat": 64.735,
+      "lon": 177.74166666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ugolny_Airport"
+    },
+    {
+      "icaoCode": "UHMD",
+      "kind": "military",
+      "item": "Q2560037",
+      "lat": 64.378333333333,
+      "lon": -173.24333333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Provideniya_Bay_Airport"
+    },
+    {
+      "icaoCode": "UHPP",
+      "kind": "military",
+      "item": "Q2074948",
+      "lat": 53.1677,
+      "lon": 158.4536,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Elizovo_Airport"
+    },
+    {
+      "icaoCode": "UHSB",
+      "kind": "military",
+      "item": "Q3813687",
+      "lat": 44.92,
+      "lon": 147.62166666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Burevestnik_Airport"
+    },
+    {
+      "icaoCode": "UHVD",
+      "kind": "military",
+      "item": "Q4418135"
+    },
+    {
+      "icaoCode": "UIBB",
+      "kind": "military",
+      "item": "Q2310549",
+      "lat": 56.37,
+      "lon": 101.69833333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Bratsk_Airport"
+    },
+    {
+      "icaoCode": "UIIB",
+      "kind": "military",
+      "item": "Q1656115"
+    },
+    {
+      "icaoCode": "UKBC",
+      "kind": "military",
+      "item": "Q20074238"
+    },
+    {
+      "icaoCode": "UKFB",
+      "kind": "military",
+      "item": "Q2985601",
+      "lat": 44.683333333333,
+      "lon": 33.583333333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Sevastopol_International_Airport"
+    },
+    {
+      "icaoCode": "UKFG",
+      "kind": "military",
+      "item": "Q4055737"
+    },
+    {
+      "icaoCode": "UKFH",
+      "kind": "military",
+      "item": "Q86662305"
+    },
+    {
+      "icaoCode": "UKFN",
+      "kind": "military",
+      "item": "Q30891201"
+    },
+    {
+      "icaoCode": "UKFT",
+      "kind": "military",
+      "item": "Q30890952"
+    },
+    {
+      "icaoCode": "UKFY",
+      "kind": "military",
+      "item": "Q86678865"
+    },
+    {
+      "icaoCode": "UKKN",
+      "kind": "military",
+      "item": "Q97305978"
+    },
+    {
+      "icaoCode": "UKLP",
+      "kind": "military",
+      "item": "Q6706931"
+    },
+    {
+      "icaoCode": "UKOR",
+      "kind": "military",
+      "item": "Q30891134"
+    },
+    {
+      "icaoCode": "UKRC",
+      "kind": "military",
+      "item": "Q1708442"
+    },
+    {
+      "icaoCode": "ULAK",
+      "kind": "military",
+      "item": "Q2426145"
+    },
+    {
+      "icaoCode": "ULAM",
+      "kind": "military",
+      "item": "Q2393084",
+      "lat": 67.64,
+      "lon": 53.125,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Naryan-Mar_Airport"
+    },
+    {
+      "icaoCode": "ULDR",
+      "kind": "military",
+      "item": "Q2011909"
+    },
+    {
+      "icaoCode": "ULKS",
+      "kind": "military",
+      "item": "Q4403746"
+    },
+    {
+      "icaoCode": "ULLP",
+      "kind": "military",
+      "item": "Q1995644"
+    },
+    {
+      "icaoCode": "ULMK",
+      "kind": "military",
+      "item": "Q1748568"
+    },
+    {
+      "icaoCode": "ULMO",
+      "kind": "military",
+      "item": "Q99688116"
+    },
+    {
+      "icaoCode": "ULMW",
+      "kind": "military",
+      "item": "Q1986690"
+    },
+    {
+      "icaoCode": "ULOO",
+      "kind": "military",
+      "item": "Q2719297",
+      "lat": 57.785,
+      "lon": 28.398333333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Princess_Olga_Pskov_International_Airport"
+    },
+    {
+      "icaoCode": "ULPB",
+      "kind": "military",
+      "item": "Q2545143",
+      "lat": 61.885,
+      "lon": 34.156666666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Petrozavodsk_Airport"
+    },
+    {
+      "icaoCode": "UMDD",
+      "kind": "military",
+      "item": "Q11824537"
+    },
+    {
+      "icaoCode": "UMIO",
+      "kind": "military",
+      "item": "Q24635004"
+    },
+    {
+      "icaoCode": "UMKK",
+      "kind": "military",
+      "item": "Q1431650",
+      "lat": 54.89,
+      "lon": 20.5925,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Khrabrovo_Airport"
+    },
+    {
+      "icaoCode": "UMLI",
+      "kind": "military",
+      "item": "Q11824554",
+      "lat": 53.773333,
+      "lon": 27.58,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Machulishchy_(air_base)"
+    },
+    {
+      "icaoCode": "UMMA",
+      "kind": "military",
+      "item": "Q84314120"
+    },
+    {
+      "icaoCode": "UMMI",
+      "kind": "military",
+      "item": "Q65122068"
+    },
+    {
+      "icaoCode": "UMMO",
+      "kind": "military",
+      "item": "Q11824659"
+    },
+    {
+      "icaoCode": "UMMR",
+      "kind": "military",
+      "item": "Q64438433"
+    },
+    {
+      "icaoCode": "UMNB",
+      "kind": "military",
+      "item": "Q11824276"
+    },
+    {
+      "icaoCode": "UNKS",
+      "kind": "military",
+      "item": "Q2271615",
+      "lat": 56.268333333333,
+      "lon": 90.576666666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Achinsk_Airport"
+    },
+    {
+      "icaoCode": "UNOS",
+      "kind": "military",
+      "item": "Q4334691"
+    },
+    {
+      "icaoCode": "UODN",
+      "kind": "military",
+      "item": "Q1529324",
+      "lat": 80.80232778,
+      "lon": 47.66945,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Nagurskoye_(air_base)"
+    },
+    {
+      "icaoCode": "UODS",
+      "kind": "military",
+      "item": "Q7585616",
+      "lat": 79.528333333333,
+      "lon": 91.075,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Sredny_Ostrov_Airfield"
+    },
+    {
+      "icaoCode": "URFI",
+      "kind": "military",
+      "item": "Q4310672"
+    },
+    {
+      "icaoCode": "URKE",
+      "kind": "military",
+      "item": "Q955079"
+    },
+    {
+      "icaoCode": "URKH",
+      "kind": "military",
+      "item": "Q1972346"
+    },
+    {
+      "icaoCode": "URRM",
+      "kind": "military",
+      "item": "Q4303113"
+    },
+    {
+      "icaoCode": "USAV",
+      "kind": "military",
+      "item": "Q4403693"
+    },
+    {
+      "icaoCode": "USHK",
+      "kind": "military",
+      "item": "Q6428998",
+      "lat": 59.65,
+      "lon": 67.433333333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Kondinskoye_Airport"
+    },
+    {
+      "icaoCode": "USPB",
+      "kind": "military",
+      "item": "Q1980626"
+    },
+    {
+      "icaoCode": "USPP",
+      "kind": "military",
+      "item": "Q1430981",
+      "lat": 57.916666666667,
+      "lon": 56.026666666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Perm_International_Airport"
+    },
+    {
+      "icaoCode": "UTSL",
+      "kind": "military",
+      "item": "Q1444594"
+    },
+    {
+      "icaoCode": "UUBD",
+      "kind": "military",
+      "item": "Q1993306"
+    },
+    {
+      "icaoCode": "UUBL",
+      "kind": "military",
+      "item": "Q4415721"
+    },
+    {
+      "icaoCode": "UUBT",
+      "kind": "military",
+      "item": "Q4224052"
+    },
+    {
+      "icaoCode": "UUBX",
+      "kind": "military",
+      "item": "Q8049482"
+    },
+    {
+      "icaoCode": "UUEM",
+      "kind": "military",
+      "item": "Q1983675",
+      "lat": 56.825,
+      "lon": 35.76,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Migalovo_air_base"
+    },
+    {
+      "icaoCode": "UUET",
+      "kind": "military",
+      "item": "Q65117572"
+    },
+    {
+      "icaoCode": "UUMB",
+      "kind": "military",
+      "item": "Q1984989",
+      "lat": 55.61166667,
+      "lon": 36.65,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Kubinka_(air_base)"
+    },
+    {
+      "icaoCode": "UUMU",
+      "kind": "military",
+      "item": "Q908071",
+      "lat": 55.878333333333,
+      "lon": 38.061666666667,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "UUOK",
+      "kind": "military",
+      "item": "Q2992490",
+      "lat": 51.751666666667,
+      "lon": 36.296666666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Kursk_Vostochny_Airport"
+    },
+    {
+      "icaoCode": "UUOW",
+      "kind": "military",
+      "item": "Q2030071"
+    },
+    {
+      "icaoCode": "UWLW",
+      "kind": "military",
+      "item": "Q2545194",
+      "lat": 54.401111111111,
+      "lon": 48.802777777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Ulyanovsk_Vostochny_Airport"
+    },
+    {
+      "icaoCode": "VANY",
+      "kind": "military",
+      "item": "Q24942048"
+    },
+    {
+      "icaoCode": "VCCN",
+      "kind": "military",
+      "item": "Q7390735",
+      "lat": 6.552125,
+      "lon": 79.977538888889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Katukurunda_Airport"
+    },
+    {
+      "icaoCode": "VCCV",
+      "kind": "military",
+      "item": "Q7390739"
+    },
+    {
+      "icaoCode": "VCUT",
+      "kind": "military",
+      "item": "Q1837207"
+    },
+    {
+      "icaoCode": "VEBR",
+      "kind": "military",
+      "item": "Q4863172"
+    },
+    {
+      "icaoCode": "VEDX",
+      "kind": "military",
+      "item": "Q6350188",
+      "lat": 22.33941667,
+      "lon": 87.21454722,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Kalaikunda_Air_Force_Station"
+    },
+    {
+      "icaoCode": "VEGT",
+      "kind": "military",
+      "item": "Q2673008",
+      "lat": 26.106111111111,
+      "lon": 91.585833333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Lokpriya_Gopinath_Bordoloi_International_Airport"
+    },
+    {
+      "icaoCode": "VIAW",
+      "kind": "military",
+      "item": "Q20457269"
+    },
+    {
+      "icaoCode": "VIAX",
+      "kind": "military",
+      "item": "Q20449639",
+      "lat": 31.433208,
+      "lon": 75.760792,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Sri_Guru_Ravidas_Airport"
+    },
+    {
+      "icaoCode": "VIDX",
+      "kind": "military",
+      "item": "Q3274626",
+      "lat": 28.707703,
+      "lon": 77.358911,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Hindan_Air_Force_Station"
+    },
+    {
+      "icaoCode": "VIHX",
+      "kind": "military",
+      "item": "Q10860393",
+      "lat": 30.74861111,
+      "lon": 75.62972222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Halwara_Air_Force_Station"
+    },
+    {
+      "icaoCode": "VIPK",
+      "kind": "military",
+      "item": "Q12694367",
+      "lat": 32.23,
+      "lon": 75.631667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Pathankot_Air_Force_Station"
+    },
+    {
+      "icaoCode": "VIPX",
+      "kind": "military",
+      "item": "Q21974264"
+    },
+    {
+      "icaoCode": "VIUM",
+      "kind": "military",
+      "item": "Q24942002"
+    },
+    {
+      "icaoCode": "VIUT",
+      "kind": "military",
+      "item": "Q12695428"
+    },
+    {
+      "icaoCode": "VOCX",
+      "kind": "military",
+      "item": "Q2172548",
+      "lat": 9.1525,
+      "lon": 92.819722222222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Car_Nicobar_Air_Force_Station"
+    },
+    {
+      "icaoCode": "VOHK",
+      "kind": "military",
+      "item": "Q3913389"
+    },
+    {
+      "icaoCode": "VOPB",
+      "kind": "military",
+      "item": "Q3015517",
+      "lat": 11.64111111,
+      "lon": 92.72972222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/INS_Utkrosh"
+    },
+    {
+      "icaoCode": "VOSX",
+      "kind": "military",
+      "item": "Q3531530"
+    },
+    {
+      "icaoCode": "VOTJ",
+      "kind": "military",
+      "item": "Q3017567",
+      "lat": 10.722222222222,
+      "lon": 79.101388888889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Thanjavur_Air_Force_Station"
+    },
+    {
+      "icaoCode": "VTBD",
+      "kind": "military",
+      "item": "Q1655612",
+      "lat": 13.9125,
+      "lon": 100.60666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Don_Muang_Royal_Thai_Air_Force_Base"
+    },
+    {
+      "icaoCode": "VTBH",
+      "kind": "military",
+      "item": "Q126959108",
+      "lat": 14.949937,
+      "lon": 100.643472,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "VTBL",
+      "kind": "military",
+      "item": "Q13021969",
+      "lat": 14.872222,
+      "lon": 100.658333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Khok_Kathiam_Air_Force_Base"
+    },
+    {
+      "icaoCode": "VTBP",
+      "kind": "military",
+      "item": "Q12694513",
+      "lat": 11.786667,
+      "lon": 99.805,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "VTCB",
+      "kind": "military",
+      "item": "Q12700142"
+    },
+    {
+      "icaoCode": "VTCR",
+      "kind": "military",
+      "item": "Q1708760"
+    },
+    {
+      "icaoCode": "VTPI",
+      "kind": "military",
+      "item": "Q4402324",
+      "lat": 15.2681,
+      "lon": 100.292,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Takhli_Royal_Thai_Air_Force_Base"
+    },
+    {
+      "icaoCode": "VTSB",
+      "kind": "military",
+      "item": "Q126171769",
+      "lat": 9.13616,
+      "lon": 99.139,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "VTSN",
+      "kind": "military",
+      "item": "Q5065943",
+      "lat": 8.463888,
+      "lon": 99.958333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Cha-ian_Airport"
+    },
+    {
+      "icaoCode": "VVHU",
+      "kind": "military",
+      "item": "Q18737233"
+    },
+    {
+      "icaoCode": "VVKP",
+      "kind": "military",
+      "item": "Q2760781"
+    },
+    {
+      "icaoCode": "VVNT",
+      "kind": "military",
+      "item": "Q1926602"
+    },
+    {
+      "icaoCode": "VVPR",
+      "kind": "military",
+      "item": "Q7180409",
+      "lat": 11.63361111,
+      "lon": 108.95194444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Phan_Rang_Air_Base"
+    },
+    {
+      "icaoCode": "VVQN",
+      "kind": "military",
+      "item": "Q10822643"
+    },
+    {
+      "icaoCode": "VVTS",
+      "kind": "military",
+      "item": "Q4115006",
+      "lat": 10.818888888889,
+      "lon": 106.65194444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Tan_Son_Nhut_Air_Base"
+    },
+    {
+      "icaoCode": "VYNP",
+      "kind": "military",
+      "item": "Q3565474"
+    },
+    {
+      "icaoCode": "WADE",
+      "kind": "military",
+      "item": "Q6694741",
+      "lat": -8.14171667,
+      "lon": 114.6185,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Lt._Col._Wisnu_Airfield"
+    },
+    {
+      "icaoCode": "WAPL",
+      "kind": "military",
+      "item": "Q1331016"
+    },
+    {
+      "icaoCode": "WARI",
+      "kind": "military",
+      "item": "Q388394"
+    },
+    {
+      "icaoCode": "WIAG",
+      "kind": "military",
+      "item": "Q2819228"
+    },
+    {
+      "icaoCode": "WIAJ",
+      "kind": "military",
+      "item": "Q19730186"
+    },
+    {
+      "icaoCode": "WICK",
+      "kind": "military",
+      "item": "Q18821729",
+      "lat": -6.982733,
+      "lon": 107.572918,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "WIDD",
+      "kind": "military",
+      "item": "Q780450",
+      "lat": 1.1208333333333,
+      "lon": 104.11861111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Hang_Nadim_International_Airport"
+    },
+    {
+      "icaoCode": "WIMG",
+      "kind": "military",
+      "item": "Q7673068"
+    },
+    {
+      "icaoCode": "WIMK",
+      "kind": "military",
+      "item": "Q1332829",
+      "lat": 3.5580555555556,
+      "lon": 98.671666666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Soewondo_Air_Force_Base"
+    },
+    {
+      "icaoCode": "WIOO",
+      "kind": "military",
+      "item": "Q723474",
+      "lat": -0.15055555555556,
+      "lon": 109.40388888889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Supadio_International_Airport"
+    },
+    {
+      "icaoCode": "WMGK",
+      "kind": "military",
+      "item": "Q7276970"
+    },
+    {
+      "icaoCode": "WMKB",
+      "kind": "military",
+      "item": "Q1551466",
+      "lat": 5.4661111111111,
+      "lon": 100.39111111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RMAF_Butterworth_Air_Base"
+    },
+    {
+      "icaoCode": "WMKD",
+      "kind": "military",
+      "item": "Q3235616",
+      "lat": 3.775175,
+      "lon": 103.20857222222,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Sultan_Haji_Ahmad_Shah_Airport"
+    },
+    {
+      "icaoCode": "WMKF",
+      "kind": "military",
+      "item": "Q1082819"
+    },
+    {
+      "icaoCode": "WSAG",
+      "kind": "military",
+      "item": "Q3497722"
+    },
+    {
+      "icaoCode": "WSAP",
+      "kind": "military",
+      "item": "Q3504948",
+      "lat": 1.3602777777778,
+      "lon": 103.90944444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Paya_Lebar_Air_Base"
+    },
+    {
+      "icaoCode": "WSAT",
+      "kind": "military",
+      "item": "Q2242841",
+      "lat": 1.3872222222222,
+      "lon": 103.70861111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Tengah_Air_Base"
+    },
+    {
+      "icaoCode": "XEBT",
+      "kind": "military",
+      "item": "Q16705375"
+    },
+    {
+      "icaoCode": "XHSO",
+      "kind": "military",
+      "item": "Q1654123"
+    },
+    {
+      "icaoCode": "XHWP",
+      "kind": "military",
+      "item": "Q25393945"
+    },
+    {
+      "icaoCode": "XIAG",
+      "kind": "military",
+      "item": "Q3274612"
+    },
+    {
+      "icaoCode": "XIAU",
+      "kind": "military",
+      "item": "Q7878336"
+    },
+    {
+      "icaoCode": "XKFD",
+      "kind": "military",
+      "item": "Q30891194"
+    },
+    {
+      "icaoCode": "XLLL",
+      "kind": "military",
+      "item": "Q4428571"
+    },
+    {
+      "icaoCode": "XLLY",
+      "kind": "military",
+      "item": "Q4377735"
+    },
+    {
+      "icaoCode": "XLMO",
+      "kind": "military",
+      "item": "Q1984972"
+    },
+    {
+      "icaoCode": "XLMV",
+      "kind": "military",
+      "item": "Q839584"
+    },
+    {
+      "icaoCode": "XLPO",
+      "kind": "military",
+      "item": "Q2271604"
+    },
+    {
+      "icaoCode": "XLPU",
+      "kind": "military",
+      "item": "Q7207185"
+    },
+    {
+      "icaoCode": "XLWF",
+      "kind": "military",
+      "item": "Q4482254"
+    },
+    {
+      "icaoCode": "XRAP",
+      "kind": "military",
+      "item": "Q4377888"
+    },
+    {
+      "icaoCode": "XRKL",
+      "kind": "military",
+      "item": "Q116482776"
+    },
+    {
+      "icaoCode": "XRKP",
+      "kind": "military",
+      "item": "Q4378739"
+    },
+    {
+      "icaoCode": "XRRG",
+      "kind": "military",
+      "item": "Q65172024"
+    },
+    {
+      "icaoCode": "XRWH",
+      "kind": "military",
+      "item": "Q4073198"
+    },
+    {
+      "icaoCode": "XRWL",
+      "kind": "military",
+      "item": "Q4256107"
+    },
+    {
+      "icaoCode": "XUBQ",
+      "kind": "military",
+      "item": "Q4519462"
+    },
+    {
+      "icaoCode": "XUIK",
+      "kind": "military",
+      "item": "Q1983668"
+    },
+    {
+      "icaoCode": "XUOB",
+      "kind": "military",
+      "item": "Q3813579"
+    },
+    {
+      "icaoCode": "XUWM",
+      "kind": "military",
+      "item": "Q3565614"
+    },
+    {
+      "icaoCode": "XWSG",
+      "kind": "military",
+      "item": "Q689065"
+    },
+    {
+      "icaoCode": "XWSW",
+      "kind": "military",
+      "item": "Q1934960"
+    },
+    {
+      "icaoCode": "YAMB",
+      "kind": "military",
+      "item": "Q955757",
+      "lat": -27.64,
+      "lon": 152.71166666667,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "YBCR",
+      "kind": "military",
+      "item": "Q4868724"
+    },
+    {
+      "icaoCode": "YBOK",
+      "kind": "military",
+      "item": "Q2903084",
+      "lat": -27.411388888889,
+      "lon": 151.73527777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Oakey_Army_Aviation_Centre"
+    },
+    {
+      "icaoCode": "YBSG",
+      "kind": "military",
+      "item": "Q7274980"
+    },
+    {
+      "icaoCode": "YBSS",
+      "kind": "military",
+      "item": "Q17899"
+    },
+    {
+      "icaoCode": "YBTL",
+      "kind": "military",
+      "item": "Q1751264",
+      "lat": -19.253333333333,
+      "lon": 146.765,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAAF_Base_Townsville"
+    },
+    {
+      "icaoCode": "YCIN",
+      "kind": "military",
+      "item": "Q7274973",
+      "lat": -17.581388888889,
+      "lon": 123.82833333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAAF_Base_Curtin"
+    },
+    {
+      "icaoCode": "YGAD",
+      "kind": "military",
+      "item": "Q62073571"
+    },
+    {
+      "icaoCode": "YGAW",
+      "kind": "military",
+      "item": "Q3274819"
+    },
+    {
+      "icaoCode": "YGIG",
+      "kind": "military",
+      "item": "Q7274971"
+    },
+    {
+      "icaoCode": "YGNB",
+      "kind": "military",
+      "item": "Q7274961"
+    },
+    {
+      "icaoCode": "YGOR",
+      "kind": "military",
+      "item": "Q14935673"
+    },
+    {
+      "icaoCode": "YJBY",
+      "kind": "military",
+      "item": "Q2741619",
+      "lat": -35.146666666667,
+      "lon": 150.69666666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Jervis_Bay_Airfield"
+    },
+    {
+      "icaoCode": "YKAL",
+      "kind": "military",
+      "item": "Q21923995",
+      "lat": -14.28518,
+      "lon": 126.63614,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "YLVT",
+      "kind": "military",
+      "item": "Q20449806"
+    },
+    {
+      "icaoCode": "YMES",
+      "kind": "military",
+      "item": "Q7274959"
+    },
+    {
+      "icaoCode": "YMPC",
+      "kind": "military",
+      "item": "Q1551483"
+    },
+    {
+      "icaoCode": "YNKR",
+      "kind": "military",
+      "item": "Q97702446",
+      "lat": -15.57666667,
+      "lon": 130.475,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "YPDN",
+      "kind": "military",
+      "item": "Q10853535",
+      "lat": -12.414722222222,
+      "lon": 130.87666666667,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAAF_Base_Darwin"
+    },
+    {
+      "icaoCode": "YPEA",
+      "kind": "military",
+      "item": "Q955792"
+    },
+    {
+      "icaoCode": "YPED",
+      "kind": "military",
+      "item": "Q959449",
+      "lat": -34.7025,
+      "lon": 138.62083333333,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "YPLM",
+      "kind": "military",
+      "item": "Q7274976",
+      "lat": -22.235833333333,
+      "lon": 114.08861111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAAF_Base_Learmonth"
+    },
+    {
+      "icaoCode": "YPTN",
+      "kind": "military",
+      "item": "Q1551495",
+      "lat": -14.521111111111,
+      "lon": 132.37777777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAAF_Base_Tindal"
+    },
+    {
+      "icaoCode": "YPWR",
+      "kind": "military",
+      "item": "Q38250457",
+      "lat": -31.14416667,
+      "lon": 136.81694444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAAF_Base_Woomera"
+    },
+    {
+      "icaoCode": "YSAE",
+      "kind": "military",
+      "item": "Q7426542"
+    },
+    {
+      "icaoCode": "YSHW",
+      "kind": "military",
+      "item": "Q3206850"
+    },
+    {
+      "icaoCode": "YSNB",
+      "kind": "military",
+      "item": "Q17616"
+    },
+    {
+      "icaoCode": "YSRI",
+      "kind": "military",
+      "item": "Q1403609",
+      "lat": -33.600555555556,
+      "lon": 150.78083333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/RAAF_Base_Richmond"
+    },
+    {
+      "icaoCode": "YWLM",
+      "kind": "military",
+      "item": "Q955268",
+      "lat": -32.795,
+      "lon": 151.83444444444,
+      "auditedAt": "2026-10-21"
+    },
+    {
+      "icaoCode": "YWOT",
+      "kind": "military",
+      "item": "Q97703570"
+    },
+    {
+      "icaoCode": "ZBBB",
+      "kind": "military",
+      "item": "Q10902429",
+      "lat": 39.96111111,
+      "lon": 116.25638889,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Beijing_Xijiao_Airport"
+    },
+    {
+      "icaoCode": "ZBXZ",
+      "kind": "joint",
+      "item": "Q8039374",
+      "lat": 38.599166666667,
+      "lon": 112.96777777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Xinzhou_Wutaishan_Airport"
+    },
+    {
+      "icaoCode": "ZBXZ",
+      "kind": "military",
+      "item": "Q8039374",
+      "lat": 38.599166666667,
+      "lon": 112.96777777778,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Xinzhou_Wutaishan_Airport"
+    },
+    {
+      "icaoCode": "ZBZJ",
+      "kind": "joint",
+      "item": "Q8070469",
+      "lat": 40.73916666666667,
+      "lon": 114.93083333333334,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Zhangjiakou_Ningyuan_Airport"
+    },
+    {
+      "icaoCode": "ZBZJ",
+      "kind": "military",
+      "item": "Q8070469",
+      "lat": 40.73916666666667,
+      "lon": 114.93083333333334,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Zhangjiakou_Ningyuan_Airport"
+    },
+    {
+      "icaoCode": "ZGCS",
+      "kind": "military",
+      "item": "Q29613852"
+    },
+    {
+      "icaoCode": "ZGFS",
+      "kind": "joint",
+      "item": "Q5473352",
+      "lat": 23.0825,
+      "lon": 113.07083333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Foshan_Shadi_Airport"
+    },
+    {
+      "icaoCode": "ZGFS",
+      "kind": "military",
+      "item": "Q5473352",
+      "lat": 23.0825,
+      "lon": 113.07083333333,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Foshan_Shadi_Airport"
+    },
+    {
+      "icaoCode": "ZGXN",
+      "kind": "military",
+      "item": "Q8044559",
+      "lat": 24.15,
+      "lon": 115.757,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Xingning_Air_Base"
+    },
+    {
+      "icaoCode": "ZKSC",
+      "kind": "military",
+      "item": "Q7639037"
+    },
+    {
+      "icaoCode": "ZKUJ",
+      "kind": "military",
+      "item": "Q5243879",
+      "lat": 40.151722222222,
+      "lon": 124.49855555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Uiju_Airfield"
+    },
+    {
+      "icaoCode": "ZSJX",
+      "kind": "military",
+      "item": "Q2900666",
+      "lat": 30.70666667,
+      "lon": 120.68055556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Jiaxing_Nanhu_Airport"
+    },
+    {
+      "icaoCode": "ZSSZ",
+      "kind": "military",
+      "item": "Q14600028",
+      "lat": 31.2631,
+      "lon": 120.401,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Suzhou_Guangfu_Airport"
+    },
+    {
+      "icaoCode": "ZSWU",
+      "kind": "military",
+      "item": "Q8039105"
+    },
+    {
+      "icaoCode": "ZULP",
+      "kind": "military",
+      "item": "Q6540050",
+      "lat": 30.679444444444,
+      "lon": 107.78611111111,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Liangping_Airport"
+    },
+    {
+      "icaoCode": "ZULS",
+      "kind": "joint",
+      "item": "Q786209",
+      "lat": 29.297777777778,
+      "lon": 90.911944444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Lhasa_Gonggar_International_Airport"
+    },
+    {
+      "icaoCode": "ZULS",
+      "kind": "military",
+      "item": "Q786209",
+      "lat": 29.297777777778,
+      "lon": 90.911944444444,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Lhasa_Gonggar_International_Airport"
+    },
+    {
+      "icaoCode": "ZYFX",
+      "kind": "military",
+      "item": "Q141619904"
+    },
+    {
+      "icaoCode": "ZYJL",
+      "kind": "military",
+      "item": "Q2901215",
+      "lat": 44.00222222,
+      "lon": 126.39555556,
+      "auditedAt": "2026-10-21",
+      "wikipedia": "https://en.wikipedia.org/wiki/Jilin_Ertaizi_Airport"
+    }
+  ],
+  "exclusions": [
+    {
+      "item": "Q5607481",
+      "sourceUrl": "https://www.flymanchester.com/about-the-airport/history/",
+      "checkedAt": "2026-10-21",
+      "evidence": "Official airport history: all remaining Air Force flying units relocated and control transferred to municipalities in January 1966. Former Grenier Air Force Base does not establish current military use at KMHT."
+    }
+  ]
+}
