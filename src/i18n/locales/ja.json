@@ -2766,5 +2766,6 @@
   "Voice service — applies next session": "音声サービス — 次回のセッションから適用",
   "Microphone support unavailable": "マイクを利用できません",
   "Microphone unavailable — voice input is off": "マイクを利用できないため、音声入力はオフです",
-  "Listening": "聞き取り中"
+  "Listening": "聞き取り中",
+  "Hold the button to speak": "ボタンを押したまま話してください"
 }

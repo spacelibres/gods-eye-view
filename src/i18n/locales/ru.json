@@ -2967,5 +2967,6 @@
   "Voice service — applies next session": "Голосовой сервис — применится в следующей сессии",
   "Microphone support unavailable": "Микрофон недоступен",
   "Microphone unavailable — voice input is off": "Микрофон недоступен — голосовой ввод отключён",
-  "Listening": "Слушаю"
+  "Listening": "Слушаю",
+  "Hold the button to speak": "Удерживайте кнопку, чтобы говорить"
 }

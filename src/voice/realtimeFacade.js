@@ -408,6 +408,18 @@ export class RealtimeFacade {
     return this._input.setMicrophoneEnabled(...args);
   }
 
+  /**
+   * Switch the microphone of a WebSocket session, if one is running.
+   *
+   * Returns false when the active session is the WebRTC one, whose capture is
+   * driven by `setMicrophoneEnabled` above.
+   */
+  setSocketMicrophoneEnabled(...args) {
+    const connection = this._connection;
+    if (!connection?.setSocketMicrophoneEnabled) return false;
+    return connection.setSocketMicrophoneEnabled(...args);
+  }
+
   startVoiceVisualizer(...args) {
     return this._input.startVoiceVisualizer(...args);
   }

@@ -90,11 +90,10 @@ export function attachVoiceSocketRelay({
         }
       };
 
-      // Frames are forwarded verbatim, including binary ones.
       // Frames are forwarded verbatim, and always as binary. The flag must be
       // forced in both directions: `ws` sends a Buffer as a text frame by
-      // default, and the vendor then receives a 41-byte "JSON" it cannot
-      // decode and never answers.
+      // default, and the vendor then receives a payload it cannot decode and
+      // never answers.
       client.on('message', (data) => {
         if (upstream.readyState === WebSocket.OPEN) {
           upstream.send(data, { binary: true });

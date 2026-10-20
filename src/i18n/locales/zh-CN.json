@@ -2766,5 +2766,6 @@
   "Voice service — applies next session": "语音服务 — 下次会话生效",
   "Microphone support unavailable": "无法使用麦克风",
   "Microphone unavailable — voice input is off": "麦克风不可用 —— 语音输入已关闭",
-  "Listening": "聆听中"
+  "Listening": "聆听中",
+  "Hold the button to speak": "按住按钮说话"
 }

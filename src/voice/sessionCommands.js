@@ -10,6 +10,7 @@ import {
   storeVoiceProvider,
 } from './voiceProviders.js';
 import { probeVoiceProvidersCached } from './voiceProviderProbe.js';
+import { bindHoldToTalk } from './holdToTalk.js';
 
 /**
  * Fill the provider picker and keep the choice.
@@ -181,6 +182,44 @@ export function createVoiceCommands({
     if (session.isActive()) session.stop();
     else void session.start({ pushToTalk: false });
   };
+
+  // A phone has no Space bar, so holding the button is the gesture: press to
+  // speak, lift to stop. On a pointer device with a keyboard the click handler
+  // above stays the only binding, since a press is already a discrete action
+  // there and a hold would fight the Space-hold path.
+  const touchOnly = globalThis.matchMedia?.(
+    '(hover: none) and (pointer: coarse)',
+  );
+  let unbindHold = () => {};
+  if (touchOnly?.matches) {
+    ui.button.addEventListener('click', (event) => event.stopPropagation());
+    unbindHold = bindHoldToTalk({
+      element: ui.button,
+      isActive: () => session.isActive(),
+      onStart: async () => {
+        if (adapter.ignoreButtonClick?.()) return;
+        if (!session.isActive()) {
+          await session.start({ pushToTalk: false });
+          return;
+        }
+        // Already connected: just reopen the microphone.
+        session.setSocketMicrophoneEnabled?.(true);
+        session.setMicrophoneEnabled?.(true);
+      },
+      onEnd: () => {
+        if (!session.isActive()) return;
+        // Stop listening, keep the session: reconnecting costs a token and a
+        // handshake, which a second press should not pay again.
+        if (session.setSocketMicrophoneEnabled?.(false)) return;
+        session.setMicrophoneEnabled?.(false);
+      },
+      onTap: () => {
+        // Too short to be speech. Say what the gesture is rather than leaving
+        // the user guessing why nothing happened.
+        if (ui.detail) ui.detail.textContent = t('Hold the button to speak');
+      },
+    });
+  }
   ui.button.addEventListener('click', buttonHandler);
   session.signal.addEventListener(
     'abort',
@@ -194,6 +233,7 @@ export function createVoiceCommands({
       reticle?.destroy();
       card?.destroy();
       unbindProviderPicker();
+      unbindHold();
       runner.dispose?.();
       ui.root.remove();
     },
@@ -209,6 +249,7 @@ export function createVoiceCommands({
     reticle?.destroy();
     card?.destroy();
     unbindProviderPicker();
+    unbindHold();
     runner.dispose?.();
     ui.root.remove();
   } else adapter.bindControls?.();

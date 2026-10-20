@@ -2900,5 +2900,6 @@
   "Voice service — applies next session": "Servicio de voz — se aplica en la próxima sesión",
   "Microphone support unavailable": "Micrófono no disponible",
   "Microphone unavailable — voice input is off": "Micrófono no disponible: la entrada de voz está desactivada",
-  "Listening": "Escuchando"
+  "Listening": "Escuchando",
+  "Hold the button to speak": "Mantén pulsado el botón para hablar"
 }

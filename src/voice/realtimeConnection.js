@@ -481,6 +481,23 @@ export class RealtimeConnection {
     }
   }
 
+  /**
+   * Turn the microphone on or off without ending the session.
+   *
+   * A WebSocket session owns its own capture, so the shared input path does
+   * not reach it. Hold-to-talk needs this: the socket stays open between
+   * presses, and only the capture is switched.
+   *
+   * @param {boolean} enabled
+   * @returns {boolean} Whether a socket session took the request.
+   */
+  setSocketMicrophoneEnabled(enabled) {
+    const session = this.socketSession;
+    if (!session?.setMicrophoneEnabled) return false;
+    session.setMicrophoneEnabled(enabled);
+    return true;
+  }
+
   invalidate() {
     this.startEpoch++;
     this.connectionAbort?.abort();

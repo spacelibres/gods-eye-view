@@ -2766,5 +2766,6 @@
   "Voice service — applies next session": "음성 서비스 — 다음 세션부터 적용",
   "Microphone support unavailable": "마이크를 사용할 수 없습니다",
   "Microphone unavailable — voice input is off": "마이크를 사용할 수 없어 음성 입력이 꺼져 있습니다",
-  "Listening": "듣는 중"
+  "Listening": "듣는 중",
+  "Hold the button to speak": "버튼을 누른 채로 말하세요"
 }

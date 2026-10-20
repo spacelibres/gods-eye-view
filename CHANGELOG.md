@@ -4,6 +4,26 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.50] — 2026-10-20 — Hold the button to speak
+
+- Give a phone hold-to-talk. The voice button's gesture was built around a
+  Space bar, which a phone does not have, so pressing start-and-release-end was
+  the only thing it did. On a touch device the button is now the hold target:
+  press to speak, lift to stop, like a walkie-talkie.
+
+  Releasing does not end the session. A connect costs a token and a socket
+  handshake, so a second press only switches the microphone back on; the socket
+  stays open between presses.
+
+  `pointercancel` and `lostpointercapture` both end the hold, because the
+  browser takes the pointer back on a scroll or an incoming call and leaving the
+  microphone open would be the worst outcome. The long-press context menu is
+  suppressed only while holding, so a normal press still behaves. A press under
+  350 ms says `Hold the button to speak` rather than failing silently.
+
+  Desktop keeps the click-to-toggle binding: a press there is already a
+  discrete action, and a hold would fight the Space-hold path.
+
 ## [0.2.49] — 2026-10-20 — Doubao audio frames are accepted
 
 - Fix the Doubao audio frame, which every microphone packet was rejected
