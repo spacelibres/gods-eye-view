@@ -1,4 +1,5 @@
 import { DEFAULT_VOICE_TIER, resolveVoiceModel } from './voiceCost.js';
+import { createDoubaoControlChannel } from './doubaoControl.js';
 
 /** A v4 UUID from the platform's own crypto, which the browser provides. */
 const newSessionId = () => globalThis.crypto.randomUUID();
@@ -63,6 +64,7 @@ export const DOUBAO_EVENTS = Object.freeze({
   startSession: 100,
   finishSession: 102,
   taskRequest: 200,
+  chatTTSText: 500,
   chatTextQuery: 501,
   connectionStarted: 50,
   connectionFailed: 51,
@@ -302,6 +304,7 @@ export function createDoubaoBackend({
   socketUrl = DEFAULT_SOCKET_URL,
   speakerId = DEFAULT_SPEAKER,
   tokenTransport = (...args) => fetch(...args),
+  controlTransport = (...args) => fetch(...args),
   WebSocketImpl = (...args) => new WebSocket(...args),
   origin = globalThis.location?.origin,
   timeoutMs = 30_000,
@@ -326,6 +329,42 @@ export function createDoubaoBackend({
     decodeFrame: (data) => decodeServerFrame(data),
     translateFrame: (frame) => translateDoubaoFrame(frame),
 
+    /** Present the same control channel as the native tool-calling providers. */
+    createControlChannel({ socket, signal, onEvent, onError, onCancel }) {
+      return createDoubaoControlChannel({
+        signal,
+        onEvent,
+        onError,
+        onCancel,
+        speak: (text) =>
+          this.sendEvent(socket, DOUBAO_EVENTS.chatTTSText, {
+            start: true,
+            content: text,
+            end: true,
+          }),
+        request: async (messages, options) => {
+          const response = await controlTransport('/api/doubao/control', {
+            method: 'POST',
+            cache: 'no-store',
+            redirect: 'error',
+            headers: { 'Content-Type': 'application/json' },
+            signal: AbortSignal.any([
+              options.signal,
+              AbortSignal.timeout(30_000),
+            ]),
+            body: JSON.stringify({
+              messages,
+              instructions: options.instructions,
+            }),
+          });
+          const data = await response.json();
+          if (!response.ok || !data?.message)
+            throw new Error(data?.error || 'App control failed');
+          return data.message;
+        },
+      });
+    },
+
     async requestToken({ tier = DEFAULT_VOICE_TIER, signal } = {}) {
       signal = scoped(signal);
       signal.throwIfAborted();
@@ -344,13 +383,12 @@ export function createDoubaoBackend({
           data?.error || `Doubao token failed: HTTP ${response.status}`,
         );
       }
-      if (!data?.appId || !data?.accessToken) {
+      if (data?.value !== 'same-origin-relay') {
         throw new Error('Doubao credential response is incomplete');
       }
       return {
-        token: data.accessToken,
-        appId: data.appId,
-        model: data.model ?? null,
+        token: data.value,
+        model: data.session?.model || 'doubao-realtime',
         tier: response.headers?.get?.('X-GEV-Voice-Tier') || null,
         transcribeModel: null,
         expiresAt: null,
@@ -365,7 +403,7 @@ export function createDoubaoBackend({
      * Waiting for the answer matters: sending both at once is silently
      * ignored.
      */
-    openSocket({ model, signal, onSession }) {
+    openSocket({ signal, onSession }) {
       signal = scoped(signal);
       signal.throwIfAborted();
       // A relative path is resolved against the page's own origin; the server's
@@ -443,7 +481,8 @@ export function createDoubaoBackend({
                 },
                 dialog: {
                   bot_name: 'Gev',
-                  system_role: model || '你是一个简洁的中文语音助手。',
+                  system_role:
+                    '你是地球应用的语音接口。应用操作由外部工具执行，播报客户端提供的操作结果。',
                   extra: {
                     // Required by the protocol; the service rejects a session
                     // without it.

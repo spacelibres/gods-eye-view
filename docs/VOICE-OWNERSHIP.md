@@ -69,3 +69,12 @@ node scripts/qa-voice-wav.mjs http://localhost:4173 --push-to-talk
 The second mode uses the actual Space shortcut, verifies microphone acquisition
 and release, and checks the same globe/Radio outcome. Tracking and scene-control
 acceptance exercise voice's shared application operations separately.
+
+WebSocket providers expose the same channel operations as the WebRTC session;
+protocol adapters translate those operations at the boundary. Qwen owns native
+function calling. Doubao owns ASR/TTS while `doubaoControl.js` adapts Qwen tool
+decisions to common response events; app execution still belongs to the shared
+turn/action owners. The server owns tool descriptions, instructions and cloud
+credentials. Provider selection/storage is owned by `voiceProviderPreferences.js`
+and does not import runtime factories. The credential-free browser regression
+is `node scripts/qa-voice-provider-controls.mjs http://127.0.0.1:4173`.

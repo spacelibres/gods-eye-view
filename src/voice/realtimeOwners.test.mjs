@@ -263,3 +263,102 @@ test('late action or viewport completion cannot resume a stopped or replacement 
     }
   }
 });
+
+test('socket function calls execute the shared action runner and return outputs', async (t) => {
+  browser(t);
+  const socket = new EventTarget();
+  socket.readyState = 1;
+  socket.close = () => {
+    socket.readyState = 3;
+  };
+  socket.sent = [];
+  socket.send = (data) => socket.sent.push(JSON.parse(data));
+  const node = () => ({ connect() {}, disconnect() {}, gain: { value: 1 } });
+  class Context {
+    constructor() {
+      this.sampleRate = 48000;
+      this.destination = {};
+    }
+    resume() {
+      return Promise.resolve();
+    }
+    close() {
+      return Promise.resolve();
+    }
+    createMediaStreamSource() {
+      return node();
+    }
+    createScriptProcessor() {
+      return node();
+    }
+    createGain() {
+      return node();
+    }
+  }
+  installGlobals(t, { AudioContext: Context });
+  const actions = [];
+  const backend = {
+    providerId: 'dashscope',
+    audio: { inputHz: 16000, outputHz: 24000 },
+    requestToken: async () => ({
+      token: 'fixture',
+      model: resolveVoiceModel('mini').id,
+    }),
+    openSocket: async () => socket,
+    sendEvent: (_socket, event) => socket.send(JSON.stringify(event)),
+    appendAudio() {},
+  };
+  const controller = new GevRealtimeController({
+    runner: async (name, args) => {
+      actions.push({ name, args });
+      return { ok: true, action: name };
+    },
+    backend,
+    debugSink: null,
+    ui: {
+      root: {
+        dataset: {},
+        classList: { remove() {} },
+        querySelectorAll: () => [],
+      },
+      status: {},
+      detail: {},
+    },
+  });
+  t.after(() => controller.stop());
+  await controller.start();
+  const event = (payload) =>
+    socket.dispatchEvent(
+      new MessageEvent('message', { data: JSON.stringify(payload) }),
+    );
+  event({ type: 'response.created', response: { id: 'response-fixture' } });
+  event({
+    type: 'response.function_call_arguments.done',
+    response_id: 'response-fixture',
+    call_id: 'fly-call',
+    item_id: 'fly-item',
+    name: 'fly_to_location',
+    arguments: '{"query":"北京"}',
+  });
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  event({
+    type: 'response.done',
+    response: { id: 'response-fixture', status: 'completed' },
+  });
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.deepEqual(actions, [
+    { name: 'fly_to_location', args: { query: '北京' } },
+  ]);
+  const output = socket.sent.find(
+    (message) => message.item?.type === 'function_call_output',
+  );
+  assert.equal(output.item.call_id, 'fly-call');
+  assert.equal(JSON.parse(output.item.output).ok, true);
+  assert.ok(socket.sent.some((message) => message.type === 'response.create'));
+  controller.sendTextCommand('打开卫星图层');
+  assert.ok(
+    socket.sent.some((message) =>
+      message.item?.content?.some((part) => part.text === '打开卫星图层'),
+    ),
+  );
+});

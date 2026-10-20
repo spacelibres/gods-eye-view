@@ -1785,7 +1785,17 @@
       "src/i18n/locales/zh-TW.json",
       "src/i18n/locales/ja.json",
       "src/i18n/locales/ko.json",
-      "src/ui/statusText.js"
+      "src/ui/statusText.js",
+      "src/voice/websocketSession.js",
+      "src/voice/voiceProviderProbe.js",
+      "src/voice/holdToTalk.js",
+      "src/voice/dashscopeBackend.js",
+      "src/voice/voiceProviders.js",
+      "src/voice/voiceProviderPreferences.js",
+      "src/voice/voiceProviderSpecs.js",
+      "src/voice/doubaoBackend.js",
+      "src/voice/doubaoControl.js",
+      "src/voice/qwenViewport.js"
     ],
     "external": []
   },
@@ -2658,7 +2668,17 @@
       "src/layers/airQuality/index.js",
       "src/layers/airQuality/model.js",
       "src/layers/airQuality/source.js",
-      "src/ui/statusText.js"
+      "src/ui/statusText.js",
+      "src/voice/websocketSession.js",
+      "src/voice/voiceProviderProbe.js",
+      "src/voice/holdToTalk.js",
+      "src/voice/voiceProviders.js",
+      "src/voice/voiceProviderPreferences.js",
+      "src/voice/voiceProviderSpecs.js",
+      "src/voice/dashscopeBackend.js",
+      "src/voice/doubaoBackend.js",
+      "src/voice/doubaoControl.js",
+      "src/voice/qwenViewport.js"
     ],
     "external": [
       "hls.js",
@@ -3580,7 +3600,11 @@
       "src/i18n/locales/zh-TW.json",
       "src/i18n/locales/ja.json",
       "src/i18n/locales/ko.json",
-      "src/ui/statusText.js"
+      "src/ui/statusText.js",
+      "src/voice/voiceProviderProbe.js",
+      "src/voice/holdToTalk.js",
+      "src/voice/voiceProviderPreferences.js",
+      "src/voice/voiceProviderSpecs.js"
     ],
     "external": []
   },

@@ -224,6 +224,8 @@ export class GevRealtimeController extends RealtimeFacade {
       canSpeak: () => !this.pushToTalkKeyHeld && this._turns.canNarrate(),
       onNarration: (kind) => this._metrics.narration(kind),
     });
+    this._input.setSocketCapture = (enabled) =>
+      this.setSocketMicrophoneEnabled(enabled);
     this._connection = new RealtimeConnection({
       readLifetimeSignal: () => this.lifetimeSignal,
       readBackend: () => this.backend,

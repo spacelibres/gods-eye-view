@@ -59,8 +59,8 @@ function localProviderPlugins({ realtime } = {}) {
     aisLiveProxy(),
     trackBackfillProxies(),
     openAiRealtimeProxy({ realtime }),
-    dashScopeRealtimeProxy(),
-    doubaoRealtimeProxy(),
+    dashScopeRealtimeProxy({ token: { tools: realtime?.tools } }),
+    doubaoRealtimeProxy({ tools: realtime?.tools }),
     googlePlacesContextProxy(),
     // Used only by browsers that cannot reach tile.googleapis.com themselves;
     // without a server key it answers 404 and they stay on the direct route.

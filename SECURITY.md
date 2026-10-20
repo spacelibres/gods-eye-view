@@ -127,3 +127,20 @@ God's Eye View's tools are also served to MCP clients: over stdio (`npm run mcp`
 ## Responsible use
 
 This is an interface for signals that are **already public**. Use it accordingly: respect privacy, follow data providers' terms, and don't represent public-data inference as authoritative intelligence.
+
+## Qwen and Doubao voice controls
+
+Qwen's socket and Doubao's binary socket authenticate through same-origin
+server relays. The browser never receives Doubao's App ID/access token; its
+availability route returns a relay marker. `/api/doubao/control` uses the
+operator's server-side `DASHSCOPE_API_KEY` for Qwen tool decisions and accepts
+only bounded JSON conversations behind the same-site gate and voice rate limit.
+It supplies the app's own fixed tool catalog and instructions, refuses
+client-supplied system roles and unknown upstream tool names, uses a fixed
+DashScope HTTPS endpoint with redirects disabled and bounds upstream responses.
+The browser executes only existing application tools; the endpoint does not
+execute arbitrary code or accept a client-supplied upstream URL. The selected
+Doubao flow sends recognition text, application context and tool results to
+Qwen, and sends the final response to Doubao for TTS. Both providers can incur
+usage charges. Cloud cancellation is best effort; local cancellation prevents
+late results from dispatching tools or speaking.

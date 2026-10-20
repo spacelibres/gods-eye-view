@@ -1063,5 +1063,13 @@
   "src/ui/flyToDataSource.test.mjs",
   "scripts/assemble-changelog.mjs",
   "src/tooling/changelogFragments.test.mjs",
-  "src/data/gbfsProxyRateLimit.test.mjs"
+  "src/data/gbfsProxyRateLimit.test.mjs",
+  "src/voice/dashscopeBackend.test.mjs",
+  "src/voice/dashscopeToken.test.mjs",
+  "src/voice/doubaoControl.test.mjs",
+  "src/voice/doubaoToken.test.mjs",
+  "src/voice/websocketSession.test.mjs",
+  "server/providers/dashscope/control.test.mjs",
+  "server/providers/voice-socket-relay.test.mjs",
+  "scripts/qa-voice-provider-controls.mjs"
 ]

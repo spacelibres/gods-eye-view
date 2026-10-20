@@ -207,6 +207,9 @@ export class RealtimeInput {
   setMicrophoneEnabled(enabled) {
     if (this.ui?.root)
       this.ui.root.dataset.microphone = enabled ? 'active' : 'muted';
+    const socketCapture = this.setSocketCapture?.(enabled);
+    if (socketCapture !== undefined && socketCapture !== false)
+      return socketCapture;
     this.stream?.getAudioTracks?.().forEach((track) => {
       track.enabled = Boolean(enabled);
     });

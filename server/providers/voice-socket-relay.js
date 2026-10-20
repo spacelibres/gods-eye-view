@@ -1,4 +1,6 @@
 import { WebSocketServer, WebSocket } from 'ws';
+import { admitSameSite } from './common/same-site.js';
+import { enforceRateLimit, openAiRateLimiter } from './openai/rate-limit.js';
 
 /**
  * Relay a browser WebSocket to a vendor that authenticates with headers.
@@ -30,15 +32,34 @@ export function attachVoiceSocketRelay({
   upstreamUrl = 'wss://openspeech.bytedance.com/api/v3/realtime/dialogue',
   upstreamHeaders,
   WebSocketImpl = WebSocket,
+  binary = true,
 }) {
   if (!upstreamUrl) throw new TypeError('A relay needs an upstream URL');
   if (typeof upstreamHeaders !== 'function')
     throw new TypeError('A relay needs an upstreamHeaders function');
-  const relay = new WebSocketServer({ noServer: true });
+  const relay = new WebSocketServer({
+    noServer: true,
+    maxPayload: 2 * 1024 * 1024,
+  });
 
   const onUpgrade = (request, socket, head) => {
     const pathname = String(request.url || '').split('?')[0];
     if (pathname !== path) return;
+
+    const rejection = {
+      statusCode: 403,
+      setHeader() {},
+      end() {
+        socket.end(
+          `HTTP/1.1 ${this.statusCode} Rejected\r\nConnection: close\r\n\r\n`,
+        );
+      },
+    };
+    if (
+      admitSameSite(request, rejection) ||
+      !enforceRateLimit(openAiRateLimiter(), request, rejection)
+    )
+      return;
 
     const headers = upstreamHeaders?.();
     if (!headers) {
@@ -76,8 +97,15 @@ export function attachVoiceSocketRelay({
       // frames left the vendor waiting for a StartConnection it never received,
       // and the session then timed out with no error to show for it.
       const pending = [];
+      let pendingBytes = 0;
+      let closing = false;
+      const timer = setTimeout(() => closeBoth(), 30_000);
 
       const closeBoth = () => {
+        if (closing) return;
+        closing = true;
+        clearTimeout(timer);
+        pending.length = 0;
         try {
           if (client.readyState === WebSocket.OPEN) client.close();
         } catch {
@@ -85,34 +113,43 @@ export function attachVoiceSocketRelay({
         }
         try {
           if (upstream.readyState === WebSocket.OPEN) upstream.close();
+          else if (upstream.readyState === WebSocket.CONNECTING)
+            upstream.terminate();
         } catch {
           /* already gone */
         }
       };
 
-      // Frames are forwarded verbatim, and always as binary. The flag must be
-      // forced in both directions: `ws` sends a Buffer as a text frame by
-      // default, and the vendor then receives a payload it cannot decode and
-      // never answers.
+      // Doubao uses binary frames; Qwen uses text JSON. Keep the configured
+      // wire type in both directions rather than relying on Buffer defaults.
       client.on('message', (data) => {
         if (upstream.readyState === WebSocket.OPEN) {
-          upstream.send(data, { binary: true });
+          upstream.send(data, { binary });
         } else if (upstream.readyState === WebSocket.CONNECTING) {
+          pendingBytes += data.byteLength;
+          if (pendingBytes > 1024 * 1024) {
+            closeBoth();
+            return;
+          }
           pending.push(data);
         }
       });
       upstream.on('open', () => {
+        clearTimeout(timer);
+        if (closing) {
+          upstream.close();
+          return;
+        }
         // Anything the page sent during the handshake, in order.
         for (const frame of pending.splice(0)) {
           if (upstream.readyState !== WebSocket.OPEN) break;
-          upstream.send(frame, { binary: true });
+          upstream.send(frame, { binary });
         }
       });
       upstream.on(
         'message',
         (data) =>
-          client.readyState === WebSocket.OPEN &&
-          client.send(data, { binary: true }),
+          client.readyState === WebSocket.OPEN && client.send(data, { binary }),
       );
 
       client.on('close', closeBoth);
@@ -127,6 +164,7 @@ export function attachVoiceSocketRelay({
   return {
     close() {
       server.off('upgrade', onUpgrade);
+      for (const client of relay.clients) client.terminate();
       relay.close();
     },
   };

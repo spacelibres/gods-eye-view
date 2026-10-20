@@ -326,13 +326,15 @@ export class RealtimeConnection {
 
       const session = await startWebSocketSession({
         backend,
-        credential: { token: minted.token, model: minted.model },
+        credential: minted,
         signal: scoped,
         callbacks: {
           onEvent: (payload) => {
             if (epoch !== this.startEpoch) return;
             try {
-              this.handleRealtimeEvent(payload);
+              return Promise.resolve(
+                this.handleRealtimeEvent({ data: JSON.stringify(payload) }),
+              ).catch((error) => this.reportError('Realtime event', error));
             } catch (error) {
               this.reportError('Realtime event', error);
             }
@@ -360,7 +362,7 @@ export class RealtimeConnection {
           },
           onStopped: () => {
             if (epoch !== this.startEpoch) return;
-            this.stop({ preserveStatus: true });
+            this.stop();
           },
         },
       });
@@ -369,6 +371,7 @@ export class RealtimeConnection {
         return;
       }
       this.socketSession = session;
+      this.dc = session.channel;
       // The shared microphone path drives the WebRTC tracks; a socket session
       // owns its own capture, so push-to-talk is applied here. The session has
       // already tried to open the microphone; this only turns it off when the

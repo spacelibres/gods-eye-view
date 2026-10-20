@@ -1,4 +1,6 @@
 import { enforceRateLimit, openAiRateLimiter } from '../openai/rate-limit.js';
+import { realtimeInstructions } from '../openai/instructions.js';
+import { GEV_REALTIME_TOOLS } from '../openai/tools.js';
 
 /** DashScope issues temporary tokens here; the account key never leaves the server. */
 const DEFAULT_TOKEN_ENDPOINT = 'https://dashscope.aliyuncs.com/api/v1/tokens';
@@ -31,6 +33,7 @@ export function createDashScopeTokenHandler({
   resolveApiKey = () => process.env.DASHSCOPE_API_KEY,
   environment = process.env,
   expireSeconds = 1800,
+  tools = GEV_REALTIME_TOOLS,
 } = {}) {
   return async (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
@@ -99,7 +102,7 @@ export function createDashScopeTokenHandler({
         JSON.stringify({
           value: data.token,
           expires_at: data.expires_at,
-          session: { model },
+          session: { model, instructions: realtimeInstructions(), tools },
         }),
       );
     } catch {

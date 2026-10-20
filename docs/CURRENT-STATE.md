@@ -5827,3 +5827,41 @@ while acquisition is pending is muted again when acquisition completes; repeated
 holds share the pending request. WebRTC and WebSocket capture are reached through
 the common session adapter. Regression coverage lives in
 `src/voice/session.test.mjs` and `src/voice/holdToTalk.test.mjs`.
+
+## Qwen and Doubao application control — October 20, 2026
+
+Qwen realtime and Doubao now execute the same 55 standalone voice tools as
+OpenAI: camera/navigation, layers, tracking, panels, styles, annotations, scenes,
+context and catalog queries. Qwen receives the shared instructions and schemas
+in `session.update`. Both socket paths expose the controller's channel contract
+so calls reach the existing executor and return their actual results before
+follow-up answers. Text commands, pointer/viewport context, cancellation and
+Space/touch microphone control use the same owners.
+
+Doubao uses its native ASR and TTS with Qwen tool decisions, as selected for this
+deployment. `/api/doubao/control` reuses server-side `DASHSCOPE_API_KEY`; the default
+control model is `qwen3.5-plus`, overridable by `DASHSCOPE_CONTROL_MODEL`. No OpenAI
+key is required for this path. The browser retains bounded conversation history,
+runs the existing tools and returns results to Qwen for subsequent tool calls or
+a final answer. Doubao receives the final answer through `ChatTTSText` (500).
+Native vendor chat audio is suppressed; only `chat_tts_text` audio is played.
+Interrupting speech or stopping cancels pending decisions and suppresses late
+calls and confirmations. Each user turn is limited to 16 planner requests.
+
+Both vendor sockets use same-origin relays in dev, preview and the standalone
+server; account headers remain server-side. Relays bound pre-handshake buffering
+and refuse cross-site requests. Qwen adapts the native tool/schema, stateless vision
+and response events, rather than forwarding OpenAI-only options. `/api/dashscope/vision`
+uses the same configured Qwen control model for one screenshot with its camera
+context. Only the latest analysis is retained in replaceable session instructions;
+images never accumulate in native realtime history. Providers
+without out-of-band response support keep progress in the shared UI instead of
+starting unsupported audio responses. Provider selection/storage is separate
+from protocol factories so reusable common controls do not import a transport.
+
+Credential-free acceptance: `node scripts/qa-voice-provider-controls.mjs
+http://127.0.0.1:4173` against a dev server. This drives the real app controls with
+fixture vendor replies, including Qwen function outputs and Doubao ASR/typed
+commands followed by result TTS. Unit tests cover the HTTP tool catalog,
+credential isolation, cross-site refusal, relay frame types, cancellation and
+capture races. This fixture gate does not establish live vendor/model access.

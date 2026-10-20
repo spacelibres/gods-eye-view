@@ -8,7 +8,7 @@ import {
   pickVoiceProvider,
   readStoredVoiceProvider,
   storeVoiceProvider,
-} from './voiceProviders.js';
+} from './voiceProviderPreferences.js';
 import { probeVoiceProvidersCached } from './voiceProviderProbe.js';
 import { bindHoldToTalk } from './holdToTalk.js';
 

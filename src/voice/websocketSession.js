@@ -146,6 +146,7 @@ export class PcmPlayer {
     this.context = context;
     this.outputHz = outputHz;
     this.nextStart = 0;
+    this.sources = new Set();
   }
 
   /** @param {ArrayBuffer|Uint8Array} bytes little-endian PCM16 */
@@ -159,6 +160,8 @@ export class PcmPlayer {
     const source = this.context.createBufferSource();
     source.buffer = buffer;
     source.connect(this.context.destination);
+    this.sources.add(source);
+    source.onended = () => this.sources.delete(source);
     const startAt = Math.max(this.context.currentTime, this.nextStart);
     source.start(startAt);
     this.nextStart = startAt + buffer.duration;
@@ -166,6 +169,14 @@ export class PcmPlayer {
 
   /** Drop anything scheduled but not yet played — barge-in. */
   reset() {
+    for (const source of this.sources) {
+      try {
+        source.stop?.();
+      } catch {
+        /* Already ended. */
+      }
+    }
+    this.sources.clear();
     this.nextStart = 0;
   }
 }
@@ -194,16 +205,51 @@ export async function startWebSocketSession({
   signal,
 } = {}) {
   const audio = backend.audio ?? { inputHz: 16_000, outputHz: 24_000 };
-  const socket = await backend.openSocket({ credential, signal });
+  const socket = await backend.openSocket({
+    credential,
+    model: credential.model,
+    signal,
+  });
   const context = new AudioContextClass();
   const player = new PcmPlayer({ context, outputHz: audio.outputHz });
   let microphone = null;
   let stream = null;
   let closed = false;
+  let captureEnabled = true;
+  let microphoneRequest = null;
+  const channel = backend.createControlChannel?.({
+    socket,
+    signal,
+    onCancel: () => player.reset(),
+    onEvent: (payload) => callbacks.onEvent?.(payload),
+    onError: (error) => callbacks.onError?.(error),
+  }) ?? {
+    supportsOutOfBand: false,
+    get readyState() {
+      return closed ? 'closed' : 'open';
+    },
+    send(data) {
+      if (closed) return;
+      const event = JSON.parse(data);
+      if (event.type === 'output_audio_buffer.clear') player.reset();
+      const result = backend.sendEvent(socket, event);
+      if (result?.localEvent) callbacks.onEvent?.(result.localEvent);
+    },
+    close() {
+      close();
+    },
+    interrupt() {
+      const result = backend.interruptSession?.(socket);
+      if (result?.localEvent) callbacks.onEvent?.(result.localEvent);
+    },
+  };
 
   const close = () => {
     if (closed) return;
     closed = true;
+    player.reset();
+    channel.dispose?.();
+    backend.disposeSession?.(socket);
     microphone?.stop();
     stream?.getTracks?.().forEach((track) => track.stop());
     try {
@@ -230,6 +276,7 @@ export async function startWebSocketSession({
         callbacks.onError?.(new Error(frame.error));
         return;
       }
+      if (channel.handleFrame?.(frame)) return;
       if (frame?.audio?.length) {
         try {
           player.push(frame.audio);
@@ -257,6 +304,7 @@ export async function startWebSocketSession({
       }
     }
     if (payload?.type === 'input_audio_buffer.speech_started') player.reset();
+    backend.observeEvent?.(socket, payload);
     callbacks.onEvent?.(payload);
   });
   socket.addEventListener('close', () => {
@@ -267,9 +315,9 @@ export async function startWebSocketSession({
     close();
   });
   signal?.addEventListener?.('abort', () => close(), { once: true });
+  backend.configureSession?.(socket, credential);
 
-  const openMicrophone = async () => {
-    if (microphone) return false;
+  const acquireMicrophone = async () => {
     try {
       stream = await getUserMedia({
         audio: {
@@ -286,8 +334,9 @@ export async function startWebSocketSession({
       callbacks.onMicrophoneError?.(error);
       return false;
     }
-    if (closed) {
+    if (closed || !captureEnabled) {
       stream.getTracks().forEach((track) => track.stop());
+      stream = null;
       return false;
     }
     microphone = new MicrophonePcmSource({
@@ -307,6 +356,17 @@ export async function startWebSocketSession({
     return true;
   };
 
+  const openMicrophone = () => {
+    if (closed || !captureEnabled) return Promise.resolve(false);
+    if (microphone) return Promise.resolve(true);
+    if (!microphoneRequest) {
+      microphoneRequest = acquireMicrophone().finally(() => {
+        microphoneRequest = null;
+      });
+    }
+    return microphoneRequest;
+  };
+
   const closeMicrophone = () => {
     microphone?.stop();
     microphone = null;
@@ -318,29 +378,34 @@ export async function startWebSocketSession({
   // Best effort. A browser with no microphone, or one that refuses the request
   // outside a user gesture, still gets a working session for typed questions
   // and spoken replies.
-  const microphoneOpen = await openMicrophone();
+  await openMicrophone();
 
   return {
     socket,
+    channel,
     stop: close,
     get microphoneOpen() {
-      return microphoneOpen || microphone !== null;
+      return microphone !== null;
     },
     setMicrophoneEnabled(enabled) {
+      captureEnabled = Boolean(enabled);
       if (enabled) return openMicrophone();
       closeMicrophone();
       return true;
     },
     sendText(text) {
-      backend.sendEvent(socket, {
-        type: 'conversation.item.create',
-        item: {
-          type: 'message',
-          role: 'user',
-          content: [{ type: 'input_text', text }],
-        },
-      });
-      backend.sendEvent(socket, { type: 'response.create' });
+      channel.interrupt?.();
+      channel.send(
+        JSON.stringify({
+          type: 'conversation.item.create',
+          item: {
+            type: 'message',
+            role: 'user',
+            content: [{ type: 'input_text', text }],
+          },
+        }),
+      );
+      channel.send(JSON.stringify({ type: 'response.create' }));
     },
   };
 }

@@ -171,7 +171,9 @@ function fakeBackend(socket, audio = { inputHz: 16_000, outputHz: 24_000 }) {
       socket.send(JSON.stringify(event));
     },
     appendAudio(_socket, audio64) {
-      socket.send(JSON.stringify({ type: 'input_audio_buffer.append', audio: audio64 }));
+      socket.send(
+        JSON.stringify({ type: 'input_audio_buffer.append', audio: audio64 }),
+      );
     },
   };
 }
@@ -210,7 +212,10 @@ test('a malformed delta does not take the session down', async () => {
   });
   // Not base64: atob throws, and the session must survive it.
   socket.emit('message', {
-    data: JSON.stringify({ type: 'response.audio.delta', delta: '!!!not base64!!!' }),
+    data: JSON.stringify({
+      type: 'response.audio.delta',
+      delta: '!!!not base64!!!',
+    }),
   });
   socket.emit('message', { data: 'not json at all' });
   assert.equal(socket.closed, false);
@@ -273,4 +278,71 @@ test('stopping releases the microphone and the context', async () => {
   session.stop();
   assert.equal(tracksStopped, 1);
   assert.equal(contextClosed, true);
+});
+
+test('socket sessions expose the controller channel for tools, context and typed commands', async () => {
+  const socket = fakeSocket();
+  const session = await startWebSocketSession({
+    backend: fakeBackend(socket),
+    credential: { token: 't' },
+    AudioContextClass: fakeAudioContext,
+    getUserMedia: async () => ({ getTracks: () => [{ stop() {} }] }),
+  });
+  assert.equal(session.channel.readyState, 'open');
+  session.channel.send(
+    JSON.stringify({
+      type: 'conversation.item.create',
+      item: {
+        type: 'function_call_output',
+        call_id: 'c1',
+        output: '{"ok":true}',
+      },
+    }),
+  );
+  session.channel.send(JSON.stringify({ type: 'response.create' }));
+  assert.deepEqual(
+    socket.sent
+      .map(JSON.parse)
+      .slice(-2)
+      .map((e) => e.type),
+    ['conversation.item.create', 'response.create'],
+  );
+  session.stop();
+  assert.equal(session.channel.readyState, 'closed');
+});
+
+test('a released socket microphone cannot reopen after delayed reacquisition', async () => {
+  const socket = fakeSocket();
+  let finish;
+  let attempts = 0;
+  let stopped = 0;
+  const session = await startWebSocketSession({
+    backend: fakeBackend(socket),
+    credential: { token: 'fixture' },
+    AudioContextClass: fakeAudioContext,
+    getUserMedia: async () => {
+      attempts++;
+      if (attempts === 2)
+        await new Promise((resolve) => {
+          finish = resolve;
+        });
+      return {
+        getTracks: () => [
+          {
+            stop() {
+              stopped++;
+            },
+          },
+        ],
+      };
+    },
+  });
+  session.setMicrophoneEnabled(false);
+  const pending = session.setMicrophoneEnabled(true);
+  session.setMicrophoneEnabled(false);
+  finish();
+  await pending;
+  assert.equal(session.microphoneOpen, false);
+  assert.equal(stopped, 2);
+  session.stop();
 });

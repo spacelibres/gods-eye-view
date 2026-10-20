@@ -60,7 +60,10 @@ test('the account key is exchanged for a short-lived token', async () => {
   const body = JSON.parse(res.body);
   assert.equal(body.value, 'st-lt-abc');
   assert.equal(body.expires_at, 1_800_000_000);
-  assert.equal(res.headers['X-GEV-Voice-Model'], DASHSCOPE_REALTIME_MODEL_DEFAULT);
+  assert.equal(
+    res.headers['X-GEV-Voice-Model'],
+    DASHSCOPE_REALTIME_MODEL_DEFAULT,
+  );
   // The account key is what goes upstream; the page only ever sees the token.
   assert.equal(seen.options.headers.Authorization, 'Bearer sk-test');
   assert.doesNotMatch(res.body, /sk-test/);
@@ -132,4 +135,26 @@ test('the token response is never cached', async () => {
   const handler = createDashScopeTokenHandler({ resolveApiKey: () => 'sk' });
   const res = await run(handler);
   assert.equal(res.headers['Cache-Control'], 'no-store');
+});
+
+test('a minted Qwen session includes the app instructions and tool catalog', async () => {
+  const handler = createDashScopeTokenHandler({
+    resolveApiKey: () => 'test-key',
+    tools: [
+      {
+        type: 'function',
+        name: 'fly_to_location',
+        parameters: { type: 'object' },
+      },
+    ],
+    fetchImpl: async () => ({
+      ok: true,
+      text: async () =>
+        JSON.stringify({ token: 'temporary', expires_at: 1800000000 }),
+    }),
+  });
+  const res = await run(handler);
+  const session = JSON.parse(res.body).session;
+  assert.match(session.instructions, /GEV Voice Control/);
+  assert.equal(session.tools[0].name, 'fly_to_location');
 });

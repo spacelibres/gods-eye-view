@@ -167,6 +167,7 @@ export class RealtimeTurns {
       }
     }
     this.pendingResponseInstructions = null;
+    this.dc?.interrupt?.();
   }
 
   /**
@@ -796,6 +797,7 @@ export class RealtimeTurns {
   canNarrate() {
     return Boolean(
       this.dc?.readyState === 'open' &&
+      this.dc.supportsOutOfBand !== false &&
       !this.responseActive &&
       !this.responseCreatePending &&
       !this.userTurnPending &&

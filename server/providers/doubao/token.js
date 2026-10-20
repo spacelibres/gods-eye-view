@@ -44,14 +44,11 @@ export function createDoubaoTokenHandler({
 
     if (!enforceRateLimit(openAiRateLimiter(), req, res)) return;
 
-    const systemRole = String(environment.DOUBAO_SYSTEM_ROLE ?? '').trim();
     res.statusCode = 200;
     res.setHeader('X-GEV-Voice-Model', 'doubao-realtime');
     res.end(
       JSON.stringify({
-        appId,
-        accessToken,
-        model: systemRole || null,
+        value: 'same-origin-relay',
         session: { model: 'doubao-realtime' },
       }),
     );
