@@ -4,6 +4,26 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.43] — 2026-10-20 — Six voice services specified
+
+- Specify all six voice services, not one. `src/voice/voiceProviderSpecs.js`
+  records what each vendor actually requires — endpoint, transport,
+  authentication fields, per-vendor sample rates and its event vocabulary —
+  read from that vendor's own documentation rather than assumed. The five
+  Chinese services join OpenAI there: Alibaba Bailian (Qwen Omni), Volcengine
+  Doubao, iFlytek Spark, Tencent Cloud and Baidu.
+
+  Only the OpenAI adapter exists, so the picker still offers one entry. The
+  other five are `PENDING_VOICE_PROVIDERS`: specified, tested, and deliberately
+  not selectable until their adapter is written, because
+  `realtimeConnection.js` drives a WebRTC session and every one of them speaks
+  WebSocket. Listing them now would put six entries in the picker and five of
+  them would connect to nothing.
+
+- Note the sample rates per vendor. They differ (OpenAI 24 kHz in and out,
+  DashScope 16 kHz in and 24 kHz out, the rest 16 kHz), and guessing one shared
+  value produces audio that plays at the wrong speed.
+
 ## [0.2.42] — 2026-10-20 — Voice services become a choice
 
 - Give voice a provider registry instead of one hard-wired service. Selecting

@@ -1,21 +1,27 @@
 import { createRealtimeBackend } from './realtimeBackend.js';
+import {
+  VOICE_PROVIDER_SPECS,
+  findVoiceProviderSpec,
+} from './voiceProviderSpecs.js';
 
 /**
  * Which voice service the session talks to.
  *
- * Every entry names a backend factory with the same two-step contract the
- * OpenAI path already uses — `requestToken` then `negotiate` — so switching
- * providers never reaches into the controller, the UI or the audio graph.
- * A provider that cannot speak that contract gets its own adapter file and
- * is listed here only once that adapter exists; a name in this table is a
- * promise that selecting it connects.
+ * The specification of each provider — endpoints, auth fields, sample rates —
+ * lives in `voiceProviderSpecs.js`. This module is the runtime side: it maps
+ * those specs to backend factories and owns the stored choice.
  *
- * `transport` records what the adapter needs from the page. Only `webrtc`
- * providers work today: `realtimeConnection.js` builds an `RTCPeerConnection`
- * and refuses to start without one. A WebSocket provider would need that
- * branch taught a second transport, which is why it is not listed yet rather
- * than listed and broken.
+ * A provider appears in `VOICE_PROVIDERS` only when its adapter exists and the
+ * page can drive it. Today `realtimeConnection.js` builds an
+ * `RTCPeerConnection` and refuses to start without one, so the WebSocket
+ * providers are specified but not yet selectable — listing them would put six
+ * entries in the picker and five of them would connect to nothing.
  */
+
+/** Adapters that exist. A spec with no entry here is not selectable yet. */
+const ADAPTERS = {
+  openai: () => createRealtimeBackend(),
+};
 
 /**
  * @typedef {object} VoiceProvider
@@ -28,15 +34,22 @@ import { createRealtimeBackend } from './realtimeBackend.js';
  */
 
 /** @type {readonly VoiceProvider[]} */
-export const VOICE_PROVIDERS = Object.freeze([
-  {
-    id: 'openai',
-    label: 'OpenAI Realtime',
-    transport: 'webrtc',
-    keyEnv: 'OPENAI_API_KEY',
-    create: () => createRealtimeBackend(),
-  },
-]);
+export const VOICE_PROVIDERS = Object.freeze(
+  VOICE_PROVIDER_SPECS.filter((spec) => ADAPTERS[spec.id]).map((spec) => ({
+    id: spec.id,
+    label: spec.label,
+    transport: spec.transport,
+    keyEnv: spec.envKeys[0],
+    create: ADAPTERS[spec.id],
+  })),
+);
+
+/** Providers specified but not yet wired to an adapter. */
+export const PENDING_VOICE_PROVIDERS = Object.freeze(
+  VOICE_PROVIDER_SPECS.filter((spec) => !ADAPTERS[spec.id]).map(
+    (spec) => spec.id,
+  ),
+);
 
 /** The provider used when nothing else is stored, or what was stored is gone. */
 export const DEFAULT_VOICE_PROVIDER = 'openai';
@@ -45,7 +58,7 @@ export const DEFAULT_VOICE_PROVIDER = 'openai';
 export const VOICE_PROVIDER_STORAGE_KEY = 'gev.voice.provider';
 
 /**
- * Find a provider by id.
+ * Find a selectable provider by id.
  *
  * An unknown id resolves to null rather than throwing: a stored choice can
  * outlive the provider it names (a build that dropped one, a hand-edited
@@ -124,3 +137,6 @@ export function createVoiceBackend(id) {
     backend: Object.freeze({ ...backend, providerId: provider.id }),
   };
 }
+
+/** Consumers that need the vendor's audio rates read them from the spec. */
+export { findVoiceProviderSpec };
