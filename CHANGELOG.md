@@ -4,6 +4,16 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.39] — 2026-10-20 — A square icon for the install slot
+
+- Stop the install icon from being cropped. The icon links and the manifest
+  pointed the browser at `logo.svg`, whose viewBox is 2.5:1, and every icon
+  slot — the tab, the install prompt, the launcher — takes a square, so the
+  ring was cut off at both ends. `icons/logo-square.svg` carries the same
+  paths on a square viewBox over the deep background and is now what those
+  links name. The manifest also states `purpose` on every entry, so a
+  platform stops guessing whether an icon may be masked.
+
 ## [0.2.38] — 2026-10-20 — Voice card at the phone's lower-left corner
 
 - Anchor the phone voice card to the lower-left corner. It was positioned

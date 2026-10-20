@@ -1373,6 +1373,14 @@ the manifest fields and that each committed PNG is square at its declared size.
 It also builds the install links under `base: '/example/'` and asserts every
 emitted link and manifest URL stays inside that base.
 
+The icon links point at `public/icons/logo-square.svg`, not `public/logo.svg`.
+The app's logo is 2.5:1, and every icon slot — the tab, the install prompt, the
+launcher — takes a square, so the horizontal artwork was cropped at both ends.
+`logo-square.svg` carries the same paths on a square viewBox over the deep
+background, and is listed first in the manifest so a vector-capable browser
+scales it instead of re-framing the wide mark. Keep the two files in step when
+the mark changes.
+
 ## Local build preview
 
 After `npm run build`, `npm run preview` serves the built app with the same data

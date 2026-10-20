@@ -75,7 +75,22 @@ test('the manifest declares a standalone installable app', () => {
 test('every declared icon is a square PNG at its declared size', async () => {
   const manifest = JSON.parse(readFileSync(publicFile(manifestHref), 'utf8'));
   for (const icon of manifest.icons) {
-    const meta = await sharp(manifestFile(icon.src)).metadata();
+    const file = manifestFile(icon.src);
+    // A vector entry declares `"sizes": "any"`. It carries no pixel size to
+    // verify, so the check is that it is square by its own viewBox — an icon
+    // slot takes squares, and a wide viewBox is what cropped the mark.
+    if (icon.type === 'image/svg+xml') {
+      const source = readFileSync(file, 'utf8');
+      const box = /viewBox="([^"]+)"/.exec(source)?.[1]?.split(/\s+/);
+      assert.ok(box, `${icon.src} has no viewBox`);
+      assert.equal(
+        box[2],
+        box[3],
+        `${icon.src} is ${box[2]}x${box[3]}, not square`,
+      );
+      continue;
+    }
+    const meta = await sharp(file).metadata();
     const [width, height] = icon.sizes.split('x').map(Number);
     assert.equal(meta.format, 'png', `${icon.src} is not a PNG`);
     // A size the manifest overstates is worse than a missing one: the platform

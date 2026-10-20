@@ -548,6 +548,7 @@ try {
   const unexpected = requests.filter(
     (url) =>
       new URL(url).pathname !== '/logo.svg' &&
+      new URL(url).pathname !== '/icons/logo-square.svg' &&
       !new URL(url).pathname.startsWith('/__qa_import_surface/') &&
       !/\/api\/|\.terrain(?:\?|$)|reearth|cesium|arcgis|openstreetmap|\.pbf(?:\?|$)/i.test(
         url,
