@@ -52,10 +52,16 @@ export const VOICE_PROVIDER_SPECS = Object.freeze([
     label: 'Alibaba Bailian (Qwen Omni)',
     transport: 'websocket',
     region: 'cn',
-    // The realtime model speaks the OpenAI event vocabulary over a plain
-    // WebSocket, which is why this is the first WebSocket adapter to write.
+    // Verified against the live service, not assumed: the connection answers
+    // `session.created`, and `session.update` is accepted with the OpenAI
+    // event names. `qwen3-omni-flash-realtime` connects and then rejects every
+    // event with `1007 Model not exist.`; the dated `qwen3.8-omni-flash-realtime`
+    // runs a real session, so that is the default.
     docs: 'https://help.aliyun.com/zh/model-studio/realtime',
     envKeys: ['DASHSCOPE_API_KEY'],
+    defaultModel: 'qwen3.8-omni-flash-realtime',
+    // The session reports `input_audio_format: pcm16` and
+    // `output_audio_format: pcm24`, so these are the rates to feed it.
     audio: { inputHz: 16_000, outputHz: 24_000 },
     bargeIn: true,
     events: {

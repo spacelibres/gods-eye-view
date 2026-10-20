@@ -19,6 +19,7 @@ import { adsbLolProxy } from './aircraft/adsb-lol.js';
 import { aisLiveProxy } from './vessels/ais-live.js';
 import { trackBackfillProxies } from './aircraft/tracks.js';
 import { openAiRealtimeProxy } from './openai.js';
+import { dashScopeRealtimeProxy } from './dashscope.js';
 import { googlePlacesContextProxy } from './places.js';
 import { googleServerApiKey } from './places/google-key.js';
 import { googleTilesRelay } from './google-tiles-relay.js';
@@ -57,6 +58,7 @@ function localProviderPlugins({ realtime } = {}) {
     aisLiveProxy(),
     trackBackfillProxies(),
     openAiRealtimeProxy({ realtime }),
+    dashScopeRealtimeProxy(),
     googlePlacesContextProxy(),
     // Used only by browsers that cannot reach tile.googleapis.com themselves;
     // without a server key it answers 404 and they stay on the direct route.

@@ -52,24 +52,31 @@ test('the default provider exists, so the fallback can never dangle', () => {
 });
 
 test('only providers the page can actually run are selectable', () => {
-  // realtimeConnection.js refuses to start without RTCPeerConnection, so a
-  // websocket provider offered today would be a picker entry that connects to
-  // nothing. This fails the day one is added without its transport work.
+  // Every selectable provider must expose a connect path realtimeConnection can
+  // drive. OpenAI does it with WebRTC; DashScope with a WebSocket the adapter
+  // opens itself. A provider listed without either would be a picker entry
+  // that connects to nothing.
   for (const provider of VOICE_PROVIDERS) {
-    assert.equal(
-      provider.transport,
-      'webrtc',
-      `${provider.id} needs a transport realtimeConnection can drive`,
+    const backend = provider.create();
+    const canConnect =
+      typeof backend.negotiate === 'function' ||
+      typeof backend.openSocket === 'function';
+    assert.ok(
+      canConnect,
+      `${provider.id} has no way to connect (needs negotiate or openSocket)`,
     );
   }
 });
 
-test('the five requested vendors are specified, even while unselectable', () => {
-  for (const id of ['dashscope', 'doubao', 'xfyun', 'tencent', 'baidu']) {
-    assert.ok(findVoiceProviderSpec(id), `${id} has a specification`);
-  }
-  // And with OpenAI, that is the six the owner asked for.
-  assert.equal(VOICE_PROVIDER_SPECS.length, 6);
+test('OpenAI and DashScope are selectable; the rest are pending', () => {
+  const selectable = VOICE_PROVIDERS.map((p) => p.id).sort();
+  assert.deepEqual(selectable, ['dashscope', 'openai']);
+  assert.deepEqual([...PENDING_VOICE_PROVIDERS].sort(), [
+    'baidu',
+    'doubao',
+    'tencent',
+    'xfyun',
+  ]);
 });
 
 test('a specified provider without an adapter is reported as pending', () => {

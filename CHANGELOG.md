@@ -4,6 +4,25 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.44] — 2026-10-20 — Alibaba Bailian voice, verified live
+
+- Add Alibaba Bailian (Qwen Omni) as a second selectable voice service,
+  verified end to end against the live API: the server mints a short-lived
+  DashScope token, the browser opens `wss://…/api-ws/v1/realtime` with it in an
+  `Authorization` header, and the session accepts `session.update`. The account
+  key never reaches the page. OpenAI remains the default and is unchanged.
+
+  The model took verification to name. `qwen3-omni-flash-realtime` accepts the
+  connection, answers `session.created`, and then rejects every event with
+  `1007 Model not exist.` — the message names the wrong fault. The dated
+  `qwen3.8-omni-flash-realtime` runs a real session, so that is the default;
+  `DASHSCOPE_REALTIME_MODEL` pins another. `qwen3-s2s-flash-realtime-*` is
+  rejected as an option: it is the live-translation model and refuses a session
+  with no `translation.language`.
+
+  The picker offers only DashScope and OpenAI. Doubao, iFlytek, Tencent and
+  Baidu stay specified and tested but unlisted until their adapters exist.
+
 ## [0.2.43] — 2026-10-20 — Six voice services specified
 
 - Specify all six voice services, not one. `src/voice/voiceProviderSpecs.js`

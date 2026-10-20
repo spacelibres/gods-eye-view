@@ -1,4 +1,5 @@
 import { createRealtimeBackend } from './realtimeBackend.js';
+import { createDashScopeBackend } from './dashscopeBackend.js';
 import {
   VOICE_PROVIDER_SPECS,
   findVoiceProviderSpec,
@@ -21,6 +22,7 @@ import {
 /** Adapters that exist. A spec with no entry here is not selectable yet. */
 const ADAPTERS = {
   openai: () => createRealtimeBackend(),
+  dashscope: () => createDashScopeBackend(),
 };
 
 /**
