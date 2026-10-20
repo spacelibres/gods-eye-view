@@ -4,6 +4,17 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.34] — 2026-10-20 — Colour schemes behind an icon on a phone
+
+- Put the colour schemes behind an icon on a phone instead of taking them
+  away. The previous release hid the swatch row below 720 px, which left a
+  phone unable to change the scheme at all. The row now collapses into one
+  48 px button that carries the scheme in force; tapping it opens the six
+  presets and the custom colour as a sheet, in the shape of the language
+  picker beside it. A tap on the globe or Escape puts it away, and choosing a
+  scheme keeps the sheet open so the result is visible while picking. Wide
+  viewports still show the row inline.
+
 ## [0.2.33] — 2026-10-20 — Smaller HUD type on a phone
 
 - Shrink the HUD readings on a phone. The corner blocks kept their desktop

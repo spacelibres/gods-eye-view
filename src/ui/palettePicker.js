@@ -40,8 +40,17 @@ export function mountPalettePicker({ root, primary, onSelect }) {
   const documentRef = root.ownerDocument;
   const active = presetFor(primary);
 
-  root.innerHTML = `
-    <div class="palette-swatches" role="radiogroup" aria-label="${t('Globe colour scheme')}">
+  root.textContent = '';
+
+  // The row of swatches. On a wide viewport this is the whole control; on a
+  // phone it lives inside `panel` and only opens from the button below, so the
+  // corner keeps one thumb-sized target — the same shape as the language
+  // picker beside it rather than a row of colours over the map.
+  const row = documentRef.createElement('div');
+  row.className = 'palette-swatches';
+  row.setAttribute('role', 'radiogroup');
+  row.setAttribute('aria-label', t('Globe colour scheme'));
+  row.innerHTML = `
       ${COLOR_PRESETS.map(
         (preset, index) => `
         <button
@@ -63,21 +72,70 @@ export function mountPalettePicker({ root, primary, onSelect }) {
           value="${normalizeHex(primary) ?? COLOR_PRESETS[0].primary}"
           aria-label="${t('Custom colour')}"
         />
-      </label>
-    </div>`;
+      </label>`;
+
+  // The phone affordance: one 48 px button showing the scheme in force, which
+  // opens the row as a sheet. Hidden on wide viewports, where the row is shown
+  // directly and hiding it would lose the control.
+  const button = documentRef.createElement('button');
+  button.type = 'button';
+  button.className = 'palette-toggle';
+  button.setAttribute('aria-haspopup', 'true');
+  button.setAttribute('aria-expanded', 'false');
+  const current = normalizeHex(primary) ?? COLOR_PRESETS[0].primary;
+  button.style.setProperty('--swatch', current);
+  button.title = t('Globe colour scheme');
+  button.setAttribute('aria-label', t('Globe colour scheme'));
+  button.innerHTML = `
+      <span class="material-symbols-outlined" aria-hidden="true">palette</span>
+      <span class="palette-toggle-chip" aria-hidden="true"></span>`;
+
+  const panel = documentRef.createElement('div');
+  panel.className = 'palette-panel';
+  panel.hidden = true;
+  panel.append(row);
+
+  root.append(button, panel);
+
+  const setOpen = (open) => {
+    root.classList.toggle('is-open', open);
+    button.setAttribute('aria-expanded', open ? 'true' : 'false');
+    panel.hidden = !open;
+  };
+
+  button.addEventListener('click', () => {
+    setOpen(!root.classList.contains('is-open'));
+  });
+
+  // A tap outside the picker puts it away, and so does Escape: on a phone the
+  // sheet covers the globe, and the map is what the user is looking at.
+  documentRef.addEventListener('pointerdown', (event) => {
+    if (!root.classList.contains('is-open')) return;
+    if (!root.contains(event.target)) setOpen(false);
+  });
+  documentRef.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    if (!root.classList.contains('is-open')) return;
+    setOpen(false);
+    button.focus({ preventScroll: true });
+  });
 
   const swatches = [...root.querySelectorAll('.palette-swatch')];
   const custom = root.querySelector('input[type="color"]');
 
   const choose = (value) => {
     if (!isValidPrimary(value)) return;
+    const hex = normalizeHex(value);
     for (const swatch of swatches) {
-      const selected = swatch.dataset.primary === normalizeHex(value);
+      const selected = swatch.dataset.primary === hex;
       swatch.classList.toggle('is-active', selected);
       swatch.setAttribute('aria-checked', selected ? 'true' : 'false');
       swatch.tabIndex = selected ? 0 : -1;
     }
-    onSelect(normalizeHex(value));
+    // The button carries the scheme in force, so a phone sees the result
+    // without opening the sheet again.
+    button.style.setProperty('--swatch', hex);
+    onSelect(hex);
   };
 
   root.addEventListener('click', (event) => {

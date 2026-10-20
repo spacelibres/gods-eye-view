@@ -87,16 +87,100 @@
 }
 
 /*
- * Phones: the swatch row is the widest thing in the bottom corner and it sat
- * over the map, so a phone gives the bottom edge to the dock instead.
+ * Phones: the swatch row was the widest thing in the bottom corner and sat
+ * over the map. It now collapses into one thumb-sized button that shows the
+ * scheme in force; tapping it opens the full row as a sheet, in the same shape
+ * as the language picker beside it. Nothing is taken away — the six presets
+ * and the custom colour are all still reachable.
  *
- * The picker has a single mount point (#palette-picker in #corner-actions), so
- * hiding it here takes the control away on phones entirely — nothing in the
- * DISPLAY rail offers it. The stored choice still applies, since the palette
- * is re-read from storage at boot; a phone just cannot change it.
+ * The wide layout keeps the row inline, so the button and the sheet geometry
+ * only apply below the breakpoint.
  */
-@media (max-width: 720px) {
+@media (max-width: 767.98px) {
   #palette-picker {
+    position: relative;
+  }
+
+  /* The row is the popup's content on a phone, never an inline strip. */
+  #palette-picker .palette-swatches {
     display: none;
+  }
+
+  #palette-picker.is-open .palette-swatches {
+    display: flex;
+  }
+
+  .palette-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-width: 48px;
+    min-height: 48px;
+    justify-content: center;
+    padding-inline: 0.5rem;
+    color: var(--text-primary);
+    background: rgba(10, 27, 37, 0.72);
+    border: 1px solid rgba(54, 220, 255, 0.42);
+    border-radius: 0.55rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+
+  .palette-toggle[aria-expanded='true'] {
+    border-color: rgba(54, 220, 255, 0.9);
+  }
+
+  /* The dot beside the glyph is the scheme currently in force. */
+  .palette-toggle-chip {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--swatch);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.55);
+  }
+
+  .palette-panel {
+    position: fixed;
+    inset-inline: 16px;
+    inset-block-end: 16px;
+    padding: 0.7rem 0.75rem;
+    background:
+      linear-gradient(145deg, rgba(10, 27, 37, 0.97), rgba(7, 13, 22, 0.95)),
+      rgba(7, 17, 25, 0.96);
+    border: 1px solid rgba(54, 220, 255, 0.42);
+    border-radius: 0.55rem;
+  }
+
+  .palette-panel[hidden] {
+    display: none;
+  }
+
+  /* Thumb-sized targets once the sheet is open, and room to aim. */
+  .palette-panel .palette-swatches {
+    justify-content: space-between;
+    gap: 0.55rem;
+  }
+
+  .palette-panel .palette-swatch,
+  .palette-panel .palette-custom {
+    width: 34px;
+    height: 34px;
+  }
+}
+
+/* Above the breakpoint the row is shown directly, so the button and the
+   sheet chrome stay out of the layout. */
+@media (min-width: 768px) {
+  .palette-toggle {
+    display: none;
+  }
+
+  /* The panel is only the sheet wrapper on a phone. A wide viewport shows the
+     row inline, so the wrapper dissolves — and `hidden` must not take the row
+     with it: `[hidden] { display: none }` outranks a bare `display: contents`,
+     and the picker is mounted closed on every viewport. */
+  .palette-panel,
+  .palette-panel[hidden] {
+    display: contents;
   }
 }
