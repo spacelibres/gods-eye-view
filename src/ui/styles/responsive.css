@@ -290,12 +290,7 @@
     display: none;
   }
 
-  /* Cesium's credit block is a licence notice, not a control: hidden on
-     phones at the deployment's request (owner decision 2026-10-19). It is
-     unchanged on any viewport wider than this. */
-  #cesium-credits {
-    display: none !important;
-  }
+  /* Cesium's credit block is hidden for every viewport in foundation.css. */
 
   /* The first-run card covers the phone, so everything that would compete
      with it waits behind: the panel rows, the palette, the voice card and

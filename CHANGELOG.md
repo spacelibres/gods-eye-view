@@ -1,5 +1,10 @@
 # Changelog
 
+- Hide Cesium and Google attribution on every viewport, not just phones. The
+  block is a licence notice rather than decoration, so the rule carries the
+  owner decision and a `.credits-visible` opt-in keeps the original styling
+  reachable for a host that turns it back on.
+
 - Give a phone its screen back. The left panel stack occupied 37% of a
   390 x 844 viewport and sat under the first-run card; it now shrinks to its
   collapsed rows above the dock and steps aside entirely while the card is
