@@ -1,4 +1,5 @@
 import { t } from '../i18n/index.js';
+import { startWebSocketSession } from './websocketSession.js';
 
 const DISCONNECT_GRACE_MS = 6000;
 
@@ -38,6 +39,7 @@ export class RealtimeConnection {
     this.dc = null;
     this.stream = null;
     this.audioEl = null;
+    this.socketSession = null;
     this.startEpoch = 0;
     this.disconnectGraceTimer = null;
     this._tearingDown = false;
@@ -60,7 +62,26 @@ export class RealtimeConnection {
     this.input.pushToTalkMode = pushToTalk;
     this.input.pushToTalkKeyHeld = pushToTalkKeyHeld;
     this.input.spaceKeyHeld = spaceKeyHeld;
-    if (!window.RTCPeerConnection || !navigator.mediaDevices?.getUserMedia) {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      this.setStatus('error', t('Microphone support unavailable'));
+      return;
+    }
+    // A WebSocket provider brings its own audio path; only the WebRTC path needs
+    // the browser's peer-connection stack. Checking this before the branch is
+    // what used to lock every non-OpenAI service out of the app.
+    const providerBackend = this.backend;
+    if (
+      !providerBackend.negotiate &&
+      typeof providerBackend.openSocket === 'function'
+    ) {
+      await this.startSocketSession({
+        backend: providerBackend,
+        pushToTalk,
+        signal: this.lifetimeSignal,
+      });
+      return;
+    }
+    if (!window.RTCPeerConnection) {
       this.setStatus('error', t('WebRTC microphone support unavailable'));
       return;
     }
@@ -80,6 +101,11 @@ export class RealtimeConnection {
     // — this is what "applies next session" means.
     this.cost.prepareSession();
     this.syncCostUi();
+    // One provider per session. The picker applies next session, so the backend
+    // is resolved once here and both steps below use it: re-reading would let a
+    // change made mid-connect split requestToken and negotiate across two
+    // different services.
+    const backend = providerBackend;
     this.setStatus('connecting', t('Requesting microphone'));
     this.debugLog('session.starting', {
       epoch,
@@ -90,7 +116,7 @@ export class RealtimeConnection {
     let localStream = null;
     let localPc = null;
     try {
-      const minted = await this.backend.requestToken({
+      const minted = await backend.requestToken({
         tier: this.cost.voiceTier,
         authMode: this.cost.sessionCloudVoiceAuth,
         signal,
@@ -226,7 +252,7 @@ export class RealtimeConnection {
         sdpLength: offer.sdp?.length || 0,
         connection: this.connectionDiagnostics(),
       });
-      const answerSdp = await this.backend.negotiate({
+      const answerSdp = await backend.negotiate({
         offerSdp: offer.sdp,
         credential: minted,
         signal,
@@ -251,6 +277,98 @@ export class RealtimeConnection {
       const diagnostics = this.connectionDiagnostics();
       this.stop({ preserveStatus: true });
       this.reportError('Realtime connection', error, diagnostics);
+    }
+  }
+
+  /**
+   * Run a session over the provider's WebSocket.
+   *
+   * The transport is `websocketSession.js`; this method owns only the parts
+   * the rest of the controller expects: an epoch that `stop()` can invalidate,
+   * a status line, and the vendor's events forwarded into the same handler the
+   * WebRTC path feeds.
+   *
+   * @param {{backend: object, pushToTalk: boolean, signal?: AbortSignal}}
+   *   options
+   */
+  async startSocketSession({ backend, pushToTalk, signal }) {
+    const epoch = ++this.startEpoch;
+    this.connectionAbort?.abort();
+    this.connectionAbort = new AbortController();
+    const scoped = AbortSignal.any(
+      [this.connectionAbort.signal, signal].filter(Boolean),
+    );
+    this.cost.prepareSession();
+    this.syncCostUi();
+    this.setStatus('connecting', t('Requesting microphone'));
+    this.debugLog('session.starting', {
+      epoch,
+      transport: 'websocket',
+      provider: backend.providerId,
+      tier: this.cost.voiceTier,
+    });
+    try {
+      const minted = await backend.requestToken({
+        tier: this.cost.voiceTier,
+        authMode: this.cost.sessionCloudVoiceAuth,
+        signal: scoped,
+      });
+      if (epoch !== this.startEpoch) return;
+      const costState = this.cost.bindServedModel(minted.model);
+      this.cost.bindTranscriptionModel?.(minted.transcribeModel);
+      if (!costState.ratesRecognized) {
+        console.warn(
+          `[GEV voice] unrecognised model "${costState.modelId}" — billing this ` +
+            'session at the most expensive known rates.',
+        );
+      }
+      this.syncCostUi();
+
+      const session = await startWebSocketSession({
+        backend,
+        credential: { token: minted.token, model: minted.model },
+        signal: scoped,
+        callbacks: {
+          onEvent: (payload) => {
+            if (epoch !== this.startEpoch) return;
+            try {
+              this.handleRealtimeEvent(payload);
+            } catch (error) {
+              this.reportError('Realtime event', error);
+            }
+          },
+          onError: (error) => {
+            if (epoch !== this.startEpoch) return;
+            this.reportError('Realtime connection', error, {
+              provider: backend.providerId,
+              transport: 'websocket',
+            });
+            this.stop({ preserveStatus: true });
+          },
+          onStopped: () => {
+            if (epoch !== this.startEpoch) return;
+            this.stop({ preserveStatus: true });
+          },
+        },
+      });
+      if (epoch !== this.startEpoch) {
+        session.stop();
+        return;
+      }
+      this.socketSession = session;
+      // The shared microphone path drives the WebRTC tracks; a socket session
+      // owns its own capture, so push-to-talk is applied here.
+      session.setMicrophoneEnabled?.(
+        !pushToTalk || this.input.pushToTalkKeyHeld,
+      );
+      this.setStatus('listening', t('Listening'));
+    } catch (error) {
+      if (epoch !== this.startEpoch) return;
+      this.reportError('Realtime connection', error, {
+        provider: backend.providerId,
+        transport: 'websocket',
+      });
+      this.stop({ preserveStatus: true });
     }
   }
 
@@ -348,6 +466,15 @@ export class RealtimeConnection {
     this.startEpoch++;
     this.connectionAbort?.abort();
     this.connectionAbort = null;
+    // A socket session is stopped through its own handle: the abort above
+    // reaches it too, but releasing the microphone and the AudioContext must
+    // not depend on that listener still being attached.
+    try {
+      this.socketSession?.stop?.();
+    } catch {
+      /* A session that already closed is not an error. */
+    }
+    this.socketSession = null;
   }
 
   closeTransport() {

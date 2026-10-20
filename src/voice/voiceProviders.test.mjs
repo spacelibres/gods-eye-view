@@ -70,12 +70,11 @@ test('only providers the page can actually run are selectable', () => {
   }
 });
 
-test('OpenAI and DashScope are selectable; the rest are pending', () => {
+test('OpenAI, DashScope and Doubao are selectable; the rest are pending', () => {
   const selectable = VOICE_PROVIDERS.map((p) => p.id).sort();
-  assert.deepEqual(selectable, ['dashscope', 'openai']);
+  assert.deepEqual(selectable, ['dashscope', 'doubao', 'openai']);
   assert.deepEqual([...PENDING_VOICE_PROVIDERS].sort(), [
     'baidu',
-    'doubao',
     'tencent',
     'xfyun',
   ]);

@@ -74,7 +74,7 @@ export class GevRealtimeController extends RealtimeFacade {
     ui,
     radioLayer = null,
     dataManager = null,
-    backend = createVoiceBackend().backend,
+    backend = null,
     signal,
     debugSink = postDebugLog,
     actionExecutor,
@@ -87,9 +87,12 @@ export class GevRealtimeController extends RealtimeFacade {
     this.pointerAnnounced = null;
     this.actionExecutor = actionExecutor;
     this.onSessionEvent = onSessionEvent;
-    this.backend = backend;
+    // A backend supplied by the caller is fixed. Without one, each session
+    // resolves the provider when it starts, so changing the picker takes
+    // effect on the next call instead of being frozen at controller
+    // construction — which happens before the user has touched anything.
+    this._fixedBackend = backend;
     this.lifetimeSignal = signal;
-
     this.lifetimeAbort = () => this.stop({ removeUi: true });
     signal?.addEventListener('abort', this.lifetimeAbort, { once: true });
     this.runner = runner;
@@ -250,6 +253,28 @@ export class GevRealtimeController extends RealtimeFacade {
 
   isActive() {
     return this.status !== 'idle' && this.status !== 'error';
+  }
+
+  /**
+   * The backend the next session should use.
+   *
+   * When the caller supplied one it is returned as-is. Otherwise the provider
+   * is resolved on every read, so a service picked in the control reaches the
+   * very next session. The controller is constructed long before anyone opens
+   * the picker, so a backend frozen at construction would keep the default
+   * forever — which is exactly how a deployment holding only the Bailian key
+   * kept calling OpenAI.
+   *
+   * The instance is kept until the selection changes: a connect makes two
+   * reads, and rebuilding in between would throw the adapter away.
+   */
+  get backend() {
+    if (this._fixedBackend) return this._fixedBackend;
+    const { provider, backend } = createVoiceBackend();
+    if (this._resolvedBackend?.providerId !== provider.id) {
+      this._resolvedBackend = backend;
+    }
+    return this._resolvedBackend;
   }
 
   /**

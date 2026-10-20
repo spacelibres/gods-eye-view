@@ -1,5 +1,6 @@
 import { createRealtimeBackend } from './realtimeBackend.js';
 import { createDashScopeBackend } from './dashscopeBackend.js';
+import { createDoubaoBackend } from './doubaoBackend.js';
 import {
   VOICE_PROVIDER_SPECS,
   findVoiceProviderSpec,
@@ -23,6 +24,7 @@ import {
 const ADAPTERS = {
   openai: () => createRealtimeBackend(),
   dashscope: () => createDashScopeBackend(),
+  doubao: () => createDoubaoBackend(),
 };
 
 /**

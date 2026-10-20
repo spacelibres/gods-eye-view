@@ -4,6 +4,27 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.46] — 2026-10-20 — Volcengine Doubao voice, verified live
+
+- Add Volcengine Doubao as a third voice service, verified against the live
+  API: the connection handshake reaches `ConnectionStarted`, `StartSession`
+  reaches `SessionStarted`, and a text turn returns real speech — "你好呀，有
+  什么想聊的吗？" — plus PCM audio blocks.
+
+  The binary protocol took reading off the service rather than the public
+  samples, which are wrong in ways that fail silently:
+
+  - The body is never gzipped. The samples compress it, and this service
+    answers `invalid char \x1f\x8b` and closes.
+  - The header is four bytes (`11 14 10 04`), not the eight the samples imply.
+  - The connection frame's payload must be real JSON; an empty `{}` is refused
+    with `unexpected end of JSON input`.
+  - Audio replies are PCM16 blocks in the frame body, not base64 in a JSON
+    field, so the session gained a decoder hook and plays them directly.
+
+  Each of those is now a test, so the next adapter written from a sample fails
+  loudly instead of producing a session that connects and stays silent.
+
 ## [0.2.45] — 2026-10-20 — Choose the voice service
 
 - Put a voice-service picker in the voice control. `0.2.44` shipped the

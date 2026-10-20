@@ -14,6 +14,7 @@
 const PROBE_ROUTES = Object.freeze({
   openai: '/api/realtime/token?probe=1',
   dashscope: '/api/dashscope/token?probe=1',
+  doubao: '/api/doubao/token?probe=1',
 });
 
 /** Answer from the last probe, so a dialog opening does not re-hit the server. */

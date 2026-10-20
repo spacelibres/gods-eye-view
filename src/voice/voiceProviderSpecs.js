@@ -75,19 +75,27 @@ export const VOICE_PROVIDER_SPECS = Object.freeze([
     label: 'Volcengine Doubao', // i18n-ignore: provider product name
     transport: 'websocket',
     region: 'cn',
-    // Binary framing, not JSON: a 4-byte header, a big-endian event id, a
-    // length-prefixed session id and a gzip body. Event ids are the vendor's
-    // own numbering, so the adapter cannot share DashScope's JSON path.
+    // Binary framing, verified against the live service: a 4-byte header
+    // (`11 14 10 04`), a big-endian event id, an optional UUID session id, a
+    // length and an **uncompressed** body. The public samples gzip the body and
+    // are refused with "invalid char \x1f\x8b", so the adapter never compresses.
     docs: 'https://www.volcengine.com/docs/6561/1594356',
-    envKeys: ['DOUBAO_APP_ID', 'DOUBAO_ACCESS_KEY'],
+    envKeys: ['DOUBAO_APP_ID', 'DOUBAO_ACCESS_TOKEN'],
+    defaultModel: 'doubao-realtime',
     audio: { inputHz: 16_000, outputHz: 24_000 },
     bargeIn: true,
     events: {
       startConnection: 1,
       startSession: 100,
+      taskRequest: 200,
+      chatTextQuery: 501,
+      connectionStarted: 50,
+      sessionStarted: 150,
       sessionFinished: 152,
       sessionFailed: 153,
-      clearAudio: 450,
+      ttsResponse: 352,
+      chatResponse: 550,
+      chatEnded: 559,
     },
   },
   {
