@@ -39,6 +39,7 @@ test('real dev and built-preview servers serve provider JSON and terminate unkno
     '<!doctype html><title>Preview fixture</title><p>Built application</p>',
   );
   for (const [name, value] of Object.entries({
+    GEV_ADSB_STATE_DIR: path.join(root, 'adsb-state'),
     AISSTREAM_API_KEY: '',
     FIRMS_MAP_KEY: '',
     FIRMS_API_KEY: '',
@@ -73,6 +74,7 @@ test('real dev and built-preview servers serve provider JSON and terminate unkno
     );
     return Response.json({
       time: Math.floor(Date.now() / 1000),
+      now: Date.now() / 1000,
       states: [],
       ac: [],
     });
@@ -96,6 +98,9 @@ test('real dev and built-preview servers serve provider JSON and terminate unkno
       ? await preview(config)
       : await createServer(config);
     if (!isPreview) await server.listen();
+    await config.plugins
+      .find((plugin) => plugin.name === 'adsblol-proxy')
+      .ready();
     const origin = `http://127.0.0.1:${server.httpServer.address().port}`;
     try {
       for (const [route, status] of [

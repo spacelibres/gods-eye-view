@@ -14,6 +14,8 @@ import {
 import { normalizeVesselTrack, vesselSnapshot } from './vessels.js';
 
 const defaultFetch = (...args) => globalThis.fetch(...args);
+const defaultNow = () => Date.now();
+const militarySources = new WeakMap();
 const header = (response, name) => response.headers?.get?.(name);
 
 function openSkyError(response) {
@@ -125,36 +127,131 @@ export function createFlightSource({
 
 export function createMilitarySource({
   fetchImpl = defaultFetch,
-  now = () => Date.now(),
+  now = defaultNow,
 } = {}) {
-  return {
+  let sourcesByClock = militarySources.get(fetchImpl);
+  if (!sourcesByClock) {
+    sourcesByClock = new WeakMap();
+    militarySources.set(fetchImpl, sourcesByClock);
+  }
+  const existing = sourcesByClock.get(now);
+  if (existing) return existing;
+
+  const fallbackIntervalMs = 240000;
+  let cached;
+  let nextReadAtMs = 0;
+  let cachedAtMs = 0;
+  let pending;
+
+  function load() {
+    const controller = new AbortController();
+    const request = { controller, consumers: 0, settled: false };
+    pending = request;
+    request.promise = (async () => {
+      let result;
+      let intervalMs = fallbackIntervalMs;
+      try {
+        const { response, payload } = await readResponse(
+          fetchImpl,
+          '/api/military',
+          { signal: controller.signal },
+          'Military aircraft',
+        );
+        const receivedAtMs = now();
+        const advertised = finite(header(response, 'x-feed-next-refresh-ms'));
+        intervalMs =
+          advertised === 0
+            ? 0
+            : Math.max(1000, advertised ?? fallbackIntervalMs);
+        if (!response.ok) {
+          const error = httpError(response, 'Military aircraft');
+          const retry = header(response, 'retry-after');
+          const seconds = finite(retry);
+          const retryMs =
+            seconds != null ? seconds * 1000 : Date.parse(retry) - receivedAtMs;
+          intervalMs = Math.max(
+            intervalMs,
+            Number.isFinite(retryMs) ? retryMs : 0,
+          );
+          error.retryAfterMs = intervalMs;
+          throw error;
+        }
+        const age = finite(header(response, 'x-feed-age-ms'));
+        result = {
+          response,
+          payload,
+          observedAtMs:
+            age != null && age >= 0
+              ? receivedAtMs - age
+              : epoch(payload?.now, 1000),
+        };
+      } catch (error) {
+        if (controller.signal.aborted) throw error;
+        error.retryAfterMs = intervalMs;
+        result = { error };
+      }
+      controller.signal.throwIfAborted();
+      cached = result;
+      cachedAtMs = now();
+      nextReadAtMs = cachedAtMs + intervalMs;
+      return result;
+    })().finally(() => {
+      request.settled = true;
+      if (pending === request) pending = null;
+    });
+    return request;
+  }
+
+  async function read({ signal } = {}) {
+    signal?.throwIfAborted();
+    let result;
+    if (cached && now() >= cachedAtMs && now() < nextReadAtMs) result = cached;
+    else {
+      const request = pending || load();
+      request.consumers++;
+      let onAbort;
+      try {
+        result = await (signal
+          ? Promise.race([
+              request.promise,
+              new Promise((_resolve, reject) => {
+                onAbort = () => reject(signal.reason);
+                signal.addEventListener('abort', onAbort, { once: true });
+              }),
+            ])
+          : request.promise);
+      } finally {
+        if (onAbort) signal.removeEventListener('abort', onAbort);
+        request.consumers--;
+        if (!request.settled && request.consumers === 0) {
+          if (pending === request) pending = null;
+          request.controller.abort();
+        }
+      }
+    }
+    signal?.throwIfAborted();
+    if (result.error) throw result.error;
+    return result;
+  }
+
+  const source = {
     // i18n-ignore: feed source name, replaced by the provider from each snapshot and reported to AI tools
     label: 'Military aircraft',
-    async getIdentities(_query = {}, { signal } = {}) {
-      const { response, payload } = await readResponse(
-        fetchImpl,
-        '/api/military',
-        { signal },
-        'Military aircraft',
-      );
-      if (!response.ok) throw httpError(response, 'Military aircraft');
+    async getIdentities(_query = {}, options = {}) {
+      const { payload } = await read(options);
       return readsbIdentities(payload);
     },
-    async getSnapshot(_query = {}, { signal } = {}) {
-      const { response, payload } = await readResponse(
-        fetchImpl,
-        '/api/military',
-        { signal },
-        'Military aircraft',
-      );
-      if (!response.ok) throw httpError(response, 'Military aircraft');
-      const age = finite(header(response, 'x-feed-age-ms'));
+    async getSnapshot(_query = {}, options = {}) {
+      const { response, payload, observedAtMs } = await read(options);
+      const currentTimeMs = now();
       return {
         ...readsbSnapshot(payload, {
           source: feedSource(response, 'Military aircraft'),
-          observedAtMs: now() - (age != null && age > 0 ? age : 0),
-          now: now(),
-          stale: header(response, 'x-feed-cache') === 'STALE',
+          observedAtMs,
+          now: currentTimeMs,
+          stale:
+            header(response, 'x-feed-cache') === 'STALE' ||
+            (observedAtMs != null && currentTimeMs - observedAtMs > 120000),
         }),
         status: response.status,
       };
@@ -180,6 +277,8 @@ export function createMilitarySource({
       };
     },
   };
+  sourcesByClock.set(now, source);
+  return source;
 }
 
 export function createVesselSource({

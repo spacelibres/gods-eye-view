@@ -468,7 +468,12 @@ async function main() {
             ownOp: 'SYNTH AF',
             seen_pos: 0,
           }));
-          return Promise.resolve(jsonResponse({ msg: 'No error', now: Date.now(), ac }));
+          // This deterministic fixture publishes a new snapshot on every forced
+          // poll. Production uses the VPS collector's four-minute read deadline.
+          return Promise.resolve(new Response(JSON.stringify({ msg: 'No error', now: Date.now(), ac }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json', 'X-Feed-Age-Ms': '0', 'X-Feed-Next-Refresh-Ms': '0' },
+          }));
         }
         return realFetch(input, init);
       };

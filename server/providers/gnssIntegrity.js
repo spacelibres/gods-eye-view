@@ -1,3 +1,4 @@
+import { adsbLolFetch } from './aircraft/adsb-quota.js';
 import {
   GNSS_CLASSIFIER,
   GNSS_WINDOW_MS,
@@ -53,7 +54,7 @@ export function gnssRetryCooldownMs(raw, nowMs) {
 
 /** Fixed-origin, bounded adsb.lol integrity route for dev and preview. */
 export function gnssIntegrityProxy({
-  fetchImpl = (...args) => globalThis.fetch(...args),
+  fetchImpl = adsbLolFetch,
   now = () => Date.now(),
   monotonicNow = () => performance.now(),
   warn = (...args) => console.warn(...args),

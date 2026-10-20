@@ -1,3 +1,4 @@
+import { adsbLolFetch } from './adsb-quota.js';
 import { normalizeAdsbLolPointResponse } from '../../../src/data/adsbLolFallback.js';
 import {
   coalesceProxyRequest,
@@ -305,7 +306,7 @@ export function adsbLolFallbackAnchor(req) {
   return { latitude, longitude };
 }
 
-async function fetchAdsbLolPointFallback(req) {
+async function fetchAdsbLolPointFallback(req, adsbFetch) {
   const anchor = adsbLolFallbackAnchor(req);
   if (!anchor) return null;
   const roundedLat = Math.round(anchor.latitude * 4) / 4;
@@ -324,7 +325,7 @@ async function fetchAdsbLolPointFallback(req) {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
       try {
-        const upstream = await fetch(
+        const upstream = await adsbFetch(
           `https://api.adsb.lol/v2/lat/${roundedLat}/lon/${roundedLon}/dist/${ADSBLOL_POINT_RADIUS_NM}`,
           {
             headers: {
@@ -367,8 +368,14 @@ async function fetchAdsbLolPointFallback(req) {
   }
 }
 
-async function serveAdsbLolPointFallback(req, res, requestedMode, reason) {
-  const fallback = await fetchAdsbLolPointFallback(req);
+async function serveAdsbLolPointFallback(
+  req,
+  res,
+  requestedMode,
+  reason,
+  adsbFetch,
+) {
+  const fallback = await fetchAdsbLolPointFallback(req, adsbFetch);
   if (!fallback) return false;
   res.writeHead(200, {
     ...buildOpenSkyHeaders({
@@ -416,7 +423,7 @@ function openSkySourceIsStale(sourceEpochMs, now = Date.now()) {
  *
  * @returns {import('vite').Plugin}
  */
-export function openSkyProxy() {
+export function openSkyProxy({ adsbFetch = adsbLolFetch } = {}) {
   const installMiddleware = (server) => {
     server.middlewares.use('/api/flights', async (req, res, next) => {
       try {
@@ -443,6 +450,7 @@ export function openSkyProxy() {
               res,
               requestedMode,
               'opensky_snapshot_stale_regional_fallback',
+              adsbFetch,
             ))
           ) {
             return;
@@ -483,6 +491,7 @@ export function openSkyProxy() {
               res,
               requestedMode,
               'opensky_cooldown_regional_fallback',
+              adsbFetch,
             )
           )
             return;
@@ -569,6 +578,7 @@ export function openSkyProxy() {
             res,
             requestedMode,
             'opensky_snapshot_stale_regional_fallback',
+            adsbFetch,
           ))
         ) {
           // Keep the last global snapshot available as a fail-soft cache,
@@ -610,6 +620,7 @@ export function openSkyProxy() {
             res,
             requestedMode,
             `opensky_http_${upstream.status}_regional_fallback`,
+            adsbFetch,
           );
           if (servedFallback) return;
         }
@@ -733,6 +744,7 @@ export function openSkyProxy() {
             res,
             requestedMode,
             'opensky_proxy_error_regional_fallback',
+            adsbFetch,
           )
         )
           return;

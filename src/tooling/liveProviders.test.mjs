@@ -115,7 +115,11 @@ test('OpenSky state and track routes share tokens, retain cache and use regional
       });
     throw Error(`Unexpected URL: ${url}`);
   });
-  const states = install(providers.openSkyProxy());
+  const states = install(
+    providers.openSkyProxy({
+      adsbFetch: (...args) => globalThis.fetch(...args),
+    }),
+  );
   assert.equal(
     (await states('/api/flights', '?lat=30&lon=-97')).statusCode,
     200,
@@ -154,10 +158,9 @@ test('OpenSky state and track routes share tokens, retain cache and use regional
     `../../server/providers/aircraft/opensky.js?fallback=${now}`
   );
   process.env.OPENSKY_AUTH_MODE = 'anon';
-  const fallback = await install(fresh.openSkyProxy())(
-    '/api/flights',
-    '?lat=30&lon=-97',
-  );
+  const fallback = await install(
+    fresh.openSkyProxy({ adsbFetch: (...args) => globalThis.fetch(...args) }),
+  )('/api/flights', '?lat=30&lon=-97');
   assert.equal(fallback.statusCode, 200);
   assert.equal(fallback.headers['x-flight-source'], 'adsb.lol');
   assert.equal(JSON.parse(fallback.body).states[0][0], 'abc123');
@@ -197,10 +200,9 @@ test('OpenSky global snapshot attempts are time-limited, retried once, then fall
     const fresh = await import(
       `../../server/providers/aircraft/opensky.js?timeout=${Math.random()}`
     );
-    const response = await install(fresh.openSkyProxy())(
-      '/api/flights',
-      '?lat=30&lon=-97',
-    );
+    const response = await install(
+      fresh.openSkyProxy({ adsbFetch: (...args) => globalThis.fetch(...args) }),
+    )('/api/flights', '?lat=30&lon=-97');
     return { response, attempts };
   };
   const recovered = await load((attempt) =>
@@ -251,7 +253,9 @@ test('OpenSky 429 starts the cooldown from headers and cancels the body unread',
   const fresh = await import(
     `../../server/providers/aircraft/opensky.js?ratelimit=${Math.random()}`
   );
-  const request = install(fresh.openSkyProxy());
+  const request = install(
+    fresh.openSkyProxy({ adsbFetch: (...args) => globalThis.fetch(...args) }),
+  );
   const first = await request('/api/flights', '?lat=30&lon=-97');
   assert.equal(first.statusCode, 200);
   assert.equal(first.headers['x-flight-source'], 'adsb.lol');
@@ -286,7 +290,9 @@ test('OpenSky 429 without retry-after cools down for the 2 minute default', asyn
   const fresh = await import(
     `../../server/providers/aircraft/opensky.js?ratelimit-default=${Math.random()}`
   );
-  const request = install(fresh.openSkyProxy());
+  const request = install(
+    fresh.openSkyProxy({ adsbFetch: (...args) => globalThis.fetch(...args) }),
+  );
   await request('/api/flights', '?lat=30&lon=-97');
   assert.equal(states, 1);
   // Past the 30 s floor but inside the 2 minute default.
@@ -312,51 +318,14 @@ test('OpenSky does not retry a snapshot body over the cap', async (t) => {
   const fresh = await import(
     `../../server/providers/aircraft/opensky.js?oversize=${Math.random()}`
   );
-  const response = await install(fresh.openSkyProxy())(
-    '/api/flights',
-    '?lat=30&lon=-97',
-  );
+  const response = await install(
+    fresh.openSkyProxy({ adsbFetch: (...args) => globalThis.fetch(...args) }),
+  )('/api/flights', '?lat=30&lon=-97');
   assert.equal(response.statusCode, 200);
   assert.equal(response.headers['x-flight-source'], 'adsb.lol');
   assert.equal(bodies.length, 1, 'an oversized body is not fetched twice');
   assert.equal(bodies[0].cancelled, true);
   assert.ok(bodies[0].pulled <= 9, 'reading stops at the 8 MiB cap');
-});
-
-test('military aircraft route answers 502 to an oversized body without caching it', async (t) => {
-  t.mock.method(console, 'error', () => {});
-  const bodies = [];
-  t.mock.method(globalThis, 'fetch', async () => {
-    const oversized = oversizedResponse('{"ac":[]}');
-    bodies.push(oversized.state);
-    return oversized.response;
-  });
-  const request = install(providers.adsbLolProxy());
-  const first = await request('/api/military');
-  assert.equal(first.statusCode, 502);
-  assert.equal(bodies[0].cancelled, true);
-  assert.ok(bodies[0].pulled <= 9, 'reading stops at the 8 MiB cap');
-  const again = await request('/api/military');
-  assert.equal(again.statusCode, 502, 'nothing was cached');
-  assert.equal(bodies.length, 2);
-});
-
-test('military aircraft route preserves fresh cache and stale response after upstream failure', async (t) => {
-  let now = Date.now();
-  let calls = 0;
-  t.mock.method(Date, 'now', () => now);
-  t.mock.method(console, 'error', () => {});
-  t.mock.method(globalThis, 'fetch', async () => {
-    if (++calls > 1) throw Error('offline');
-    return Response.json({ ac: [{ hex: 'abc123' }] });
-  });
-  const request = install(providers.adsbLolProxy());
-  const first = await request('/api/military');
-  assert.equal((await request('/api/military')).body, first.body);
-  assert.equal(calls, 1);
-  now += 13_000;
-  assert.equal((await request('/api/military')).body, first.body);
-  assert.equal(calls, 2);
 });
 
 test('AIS preview route ingests through the socket, returns tracks and disposes before restart', async (t) => {
@@ -431,129 +400,6 @@ test('AIS preview route ingests through the socket, returns tracks and disposes 
   await restarted('/api/vessels');
   for (let i = 0; i < 100 && sockets.length < 2; i++) await delay(10);
   assert.equal(sockets.length, 2);
-});
-
-test('military aircraft route serves stale cache on an upstream 429 and cools down for Retry-After', async (t) => {
-  let now = Date.now();
-  let calls = 0;
-  t.mock.method(Date, 'now', () => now);
-  t.mock.method(console, 'warn', () => {});
-  t.mock.method(globalThis, 'fetch', async () => {
-    calls += 1;
-    if (calls === 1) return Response.json({ ac: [{ hex: 'abc123' }] });
-    return new Response(JSON.stringify({ error: 'rate limited' }), {
-      status: 429,
-      headers: { 'Retry-After': '20' },
-    });
-  });
-  const request = install(providers.adsbLolProxy());
-  const first = await request('/api/military');
-  assert.equal(first.statusCode, 200);
-  now += 13_000;
-  const limited = await request('/api/military');
-  assert.equal(calls, 2);
-  assert.equal(
-    limited.statusCode,
-    200,
-    'a 429 with a cached body is never relayed',
-  );
-  assert.equal(limited.body, first.body);
-  assert.equal(limited.headers['x-feed-cache'], 'STALE');
-  assert.equal(limited.headers['x-ads-b-upstream-status'], '429');
-  assert.equal(limited.headers['x-feed-age-ms'], '13000');
-  now += 5_000;
-  const cooling = await request('/api/military');
-  assert.equal(calls, 2, 'no upstream call inside the Retry-After window');
-  assert.equal(cooling.headers['x-feed-cache'], 'STALE');
-  assert.equal(cooling.headers['x-feed-age-ms'], '18000');
-  now += 16_000;
-  await request('/api/military');
-  assert.equal(calls, 3, 'upstream is retried once Retry-After elapses');
-});
-
-test('military aircraft route relays an upstream 429 when nothing is cached', async (t) => {
-  t.mock.method(console, 'warn', () => {});
-  let calls = 0;
-  t.mock.method(globalThis, 'fetch', async () => {
-    calls += 1;
-    return new Response('{"error":"rate limited"}', { status: 429 });
-  });
-  const request = install(providers.adsbLolProxy());
-  const limited = await request('/api/military');
-  assert.equal(limited.statusCode, 429);
-  assert.ok(limited.headers['retry-after']);
-  const again = await request('/api/military');
-  assert.equal(again.statusCode, 429);
-  assert.equal(
-    calls,
-    1,
-    'the cooldown still protects upstream with nothing cached',
-  );
-  assert.ok(
-    again.headers['retry-after'],
-    'a cooling-down miss carries Retry-After',
-  );
-});
-
-test('military fallback cancels a stalled 5xx body and starts cooldown at receipt', async (t) => {
-  let now = 1_800_000_000_000;
-  let calls = 0;
-  let cancelled = false;
-  t.mock.method(Date, 'now', () => now);
-  t.mock.method(console, 'warn', () => {});
-  t.mock.method(globalThis, 'fetch', async () => {
-    if (++calls === 1) return Response.json({ ac: [] });
-    now += 10000;
-    return new Response(
-      new ReadableStream({
-        cancel() {
-          cancelled = true;
-        },
-      }),
-      {
-        status: 503,
-        headers: { 'Retry-After': new Date(now + 20000).toUTCString() },
-      },
-    );
-  });
-  const request = install(providers.adsbLolProxy());
-  await request('/api/military');
-  now += 1000;
-  const hit = await request('/api/military');
-  assert.equal(hit.headers['x-feed-age-ms'], '1000');
-  now += 12000;
-  const fallback = await request('/api/military');
-  assert.equal(fallback.statusCode, 200);
-  assert.equal(cancelled, true);
-  assert.equal(fallback.headers['x-feed-age-ms'], '23000');
-  assert.equal(fallback.headers['x-ads-b-retry-after-seconds'], '20');
-  now += 19000;
-  await request('/api/military');
-  assert.equal(calls, 2);
-  now += 2000;
-  await request('/api/military');
-  assert.equal(calls, 3);
-});
-
-test('military cooldown bounds untrusted Retry-After and defaults server errors', async (t) => {
-  t.mock.method(console, 'warn', () => {});
-  for (const [status, raw, seconds] of [
-    [429, '1', 5],
-    [429, '99999', 120],
-    [503, 'invalid', 15],
-  ]) {
-    t.mock.method(
-      globalThis,
-      'fetch',
-      async () =>
-        new Response('{}', {
-          status,
-          headers: { 'Retry-After': raw },
-        }),
-    );
-    const result = await install(providers.adsbLolProxy())('/api/military');
-    assert.equal(Number(result.headers['retry-after']), seconds);
-  }
 });
 
 test('track backfill proxy returns 502 on an oversized upstream body and caches it as an error', async (t) => {

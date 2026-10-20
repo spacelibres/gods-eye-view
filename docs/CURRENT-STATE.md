@@ -5865,3 +5865,34 @@ fixture vendor replies, including Qwen function outputs and Doubao ASR/typed
 commands followed by result TTS. Unit tests cover the HTTP tool catalog,
 credential isolation, cross-site refusal, relay frame types, cancellation and
 capture races. This fixture gate does not establish live vendor/model access.
+## VPS-owned ADS-B collection — October 20, 2026
+
+`server/providers/aircraft/adsb-lol.js` now owns a four-minute background military
+collector. `/api/military` is a cache-only read: neither page traffic nor forced
+layer updates can start an upstream request. The last validated readsb snapshot
+and its original source epoch persist across deploys. Cache age greater than two
+minutes is stale; day-old snapshots are unavailable. Existing motion owners keep
+their bounded stale coast rather than extrapolating indefinitely.
+
+`adsb-quota.js` is shared by military collection, GNSS integrity and the OpenSky
+regional fallback. It durably reserves all attempts, including failures, before
+sending. The conservative limits are one request per second and 500 attempts per
+rolling 24 hours, with ancillary requests capped at 140 and military requests at
+least four minutes apart. Response headers are persisted before another request
+can consume an uncertain allowance. Long Retry-After and reset deadlines are
+honored; 429 without a usable reset pauses for at least 24 hours. An interrupted
+transport leaves a durable pending reservation rather than resetting quota on
+restart. Uncertain writes fail closed for operator recovery.
+
+`createMilitarySource()` shares its payload, pending request and server-directed
+read deadline between layer, classification and query consumers. Cached reads
+retain their observation time while age grows. Caller cancellation is isolated;
+the underlying request aborts when its last consumer leaves. Unknown observation
+times remain unknown. Tracking's synthetic gate explicitly publishes immediately
+refreshable snapshots; production deadlines remain at least one second.
+
+On the production VPS set `GEV_ADSB_STATE_DIR=/var/lib/gods-eye-view/adsb`, outside
+the checkout, owned by the `gev` service user. See `docs/ADSB-CACHE-OPERATIONS.md`
+for persistence, recovery and validation. Focused regression tests are
+`server/providers/aircraft/adsb-*.test.mjs`, `src/sources/live/contract.test.mjs`,
+`src/data/militaryFlights.test.mjs` and existing provider/GNSS integration tests.

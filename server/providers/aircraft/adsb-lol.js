@@ -1,178 +1,204 @@
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  renameSync,
+  statSync,
+  unlinkSync,
+  writeFileSync,
+} from 'node:fs';
+import { resolve } from 'node:path';
+import { randomUUID } from 'node:crypto';
 import { readResponseTextCapped } from '../common/http.js';
+import {
+  ADSB_REFRESH_MS,
+  ADSB_DAY_MS,
+  adsbStateDirectory,
+  sharedAdsbQuota,
+} from './adsb-quota.js';
 
-/**
- * Vite plugin: adsb.lol military aircraft proxy with 12 s response cache.
- *
- * Serves GET /api/military from https://api.adsb.lol/v2/mil. When upstream
- * fails — a thrown fetch OR a non-OK status such as 429 — the proxy serves its
- * cached body as STALE instead of relaying the failure, and it backs off from
- * upstream for the Retry-After period (bounded) so a rate limit is never
- * hammered mid-cooldown. A failure with nothing cached is relayed as-is.
- *
- * Why the non-OK case matters: the browser layer treats a relayed 429 as a
- * 45 s cooldown during which EVERY refresh (the 15 s poll and any tracking
- * resolve) reports "adsb.lol rate limited", which the global status chip
- * renders as LOAD FAILED while the map is still fully populated.
- *
- * @returns {import('vite').Plugin}
- */
-export function adsbLolProxy() {
-  /** @type {string|null} Cached upstream JSON body. */
-  let _cache = null;
-  /** @type {number} Epoch-ms when the cache was populated. */
-  let _cacheAt = 0;
-  /** @type {number} Epoch-ms until which upstream is not contacted. */
-  let _cooldownUntil = 0;
-  /** @type {number} Upstream status that started the current cooldown. */
-  let _cooldownStatus = 0;
-  /** Response cache TTL (ms). */
-  const CACHE_MS = 12000;
-  /** Upstream deadline (ms); the fetch previously had none and could hang a poll. */
-  const UPSTREAM_TIMEOUT_MS = 12000;
-  /** /v2/mil measures ~67 KB; a relayed error page is bounded by the same cap. */
-  const ADSBLOL_MIL_MAX_RESPONSE_BYTES = 8 * 1024 * 1024;
-  /** Cooldown after a 429 when upstream sends no usable Retry-After (ms). */
-  const RATE_LIMIT_COOLDOWN_MS = 30000;
-  /** Cooldown after a 5xx (ms). */
-  const SERVER_ERROR_COOLDOWN_MS = 15000;
-  /** Bounds for an upstream-supplied Retry-After (ms). */
-  const COOLDOWN_MIN_MS = 5000;
-  const COOLDOWN_MAX_MS = 120000;
+const MAX_BYTES = 8 * 1024 * 1024;
 
-  const clampCooldown = (ms) =>
-    Math.min(COOLDOWN_MAX_MS, Math.max(COOLDOWN_MIN_MS, ms));
+function admit(body, at) {
+  const value = JSON.parse(body);
+  const observedAt = Number(value.now) * (Number(value.now) > 1e12 ? 1 : 1000);
+  if (
+    !Array.isArray(value.ac) ||
+    !Number.isFinite(observedAt) ||
+    observedAt <= 0 ||
+    observedAt > at + 60_000 ||
+    at - observedAt >= ADSB_DAY_MS ||
+    value.ac.some(
+      (row) => !row || typeof row.hex !== 'string' || !row.hex.trim(),
+    )
+  )
+    throw new Error('Invalid military snapshot');
+  return observedAt;
+}
 
-  /** Cooldown (ms) an upstream failure earns, honouring Retry-After when sane. */
-  function cooldownFor(upstream, now) {
-    const raw = upstream.headers?.get?.('retry-after');
-    if (raw) {
-      const seconds = Number(raw);
-      if (Number.isFinite(seconds) && seconds > 0)
-        return clampCooldown(seconds * 1000);
-      const at = Date.parse(raw);
-      if (Number.isFinite(at) && at > now) return clampCooldown(at - now);
+/** VPS-owned collector. HTTP readers can never start or accelerate a vendor request. */
+export function adsbLolProxy({
+  directory = adsbStateDirectory(),
+  quota = sharedAdsbQuota,
+  now = () => Date.now(),
+  setTimer = setTimeout,
+  clearTimer = clearTimeout,
+} = {}) {
+  const file = resolve(directory, 'military.json');
+  let cached = null;
+  let diskVersion = null;
+  let nextAt = 0;
+  let timer = null;
+  let running = null;
+  let controller = null;
+  let stopped = true;
+  let failure = null;
+
+  function restore() {
+    try {
+      if (!existsSync(file)) return;
+      const info = statSync(file);
+      const version = `${info.ino}:${info.mtimeMs}:${info.ctimeMs}:${info.size}`;
+      if (version === diskVersion || info.size > MAX_BYTES * 2 + 4096) return;
+      diskVersion = version;
+      const saved = JSON.parse(readFileSync(file, 'utf8'));
+      const observedAt = admit(saved.body, now());
+      if (!Number.isFinite(saved.publishedAt) || saved.publishedAt > now())
+        return;
+      cached = { ...saved, observedAt };
+      nextAt = Math.max(nextAt, saved.publishedAt + ADSB_REFRESH_MS);
+      failure = null;
+    } catch {
+      /* A broken snapshot is unavailable; never reset the quota ledger. */
     }
-    return upstream.status === 429
-      ? RATE_LIMIT_COOLDOWN_MS
-      : SERVER_ERROR_COOLDOWN_MS;
   }
-
-  function serve(res, status, body, cacheStatus, extra = {}) {
-    res.writeHead(status, {
-      'Content-Type': 'application/json',
-      'Cache-Control': 'no-store',
-      'X-Feed-Source': 'adsb.lol',
-      'X-Feed-Cache': cacheStatus,
-      ...(['HIT', 'STALE'].includes(cacheStatus)
-        ? {
-            'X-Feed-Age-Ms': String(Math.max(0, Date.now() - _cacheAt)),
-          }
-        : {}),
-      ...extra,
-    });
-    res.end(body);
+  function schedule() {
+    if (stopped) return;
+    clearTimer(timer);
+    const delay = Math.max(1000, nextAt - now(), quota.waitMs('military'));
+    nextAt = now() + delay;
+    timer = setTimer(
+      () => {
+        void refresh();
+      },
+      Math.min(delay, 2_147_483_647),
+    );
+    timer?.unref?.();
   }
-
-  const installMiddleware = (server) => {
-    server.middlewares.use('/api/military', async (req, res, next) => {
+  function refresh() {
+    if (stopped || running) return running;
+    restore();
+    const wait = Math.max(nextAt - now(), quota.waitMs('military'));
+    if (wait > 0) {
+      nextAt = now() + wait;
+      schedule();
+      return Promise.resolve();
+    }
+    controller = new AbortController();
+    const signal = AbortSignal.any([
+      controller.signal,
+      AbortSignal.timeout(12_000),
+    ]);
+    nextAt = now() + ADSB_REFRESH_MS;
+    running = (async () => {
       try {
-        // This mount also matches its /track route, served by its own handler.
-        if (new URL(req.url || '/', 'http://localhost').pathname !== '/')
-          return next();
-        const now = Date.now();
-        if (_cache && now - _cacheAt < CACHE_MS) {
-          serve(res, 200, _cache, 'HIT');
-          return;
-        }
-        if (now < _cooldownUntil) {
-          const retryAfter = String(
-            Math.ceil((_cooldownUntil - Date.now()) / 1000),
-          );
-          if (_cache) {
-            serve(res, 200, _cache, 'STALE', {
-              'X-ADS-B-Upstream-Status': String(_cooldownStatus),
-              'X-ADS-B-Retry-After-Seconds': retryAfter,
-            });
-            return;
-          }
-          serve(
-            res,
-            _cooldownStatus || 503,
-            JSON.stringify({ error: 'adsb.lol upstream cooling down' }),
-            'NONE',
-            { 'Retry-After': retryAfter },
-          );
-          return;
-        }
-        const signal = AbortSignal.timeout(UPSTREAM_TIMEOUT_MS);
-        const upstream = await fetch('https://api.adsb.lol/v2/mil', {
-          headers: { 'User-Agent': 'gods-eye-view-adsblol-proxy/1.0' },
-          signal,
-        });
-        if (upstream.ok) {
-          const body = await readResponseTextCapped(
-            upstream,
-            ADSBLOL_MIL_MAX_RESPONSE_BYTES,
+        const response = await quota.fetch(
+          '/v2/mil',
+          {
             signal,
-          );
-          _cache = body;
-          _cacheAt = Date.now();
-          _cooldownUntil = 0;
-          _cooldownStatus = 0;
-          serve(res, 200, body, 'MISS');
-          return;
-        }
-        if (upstream.status === 429 || upstream.status >= 500) {
-          const failedAt = Date.now();
-          _cooldownUntil = failedAt + cooldownFor(upstream, failedAt);
-          _cooldownStatus = upstream.status;
-          console.warn(
-            `[adsb.lol Proxy] upstream ${upstream.status}; cooling down ${Math.round((_cooldownUntil - Date.now()) / 1000)} s${_cache ? ', serving stale' : ''}`,
-          );
-          if (_cache) {
-            // Do not wait for a failing response body before serving usable data.
-            upstream.body?.cancel().catch(() => {});
-            serve(res, 200, _cache, 'STALE', {
-              'X-ADS-B-Upstream-Status': String(upstream.status),
-              'X-ADS-B-Retry-After-Seconds': String(
-                Math.ceil((_cooldownUntil - Date.now()) / 1000),
-              ),
-            });
-            return;
-          }
-        }
-        const body = await readResponseTextCapped(
-          upstream,
-          ADSBLOL_MIL_MAX_RESPONSE_BYTES,
-          signal,
+            headers: { 'User-Agent': 'gods-eye-view-adsblol-proxy/1.0' },
+          },
+          'military',
         );
-        serve(
-          res,
-          upstream.status,
-          body,
-          'MISS',
-          _cooldownUntil > Date.now()
-            ? {
-                'Retry-After': String(
-                  Math.ceil((_cooldownUntil - Date.now()) / 1000),
-                ),
-              }
-            : {},
-        );
-      } catch (e) {
-        console.error('[adsb.lol Proxy]', e.message);
-        if (_cache) {
-          serve(res, 200, _cache, 'STALE');
-          return;
+        if (!response.ok) {
+          await response.body?.cancel();
+          throw new Error('Military upstream HTTP ' + response.status);
         }
-        res.writeHead(502, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'ADS-B proxy error' }));
+        const body = await readResponseTextCapped(response, MAX_BYTES, signal);
+        signal.throwIfAborted();
+        if (stopped) return;
+        const observedAt = admit(body, now());
+        const entry = { body, observedAt, publishedAt: now() };
+        mkdirSync(directory, { recursive: true, mode: 0o700 });
+        const temporary = file + '.' + randomUUID() + '.tmp';
+        try {
+          writeFileSync(temporary, JSON.stringify(entry), {
+            mode: 0o600,
+            flush: true,
+          });
+          renameSync(temporary, file);
+        } finally {
+          if (existsSync(temporary)) unlinkSync(temporary);
+        }
+        cached = entry;
+        failure = null;
+      } catch (error) {
+        if (!stopped) failure = error.message;
+      } finally {
+        running = null;
+        controller = null;
+        schedule();
       }
+    })();
+    return running;
+  }
+  function close() {
+    stopped = true;
+    clearTimer(timer);
+    controller?.abort();
+  }
+  function install(server) {
+    if (stopped) {
+      stopped = false;
+      restore();
+      void refresh();
+      server.httpServer?.once?.('close', close);
+    }
+    server.middlewares.use('/api/military', (req, res, next) => {
+      if (new URL(req.url || '/', 'http://localhost').pathname !== '/')
+        return next();
+      if (!['GET', 'HEAD'].includes(req.method || 'GET')) {
+        res.writeHead(405, { Allow: 'GET, HEAD' });
+        res.end();
+        return;
+      }
+      // A peer worker may have won the shared collection reservation. Only
+      // reload atomically replaced snapshots; this never starts a fetch.
+      restore();
+      const at = now();
+      // A read while collection is in flight should see its result shortly,
+      // not wait another full collection interval for the previous snapshot.
+      const delay = running
+        ? 1000
+        : Math.max(1000, nextAt - at, quota.waitMs('military'));
+      const available = cached && at - cached.observedAt < ADSB_DAY_MS;
+      const age = available ? Math.max(0, at - cached.observedAt) : null;
+      const stale = available && (Boolean(failure) || age > 120_000);
+      res.writeHead(available ? 200 : 503, {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store',
+        'X-Feed-Source': 'adsb.lol',
+        'X-Feed-Cache': available ? (stale ? 'STALE' : 'HIT') : 'NONE',
+        'X-Feed-Next-Refresh-Ms': String(Math.ceil(delay)),
+        ...(age !== null ? { 'X-Feed-Age-Ms': String(Math.ceil(age)) } : {}),
+        ...(!available
+          ? { 'Retry-After': String(Math.ceil(delay / 1000)) }
+          : {}),
+      });
+      res.end(
+        req.method === 'HEAD'
+          ? undefined
+          : available
+            ? cached.body
+            : JSON.stringify({ error: 'Military data collection pending' }),
+      );
     });
-  };
+  }
   return {
     name: 'adsblol-proxy',
-    configureServer: installMiddleware,
-    configurePreviewServer: installMiddleware,
+    configureServer: install,
+    configurePreviewServer: install,
+    closeBundle: close,
+    ready: () => running || Promise.resolve(),
   };
 }

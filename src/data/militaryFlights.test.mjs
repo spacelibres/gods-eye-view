@@ -157,6 +157,10 @@ test('nonempty adsb.lol payload with zero usable rows cannot prove share target 
   globalThis.fetch = async () => ({
     ok: true,
     status: 200,
+    headers: new Headers({
+      'X-Feed-Next-Refresh-Ms': '0',
+      'X-Feed-Age-Ms': '0',
+    }),
     json: async () => ({ ac: [null, {}, { hex: 'ae1234' }] }),
   });
   try {
@@ -220,6 +224,10 @@ test('military poll refreshes tracked callsign/altitude/kts and marks a missed p
   globalThis.fetch = async () => ({
     ok: true,
     status: 200,
+    headers: new Headers({
+      'X-Feed-Next-Refresh-Ms': '0',
+      'X-Feed-Age-Ms': '0',
+    }),
     json: async () => ({
       ac:
         poll++ === 0
@@ -296,8 +304,9 @@ test('cached military snapshots retain their observation time and expose stale f
       {
         headers: {
           'X-Feed-Cache': cache,
+          'X-Feed-Next-Refresh-Ms': '0',
           ...(cache === 'MISS'
-            ? {}
+            ? { 'X-Feed-Age-Ms': '0' }
             : { 'X-Feed-Age-Ms': String(now - receivedAt) }),
         },
       },

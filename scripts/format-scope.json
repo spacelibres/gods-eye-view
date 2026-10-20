@@ -1071,5 +1071,8 @@
   "src/voice/websocketSession.test.mjs",
   "server/providers/dashscope/control.test.mjs",
   "server/providers/voice-socket-relay.test.mjs",
-  "scripts/qa-voice-provider-controls.mjs"
+  "scripts/qa-voice-provider-controls.mjs",
+  "server/providers/aircraft/adsb-quota.test.mjs",
+  "server/providers/aircraft/adsb-lol.test.mjs",
+  "server/providers/aircraft/adsb-integration.test.mjs"
 ]

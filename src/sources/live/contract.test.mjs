@@ -377,3 +377,201 @@ test('squawks are validated and omitted OpenSky status differs from an explicit 
   assert.equal(quiet.squawk, null);
   assert.equal(quiet.emergency, null);
 });
+
+test('military consumers share reads and retain source time while cached age grows', async () => {
+  let clock = now;
+  let calls = 0;
+  const source = createMilitarySource({
+    now: () => clock,
+    fetchImpl: async () => {
+      calls++;
+      return response(
+        { ac: [{ hex: 'abc123', lat: 30, lon: -97, seen_pos: 15 }] },
+        {
+          'x-feed-age-ms': String(60000 + clock - now),
+          'x-feed-next-refresh-ms': '240000',
+          'x-feed-cache': 'HIT',
+        },
+      );
+    },
+  });
+  const [snapshot, identities] = await Promise.all([
+    source.getSnapshot(),
+    source.getIdentities(),
+  ]);
+  assert.equal(calls, 1);
+  assert.deepEqual(identities, ['abc123']);
+  clock += 70000;
+  const older = await source.getSnapshot();
+  assert.equal(calls, 1);
+  assert.equal(older.observedAtMs, snapshot.observedAtMs);
+  assert.equal(older.records[0].positionTimeMs, now - 75000);
+  assert.equal(older.ageMs, 130000);
+  assert.equal(older.stale, true);
+  assert.equal(older.freshness, 'stale');
+  clock = now + 240000;
+  assert.equal(
+    (await source.getSnapshot()).observedAtMs,
+    snapshot.observedAtMs,
+  );
+  assert.equal(calls, 2);
+});
+
+test('military failures respect server deadlines and missing metadata defaults to four minutes', async () => {
+  let clock = now;
+  let calls = 0;
+  const source = createMilitarySource({
+    now: () => clock,
+    fetchImpl: async () => {
+      calls++;
+      return response(
+        {},
+        { 'retry-after': '600', 'x-feed-next-refresh-ms': '300000' },
+        503,
+      );
+    },
+  });
+  await assert.rejects(source.getSnapshot(), {
+    status: 503,
+    retryAfterMs: 600000,
+  });
+  clock += 599999;
+  await assert.rejects(source.getIdentities(), { status: 503 });
+  assert.equal(calls, 1);
+  clock++;
+  await assert.rejects(source.getSnapshot());
+  assert.equal(calls, 2);
+  let fallbackCalls = 0;
+  const fallback = createMilitarySource({
+    now: () => clock,
+    fetchImpl: async () => {
+      fallbackCalls++;
+      return response({ ac: [] });
+    },
+  });
+  await fallback.getSnapshot();
+  clock += 239999;
+  await fallback.getIdentities();
+  assert.equal(fallbackCalls, 1);
+  clock++;
+  await fallback.getSnapshot();
+  assert.equal(fallbackCalls, 2);
+});
+
+test('military caller cancellation leaves another shared consumer active', async () => {
+  let release;
+  let calls = 0;
+  const body = new Promise((resolve) => {
+    release = resolve;
+  });
+  const abort = new AbortController();
+  const source = createMilitarySource({
+    fetchImpl: async () => {
+      calls++;
+      return {
+        ok: true,
+        status: 200,
+        headers: new Headers(),
+        json: () => body,
+      };
+    },
+  });
+  const cancelled = source.getSnapshot({}, { signal: abort.signal });
+  const survivor = source.getIdentities();
+  await new Promise((resolve) => setImmediate(resolve));
+  abort.abort();
+  const rejected = assert.rejects(cancelled, { name: 'AbortError' });
+  release({ ac: [{ hex: 'abc123', lat: 30, lon: -97 }] });
+  await rejected;
+  assert.deepEqual(await survivor, ['abc123']);
+  assert.equal(calls, 1);
+});
+
+test('military transport releases when its last caller cancels and can retry immediately', async () => {
+  let calls = 0;
+  let transportSignal;
+  const abort = new AbortController();
+  const source = createMilitarySource({
+    fetchImpl: async (_url, { signal }) => {
+      calls++;
+      transportSignal = signal;
+      if (calls > 1) return response({ ac: [] });
+      return new Promise((_resolve, reject) =>
+        signal.addEventListener('abort', () => reject(signal.reason), {
+          once: true,
+        }),
+      );
+    },
+  });
+  const pending = source.getSnapshot({}, { signal: abort.signal });
+  abort.abort();
+  await assert.rejects(pending, { name: 'AbortError' });
+  assert.equal(transportSignal.aborted, true);
+  assert.deepEqual(await source.getIdentities(), []);
+  assert.equal(calls, 2);
+});
+
+test('military source instances sharing transport and clock share their cache', async () => {
+  let calls = 0;
+  const fetchImpl = async () => {
+    calls++;
+    return response({ ac: [{ hex: 'abc123', lat: 30, lon: -97 }] });
+  };
+  const clock = () => now;
+  const first = createMilitarySource({ fetchImpl, now: clock });
+  const second = createMilitarySource({ fetchImpl, now: clock });
+  await Promise.all([first.getSnapshot(), second.getIdentities()]);
+  assert.equal(calls, 1);
+  await second.getSnapshot();
+  assert.equal(calls, 1);
+  await createMilitarySource({ fetchImpl, now: () => now }).getIdentities();
+  assert.equal(calls, 2);
+});
+
+test('default military source instances share the default transport cache', async () => {
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async () => {
+    calls++;
+    return response({ ac: [] });
+  };
+  try {
+    await Promise.all([
+      createMilitarySource().getSnapshot(),
+      createMilitarySource().getIdentities(),
+    ]);
+    assert.equal(calls, 1);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('military explicit zero refresh allows an immediate read', async () => {
+  let calls = 0;
+  const source = createMilitarySource({
+    now: () => now,
+    fetchImpl: async () => {
+      calls++;
+      return response({ ac: [] }, { 'x-feed-next-refresh-ms': '0' });
+    },
+  });
+  await source.getSnapshot();
+  await source.getIdentities();
+  assert.equal(calls, 2);
+});
+
+test('military cached deadlines expire when the clock rewinds', async () => {
+  let clock = now;
+  let calls = 0;
+  const source = createMilitarySource({
+    now: () => clock,
+    fetchImpl: async () => {
+      calls++;
+      return response({ ac: [] });
+    },
+  });
+  await source.getSnapshot();
+  clock--;
+  await source.getIdentities();
+  assert.equal(calls, 2);
+});

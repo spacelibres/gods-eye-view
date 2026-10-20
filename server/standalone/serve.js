@@ -274,6 +274,13 @@ const server = createServer(async (req, res) => {
   sendFile(req, res, path.join(DIST, 'index.html'));
 });
 
+// Stop background collectors before a graceful shutdown waits for connections.
+// The standalone router does not expose Vite's httpServer lifecycle to plugins.
+const stopCollectors = () => {
+  for (const plugin of plugins) plugin.closeBundle?.();
+};
+server.on('close', stopCollectors);
+
 // The browser cannot put headers on a WebSocket, and Volcengine signs its
 // socket with `X-Api-*` headers. This same-origin relay is that missing hop.
 // Without a credential it refuses before upgrading, which the page reports as
@@ -291,5 +298,8 @@ server.listen(PORT, HOST, () => {
 });
 
 for (const signal of ['SIGINT', 'SIGTERM']) {
-  process.on(signal, () => server.close(() => process.exit(0)));
+  process.on(signal, () => {
+    stopCollectors();
+    server.close(() => process.exit(0));
+  });
 }
