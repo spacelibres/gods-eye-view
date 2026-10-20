@@ -124,13 +124,36 @@ export function storeVoiceProvider(id, storage = globalThis.localStorage) {
 }
 
 /**
+ * Read the stored provider id without resolving it, so the caller can tell
+ * "nothing stored" from "stored the default".
+ */
+function readStoredVoiceProviderId(storage = globalThis.localStorage) {
+  try {
+    return storage?.getItem?.(VOICE_PROVIDER_STORAGE_KEY) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Build the backend for a provider id.
  *
- * @param {string} [id] Falls back to the stored choice, then the default.
+ * @param {string} [id] Falls back to the stored choice, then a configured
+ *   provider, then the default.
+ * @param {{configured?: Record<string, boolean>}} [options] Pass
+ *   `probeVoiceProviders`' result so a deployment that set only one vendor's
+ *   key connects with that one instead of failing on the untouched default.
  * @returns {{provider: VoiceProvider, backend: object}}
  */
-export function createVoiceBackend(id) {
-  const provider = id ? resolveVoiceProvider(id) : readStoredVoiceProvider();
+export function createVoiceBackend(id, { configured } = {}) {
+  const provider = id
+    ? resolveVoiceProvider(id)
+    : configured
+      ? pickVoiceProvider({
+          configured,
+          storedId: readStoredVoiceProviderId(),
+        })
+      : readStoredVoiceProvider();
   const backend = provider.create();
   // The controller reads `protocol` for diagnostics; keep the two in step so a
   // log line names the provider that was actually selected.
@@ -138,6 +161,51 @@ export function createVoiceBackend(id) {
     provider,
     backend: Object.freeze({ ...backend, providerId: provider.id }),
   };
+}
+
+/**
+ * Rank providers by whether this deployment can actually run them.
+ *
+ * The stored choice wins when it is usable. When it is not — the common case
+ * on a deployment that set only one vendor's key — the first configured
+ * provider is used instead of surfacing "OPENAI_API_KEY is not set" for a
+ * service the user never chose.
+ *
+ * @param {{configured: Record<string, boolean>, storedId?: string}}
+ *   options `configured[id]` is true when that provider answered its
+ *   credential probe.
+ * @returns {VoiceProvider} Always a provider; the stored one, then a ready
+ *   one, then the default.
+ */
+export function pickVoiceProvider({ configured = {}, storedId } = {}) {
+  const stored = findVoiceProvider(storedId);
+  if (stored && configured[stored.id] !== false) return stored;
+  const ready = VOICE_PROVIDERS.find((provider) => configured[provider.id]);
+  return ready ?? stored ?? resolveVoiceProvider(null);
+}
+
+/**
+ * Ask each provider's server route whether it holds a credential.
+ *
+ * Only the providers that ship a probe are checked; a provider without one is
+ * treated as usable so the check can never hide a working option.
+ *
+ * @param {((id: string) => Promise<boolean>)|null} [probe]
+ * @returns {Promise<Record<string, boolean>>}
+ */
+export async function probeVoiceProviders(probe) {
+  const results = {};
+  await Promise.all(
+    VOICE_PROVIDERS.map(async (provider) => {
+      if (typeof probe !== 'function') return;
+      try {
+        results[provider.id] = await probe(provider.id);
+      } catch {
+        results[provider.id] = false;
+      }
+    }),
+  );
+  return results;
 }
 
 /** Consumers that need the vendor's audio rates read them from the spec. */

@@ -2761,5 +2761,7 @@
   "Routing map data through the server...": "正在通过服务器中转地图数据...",
   "Showing the whole globe...": "正在显示完整地球……",
   "Data": "数据",
-  "Display": "显示"
+  "Display": "显示",
+  "Voice service": "语音服务",
+  "Voice service — applies next session": "语音服务 — 下次会话生效"
 }

@@ -34,7 +34,7 @@
 export const VOICE_PROVIDER_SPECS = Object.freeze([
   {
     id: 'openai',
-    label: 'OpenAI Realtime',
+    label: 'OpenAI Realtime', // i18n-ignore: provider product name
     transport: 'webrtc',
     region: 'global',
     docs: 'https://platform.openai.com/docs/guides/realtime',
@@ -49,7 +49,7 @@ export const VOICE_PROVIDER_SPECS = Object.freeze([
   },
   {
     id: 'dashscope',
-    label: 'Alibaba Bailian (Qwen Omni)',
+    label: 'Alibaba Bailian (Qwen Omni)', // i18n-ignore: provider product name
     transport: 'websocket',
     region: 'cn',
     // Verified against the live service, not assumed: the connection answers
@@ -72,7 +72,7 @@ export const VOICE_PROVIDER_SPECS = Object.freeze([
   },
   {
     id: 'doubao',
-    label: 'Volcengine Doubao',
+    label: 'Volcengine Doubao', // i18n-ignore: provider product name
     transport: 'websocket',
     region: 'cn',
     // Binary framing, not JSON: a 4-byte header, a big-endian event id, a
@@ -92,7 +92,7 @@ export const VOICE_PROVIDER_SPECS = Object.freeze([
   },
   {
     id: 'xfyun',
-    label: 'iFlytek Spark',
+    label: 'iFlytek Spark', // i18n-ignore: provider product name
     transport: 'websocket',
     region: 'cn',
     docs: 'https://www.xfyun.cn/doc/spark/Web.html',
@@ -105,7 +105,7 @@ export const VOICE_PROVIDER_SPECS = Object.freeze([
   },
   {
     id: 'tencent',
-    label: 'Tencent Cloud',
+    label: 'Tencent Cloud', // i18n-ignore: provider product name
     transport: 'websocket',
     region: 'cn',
     docs: 'https://cloud.tencent.com/document/product/1093',
@@ -116,7 +116,7 @@ export const VOICE_PROVIDER_SPECS = Object.freeze([
   },
   {
     id: 'baidu',
-    label: 'Baidu Speech',
+    label: 'Baidu Speech', // i18n-ignore: provider product name
     transport: 'websocket',
     region: 'cn',
     // One-shot HTTP upload rather than a full-duplex session: no barge-in,

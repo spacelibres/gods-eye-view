@@ -2761,5 +2761,7 @@
   "Routing map data through the server...": "서버를 통해 지도 데이터를 중계하는 중...",
   "Showing the whole globe...": "지구 전체를 표시하는 중...",
   "Data": "데이터",
-  "Display": "표시"
+  "Display": "표시",
+  "Voice service": "음성 서비스",
+  "Voice service — applies next session": "음성 서비스 — 다음 세션부터 적용"
 }

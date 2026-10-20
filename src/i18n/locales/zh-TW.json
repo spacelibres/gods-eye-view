@@ -2761,5 +2761,7 @@
   "Routing map data through the server...": "正在透過伺服器中轉地圖資料...",
   "Showing the whole globe...": "正在顯示完整地球……",
   "Data": "資料",
-  "Display": "顯示"
+  "Display": "顯示",
+  "Voice service": "語音服務",
+  "Voice service — applies next session": "語音服務 — 下次工作階段生效"
 }

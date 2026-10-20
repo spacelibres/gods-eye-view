@@ -2895,5 +2895,7 @@
   "Routing map data through the server...": "Enrutando los datos del mapa a través del servidor...",
   "Showing the whole globe...": "Mostrando el globo completo...",
   "Data": "Datos",
-  "Display": "Visualización"
+  "Display": "Visualización",
+  "Voice service": "Servicio de voz",
+  "Voice service — applies next session": "Servicio de voz — se aplica en la próxima sesión"
 }

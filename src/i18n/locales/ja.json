@@ -2761,5 +2761,7 @@
   "Routing map data through the server...": "サーバー経由で地図データを中継しています...",
   "Showing the whole globe...": "地球全体を表示中...",
   "Data": "データ",
-  "Display": "表示"
+  "Display": "表示",
+  "Voice service": "音声サービス",
+  "Voice service — applies next session": "音声サービス — 次回のセッションから適用"
 }

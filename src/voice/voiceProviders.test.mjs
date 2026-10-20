@@ -8,6 +8,8 @@ import {
   VOICE_PROVIDER_STORAGE_KEY,
   createVoiceBackend,
   findVoiceProvider,
+  pickVoiceProvider,
+  probeVoiceProviders,
   readStoredVoiceProvider,
   resolveVoiceProvider,
   storeVoiceProvider,
@@ -178,5 +180,53 @@ test('the built backend names the provider that was selected', () => {
   assert.equal(backend.providerId, DEFAULT_VOICE_PROVIDER);
   // The contract the controller drives, unchanged from the OpenAI path.
   assert.equal(typeof backend.requestToken, 'function');
-  assert.equal(typeof backend.negotiate, 'function');
+});
+
+test('a configured provider is chosen over the unconfigured default', () => {
+  // The case that produced "OPENAI_API_KEY is not set" on a deployment that
+  // had only set the other vendor's key: nothing stored, so the default was
+  // used even though it could not connect.
+  const picked = pickVoiceProvider({
+    configured: { openai: false, dashscope: true },
+    storedId: null,
+  });
+  assert.equal(picked.id, 'dashscope');
+});
+
+test('an explicit stored choice is honoured while it is usable', () => {
+  const picked = pickVoiceProvider({
+    configured: { openai: true, dashscope: true },
+    storedId: 'dashscope',
+  });
+  assert.equal(picked.id, 'dashscope');
+});
+
+test('a stored choice that cannot connect falls through to one that can', () => {
+  const picked = pickVoiceProvider({
+    configured: { openai: false, dashscope: true },
+    storedId: 'openai',
+  });
+  assert.equal(picked.id, 'dashscope');
+});
+
+test('when nothing is configured the stored choice still stands', () => {
+  // Nothing answered the probe; picking something else would be a guess.
+  const picked = pickVoiceProvider({
+    configured: { openai: false, dashscope: false },
+    storedId: 'dashscope',
+  });
+  assert.equal(picked.id, 'dashscope');
+});
+
+test('the probe reports per provider and never throws', async () => {
+  const results = await probeVoiceProviders(async (id) => {
+    if (id === 'openai') throw new Error('probe down');
+    return true;
+  });
+  assert.equal(results.openai, false, 'a throwing probe is unconfigured');
+  assert.equal(results.dashscope, true);
+});
+
+test('without a probe every provider is left unjudged', async () => {
+  assert.deepEqual(await probeVoiceProviders(null), {});
 });

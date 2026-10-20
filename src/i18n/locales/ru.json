@@ -2962,5 +2962,7 @@
   "Routing map data through the server...": "Маршрутизация данных карты через сервер...",
   "Showing the whole globe...": "Показываем весь земной шар...",
   "Data": "Данные",
-  "Display": "Отображение"
+  "Display": "Отображение",
+  "Voice service": "Голосовой сервис",
+  "Voice service — applies next session": "Голосовой сервис — применится в следующей сессии"
 }

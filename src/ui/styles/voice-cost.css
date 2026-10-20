@@ -12,6 +12,37 @@
   flex: 0 0 auto;
 }
 
+/* Voice service picker. Same frame as the tier button beside it: the two are
+   both "applies next session" settings and read as one group. */
+.gev-voice-provider {
+  padding: 0 0.18rem;
+  height: 0.72rem;
+  max-width: 5.2rem;
+  background: rgba(0, 212, 255, 0.06);
+  border: 1px solid rgba(0, 212, 255, 0.34);
+  border-radius: 0.18rem;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.4rem;
+  letter-spacing: 0.045rem;
+  line-height: 1;
+  cursor: pointer;
+  appearance: none;
+  text-overflow: ellipsis;
+}
+
+.gev-voice-provider:hover {
+  color: var(--text-primary);
+  border-color: rgba(0, 212, 255, 0.6);
+  background: rgba(0, 212, 255, 0.12);
+}
+
+/* One provider is not a choice; the row stays out of the layout until there
+   is something to pick between. */
+.gev-voice-provider[hidden] {
+  display: none;
+}
+
 .gev-voice-tier-btn {
   padding: 0 0.24rem;
   height: 0.72rem;

@@ -3,6 +3,72 @@ import { createVoiceSession } from './session.js';
 import { VoiceCardControls } from './voiceCard.js';
 import { PointerReticle } from './pointerReticle.js';
 import { msg, registerUnsavedWork, t } from '../i18n/index.js';
+import {
+  VOICE_PROVIDERS,
+  pickVoiceProvider,
+  readStoredVoiceProvider,
+  storeVoiceProvider,
+} from './voiceProviders.js';
+import { probeVoiceProvidersCached } from './voiceProviderProbe.js';
+
+/**
+ * Fill the provider picker and keep the choice.
+ *
+ * A change takes effect on the next session: the current one owns a live
+ * socket whose provider cannot be swapped underneath it, so switching mid-call
+ * would leave the audio graph talking to a service that is no longer selected.
+ *
+ * The server is asked once which providers it holds a credential for. A
+ * deployment that set only the other vendor's key then opens the picker on a
+ * service that can connect, instead of failing the first call with
+ * "OPENAI_API_KEY is not set" for a choice nobody made.
+ *
+ * @param {HTMLSelectElement|null} select
+ * @returns {() => void} Removes the listener.
+ */
+function bindProviderPicker(select) {
+  if (!select) return () => {};
+  const current = readStoredVoiceProvider();
+  select.textContent = '';
+  for (const provider of VOICE_PROVIDERS) {
+    const option = select.ownerDocument.createElement('option');
+    option.value = provider.id;
+    option.textContent = provider.label;
+    select.append(option);
+  }
+  select.value = current.id;
+  // One provider is not a choice; keep the row out of the layout until there
+  // is something to pick between.
+  select.hidden = VOICE_PROVIDERS.length < 2;
+  const onChange = () => {
+    storeVoiceProvider(select.value);
+  };
+  select.addEventListener('change', onChange);
+
+  // Correct the selection once the server has answered. The probe is bounded
+  // by the browser's own timeout path, so a server that never answers leaves
+  // the stored choice in place rather than blocking the control.
+  let cancelled = false;
+  void probeVoiceProvidersCached()
+    .then((configured) => {
+      if (cancelled) return;
+      const usable = pickVoiceProvider({ configured, storedId: select.value });
+      if (!usable) return;
+      select.value = usable.id;
+      // Only persist when the stored value was actually unusable: an explicit
+      // choice must survive a probe, or the picker would fight the user.
+      if (!configured[readStoredVoiceProvider().id])
+        storeVoiceProvider(usable.id);
+    })
+    .catch(() => {
+      /* A failed probe leaves the stored choice alone. */
+    });
+
+  return () => {
+    cancelled = true;
+    select.removeEventListener('change', onChange);
+  };
+}
 
 function createDefaultReticle(pointer) {
   const element = pointer?.element;
@@ -32,6 +98,7 @@ export function createVoiceCommands({
 }) {
   window.__gevVoiceCommands?.stop?.({ removeUi: true });
   const ui = createControl({ reset: true });
+  const unbindProviderPicker = bindProviderPicker(ui.providerSelect);
   const session = createVoiceSession({
     runner,
     signal,
@@ -126,6 +193,7 @@ export function createVoiceCommands({
       updatePointer();
       reticle?.destroy();
       card?.destroy();
+      unbindProviderPicker();
       runner.dispose?.();
       ui.root.remove();
     },
@@ -140,6 +208,7 @@ export function createVoiceCommands({
     updatePointer();
     reticle?.destroy();
     card?.destroy();
+    unbindProviderPicker();
     runner.dispose?.();
     ui.root.remove();
   } else adapter.bindControls?.();

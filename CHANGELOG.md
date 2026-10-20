@@ -4,6 +4,22 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.45] — 2026-10-20 — Choose the voice service
+
+- Put a voice-service picker in the voice control. `0.2.44` shipped the
+  DashScope adapter but no way to choose it, so the session kept using the
+  stored default and a deployment holding only the Bailian key answered every
+  call with `OPENAI_API_KEY is not set`. The picker lists the services this
+  build can actually connect to, remembers the choice, and applies it on the
+  next session — swapping mid-call would leave the audio graph talking to a
+  service that is no longer selected.
+
+- Open on a service that can connect. At startup the page asks each provider's
+  credential route whether it holds a key and prefers a configured one, so a
+  deployment that set only one vendor's key works without anyone opening the
+  picker first. An explicit choice is still honoured while it is usable; a
+  probe that fails leaves it alone rather than guessing.
+
 ## [0.2.44] — 2026-10-20 — Alibaba Bailian voice, verified live
 
 - Add Alibaba Bailian (Qwen Omni) as a second selectable voice service,
