@@ -17,7 +17,6 @@
   "Board cleared.": "ボードを消去しました。",
   "{owner} is using the pointer — close it first.": "{owner} がポインターを使用中です。先に閉じてください。",
   "{label} · Detailed outline unavailable": "{label} · 詳細な輪郭は利用できません",
-  "Flying to Austin, TX...": "テキサス州オースティンへ移動中...",
   "Restoring shared view...": "共有ビューを復元中...",
   "Configuring viewer...": "ビューアを設定中...",
   "Loading Google 3D Tiles...": "Google 3D Tiles を読み込み中...",
@@ -2759,5 +2758,8 @@
   "Globe colour scheme": "地球の配色",
   "Custom colour": "カスタムカラー",
   "Checking connectivity...": "接続を確認しています...",
-  "Routing map data through the server...": "サーバー経由で地図データを中継しています..."
+  "Routing map data through the server...": "サーバー経由で地図データを中継しています...",
+  "Showing the whole globe...": "地球全体を表示中...",
+  "Data": "データ",
+  "Display": "表示"
 }

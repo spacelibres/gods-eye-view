@@ -11,6 +11,8 @@
  * at once, and neither has to know about the other.
  */
 
+import { t } from '../i18n/index.js';
+
 /** Above this width the desktop rails are used as-is. */
 export const MOBILE_MAX_WIDTH_PX = 720;
 
@@ -18,14 +20,12 @@ export const MOBILE_MAX_WIDTH_PX = 720;
 export const MOBILE_PANEL_GROUPS = Object.freeze([
   {
     id: 'left-panel-stack',
-    label: 'Data',
     // A stack of layers, NOT `layers_clear`: that glyph is the "clear selected
     // layers" action in the top row, and reusing it made two buttons look alike.
     icon: 'layers',
   },
   {
     id: 'right-context-rail',
-    label: 'Display',
     // Sliders, matching what the rail holds rather than which side it is on.
     icon: 'tune',
   },
@@ -57,8 +57,11 @@ export function initMobilePanelSwitches({
     button.dataset.panelGroup = group.id;
     button.setAttribute('aria-controls', group.id);
     button.setAttribute('aria-expanded', 'false');
-    button.setAttribute('aria-label', group.label);
-    button.title = group.label;
+    // A literal per group: the i18n extractor matches translation calls in the
+    // source text, so a translated variable would never be found there.
+    const label = group.id === 'left-panel-stack' ? t('Data') : t('Display');
+    button.setAttribute('aria-label', label);
+    button.title = label;
     button.innerHTML = `<span class="material-symbols-outlined" aria-hidden="true">${group.icon}</span>`;
     host.appendChild(button);
 

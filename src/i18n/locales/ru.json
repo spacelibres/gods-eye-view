@@ -1,5 +1,4 @@
 {
-  "Flying to Austin, TX...": "Перелёт в Остин, Техас...",
   "Restoring shared view...": "Восстановление общего вида...",
   "Initializing systems...": "Инициализация систем...",
   "Configuring viewer...": "Настройка просмотрщика...",
@@ -2960,5 +2959,8 @@
   "Globe colour scheme": "Цветовая схема глобуса",
   "Custom colour": "Свой цвет",
   "Checking connectivity...": "Проверка подключения...",
-  "Routing map data through the server...": "Маршрутизация данных карты через сервер..."
+  "Routing map data through the server...": "Маршрутизация данных карты через сервер...",
+  "Showing the whole globe...": "Показываем весь земной шар...",
+  "Data": "Данные",
+  "Display": "Отображение"
 }

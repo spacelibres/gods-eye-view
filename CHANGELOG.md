@@ -4,6 +4,19 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.41] — 2026-10-20 — Open on the whole globe
+
+- Open on the whole globe. A cold start flew to Austin, Texas and settled 600 m
+  above it, so the first thing anyone saw was one city — and the view-scale
+  band that context budgets, screenshots and voice read from treated it as a
+  local view. The camera is now placed at the app's own full-earth height
+  (`GLOBE_VIEW`) with both hemispheres in frame, and the loading text says so.
+  A share link still restores the camera it carries. The unused Austin fly-in
+  and the presets beside it are gone.
+
+- Translate the phone panel switches' labels ("Data" and "Display"), which
+  shipped in English for every locale.
+
 ## [0.2.40] — 2026-10-20 — The loading screen waits for the base map
 
 - Keep the loading screen up until the base map is actually drawn. It used to

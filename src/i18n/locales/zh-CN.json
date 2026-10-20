@@ -188,7 +188,6 @@
   "Board cleared.": "白板已清空。",
   "{owner} is using the pointer — close it first.": "{owner} 正在使用指针——请先关闭。",
   "{label} · Detailed outline unavailable": "{label} · 详细轮廓不可用",
-  "Flying to Austin, TX...": "正在飞往德克萨斯州奥斯汀……",
   "Restoring shared view...": "正在恢复共享视图……",
   "Configuring viewer...": "正在配置视图……",
   "Loading Google 3D Tiles...": "正在加载 Google 3D Tiles……",
@@ -2759,5 +2758,8 @@
   "Globe colour scheme": "地球配色方案",
   "Custom colour": "自定义颜色",
   "Checking connectivity...": "正在检测连接...",
-  "Routing map data through the server...": "正在通过服务器中转地图数据..."
+  "Routing map data through the server...": "正在通过服务器中转地图数据...",
+  "Showing the whole globe...": "正在显示完整地球……",
+  "Data": "数据",
+  "Display": "显示"
 }

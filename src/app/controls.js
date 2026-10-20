@@ -1,6 +1,6 @@
 import { catalogControlServices } from './catalog.js';
 import { StyleManager } from '../ui/composition.js';
-import { flyToAustin } from '../camera.js';
+import { showFullGlobe } from '../camera.js';
 import { initCockpitCloudEffects } from '../cockpitCloudEffects.js';
 import { t } from '../i18n/index.js';
 
@@ -40,10 +40,12 @@ export function createApplicationControls({
   });
   defer(() => cockpitCloudEffects?.destroy());
 
-  // If no share link state, do default fly-to Austin
+  // A share link carries its own camera, so only a cold start needs one. The
+  // default is the whole globe: the app is a world view, and opening over one
+  // city left it looking like a local map until the user zoomed out.
   if (!styleManager.hasShareState) {
-    loaderStatus.textContent = t('Flying to Austin, TX...');
-    defer(flyToAustin(viewer));
+    loaderStatus.textContent = t('Showing the whole globe...');
+    defer(showFullGlobe(viewer));
   } else {
     loaderStatus.textContent = t('Restoring shared view...');
   }
