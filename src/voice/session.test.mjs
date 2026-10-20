@@ -441,3 +441,86 @@ test('a late rejection cannot settle a newer turn card', async () => {
   );
   f.session.destroy();
 });
+
+test('touch holds mute on release, retain the session and resume without reconnecting', async () => {
+  const previousWindow = globalThis.window;
+  const previousMedia = globalThis.matchMedia;
+  globalThis.window = {};
+  globalThis.matchMedia = () => ({ matches: true });
+  const button = new EventTarget();
+  button.setAttribute = () => {};
+  const calls = [];
+  let controls;
+  try {
+    controls = createVoiceCommands({
+      runner: async () => {},
+      createControl: () => ({
+        button,
+        root: { dataset: {}, remove() {} },
+        status: {},
+        detail: {},
+      }),
+      createSession: ({ emit }) => ({
+        start() {
+          calls.push('start');
+          emit({ type: 'state', state: 'listening' });
+        },
+        stop() {
+          calls.push('stop');
+        },
+        setMicrophoneEnabled(value) {
+          calls.push(value ? 'unmute' : 'mute');
+        },
+        sendText() {},
+        sendMapEvent() {},
+      }),
+    });
+    button.dispatchEvent(new Event('pointerdown'));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    button.dispatchEvent(new Event('pointerup'));
+    assert.equal(calls.at(-1), 'mute');
+    const click = new Event('click');
+    Object.defineProperty(click, 'detail', { value: 1 });
+    button.dispatchEvent(click);
+    assert.equal(controls.session.isActive(), true);
+    button.dispatchEvent(new Event('pointerdown'));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    assert.equal(calls.at(-1), 'unmute');
+    button.dispatchEvent(new Event('pointercancel'));
+    assert.equal(calls.at(-1), 'mute');
+    assert.equal(calls.filter((call) => call === 'start').length, 1);
+    assert.equal(calls.includes('stop'), false);
+    button.dispatchEvent(new Event('click'));
+    assert.equal(
+      controls.session.isActive(),
+      false,
+      'keyboard activation can still stop',
+    );
+  } finally {
+    controls?.session.destroy();
+    globalThis.window = previousWindow;
+    globalThis.matchMedia = previousMedia;
+  }
+});
+
+for (const socket of [false, true]) {
+  test(`common microphone control reaches ${socket ? 'WebSocket' : 'WebRTC'} capture`, async () => {
+    const { createRealtimeSession } = await import('./realtimeSession.js');
+    const calls = [];
+    const adapter = createRealtimeSession({
+      createController: () => ({
+        setSocketMicrophoneEnabled(value) {
+          if (!socket) return false;
+          calls.push(value);
+          return Promise.resolve(true);
+        },
+        setMicrophoneEnabled(value) {
+          calls.push(value);
+        },
+      }),
+    });
+    await adapter.setMicrophoneEnabled(false);
+    await adapter.setMicrophoneEnabled(true);
+    assert.deepEqual(calls, [false, true]);
+  });
+}

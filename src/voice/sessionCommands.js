@@ -177,7 +177,9 @@ export function createVoiceCommands({
   const unregisterUnsavedWork = registerUnsavedWork(() =>
     session.isActive() ? msg('the active voice session') : null,
   );
-  const buttonHandler = () => {
+  const buttonHandler = (event) => {
+    // Pointer activation already belongs to the hold; preserve keyboard clicks.
+    if (touchHold && event.detail > 0) return;
     if (adapter.ignoreButtonClick?.()) return;
     if (session.isActive()) session.stop();
     else void session.start({ pushToTalk: false });
@@ -191,8 +193,9 @@ export function createVoiceCommands({
     '(hover: none) and (pointer: coarse)',
   );
   let unbindHold = () => {};
-  if (touchOnly?.matches) {
-    ui.button.addEventListener('click', (event) => event.stopPropagation());
+  const touchHold =
+    touchOnly?.matches && typeof adapter.setMicrophoneEnabled === 'function';
+  if (touchHold) {
     unbindHold = bindHoldToTalk({
       element: ui.button,
       isActive: () => session.isActive(),
@@ -203,15 +206,13 @@ export function createVoiceCommands({
           return;
         }
         // Already connected: just reopen the microphone.
-        session.setSocketMicrophoneEnabled?.(true);
-        session.setMicrophoneEnabled?.(true);
+        await session.setMicrophoneEnabled(true);
       },
       onEnd: () => {
         if (!session.isActive()) return;
         // Stop listening, keep the session: reconnecting costs a token and a
         // handshake, which a second press should not pay again.
-        if (session.setSocketMicrophoneEnabled?.(false)) return;
-        session.setMicrophoneEnabled?.(false);
+        session.setMicrophoneEnabled(false);
       },
       onTap: () => {
         // Too short to be speech. Say what the gesture is rather than leaving

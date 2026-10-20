@@ -730,6 +730,7 @@
   "src/voice/realtimeSession.js",
   "src/voice/realtimeEvents.js",
   "src/voice/session.test.mjs",
+  "src/voice/holdToTalk.test.mjs",
   "src/layers/alpr/records.js",
   "src/layers/earthquakes/records.js",
   "src/layers/earthquakes/records.test.mjs",

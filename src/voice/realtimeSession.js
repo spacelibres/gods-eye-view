@@ -17,6 +17,11 @@ export function createRealtimeSession({
     capabilities: { costControls: true, pushToTalk: true },
     start: (settings) => controller.start(settings),
     stop: (settings) => controller.stop(settings),
+    setMicrophoneEnabled(enabled) {
+      const result = controller.setSocketMicrophoneEnabled(enabled);
+      if (result !== false) return result;
+      return controller.setMicrophoneEnabled(enabled);
+    },
     sendText: (text) => controller.sendTextCommand(text),
     sendMapEvent: (event) => controller.notifyMapEvent(event),
     ignoreButtonClick: () => Boolean(controller.spaceKeyHeld),

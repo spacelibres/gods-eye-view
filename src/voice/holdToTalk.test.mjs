@@ -22,7 +22,10 @@ function fakeElement() {
       for (const handler of [...(listeners.get(type) ?? [])]) handler(event);
     },
     count() {
-      return [...listeners.values()].reduce((sum, list) => sum + list.length, 0);
+      return [...listeners.values()].reduce(
+        (sum, list) => sum + list.length,
+        0,
+      );
     },
   };
 }
@@ -125,4 +128,56 @@ test('unbinding removes every listener', () => {
   assert.ok(h.element.count() > 0);
   h.unbind();
   assert.equal(h.element.count(), 0);
+});
+
+test('release during startup mutes again when the microphone becomes ready', async () => {
+  const element = fakeElement();
+  let ready;
+  let microphone = false;
+  bindHoldToTalk({
+    element,
+    onStart: async () => {
+      await new Promise((resolve) => {
+        ready = resolve;
+      });
+      microphone = true;
+    },
+    onEnd: () => {
+      microphone = false;
+    },
+  });
+  element.fire('pointerdown', { pointerId: 1 });
+  element.fire('pointerup', { pointerId: 1 });
+  ready();
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.equal(microphone, false);
+});
+
+test('a second hold shares pending acquisition and keeps its current gesture', async () => {
+  const element = fakeElement();
+  let ready;
+  let starts = 0;
+  let microphone = false;
+  bindHoldToTalk({
+    element,
+    onStart: async () => {
+      starts++;
+      await new Promise((resolve) => {
+        ready = resolve;
+      });
+      microphone = true;
+    },
+    onEnd: () => {
+      microphone = false;
+    },
+  });
+  element.fire('pointerdown', { pointerId: 1 });
+  element.fire('pointerup', { pointerId: 1 });
+  element.fire('pointerdown', { pointerId: 2 });
+  ready();
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.equal(starts, 1);
+  assert.equal(microphone, true);
+  element.fire('pointerup', { pointerId: 2 });
+  assert.equal(microphone, false);
 });

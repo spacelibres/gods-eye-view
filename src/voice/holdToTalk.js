@@ -43,6 +43,7 @@ export function bindHoldToTalk({
   let holding = false;
   let startedAt = 0;
   let pointerId = null;
+  let starting = null;
 
   const begin = async (event) => {
     // Ignore a second finger: one press is one microphone.
@@ -56,10 +57,16 @@ export function bindHoldToTalk({
       // Capture is an optimisation; losing it only costs a stray pointerup.
     }
     try {
-      await onStart();
+      // Repeated holds during acquisition share one microphone request.
+      starting ??= Promise.resolve(onStart());
+      await starting;
+      // Acquisition may finish after release; apply the current gesture state.
+      if (!holding) onEnd();
     } catch {
       // A failed start is reported by the session itself.
       holding = false;
+    } finally {
+      starting = null;
     }
   };
 

@@ -51,6 +51,13 @@ New typed input supersedes old intent. Radio waits for the spoken confirmation a
 verified muted playback. A live cost meter stays bound to its negotiated model,
 even when the next-session preference changes.
 
+Touch hold-to-talk uses the common session's `setMicrophoneEnabled` operation,
+delegated to adapters that support capture control. The Realtime adapter routes
+this operation to WebRTC tracks or WebSocket capture and preserves asynchronous
+acquisition completion. Release and cancellation mute without closing the
+session, including when acquisition finishes after release. Pointer-generated
+clicks do not toggle a touch hold session; keyboard activation still does.
+
 Run the unit suite and both live recorded-audio modes against a configured local
 server:
 

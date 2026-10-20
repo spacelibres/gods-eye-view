@@ -174,6 +174,9 @@ export function createVoiceSession({ createAdapter, runner, signal }) {
       }
     },
     sendText: (text) => !disposed && adapter.sendText(text),
+    /** Switch capture through the provider-neutral adapter. */
+    setMicrophoneEnabled: (enabled) =>
+      !disposed && adapter.setMicrophoneEnabled?.(enabled),
     sendMapEvent: (event) => !disposed && adapter.sendMapEvent(event),
     destroy: () => dispose(),
   };

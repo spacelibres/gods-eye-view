@@ -489,13 +489,12 @@ export class RealtimeConnection {
    * presses, and only the capture is switched.
    *
    * @param {boolean} enabled
-   * @returns {boolean} Whether a socket session took the request.
+   * @returns {boolean|Promise<boolean>} Capture result, or false without a socket.
    */
   setSocketMicrophoneEnabled(enabled) {
     const session = this.socketSession;
     if (!session?.setMicrophoneEnabled) return false;
-    session.setMicrophoneEnabled(enabled);
-    return true;
+    return session.setMicrophoneEnabled(enabled);
   }
 
   invalidate() {

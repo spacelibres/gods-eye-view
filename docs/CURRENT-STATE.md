@@ -5815,3 +5815,15 @@ datacenters, dams and the Nepal locator retain that shared credit while displaye
 
 Military fragments stitch by source identity. Different mapped parcels merge only
 when their footprints touch or contain one another, never across a seam tolerance gap.
+
+## Mobile voice capture — October 20, 2026
+
+On coarse-pointer touch devices, voice adapters exposing microphone control use
+hold-to-talk. Releasing or cancelling the hold mutes capture while retaining the
+connection; the next hold resumes capture without reconnecting. The pointer's
+follow-up click does not toggle the session. Keyboard activation still toggles,
+and adapters without microphone control retain click-to-toggle. A hold released
+while acquisition is pending is muted again when acquisition completes; repeated
+holds share the pending request. WebRTC and WebSocket capture are reached through
+the common session adapter. Regression coverage lives in
+`src/voice/session.test.mjs` and `src/voice/holdToTalk.test.mjs`.
