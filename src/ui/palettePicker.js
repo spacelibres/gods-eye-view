@@ -74,22 +74,18 @@ export function mountPalettePicker({ root, primary, onSelect }) {
         />
       </label>`;
 
-  // The phone affordance: one button carrying the scheme in force, built to
-  // the language picker's measurements so the corner reads as one row. It
-  // opens the row upward; on a wide viewport the row is shown inline and the
-  // button stays out of the layout.
+  // The phone affordance: one button, one glyph. Carries no state chip — the
+  // scheme in force is visible on the globe itself, and a dot beside the icon
+  // read as a second, unexplained control.
   const button = documentRef.createElement('button');
   button.type = 'button';
   button.className = 'palette-toggle';
   button.setAttribute('aria-haspopup', 'true');
   button.setAttribute('aria-expanded', 'false');
-  const current = normalizeHex(primary) ?? COLOR_PRESETS[0].primary;
-  button.style.setProperty('--swatch', current);
   button.title = t('Globe colour scheme');
   button.setAttribute('aria-label', t('Globe colour scheme'));
   button.innerHTML = `
-      <span class="material-symbols-outlined" aria-hidden="true">palette</span>
-      <span class="palette-toggle-chip" aria-hidden="true"></span>`;
+      <span class="material-symbols-outlined" aria-hidden="true">palette</span>`;
 
   const panel = documentRef.createElement('div');
   panel.className = 'palette-panel';
@@ -133,9 +129,8 @@ export function mountPalettePicker({ root, primary, onSelect }) {
       swatch.setAttribute('aria-checked', selected ? 'true' : 'false');
       swatch.tabIndex = selected ? 0 : -1;
     }
-    // The button carries the scheme in force, so a phone sees the result
-    // without opening the sheet again.
-    button.style.setProperty('--swatch', hex);
+    // The button carries no state chip, so there is nothing to sync there:
+    // the active swatch inside the popup is the only indicator.
     onSelect(hex);
   };
 

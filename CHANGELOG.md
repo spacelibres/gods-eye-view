@@ -4,6 +4,15 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.36] — 2026-10-20 — One icon, one column for the phone colour picker
+
+- Give the phone colour button a single glyph, and stack its choices in a
+  vertical rail. The button carried a dot showing the scheme in force, which
+  read as an unexplained second control beside the palette icon; it is one
+  icon now. Tapping it opens the six presets and the custom colour as a
+  column pinned to the screen's end edge, rising upward from the corner,
+  instead of a horizontal strip. Every choice keeps the same box.
+
 ## [0.2.35] — 2026-10-20 — Phone colour picker matches the language button
 
 - Match the phone colour picker's button to the language button beside it, and

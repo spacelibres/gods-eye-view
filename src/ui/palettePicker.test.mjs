@@ -13,7 +13,7 @@ import { mountPalettePicker } from './palettePicker.js';
  * a full HTML implementation.
  */
 function parseMarkup(node, html) {
-  const tags = html.match(/<(button|input|label)\b([^>]*)>/g) ?? [];
+  const tags = html.match(/<(button|input|label|span)\b([^>]*)>/g) ?? [];
   for (const tag of tags) {
     const name = /^<(\w+)/.exec(tag)[1];
     const el = makeElement(node.ownerDocument, name);
@@ -205,15 +205,23 @@ test('tapping the button opens every scheme and tapping again puts them away', (
   assert.equal(panel.hidden, true);
 });
 
-test('the button shows the scheme in force and updates when another is chosen', () => {
+test('the button is one glyph with no state chip, and choosing still applies', () => {
   const { root, chosen } = fixture('#007BFF');
   const button = root.children.find((c) => c.classList.contains('palette-toggle'));
-  assert.equal(button.style.getPropertyValue('--swatch'), '#007BFF');
+
+  // A single icon: no second dot beside it, which read as its own control.
+  const glyphs = button.children;
+  assert.equal(glyphs.length, 1, 'the button holds one element');
+  assert.ok(glyphs[0].classList.contains('material-symbols-outlined'));
+  assert.equal(
+    button.querySelectorAll('.palette-toggle-chip').length,
+    0,
+    'no colour dot on the button',
+  );
 
   const swatch = root.querySelectorAll('.palette-swatch')[2];
   root.dispatch('click', { target: swatch });
-  assert.deepEqual(chosen, [swatch.dataset.primary]);
-  assert.equal(button.style.getPropertyValue('--swatch'), swatch.dataset.primary);
+  assert.deepEqual(chosen, [swatch.dataset.primary], 'the choice still applies');
 });
 
 test('a tap outside the panel and Escape both put it away', () => {

@@ -101,14 +101,8 @@
     display: flex;
   }
 
-  /* The row is the popup's content on a phone, never an inline strip. */
-  #palette-picker .palette-swatches {
-    display: none;
-  }
-
-  #palette-picker.is-open .palette-swatches {
-    display: flex;
-  }
+  /* The panel's own `hidden` attribute decides visibility, so the swatch row
+     inside it needs no separate show/hide rule. */
 
   /* Same box, padding, radius and frame as .locale-picker-button, so the two
      buttons are the same height and share one baseline in the corner row. */
@@ -160,24 +154,16 @@
     color: #55dff5;
   }
 
-  /* The dot beside the glyph is the scheme currently in force. */
-  .palette-toggle-chip {
-    flex: none;
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    background: var(--swatch);
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.55);
-  }
-
-  /* Opens upward from the corner, aligned to its own end edge — the language
-     picker's placement, not a sheet over the map. */
+  /* Opens upward as a single column pinned to the screen's end edge. The
+     anchor is the picker itself (`#palette-picker` is `position: relative`),
+     which already sits at the corner with the same inline inset, so the rail
+     rises along the edge instead of spreading across the map. */
   .palette-panel {
     position: absolute;
-    inset-block-end: calc(100% + 0.4rem);
     inset-inline-end: 0;
+    inset-block-end: calc(100% + 0.4rem);
     display: flex;
-    padding: 0.45rem;
+    padding: 0.4rem;
     background:
       linear-gradient(145deg, rgba(10, 27, 37, 0.97), rgba(7, 13, 22, 0.95)),
       rgba(7, 17, 25, 0.96);
@@ -194,9 +180,11 @@
     display: none;
   }
 
-  /* One grid for every choice: six presets and the custom field share a box,
-     so nothing reads as a bigger or smaller dot than its neighbour. */
+  /* One column of choices, stacked upward along the screen's end edge rather
+     than a horizontal strip over the map. Every swatch keeps the same box, so
+     the six presets and the custom field line up on one rail. */
   .palette-panel .palette-swatches {
+    flex-direction: column;
     gap: 0.4rem;
   }
 
