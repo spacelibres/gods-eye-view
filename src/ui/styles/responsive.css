@@ -172,13 +172,16 @@
     width: auto;
   }
 
+  /* The panel stack is a door, not a wall: it shrinks to its collapsed rows
+     and sits above the dock, so the globe keeps the screen. Expanding a panel
+     still gives it the height it needs (the stack scrolls). */
   #left-panel-stack {
-    top: 70px;
+    top: auto;
     right: 16px;
-    bottom: calc(50vh + 8px);
+    bottom: 108px;
     left: 16px;
     width: auto;
-    max-height: none;
+    max-height: 46vh;
     overflow-y: auto;
   }
 
@@ -269,6 +272,38 @@
 
   #title-bar h1 > span:last-child,
   #title-bar .subtitle {
+    display: none;
+  }
+}
+
+/* ── Phones: keep the globe visible ───────────────────────────────
+   A 390 x 844 phone has no room for the desktop rails: the left panel
+   stack alone covered 37% of the screen, and the dock, the palette and
+   the location bar stacked on top of it. The panels stay reachable — they
+   shrink to their collapsed rows (see the stack rule above) — and the
+   first-run sheet stops competing with the controls underneath it. */
+
+@media (max-width: 720px) {
+  /* The identity lives in the loading screen and the dock; on a phone the
+     wordmark only competed with the globe for the top row. */
+  #title-bar {
+    display: none;
+  }
+
+  /* Cesium's credit block is a licence notice, not a control: hidden on
+     phones at the deployment's request (owner decision 2026-10-19). It is
+     unchanged on any viewport wider than this. */
+  #cesium-credits {
+    display: none !important;
+  }
+
+  /* The first-run card covers the phone, so everything that would compete
+     with it waits behind: the panel rows, the palette, the voice card and
+     the location bar. */
+  body:has(#first-run-launcher.visible) #left-panel-stack,
+  body:has(#first-run-launcher.visible) #gev-voice-control,
+  body:has(#first-run-launcher.visible) #location-bar,
+  body:has(#first-run-launcher.visible) #scene-panel {
     display: none;
   }
 }

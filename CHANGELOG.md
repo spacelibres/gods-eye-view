@@ -1,5 +1,13 @@
 # Changelog
 
+- Give a phone its screen back. The left panel stack occupied 37% of a
+  390 x 844 viewport and sat under the first-run card; it now shrinks to its
+  collapsed rows above the dock and steps aside entirely while the card is
+  open, along with the palette, the voice card, the location bar and the
+  scene panel. The title lockup is hidden on phones (the loading screen and
+  the dock carry the identity), and Cesium credit block is hidden there too
+  at the deployment owner request. Wider viewports are unchanged.
+
 - Record the app version in share links as `av`. `v` stays the link format
   that decides which fields exist; `av` only names the build the link was
   made with, so a copied URL answers "which release is this from?" without
