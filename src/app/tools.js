@@ -105,7 +105,20 @@ export function createApplicationTools({
     });
   }
   if (startChrome)
-    defer(startChrome({ loadingScreen, styleManager, dataManager, signal }));
+    defer(
+      startChrome({
+        loadingScreen,
+        styleManager,
+        dataManager,
+        viewer,
+        tileset,
+        signal,
+        reportStatus: (text) => {
+          const status = loadingScreen?.querySelector('.loader-status');
+          if (status) status.textContent = text;
+        },
+      }),
+    );
   // Idle render governor: flips the scene into requestRenderMode whenever
   // nothing animates per frame. Installed AFTER every module above has had
   // its chance to register pre-install holds. (perf wave 2)

@@ -4,6 +4,17 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.40] — 2026-10-20 — The loading screen waits for the base map
+
+- Keep the loading screen up until the base map is actually drawn. It used to
+  lift after a fixed second, waiting only for the saved layer switches, so the
+  page opened onto an empty globe while the first tiles were still arriving.
+  It now waits for the base map itself: `allTilesLoaded` on the photoreal 3D
+  tileset, or the globe's tile-queue drain on the keyless globe. Everything
+  else — the layer catalog and the live feeds — keeps loading behind the page,
+  as before. The wait is bounded at 12 seconds, so a slow network still reaches
+  the app rather than sitting on the cover; a warm cache skips the wait.
+
 ## [0.2.39] — 2026-10-20 — A square icon for the install slot
 
 - Stop the install icon from being cropped. The icon links and the manifest
