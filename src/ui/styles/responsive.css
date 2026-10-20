@@ -124,6 +124,62 @@
     font-size: 9px;
   }
 
+  /*
+   * Phones: the corner blocks were sized for a desktop viewport, so on a
+   * 390 x 844 screen GSD/ALT/MGRS/lat-lon and the ORB line took a large share
+   * of the map and collided with each other. Every reading shrinks here, and
+   * the letterspacing that made them wide goes with them.
+   */
+  .hud-content {
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+
+  .hud-rec {
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+
+  #hud-rec-dot {
+    font-size: 11px;
+  }
+
+  .hud-orbital {
+    font-size: 9px;
+    letter-spacing: 0.8px;
+  }
+
+  .hud-mode {
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+
+  .hud-classification,
+  .hud-system {
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+
+  .hud-summary {
+    font-size: 9px;
+    letter-spacing: 0.6px;
+  }
+
+  .hud-summary-label {
+    font-size: 8px;
+  }
+
+  /* The bracket glyphs are 22px on desktop; at that size they framed a
+     reading rather than sitting beside it. */
+  .hud-bracket {
+    font-size: 16px;
+  }
+
+  .hud-ais-vessel {
+    max-width: 210px;
+    font-size: 9px;
+  }
+
   #data-panel {
     top: auto;
     left: 16px;

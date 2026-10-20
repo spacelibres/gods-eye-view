@@ -4,6 +4,15 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.33] — 2026-10-20 — Smaller HUD type on a phone
+
+- Shrink the HUD readings on a phone. The corner blocks kept their desktop
+  size, so on a 390 x 844 screen GSD, ALT, MGRS, lat/lon, the ORB line and the
+  REC timestamp took a large share of the map and overlapped each other. Every
+  reading drops to 9-10 px below 720 px, along with most of the letter spacing
+  that made them wide, and the bracket glyphs come down from 22 px. Wider
+  viewports are unchanged.
+
 ## [0.2.32] — 2026-10-20 — Changelog grouped by release
 
 - Group the changelog by release. Every entry now sits under the
