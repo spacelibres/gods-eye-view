@@ -4,6 +4,15 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.38] — 2026-10-20 — Voice card at the phone's lower-left corner
+
+- Anchor the phone voice card to the lower-left corner. It was positioned
+  against the voice control in the dock's right column and centred on it, so
+  it floated over the middle of the map. On a phone it now pins to the
+  screen's lower-left and grows upward as a narrow column, in line with the
+  lockup and the panel rows down that edge, and it enters with a short rise
+  rather than the desktop's centring shift.
+
 ## [0.2.37] — 2026-10-20 — Lockup ratio and a voice card that scales
 
 - Stop the title lockup from squashing. The inlined vector was given
