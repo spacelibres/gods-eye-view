@@ -1,3 +1,6 @@
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { once } from 'node:events';
@@ -84,250 +87,6 @@ test('live entry resolves in Node and aircraft normalization stays independently
   );
 });
 
-test('OpenSky state and track routes share tokens, retain cache and use regional fallback', async (t) => {
-  environment(t, {
-    OPENSKY_CLIENT_ID: 'fixture-client',
-    OPENSKY_CLIENT_SECRET: 'fixture-secret',
-    OPENSKY_AUTH_MODE: 'oauth',
-    OPENSKY_USERNAME: undefined,
-    OPENSKY_PASSWORD: undefined,
-  });
-  let now = Date.now();
-  t.mock.method(Date, 'now', () => now);
-  t.mock.method(console, 'log', () => {});
-  const calls = [];
-  t.mock.method(globalThis, 'fetch', async (url, options) => {
-    calls.push({ url, options });
-    if (url.includes('/token'))
-      return Response.json({ access_token: 'fixture-token', expires_in: 1800 });
-    if (url.includes('/states/')) {
-      assert.equal(options.headers.Authorization, 'Bearer fixture-token');
-      return Response.json({ time: Math.floor(now / 1000), states: [] });
-    }
-    if (url.includes('/tracks/')) {
-      assert.equal(options.headers.Authorization, 'Bearer fixture-token');
-      return Response.json({ path: [] });
-    }
-    if (url.includes('/lat/'))
-      return Response.json({
-        now: now / 1000,
-        ac: [{ hex: 'abc123', lat: 30, lon: -97, alt_baro: 10000 }],
-      });
-    throw Error(`Unexpected URL: ${url}`);
-  });
-  const states = install(
-    providers.openSkyProxy({
-      adsbFetch: (...args) => globalThis.fetch(...args),
-    }),
-  );
-  assert.equal(
-    (await states('/api/flights', '?lat=30&lon=-97')).statusCode,
-    200,
-  );
-  assert.equal(
-    (await states('/api/flights', '?lat=30&lon=-97')).headers[
-      'x-opensky-cache'
-    ],
-    'HIT',
-  );
-  assert.equal(calls.length, 2);
-  const tracks = install(providers.trackBackfillProxies(), true);
-  assert.equal(
-    (await tracks('/api/flights/track', '?icao24=ABC123')).statusCode,
-    200,
-  );
-  await tracks('/api/flights/track', '?icao24=abc123');
-  assert.equal(calls.filter((call) => call.url.includes('/token')).length, 1);
-  assert.equal(calls.filter((call) => call.url.includes('/tracks/')).length, 1);
-  assert.equal(
-    (await tracks('/api/military/track', '?hex=invalid')).statusCode,
-    400,
-  );
-  now += 130_000;
-  t.mock.method(globalThis, 'fetch', async (url) => {
-    if (url.includes('/states/')) return new Response('', { status: 503 });
-    if (url.includes('/lat/'))
-      return Response.json({
-        now: now / 1000,
-        ac: [{ hex: 'abc123', lat: 30, lon: -97, alt_baro: 10000 }],
-      });
-    throw Error(`Unexpected URL: ${url}`);
-  });
-  // A fresh request without a usable cached worldwide frame should use the regional feed.
-  const fresh = await import(
-    `../../server/providers/aircraft/opensky.js?fallback=${now}`
-  );
-  process.env.OPENSKY_AUTH_MODE = 'anon';
-  const fallback = await install(
-    fresh.openSkyProxy({ adsbFetch: (...args) => globalThis.fetch(...args) }),
-  )('/api/flights', '?lat=30&lon=-97');
-  assert.equal(fallback.statusCode, 200);
-  assert.equal(fallback.headers['x-flight-source'], 'adsb.lol');
-  assert.equal(JSON.parse(fallback.body).states[0][0], 'abc123');
-});
-
-test('OpenSky global snapshot attempts are time-limited, retried once, then fall back', async (t) => {
-  environment(t, {
-    OPENSKY_CLIENT_ID: undefined,
-    OPENSKY_CLIENT_SECRET: undefined,
-    OPENSKY_AUTH_MODE: 'anon',
-    OPENSKY_USERNAME: undefined,
-    OPENSKY_PASSWORD: undefined,
-  });
-  t.mock.method(console, 'warn', () => {});
-  const timedOut = () =>
-    Promise.reject(
-      new DOMException(
-        'The operation was aborted due to timeout',
-        'TimeoutError',
-      ),
-    );
-  const load = async (respond) => {
-    const attempts = [];
-    t.mock.method(globalThis, 'fetch', async (url, options) => {
-      if (url.includes('/states/')) {
-        assert.ok(options.signal instanceof AbortSignal);
-        attempts.push(url);
-        return respond(attempts.length);
-      }
-      if (url.includes('/lat/'))
-        return Response.json({
-          now: Date.now() / 1000,
-          ac: [{ hex: 'abc123', lat: 30, lon: -97, alt_baro: 10000 }],
-        });
-      throw Error(`Unexpected URL: ${url}`);
-    });
-    const fresh = await import(
-      `../../server/providers/aircraft/opensky.js?timeout=${Math.random()}`
-    );
-    const response = await install(
-      fresh.openSkyProxy({ adsbFetch: (...args) => globalThis.fetch(...args) }),
-    )('/api/flights', '?lat=30&lon=-97');
-    return { response, attempts };
-  };
-  const recovered = await load((attempt) =>
-    attempt === 1
-      ? timedOut()
-      : Response.json({ time: Math.floor(Date.now() / 1000), states: [] }),
-  );
-  assert.equal(recovered.attempts.length, 2);
-  assert.equal(recovered.response.statusCode, 200);
-  assert.equal(recovered.response.headers['x-flight-source'], undefined);
-  const stalled = await load(() => timedOut());
-  assert.equal(stalled.attempts.length, 2);
-  assert.equal(stalled.response.statusCode, 200);
-  assert.equal(stalled.response.headers['x-flight-source'], 'adsb.lol');
-});
-
-const openSkyAnonEnv = {
-  OPENSKY_CLIENT_ID: undefined,
-  OPENSKY_CLIENT_SECRET: undefined,
-  OPENSKY_AUTH_MODE: 'anon',
-  OPENSKY_USERNAME: undefined,
-  OPENSKY_PASSWORD: undefined,
-};
-const regionalFallback = () =>
-  Response.json({
-    now: Date.now() / 1000,
-    ac: [{ hex: 'abc123', lat: 30, lon: -97, alt_baro: 10000 }],
-  });
-
-test('OpenSky 429 starts the cooldown from headers and cancels the body unread', async (t) => {
-  environment(t, openSkyAnonEnv);
-  t.mock.method(console, 'warn', () => {});
-  t.mock.method(console, 'error', () => {});
-  let states = 0;
-  let limited;
-  t.mock.method(globalThis, 'fetch', async (url) => {
-    if (url.includes('/states/')) {
-      states++;
-      limited = oversizedResponse('x', {
-        status: 429,
-        headers: { 'x-rate-limit-retry-after-seconds': '600' },
-      });
-      return limited.response;
-    }
-    if (url.includes('/lat/')) return regionalFallback();
-    throw Error(`Unexpected URL: ${url}`);
-  });
-  const fresh = await import(
-    `../../server/providers/aircraft/opensky.js?ratelimit=${Math.random()}`
-  );
-  const request = install(
-    fresh.openSkyProxy({ adsbFetch: (...args) => globalThis.fetch(...args) }),
-  );
-  const first = await request('/api/flights', '?lat=30&lon=-97');
-  assert.equal(first.statusCode, 200);
-  assert.equal(first.headers['x-flight-source'], 'adsb.lol');
-  assert.equal(states, 1, 'a rate-limited snapshot is not retried');
-  assert.equal(limited.state.cancelled, true);
-  assert.ok(limited.state.pulled <= 1, 'the 429 body is not read');
-  const cooling = await request('/api/flights', '?lat=30&lon=-97');
-  assert.equal(cooling.statusCode, 200);
-  assert.equal(
-    cooling.headers['x-opensky-auth-reason'],
-    'opensky_cooldown_regional_fallback',
-  );
-  assert.equal(states, 1, 'the cooldown holds off the next upstream attempt');
-});
-
-test('OpenSky 429 without retry-after cools down for the 2 minute default', async (t) => {
-  environment(t, openSkyAnonEnv);
-  t.mock.method(console, 'warn', () => {});
-  t.mock.method(console, 'error', () => {});
-  const start = Date.now();
-  let now = start;
-  t.mock.method(Date, 'now', () => now);
-  let states = 0;
-  t.mock.method(globalThis, 'fetch', async (url) => {
-    if (url.includes('/states/')) {
-      states++;
-      return new Response('{}', { status: 429 });
-    }
-    if (url.includes('/lat/')) return regionalFallback();
-    throw Error(`Unexpected URL: ${url}`);
-  });
-  const fresh = await import(
-    `../../server/providers/aircraft/opensky.js?ratelimit-default=${Math.random()}`
-  );
-  const request = install(
-    fresh.openSkyProxy({ adsbFetch: (...args) => globalThis.fetch(...args) }),
-  );
-  await request('/api/flights', '?lat=30&lon=-97');
-  assert.equal(states, 1);
-  // Past the 30 s floor but inside the 2 minute default.
-  now = start + 90_000;
-  await request('/api/flights', '?lat=30&lon=-97');
-  assert.equal(states, 1, 'a missing header is not read as a zero wait');
-});
-
-test('OpenSky does not retry a snapshot body over the cap', async (t) => {
-  environment(t, openSkyAnonEnv);
-  t.mock.method(console, 'warn', () => {});
-  t.mock.method(console, 'error', () => {});
-  const bodies = [];
-  t.mock.method(globalThis, 'fetch', async (url) => {
-    if (url.includes('/states/')) {
-      const oversized = oversizedResponse(' ');
-      bodies.push(oversized.state);
-      return oversized.response;
-    }
-    if (url.includes('/lat/')) return regionalFallback();
-    throw Error(`Unexpected URL: ${url}`);
-  });
-  const fresh = await import(
-    `../../server/providers/aircraft/opensky.js?oversize=${Math.random()}`
-  );
-  const response = await install(
-    fresh.openSkyProxy({ adsbFetch: (...args) => globalThis.fetch(...args) }),
-  )('/api/flights', '?lat=30&lon=-97');
-  assert.equal(response.statusCode, 200);
-  assert.equal(response.headers['x-flight-source'], 'adsb.lol');
-  assert.equal(bodies.length, 1, 'an oversized body is not fetched twice');
-  assert.equal(bodies[0].cancelled, true);
-  assert.ok(bodies[0].pulled <= 9, 'reading stops at the 8 MiB cap');
-});
-
 test('AIS preview route ingests through the socket, returns tracks and disposes before restart', async (t) => {
   const upstream = new WebSocketServer({ host: '127.0.0.1', port: 0 });
   await once(upstream, 'listening');
@@ -403,7 +162,16 @@ test('AIS preview route ingests through the socket, returns tracks and disposes 
 });
 
 test('track backfill proxy returns 502 on an oversized upstream body and caches it as an error', async (t) => {
-  const tracks = install(providers.trackBackfillProxies(), true);
+  const directory = mkdtempSync(join(tmpdir(), 'gev-track-cap-'));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  const tracks = install(
+    providers.trackBackfillProxies({
+      directory,
+      tokenProvider: async () => 'fixture',
+      quota: { fetch: (...args) => globalThis.fetch(...args), waitMs: () => 0 },
+    }),
+    true,
+  );
   let callCount = 0;
   t.mock.method(globalThis, 'fetch', async () => {
     callCount++;

@@ -330,10 +330,10 @@ async function main() {
       window.__SYNTH_HITS = { opensky: 0, mil: 0 };
 
       const realFetch = window.fetch.bind(window);
-      const jsonResponse = (obj) =>
+      const jsonResponse = (obj, headers = {}) =>
         new Response(JSON.stringify(obj), {
           status: 200,
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...headers },
         });
 
       window.fetch = (input, init) => {
@@ -366,7 +366,7 @@ async function main() {
             f.track,           // 10 true_track (deg)
             0, null, null, null, false, 0, // padding to match state-vector length
           ]));
-          return Promise.resolve(jsonResponse({ time: Math.floor(Date.now() / 1000), states }));
+          return Promise.resolve(jsonResponse({ time: Math.floor(Date.now() / 1000), states }, { 'X-Feed-Next-Refresh-Ms': '0' }));
         }
         // Trail backfill (fires on trackById). Stub with valid-but-empty
         // payloads so the deterministic run never 404s against the dev proxy.

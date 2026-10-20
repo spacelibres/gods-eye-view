@@ -40,6 +40,7 @@ test('real dev and built-preview servers serve provider JSON and terminate unkno
   );
   for (const [name, value] of Object.entries({
     GEV_ADSB_STATE_DIR: path.join(root, 'adsb-state'),
+    GEV_OPENSKY_STATE_DIR: path.join(root, 'opensky-state'),
     AISSTREAM_API_KEY: '',
     FIRMS_MAP_KEY: '',
     FIRMS_API_KEY: '',
@@ -98,6 +99,9 @@ test('real dev and built-preview servers serve provider JSON and terminate unkno
       ? await preview(config)
       : await createServer(config);
     if (!isPreview) await server.listen();
+    await config.plugins
+      .find((plugin) => plugin.name === 'opensky-proxy')
+      .ready();
     await config.plugins
       .find((plugin) => plugin.name === 'adsblol-proxy')
       .ready();

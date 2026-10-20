@@ -919,6 +919,17 @@ and model transitions, Cockpit HUD, clearing and tracking release.
 
 ## Browser live-source observations
 
+OpenSky acquisition runs on the VPS every 120 seconds for one worldwide snapshot.
+`/api/flights` only reads its persistent shared cache; browser movement and parallel
+clients cannot trigger upstream requests or regional ADS-B fallbacks. Each global
+attempt reserves four credits in a durable state ledger; track backfill has an
+independent ledger and a bounded shared per-aircraft cache. Actual remaining
+credits and full upstream cooldowns may extend the collection interval. Frontend
+adapters coalesce reads and honor the server refresh deadline while preserving
+original observation epochs and stale ages. See
+[`OPENSKY-CACHE-OPERATIONS.md`](OPENSKY-CACHE-OPERATIONS.md) for deployment,
+storage and conservative quota recovery.
+
 Flights, Military Flights and AIS Vessels obtain snapshots and optional history
 through `gods-eye-view/sources/live`. The standalone adapters use the existing
 same-origin routes. Aircraft observations distinguish barometric metres from

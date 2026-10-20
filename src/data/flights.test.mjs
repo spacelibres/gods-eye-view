@@ -194,7 +194,10 @@ test('nonempty OpenSky payload with zero usable rows cannot prove share target a
   globalThis.fetch = async () => ({
     ok: true,
     status: 200,
-    headers: { get: () => null },
+    headers: {
+      get: (name) =>
+        name.toLowerCase() === 'x-feed-next-refresh-ms' ? '0' : null,
+    },
     json: async () => ({
       states: [null, {}, ['abc123', null, null, null, null, null, null]],
     }),
@@ -262,7 +265,10 @@ test('a newly seen aircraft appears at its delayed position, not ahead of it', a
     return {
       ok: true,
       status: 200,
-      headers: { get: () => null },
+      headers: {
+        get: (name) =>
+          name.toLowerCase() === 'x-feed-next-refresh-ms' ? '0' : null,
+      },
       json: async () => ({
         time: nowSec,
         states: [
@@ -381,7 +387,10 @@ test('flights poll refreshes tracked callsign/FL/kts and marks a missed poll STA
     return {
       ok: true,
       status: 200,
-      headers: { get: () => null },
+      headers: {
+        get: (name) =>
+          name.toLowerCase() === 'x-feed-next-refresh-ms' ? '0' : null,
+      },
       json: async () => ({ time: nowSec, states }),
     };
   };
@@ -973,7 +982,10 @@ test('civil tracked readout: a callsign-less enriched contact reads as its regis
   globalThis.fetch = async () => ({
     ok: true,
     status: 200,
-    headers: { get: () => null },
+    headers: {
+      get: (name) =>
+        name.toLowerCase() === 'x-feed-next-refresh-ms' ? '0' : null,
+    },
     json: async () => ({ time: 0, states: [] }),
   });
   try {
@@ -1111,7 +1123,10 @@ test('a newly seen taxiing aircraft starts on the floor under its delayed positi
     return {
       ok: true,
       status: 200,
-      headers: { get: () => null },
+      headers: {
+        get: (name) =>
+          name.toLowerCase() === 'x-feed-next-refresh-ms' ? '0' : null,
+      },
       json: async () => ({
         time: nowSec,
         states: [

@@ -206,7 +206,7 @@ test('construction is inert; adapters preserve routes, viewport query, cache epo
     { signal },
   );
   assert.equal(requests[0].url, '/api/flights?lat=30.1235&lon=-97.0000');
-  assert.equal(requests[0].init.signal, signal);
+  assert.equal(requests[0].init.signal.aborted, false);
   assert.equal(snapshot.source, 'adsb.lol');
   assert.equal(snapshot.coverage, '250 nm regional');
   assert.equal((await civil.getTrack('abc123')).records[0].baroAltitudeM, 1000);
@@ -574,4 +574,181 @@ test('military cached deadlines expire when the clock rewinds', async () => {
   clock--;
   await source.getIdentities();
   assert.equal(calls, 2);
+});
+
+test('civil shared global cache keeps source epoch and honors the server deadline across regions', async () => {
+  let time = now,
+    calls = 0;
+  const clock = () => time;
+  const fetchImpl = async () => {
+    calls++;
+    return response(
+      { time: now / 1000 - 60, states: [aircraft] },
+      {
+        'X-Flight-Coverage': 'GLOBAL',
+        'X-Feed-Next-Refresh-Ms': '240000',
+        'X-OpenSky-Cache': 'STALE',
+        'X-Feed-Source': 'OpenSky cache',
+      },
+    );
+  };
+  const first = createFlightSource({ fetchImpl, now: clock });
+  const second = createFlightSource({ fetchImpl, now: clock });
+  await first.getSnapshot({ latitude: 1, longitude: 1 });
+  time += 100000;
+  const snapshot = await second.getSnapshot({ latitude: 2, longitude: 2 });
+  assert.equal(calls, 1);
+  assert.equal(snapshot.observedAtMs, now - 60000);
+  assert.equal(snapshot.ageMs, 160000);
+  assert.equal(snapshot.stale, true);
+  assert.equal(snapshot.source, 'OpenSky cache');
+  time = now - 1;
+  await first.getSnapshot();
+  assert.equal(calls, 2);
+});
+
+test('civil shared requests isolate cancellation and retain retry deadlines', async () => {
+  let release,
+    calls = 0,
+    transportSignal;
+  const fetchImpl = async (_url, { signal }) => {
+    calls++;
+    transportSignal = signal;
+    return new Promise((resolve) => {
+      release = () => resolve(response({}, { 'Retry-After': '7200' }, 429));
+    });
+  };
+  const clock = () => now;
+  const a = createFlightSource({ fetchImpl, now: clock });
+  const b = createFlightSource({ fetchImpl, now: clock });
+  const controller = new AbortController();
+  const first = a.getSnapshot({}, { signal: controller.signal });
+  const second = b.getSnapshot();
+  controller.abort();
+  await assert.rejects(first, { name: 'AbortError' });
+  assert.equal(transportSignal.aborted, false);
+  release();
+  await assert.rejects(second, { retryAfterMs: 7200000 });
+  await assert.rejects(a.getSnapshot(), { retryAfterMs: 7200000 });
+  assert.equal(calls, 1);
+});
+
+test('civil default sources share the worldwide route and two-minute fallback', async () => {
+  const original = globalThis.fetch;
+  const urls = [];
+  globalThis.fetch = async (url) => {
+    urls.push(url);
+    return response({ time: now / 1000, states: [aircraft] });
+  };
+  const clock = () => now;
+  try {
+    await Promise.all([
+      createFlightSource({ now: clock }).getSnapshot({
+        latitude: 1,
+        longitude: 2,
+      }),
+      createFlightSource({ now: clock }).getSnapshot({
+        latitude: 3,
+        longitude: 4,
+      }),
+    ]);
+    await createFlightSource({ now: clock }).getSnapshot();
+    assert.deepEqual(urls, ['/api/flights']);
+  } finally {
+    globalThis.fetch = original;
+  }
+});
+
+test('civil regional responses cannot satisfy another anchor and explicit zero allows fixture refresh', async () => {
+  const urls = [];
+  const source = createFlightSource({
+    now: () => now,
+    fetchImpl: async (url) => {
+      urls.push(url);
+      return response(
+        { time: now / 1000, states: [aircraft] },
+        {
+          'X-Flight-Coverage': '250 nm regional',
+          'X-Feed-Next-Refresh-Ms': '0',
+        },
+      );
+    },
+  });
+  await source.getSnapshot({ latitude: 1, longitude: 2 });
+  await source.getSnapshot({ latitude: 3, longitude: 4 });
+  await source.getSnapshot({ latitude: 3, longitude: 4 });
+  assert.deepEqual(urls, [
+    '/api/flights?lat=1.0000&lon=2.0000',
+    '/api/flights?lat=3.0000&lon=4.0000',
+    '/api/flights?lat=3.0000&lon=4.0000',
+  ]);
+});
+
+test('civil final reader cancellation releases transport and can retry immediately', async () => {
+  let calls = 0,
+    transportSignal;
+  const source = createFlightSource({
+    fetchImpl: async (_url, { signal }) => {
+      calls++;
+      transportSignal = signal;
+      if (calls > 1) return response({ states: [] });
+      return new Promise((_resolve, reject) =>
+        signal.addEventListener('abort', () => reject(signal.reason), {
+          once: true,
+        }),
+      );
+    },
+  });
+  const controller = new AbortController();
+  const pending = source.getSnapshot({}, { signal: controller.signal });
+  controller.abort();
+  await assert.rejects(pending, { name: 'AbortError' });
+  assert.equal(transportSignal.aborted, true);
+  await source.getSnapshot();
+  assert.equal(calls, 2);
+});
+
+test('civil fallback deadline expires at 120 seconds and cached age never resets', async () => {
+  let time = now,
+    calls = 0;
+  const source = createFlightSource({
+    now: () => time,
+    fetchImpl: async () => {
+      calls++;
+      return response(
+        { states: [aircraft] },
+        { 'X-Feed-Age-Ms': String(time - now + 10000) },
+      );
+    },
+  });
+  const initial = await source.getSnapshot();
+  time += 119999;
+  assert.equal((await source.getSnapshot()).ageMs, 129999);
+  assert.equal(calls, 1);
+  time++;
+  const refreshed = await source.getSnapshot();
+  assert.equal(calls, 2);
+  assert.equal(initial.observedAtMs, now - 10000);
+  assert.equal(refreshed.observedAtMs, initial.observedAtMs);
+  assert.equal(refreshed.stale, true);
+});
+
+test('civil cached regional coverage stays scoped to its requested anchor', async () => {
+  const urls = [];
+  const source = createFlightSource({
+    now: () => now,
+    fetchImpl: async (url) => {
+      urls.push(url);
+      return response(
+        { time: now / 1000, states: [aircraft] },
+        { 'X-Flight-Coverage': 'regional' },
+      );
+    },
+  });
+  const anchor = { latitude: 1, longitude: 2 };
+  await source.getSnapshot(anchor);
+  await source.getSnapshot(anchor);
+  assert.equal(urls.length, 1);
+  await source.getSnapshot({ latitude: 3, longitude: 4 });
+  assert.equal(urls.length, 2);
 });

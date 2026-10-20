@@ -3,8 +3,7 @@
 God's Eye View uses explicit auth modes for `/api/flights`:
 
 - `OPENSKY_AUTH_MODE=oauth` (default, recommended)
-- `OPENSKY_AUTH_MODE=auto` (OAuth first, then Basic fallback)
-- `OPENSKY_AUTH_MODE=basic`
+- `OPENSKY_AUTH_MODE=auto` (OAuth, retained as a compatibility alias)
 - `OPENSKY_AUTH_MODE=anon`
 
 Reference: OpenSky REST API docs recommend OAuth2 Client Credentials flow.
@@ -41,13 +40,13 @@ Launchers resolve OAuth creds in this order:
 2. `OPENSKY_CREDENTIALS_FILE`
 3. Keychain (`opensky-network` / `client_id`, `client_secret`)
 
-## Basic Auth (Legacy)
+## VPS shared cache
 
-Basic auth is still supported for now, but OpenSky is moving away from it.
-
-```bash
-OPENSKY_AUTH_MODE=basic ./scripts/dev-fresh.sh
-```
+The collector uses OAuth client credentials. Legacy Basic authentication is no
+longer used by the aircraft provider; migrate existing Basic configurations to
+OAuth. Authentication never silently falls back to anonymous access. Explicit
+anonymous mode has a smaller daily credit allowance and a longer safe interval.
+See [cache operations](OPENSKY-CACHE-OPERATIONS.md) for persistent VPS storage.
 
 ## Troubleshooting
 
@@ -61,6 +60,4 @@ Useful reasons:
 
 - `oauth_invalid_or_missing`: OAuth client not found/usable
 - `oauth_invalid_credentials`: OAuth client rejected by OpenSky
-- `basic_invalid_credentials`: username/password rejected
-- `missing_basic_creds`: basic mode missing user/pass
 - `rate_limited`: OpenSky throttling

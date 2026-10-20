@@ -16,6 +16,7 @@ import { normalizeVesselTrack, vesselSnapshot } from './vessels.js';
 const defaultFetch = (...args) => globalThis.fetch(...args);
 const defaultNow = () => Date.now();
 const militarySources = new WeakMap();
+const flightSources = new WeakMap();
 const header = (response, name) => response.headers?.get?.(name);
 
 function openSkyError(response) {
@@ -65,35 +66,165 @@ function feedSource(response, fallback) {
 /** The flights feed (/api/flights); no request starts during construction. */
 export function createFlightSource({
   fetchImpl = defaultFetch,
-  now = () => Date.now(),
+  now = defaultNow,
 } = {}) {
-  return {
-    // i18n-ignore: feed source name, replaced by the provider from each snapshot and reported to AI tools
+  let clocks = flightSources.get(fetchImpl);
+  if (!clocks) flightSources.set(fetchImpl, (clocks = new WeakMap()));
+  if (clocks.has(now)) return clocks.get(now);
+  const fallbackIntervalMs = 120000;
+  let cached;
+  let nextReadAtMs = 0;
+  let cachedAtMs = 0;
+  let pending;
+
+  let cachedUrl;
+  const globalResult = (r) =>
+    !r?.response ||
+    !header(r.response, 'x-flight-coverage') ||
+    /global|worldwide/i.test(header(r.response, 'x-flight-coverage'));
+  function load(url) {
+    const controller = new AbortController();
+    const request = { controller, consumers: 0, settled: false, url };
+    pending = request;
+    request.promise = (async () => {
+      let result;
+      let intervalMs = fallbackIntervalMs;
+      try {
+        const { response, payload } = await readResponse(
+          fetchImpl,
+          url,
+          { signal: controller.signal },
+          'Flights',
+        );
+        const receivedAtMs = now();
+        const advertised = finite(header(response, 'x-feed-next-refresh-ms'));
+        intervalMs =
+          advertised === 0
+            ? 0
+            : Math.max(1000, advertised ?? fallbackIntervalMs);
+        if (!response.ok) {
+          const error = openSkyError(response);
+          const retry = header(response, 'retry-after');
+          const seconds = finite(retry);
+          const retryMs =
+            seconds != null ? seconds * 1000 : Date.parse(retry) - receivedAtMs;
+          intervalMs = Math.max(
+            intervalMs,
+            Number.isFinite(retryMs) ? retryMs : 0,
+          );
+          error.retryAfterMs = intervalMs;
+          throw error;
+        }
+        const age = finite(header(response, 'x-feed-age-ms'));
+        result = {
+          response,
+          payload,
+          observedAtMs:
+            age != null && age >= 0
+              ? receivedAtMs - age
+              : epoch(payload?.time, 1000),
+        };
+      } catch (error) {
+        if (controller.signal.aborted) throw error;
+        error.retryAfterMs = intervalMs;
+        result = { error };
+      }
+      controller.signal.throwIfAborted();
+      cached = result;
+      cachedUrl = url;
+      cachedAtMs = now();
+      nextReadAtMs = cachedAtMs + intervalMs;
+      return result;
+    })().finally(() => {
+      request.settled = true;
+      if (pending === request) pending = null;
+    });
+    return request;
+  }
+
+  async function read(url, { signal } = {}) {
+    signal?.throwIfAborted();
+    let result;
+    if (
+      cached &&
+      (cachedUrl === url || globalResult(cached)) &&
+      now() >= cachedAtMs &&
+      now() < nextReadAtMs
+    )
+      result = cached;
+    else {
+      if (pending && pending.url !== url) {
+        await read(pending.url, { signal });
+        return read(url, { signal });
+      }
+      const request = pending || load(url);
+      request.consumers++;
+      let onAbort;
+      try {
+        result = await (signal
+          ? Promise.race([
+              request.promise,
+              new Promise((_resolve, reject) => {
+                onAbort = () => reject(signal.reason);
+                signal.addEventListener('abort', onAbort, { once: true });
+              }),
+            ])
+          : request.promise);
+      } finally {
+        if (onAbort) signal.removeEventListener('abort', onAbort);
+        request.consumers--;
+        if (!request.settled && request.consumers === 0) {
+          if (pending === request) pending = null;
+          request.controller.abort();
+        }
+      }
+    }
+    signal?.throwIfAborted();
+    if (result.error) throw result.error;
+    return result;
+  }
+
+  const source = {
+    // i18n-ignore: feed source name, replaced by provider metadata
     label: 'Flights',
-    async getSnapshot(query = {}, { signal } = {}) {
+    async getSnapshot(query = {}, options = {}) {
       const params = new URLSearchParams();
-      if (Number.isFinite(query.latitude) && Number.isFinite(query.longitude)) {
+      if (
+        fetchImpl !== defaultFetch &&
+        Number.isFinite(query.latitude) &&
+        Number.isFinite(query.longitude)
+      ) {
         params.set('lat', query.latitude.toFixed(4));
         params.set('lon', query.longitude.toFixed(4));
       }
-      const { response, payload } = await readResponse(
-        fetchImpl,
+      const { response, payload, observedAtMs } = await read(
         `/api/flights${params.size ? '?' + params : ''}`,
-        { signal },
-        'Flights',
+        options,
       );
-      if (!response.ok) throw openSkyError(response);
+      const currentTimeMs = now();
+      const snapshot = openSkySnapshot(payload, {
+        source:
+          header(response, 'x-flight-source') ||
+          feedSource(response, 'Flights'),
+        coverage:
+          header(response, 'x-flight-coverage') ||
+          'worldwide upstream snapshot',
+        now: currentTimeMs,
+        stale:
+          header(response, 'x-opensky-cache') === 'STALE' ||
+          header(response, 'x-feed-cache') === 'STALE',
+      });
+      const sourceTimeMs = snapshot.observedAtMs ?? observedAtMs;
+      const ageMs =
+        sourceTimeMs == null ? null : Math.max(0, currentTimeMs - sourceTimeMs);
+      const stale = snapshot.stale || (ageMs != null && ageMs > 120000);
       return {
-        ...openSkySnapshot(payload, {
-          // A fallback provider names itself in X-Flight-Source.
-          source:
-            header(response, 'x-flight-source') ||
-            feedSource(response, 'Flights'),
-          coverage:
-            header(response, 'x-flight-coverage') ||
-            'worldwide upstream snapshot',
-          now: now(),
-        }),
+        ...snapshot,
+        observedAtMs: sourceTimeMs,
+        ageMs,
+        stale,
+        freshness:
+          sourceTimeMs == null ? 'unknown' : stale ? 'stale' : 'current',
         status: response.status,
       };
     },
@@ -123,6 +254,8 @@ export function createFlightSource({
       return payload;
     },
   };
+  clocks.set(now, source);
+  return source;
 }
 
 export function createMilitarySource({

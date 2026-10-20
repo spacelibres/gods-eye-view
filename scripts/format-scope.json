@@ -1074,5 +1074,10 @@
   "scripts/qa-voice-provider-controls.mjs",
   "server/providers/aircraft/adsb-quota.test.mjs",
   "server/providers/aircraft/adsb-lol.test.mjs",
-  "server/providers/aircraft/adsb-integration.test.mjs"
+  "server/providers/aircraft/adsb-integration.test.mjs",
+  "server/providers/aircraft/opensky.test.mjs",
+  "server/providers/aircraft/opensky-auth.test.mjs",
+  "server/providers/aircraft/opensky-quota.test.mjs",
+  "server/providers/aircraft/tracks.test.mjs",
+  "server/providers/aircraft/opensky-http.test.mjs"
 ]
