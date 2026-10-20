@@ -133,6 +133,51 @@ function harness(source, services = {}) {
   layer.init(viewer);
   return { layer, viewer, sources, callbacks, entries, contexts };
 }
+test('airports use shared aircraft silhouettes rather than point dots and tint with the theme', async () => {
+  let theme;
+  let color = '#33ccff';
+  const h = harness(
+    {
+      getSnapshot: async () => ({
+        airports: [airport(), airport('2', 'small_airport')],
+      }),
+    },
+    {
+      getPalette: () => ({ primaryOnDark: color }),
+      subscribeTheme: (callback) => {
+        theme = callback;
+        return () => {};
+      },
+    },
+  );
+  h.viewer.camera.positionCartographic.height = 10000;
+  h.layer.enable();
+  await h.layer.update();
+  const [major, minor] = h.sources[0].entities.values;
+  assert.equal(major.point, undefined, 'a point is not an airport symbol');
+  assert.ok(major.billboard, 'airport has a billboard');
+  const image = major.billboard.image.getValue();
+  assert.match(decodeURIComponent(image), /<svg[\s>]/);
+  assert.match(decodeURIComponent(image), /<path/);
+  assert.equal(
+    minor.billboard.image.getValue(),
+    image,
+    'all airport markers share one aircraft image',
+  );
+  assert.ok(major.billboard.width.getValue() >= 24);
+  assert.ok(minor.billboard.width.getValue() >= 18);
+  assert.equal(
+    major.billboard.color.getValue().toCssColorString(),
+    'rgb(51,204,255)',
+  );
+  color = '#ffcc33';
+  theme();
+  assert.equal(
+    major.billboard.color.getValue().toCssColorString(),
+    'rgb(255,204,51)',
+  );
+  h.layer.destroy();
+});
 test('bounded labels, ground anchors, failure keeps display and disable clears', async () => {
   let fail = false;
   const h = harness({

@@ -1,0 +1,7 @@
+# Aviation map symbols and reference data
+
+User requirements: airport markers must be airplane symbols, and the airport directory must make aviation navaids and country names useful. User clarified radio stations means VOR/NDB/DME aviation facilities, not broadcast radio.
+
+Approved direction: replace airport point graphics with a shared white SVG aircraft billboard tinted by current theme. Extend the existing daily OurAirports snapshot with same-revision navaids and full countries, published atomically on the VPS. Add cache-only bounded navaid and country API routes and source methods. The Airports aviation display adds navaid station symbols/details in nearby views and localized country names from bundled Natural Earth geography at regional/global scales; all records remain available through bounded query/search rather than rendering every record at once. Airport points and navaids remain distinct entities. Details show published frequency units, identifiers, service/type/power/status and associated airport; missing fields stay unknown. No route makes browsers fetch upstream data. Preserve all current airport search, selection, failure, theme and lifecycle contracts. Existing broadcast-radio code stays untouched.
+
+Use existing spacelibre roles, actual logo, shared overlay/selection and terrain placement. Tests cover parsing, atomic fallback, limits, unit correctness, symbols, labels and browser display. Patch bump, commit/push main and deploy previously authorized VPS after verification.

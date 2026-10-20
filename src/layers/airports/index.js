@@ -11,6 +11,11 @@ import {
 } from './model.js';
 export * from './model.js';
 const msg = (value) => value;
+// One shared, outlined aircraft silhouette stays legible on imagery. Cesium
+// tints the white fill with the active palette without regenerating textures.
+const AIRPORT_AIRCRAFT_IMAGE = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 32 32"><path d="M16 2c-1 0-2 1-2 3v7L3 20v3l11-4v6l-4 3v2l6-2 6 2v-2l-4-3v-6l11 4v-3l-11-8V5c0-2-1-3-2-3Z" fill="white" stroke="black" stroke-width="1.5" stroke-linejoin="round"/></svg>',
+)}`;
 /** One viewport-scoped, bounded directory display. MSL elevation is metadata only. */
 export function createAirportsLayer({
   source,
@@ -58,7 +63,7 @@ export function createAirportsLayer({
     if (!enabled || !data) return;
     const accent = accentColor();
     for (const entity of data.entities.values) {
-      entity.point.color = Cesium.Color.fromCssColorString(accent);
+      entity.billboard.color = Cesium.Color.fromCssColorString(accent);
       entity.gevLabelModel = { ...entity.gevLabelModel, accent };
       refreshSelectedReadout(entity);
     }
@@ -204,9 +209,23 @@ export function createAirportsLayer({
               name: a.name,
               position,
               description: airportDescription(a, context.properties, t),
-              point: {
-                pixelSize: a.type === 'large_airport' ? 8 : 6,
+              billboard: {
+                image: AIRPORT_AIRCRAFT_IMAGE,
+                width:
+                  a.type === 'large_airport'
+                    ? 28
+                    : a.type === 'medium_airport'
+                      ? 24
+                      : 20,
+                height:
+                  a.type === 'large_airport'
+                    ? 28
+                    : a.type === 'medium_airport'
+                      ? 24
+                      : 20,
                 color,
+                horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                verticalOrigin: Cesium.VerticalOrigin.CENTER,
                 heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                 disableDepthTestDistance: 50000,
               },
