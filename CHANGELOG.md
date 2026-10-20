@@ -4,6 +4,19 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.37] — 2026-10-20 — Lockup ratio and a voice card that scales
+
+- Stop the title lockup from squashing. The inlined vector was given
+  `height: 100%` inside a holder that only sets a width, so the height
+  resolved against an auto box and the mark was clipped. It now keeps the
+  file's own 810 × 180 ratio at every width.
+
+- Scale the voice card down with the screen instead of letting it fill one.
+  Below 768 px the card was `min(22rem, 100vw - 1.5rem)` wide — nearly the
+  full width of a phone — and covered the map. It now takes a share of the
+  viewport and everything inside it scales with the box, so its rows and type
+  shrink together rather than crowding each other.
+
 ## [0.2.36] — 2026-10-20 — One icon, one column for the phone colour picker
 
 - Give the phone colour button a single glyph, and stack its choices in a

@@ -381,6 +381,27 @@ body.recording-mode .gev-pointer-reticle {
   }
 }
 
+/*
+ * Phones: the card stretched to nearly the full width, so it covered the map
+ * and its rows crowded each other. Everything inside it is sized in `rem`, so
+ * shrinking the font-size alone would not move a single edge; `zoom` scales
+ * the whole box — type, padding and the fixed-footprint rows together — which
+ * is the same thing as the card being drawn smaller at a proportional size.
+ */
+@media (max-width: 767.98px) {
+  #gev-voice-control .gev-voice-card {
+    width: clamp(11rem, 62vw, 16rem);
+    max-height: min(18rem, 45vh);
+    zoom: 0.82;
+  }
+
+  /* Its rows are grids with a fixed glyph column; at this scale the text
+     needs the remaining width rather than being pushed out of the row. */
+  #gev-voice-control .gev-voice-card > * {
+    min-width: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   #gev-voice-control .gev-voice-card,
   .gev-pointer-reticle {

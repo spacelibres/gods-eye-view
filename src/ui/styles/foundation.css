@@ -631,7 +631,10 @@ body.cockpit-mode #cockpit-cloud-effects.active {
 .brand-logo > svg {
   display: block;
   width: 100%;
-  height: 100%;
+  /* The holder sets a width and lets the height follow, so the vector keeps
+     its own 810 x 180 ratio. A height of 100% here resolved against an auto
+     height and squashed the mark. */
+  height: auto;
 }
 
 /* The inlined lockup paints from the palette roles, so its colour follows the
