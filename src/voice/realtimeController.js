@@ -53,7 +53,7 @@ export {
   gateVoiceVisualizerLevel,
 } from './realtimeInputPolicy.js';
 
-import { createRealtimeBackend } from './realtimeBackend.js';
+import { createVoiceBackend } from './voiceProviders.js';
 
 import { t } from '../i18n/index.js';
 import { voiceStatusLabel } from './control.js';
@@ -74,7 +74,7 @@ export class GevRealtimeController extends RealtimeFacade {
     ui,
     radioLayer = null,
     dataManager = null,
-    backend = createRealtimeBackend(),
+    backend = createVoiceBackend().backend,
     signal,
     debugSink = postDebugLog,
     actionExecutor,

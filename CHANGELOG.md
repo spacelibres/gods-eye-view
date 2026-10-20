@@ -4,6 +4,20 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.42] — 2026-10-20 — Voice services become a choice
+
+- Give voice a provider registry instead of one hard-wired service. Selecting
+  a voice service is now a stored choice, read at session start, that resolves
+  through `src/voice/voiceProviders.js`; an unknown or vanished choice falls
+  back to the default rather than failing, and storage that throws (a locked
+  profile) does not take the voice UI down with it. The OpenAI Realtime path is
+  unchanged and is still the default.
+
+  Only providers the page can actually run are listed. `realtimeConnection.js`
+  builds an `RTCPeerConnection` and refuses to start without one, so a
+  WebSocket provider would be a picker entry that cannot connect; one constant
+  test fails the day such a provider is added without teaching that transport.
+
 ## [0.2.41] — 2026-10-20 — Open on the whole globe
 
 - Open on the whole globe. A cold start flew to Austin, Texas and settled 600 m
