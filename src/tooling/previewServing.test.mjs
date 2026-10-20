@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { writeFile, rm } from 'node:fs/promises';
+import { writeFile, mkdir, rm } from 'node:fs/promises';
 import path from 'node:path';
 import { build, createServer, preview } from 'vite';
 import { localProviderPlugins } from '../../server/providers/local.js';
@@ -38,9 +38,17 @@ test('real dev and built-preview servers serve provider JSON and terminate unkno
     path.join(root, 'index.html'),
     '<!doctype html><title>Preview fixture</title><p>Built application</p>',
   );
+  // Keep daily collection inert even when this bundled release is older than a
+  // day. Server route checks read real bundled airport data, never the vendor.
+  await mkdir(path.join(root, 'airports-state'));
+  await writeFile(
+    path.join(root, 'airports-state', 'state.json'),
+    JSON.stringify({ schemaVersion: 1, nextCheckAt: Date.now() + 86400000 }),
+  );
   for (const [name, value] of Object.entries({
     GEV_ADSB_STATE_DIR: path.join(root, 'adsb-state'),
     GEV_OPENSKY_STATE_DIR: path.join(root, 'opensky-state'),
+    GEV_AIRPORTS_STATE_DIR: path.join(root, 'airports-state'),
     AISSTREAM_API_KEY: '',
     FIRMS_MAP_KEY: '',
     FIRMS_API_KEY: '',
@@ -105,11 +113,15 @@ test('real dev and built-preview servers serve provider JSON and terminate unkno
     await config.plugins
       .find((plugin) => plugin.name === 'adsblol-proxy')
       .ready();
+    await config.plugins.find((plugin) => plugin.name === 'airports-proxy')
+      .ready;
     const origin = `http://127.0.0.1:${server.httpServer.address().port}`;
     try {
       for (const [route, status] of [
         ['/api/flights', 200],
         ['/api/military', 200],
+        ['/api/airports/search?q=EGLL', 200],
+        ['/api/airports/detail?id=2434', 200],
         ['/api/adsbdb/type/invalid', 400],
         ['/api/firms/status', 200],
         ['/api/fire-perimeters/inciweb/publication/invalid', 400],
@@ -142,6 +154,10 @@ test('real dev and built-preview servers serve provider JSON and terminate unkno
           route,
         );
         const body = await response.json();
+        if (route === '/api/airports/search?q=EGLL')
+          assert.equal(body.airports[0].icaoCode, 'EGLL');
+        if (route === '/api/airports/detail?id=2434')
+          assert.equal(body.airport.iataCode, 'LHR');
         if (route === '/api/cctv/sources')
           assert.equal(body.sources[0].id, 'fixture');
         if (route === '/api/mapillary/status')

@@ -13,6 +13,16 @@ How to read this:
 
 ## Live sources (fetched at runtime — not stored in this repo)
 
+The airport directory uses [OurAirports](https://ourairports.com/data/) public-domain
+data, with an initial reproducible snapshot in `server/data/airports/` and daily
+server-side updates. It contains airport locations, names, distinct ICAO/IATA and
+source identifiers, facility types, administrative locations and optional MSL
+elevations. The original source revision is retained. Closed facilities stay
+marked closed and are omitted from the default map. Browsers query the project's
+own directory; they do not download from OurAirports. This community directory
+is not an operational aeronautical publication. Attribution: "OurAirports
+(public domain)". See [airport operations](docs/AIRPORTS-OPERATIONS.md).
+
 | Source                                                                | Used for                                                                                                                            | License / terms                                                                                                                                                                                                                                                                                                                                       | Attribution                                                                                                                                 |
 | --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | **NOAA GFS (wind)** (`noaa-gfs-bdp-pds.s3.amazonaws.com`) | Global 10 m wind, optional 2 m temperature and mean sea-level pressure for Wind. Keyless; latest 6-hourly 0.25° cycle, byte-range GRIB2 reads, cached for an hour | U.S. public domain (NOAA); keyless via NOAA Open Data on AWS | "NOAA Global Forecast System (GFS)" (courtesy; not an endorsement) |

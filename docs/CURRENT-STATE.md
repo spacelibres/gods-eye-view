@@ -1,5 +1,17 @@
 # God's Eye View Current State
 
+The Airports layer reads a project-hosted global OurAirports directory. It is off
+by default, has permanent share token `5`, and appears under Infrastructure. The
+world view prioritizes larger airports; closer views include smaller facilities.
+Markers and labels are bounded. Airport details retain distinct source/ICAO/IATA
+codes, facility type, country/city, coordinates and optional elevation above mean
+sea level. Closed facilities are retained in the directory and excluded from the
+default map. Airport-code/name navigation uses the same local directory, with
+explicit choices for ambiguous results and normal place-search fallback for
+ordinary city/address queries. The VPS checks for upstream changes daily while
+browser reads remain cache-only. The bundled snapshot and last good persistent
+version remain usable if an update fails. See `docs/AIRPORTS-OPERATIONS.md`.
+
 Shared distance checks use `src/geoDistance.js` with `{ lat, lon }` points and
 the IUGG mean spherical Earth radius, 6371.0088 km. `greatCircleKm` is
 canonical; `greatCircleMeters` is its exact metre conversion. Missing,

@@ -660,3 +660,14 @@ test('a precise search without an outline frames against the resolved ground, no
   const eye = target.height + flight.offset.range * Math.sin(-flight.offset.pitch);
   assert.ok(eye > 171 + 100, `eye ${eye} must clear the 171 m surface`);
 });
+
+test('airport ambiguity and outage never trigger near-view recovery or a flight', async () => {
+  const choices=[{lat:51,lng:0,label:'First Airport',types:['airport'],exact:true},{lat:40,lng:10,label:'Second Airport',types:['airport'],exact:true}];
+  for(const outcome of [{place:null,answered:true,terminal:true,choices},{place:null,answered:false,terminal:true}]){
+    const viewer=stubViewer();let recovered=false;const result=await searchAndFlyTo(viewer,'ABC',{placeSearch:{geocode:async()=>outcome},recoverNearView:async()=>{recovered=true;return null}});assert.equal(recovered,false);assert.equal(viewer.flights.length,0);if(outcome.choices)assert.deepEqual(result.choices,choices);
+  }
+});
+test('airport ambiguity flies only to the selected choice',async()=>{
+ const viewer=stubViewer();const choices=[{lat:51,lng:0,label:'First Airport',types:['airport'],exact:true},{lat:40,lng:10,label:'Second Airport',types:['airport'],exact:true}];let offered;
+ const result=await searchAndFlyTo(viewer,'ABC',{placeSearch:{geocode:async()=>({place:null,answered:true,terminal:true,choices})},chooseAirport:async values=>{offered=values;return values[1]},recoverNearView:()=>{throw Error('must not recover')}});assert.deepEqual(offered,choices);assert.equal(result.label,'Second Airport');assert.equal(viewer.flights.length,1);
+});

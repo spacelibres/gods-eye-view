@@ -188,7 +188,24 @@ function installGoogleMocks(t, handler) {
     setTimeout: globalThis.setTimeout,
     clearTimeout: globalThis.clearTimeout,
   };
-  globalThis.fetch = handler;
+  globalThis.fetch = (url, options) =>
+    String(url).startsWith('/api/airports/search')
+      ? Promise.resolve(
+          new Response(
+            JSON.stringify({
+              revision: 'annotation-fixture',
+              updatedAt: '2026-10-21T00:00:00Z',
+              source: 'OurAirports',
+              sourceUrl: 'https://ourairports.com/data/',
+              total: 0,
+              matched: 0,
+              truncated: false,
+              airports: [],
+            }),
+            { headers: { 'Content-Type': 'application/json' } },
+          ),
+        )
+      : handler(url, options);
   t.after(() => {
     if (originalWindow === undefined) delete globalThis.window;
     else globalThis.window = originalWindow;

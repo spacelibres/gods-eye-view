@@ -21,6 +21,7 @@ import { createWindSource } from '../layers/wind/source.js';
 import { createFirmsSource } from '../layers/firms/source.js';
 import { createMapillarySource } from '../layers/streetLevel/providers/mapillary/source.js';
 import { createReferenceSources } from '../sources/reference.js';
+import { createAirportSource } from '../sources/airports/source.js';
 export { createReferenceSources as createStandaloneReferenceSources } from '../sources/reference.js';
 
 /** Select standalone providers without starting their acquisition. */
@@ -33,6 +34,7 @@ export function createStandaloneLayerSources(overrides = {}) {
     directions: createDirectionsSource(),
     'recent-imagery': createRecentImagerySource(),
     flights: createFlightSource(),
+    airports: createAirportSource(),
     military: createMilitarySource(),
     vessels: createVesselSource({
       apiUrl: import.meta.env?.VITE_AIS_LIVE_API_URL || '/api/vessels',

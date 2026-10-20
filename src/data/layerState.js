@@ -590,6 +590,7 @@ export const LAYER_STATE_REGISTRY = Object.freeze([
     token: '4',
     disposition: 'enabled-only',
   }),
+  Object.freeze({ id: 'airports', token: '5', disposition: 'enabled-only' }),
   Object.freeze({
     id: 'ais-live-vessels',
     token: 'a',

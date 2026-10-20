@@ -44,6 +44,13 @@ const AIRCRAFT_FIELDS = {
 
 const layers = [
   {
+    id: 'airports',
+    aliases: ['airport', 'airfields', '机场', '機場'],
+    context: true,
+    noQuery:
+      'static airport directory; use airport name or ICAO/IATA location search',
+  },
+  {
     id: 'gnss-integrity',
     aliases: [
       'gnss integrity',

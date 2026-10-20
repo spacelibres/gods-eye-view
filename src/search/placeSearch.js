@@ -26,7 +26,7 @@ export function createPlaceSearch({
       combined.throwIfAborted();
       const text = String(query ?? '').trim();
       if (!text) return { place: null, answered: true };
-      const key = `${bias || ''}\n${text.toLowerCase()}`;
+      const key = `${bias || ''}\n${text}`;
       const cached = cache.get(key);
       if (cached && cached.expires > now()) return cached.result;
       cache.delete(key);
@@ -40,6 +40,14 @@ export function createPlaceSearch({
             place: next.place,
             answered: Boolean(next.place) || (result.answered && next.answered),
           };
+          if (next.terminal) {
+            result = {
+              ...result,
+              terminal: true,
+              ...(next.choices ? { choices: next.choices } : {}),
+            };
+            break;
+          }
           if (result.place) {
             result.fallbackUsed = index > 0;
             break;

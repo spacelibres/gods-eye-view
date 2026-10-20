@@ -115,6 +115,24 @@ export class LocationNavigation {
       search: (query, options) =>
         searchAndFlyTo(this.viewer, query, {
           placeSearch: this.placeSearch,
+          chooseAirport: (choices, { signal }) => {
+            this._collapsePOIRow();
+            const controller = new AbortController();
+            this._airportChoiceController = controller;
+            return chooseAirportDestination(
+              this._poiRow,
+              this._locationSearch,
+              choices,
+              {
+                signal: AbortSignal.any(
+                  [controller.signal, signal].filter(Boolean),
+                ),
+              },
+            ).finally(() => {
+              if (this._airportChoiceController === controller)
+                this._airportChoiceController = null;
+            });
+          },
           ...options,
         }),
       onResult: (destination) => {
@@ -185,6 +203,7 @@ export class LocationNavigation {
   }
 
   _onCityPillClick(cityId) {
+    this._airportChoiceController?.abort();
     const { CITY_POIS, flyToPresetLocation } = this.services;
     if (this._expandedCityId === cityId) {
       // Same city clicked again — toggle collapse
@@ -212,6 +231,7 @@ export class LocationNavigation {
   }
 
   _onPoiClick(cityId, poiIndex) {
+    this._airportChoiceController?.abort();
     const { CITY_POIS, flyToPOI } = this.services;
     const isCityChanged =
       this._activeLocationId && this._activeLocationId !== cityId;
@@ -239,6 +259,7 @@ export class LocationNavigation {
   }
 
   _collapsePOIRow() {
+    this._airportChoiceController?.abort();
     this._expandedCityId = null;
     this._activePoiIndex = null;
     this._locationControls.hidePois();
@@ -299,6 +320,7 @@ export class LocationNavigation {
   }
 
   resetToGlobeView() {
+    this._airportChoiceController?.abort();
     const {
       GLOBE_VIEW,
       flyToGlobeView,
@@ -431,4 +453,53 @@ export class LocationNavigation {
     this._trafficTransitionTimer = null;
     this.orbitController?.stop();
   }
+}
+
+/** Reuse the existing destination row; plain text and native buttons remain keyboard accessible. */
+export function chooseAirportDestination(row, input, choices, { signal } = {}) {
+  if (signal?.aborted) return Promise.resolve(null);
+  return new Promise((resolve) => {
+    const removers = [];
+    const finish = (choice) => {
+      for (const remove of removers) remove();
+      signal?.removeEventListener('abort', abort);
+      row.replaceChildren();
+      row.classList.remove('expanded');
+      row.removeAttribute('role');
+      row.removeAttribute('aria-label');
+      input.focus();
+      resolve(choice);
+    };
+    const abort = () => finish(null);
+    signal?.addEventListener('abort', abort, { once: true });
+    row.replaceChildren();
+    row.setAttribute('role', 'group');
+    row.setAttribute('aria-label', t('Choose an airport'));
+    const bind = (element, type, listener) => {
+      element.addEventListener(type, listener);
+      removers.push(() => element.removeEventListener(type, listener));
+    };
+    for (const choice of choices.slice(0, 8)) {
+      const button = row.ownerDocument.createElement('button');
+      button.type = 'button';
+      button.className = 'poi-pill';
+      button.textContent = choice.label;
+      bind(button, 'click', () => finish(choice));
+      row.appendChild(button);
+    }
+    const cancel = row.ownerDocument.createElement('button');
+    cancel.type = 'button';
+    cancel.className = 'poi-pill';
+    cancel.textContent = t('Cancel airport selection');
+    bind(cancel, 'click', abort);
+    row.appendChild(cancel);
+    bind(row, 'keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      event.preventDefault();
+      event.stopPropagation();
+      abort();
+    });
+    row.classList.add('expanded');
+    row.children[0]?.focus();
+  });
 }

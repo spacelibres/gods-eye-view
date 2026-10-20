@@ -13,6 +13,7 @@ import { msg, t, translateKnown } from '../i18n/index.js';
 
 /** English module names (`layer.name`) by layer id. */
 export const LAYER_NAME_KEYS = Object.freeze({
+  airports: msg('Airports'),
   flights: msg('Live Flights'),
   military: msg('Military Flights'),
   earthquakes: msg('Earthquakes (24h)'),

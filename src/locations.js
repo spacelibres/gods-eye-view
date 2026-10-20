@@ -316,7 +316,15 @@ export async function searchAndFlyTo(viewer, query, options = {}) {
     signal,
   });
   signal?.throwIfAborted();
-  const result = outcome.place;
+  let result = outcome.place;
+  if (outcome.choices?.length) {
+    if (!options.chooseAirport)
+      return { choices: outcome.choices, ambiguous: true };
+    result = await options.chooseAirport(outcome.choices, { signal });
+    signal?.throwIfAborted();
+    if (!result || !outcome.choices.includes(result)) return CANCELLED_SEARCH;
+  }
+  if (outcome.terminal && !result) return null;
   let lat = result?.lat;
   let lng = result?.lng;
   let label = result?.label || query;

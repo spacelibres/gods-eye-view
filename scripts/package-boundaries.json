@@ -57,7 +57,11 @@
       "src/i18n/marker.js",
       "server/providers/aircraft/adsb-quota.js",
       "server/providers/aircraft/opensky-auth.js",
-      "server/providers/aircraft/opensky-quota.js"
+      "server/providers/aircraft/opensky-quota.js",
+      "server/providers/airports/index.js",
+      "server/providers/airports/collector.js",
+      "server/providers/airports/model.js",
+      "src/sources/airports/records.js"
     ],
     "external": ["ws"]
   },
@@ -389,7 +393,10 @@
       "src/data/local_data/natural_earth/marine.json",
       "src/sources/httpBody.js",
       "src/i18n/marker.js",
-      "src/sources/nominatim.js"
+      "src/sources/nominatim.js",
+      "src/search/airports.js",
+      "src/sources/airports/source.js",
+      "src/sources/airports/records.js"
     ],
     "external": []
   },
@@ -1564,7 +1571,14 @@
       "src/i18n/locales/zh-CN.json",
       "src/i18n/locales/zh-TW.json",
       "src/i18n/locales/ja.json",
-      "src/i18n/locales/ko.json"
+      "src/i18n/locales/ko.json",
+      "src/data/layerState.js",
+      "scripts/qa-panelDrag.mjs",
+      "scripts/qa-browserEvidence.mjs",
+      "scripts/fixtures/street-level/mapillaryGraph.mjs",
+      "scripts/fixtures/street-level/kartaView.mjs",
+      "scripts/fixtures/street-level/panoramax.mjs",
+      "src/testSupport/panoramaxFixtures.mjs"
     ],
     "external": ["cesium", "pbf", "@mapbox/vector-tile", "mapillary-js"]
   },
@@ -2642,7 +2656,6 @@
       "src/data/cameraArrival.js",
       "src/layers/alpr/floors.js",
       "src/data/militaryNames.js",
-      "src/sources/requestDeadline.js",
       "src/data/local_data/osm_military_names/names.json",
       "src/layers/installations/namedMarkers.js",
       "src/data/infrastructureOverlayEntry.js",
@@ -2681,7 +2694,13 @@
       "src/voice/dashscopeBackend.js",
       "src/voice/doubaoBackend.js",
       "src/voice/doubaoControl.js",
-      "src/voice/qwenViewport.js"
+      "src/voice/qwenViewport.js",
+      "src/app/layers/airports.js",
+      "src/search/airports.js",
+      "src/sources/airports/source.js",
+      "src/layers/airports/index.js",
+      "src/sources/airports/records.js",
+      "src/layers/airports/model.js"
     ],
     "external": [
       "hls.js",
@@ -3233,7 +3252,6 @@
       "src/data/cameraArrival.js",
       "src/layers/alpr/floors.js",
       "src/data/militaryNames.js",
-      "src/sources/requestDeadline.js",
       "src/data/local_data/osm_military_names/names.json",
       "src/layers/installations/namedMarkers.js",
       "src/data/infrastructureOverlayEntry.js",
@@ -3256,7 +3274,16 @@
       "src/layers/airQuality/model.js",
       "src/layers/airQuality/source.js",
       "src/ui/statusText.js",
-      "src/ui/layerNames.js"
+      "src/ui/layerNames.js",
+      "src/app/layers/airports.js",
+      "src/search/airports.js",
+      "src/sources/airports/source.js",
+      "src/layers/airports/index.js",
+      "src/ui/colorSystemRuntime.js",
+      "src/sources/airports/records.js",
+      "src/layers/airports/model.js",
+      "src/ui/colorSystem.js",
+      "src/ui/paletteChoice.js"
     ],
     "external": [
       "hls.js",
@@ -3326,7 +3353,10 @@
       "src/sources/featureSource.js",
       "src/sources/capability.js",
       "src/data/cameraArrival.js",
-      "src/data/cameraFraming.js"
+      "src/data/cameraFraming.js",
+      "src/search/airports.js",
+      "src/sources/airports/source.js",
+      "src/sources/airports/records.js"
     ],
     "external": [
       "cesium",
@@ -4194,6 +4224,25 @@
     "modules": [
       "src/layers/airQuality/model.js",
       "src/layers/airQuality/source.js",
+      "src/sources/httpBody.js",
+      "src/i18n/marker.js"
+    ],
+    "external": []
+  },
+  "airports": {
+    "exports": ["./layers/airports"],
+    "modules": [
+      "src/layers/airports/index.js",
+      "src/layers/airports/model.js",
+      "src/data/inputOwnership.js"
+    ],
+    "external": ["cesium"]
+  },
+  "airports-source": {
+    "exports": ["./layers/airports/source"],
+    "modules": [
+      "src/sources/airports/source.js",
+      "src/sources/airports/records.js",
       "src/sources/httpBody.js",
       "src/i18n/marker.js"
     ],

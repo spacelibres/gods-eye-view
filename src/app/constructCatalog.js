@@ -25,6 +25,7 @@ import { createApplicationAwareness } from './layers/militaryAwareness.js';
 import { createApplicationFirms } from './layers/firms.js';
 import { createApplicationEarthquakes } from './layers/earthquakes.js';
 import { createApplicationAirQuality } from './layers/airQuality.js';
+import { createApplicationAirports } from './layers/airports.js';
 import { createApplicationFirePerimeters } from './layers/perimeters.js';
 import { createApplicationGnssIntegrity } from './layers/gnss.js';
 import { createApplicationCables } from './layers/submarineCables.js';
@@ -111,6 +112,7 @@ export function createApplicationCatalog({
           boundaryResolver: nepalBoundaryResolver,
         }),
         flights,
+        createApplicationAirports({ source: sources.airports, surface }),
         military,
         createApplicationLocalAdsb({
           surface,

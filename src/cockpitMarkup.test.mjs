@@ -870,7 +870,7 @@ test('Location navigation releases immediate routes before flight and deferred r
     ui,
     /beforeFly: \(generation\) => this\._reassertNavigationHandoff\(generation\)/,
   );
-  assert.match(ui.slice(search, search + 180), /\.\.\.options/);
+  assert.match(ui.slice(search, ui.indexOf('onResult:', search)), /\.\.\.options/);
   const lookup = fs.readFileSync(
     path.join(ROOT, 'src', 'ui', 'locationSearch.js'),
     'utf8',

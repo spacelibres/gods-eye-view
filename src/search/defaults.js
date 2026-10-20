@@ -1,3 +1,5 @@
+import { createAirportGeocoder } from './airports.js';
+import { createAirportSource } from '../sources/airports/source.js';
 import { createNominatimProvider } from './nominatim.js';
 import { createGeospatialServices } from './geospatial.js';
 import { createHttpGeospatialProvider } from './http.js';
@@ -37,6 +39,9 @@ export function createDefaultPlaceSearch({
     signal,
     providers: providers.geocode || [
       createCoordinateGeocoder(),
+      createAirportGeocoder({
+        source: createAirportSource({ fetchImpl, baseUrl: endpoints.airports }),
+      }),
       ...(presets ? [createPresetGeocoder({ presets })] : []),
       createAlpsGeocoder(),
       ...(selected

@@ -99,6 +99,10 @@ export const NYC_DOT_DISCLAIMER =
   'The public is advised to observe posted signage for compliance with applicable laws and regulations.';
 
 export const DATA_CREDITS = [
+  {
+    key: 'ourairports',
+    html: 'Airport directory: <a href="https://ourairports.com/data/" target="_blank" rel="noopener">OurAirports</a> (public domain)',
+  },
   // ── Live sources ────────────────────────────────────────────────
   {
     key: 'opensky',

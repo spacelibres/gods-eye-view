@@ -1079,5 +1079,13 @@
   "server/providers/aircraft/opensky-auth.test.mjs",
   "server/providers/aircraft/opensky-quota.test.mjs",
   "server/providers/aircraft/tracks.test.mjs",
-  "server/providers/aircraft/opensky-http.test.mjs"
+  "server/providers/aircraft/opensky-http.test.mjs",
+  "scripts/import-airports.mjs",
+  "scripts/qa-airports.mjs",
+  "server/providers/airports/model.test.mjs",
+  "server/providers/airports/collector.test.mjs",
+  "src/sources/airports/source.test.mjs",
+  "src/search/airports.test.mjs",
+  "src/layers/airports/index.test.mjs",
+  "src/ui/locationNavigation.test.mjs"
 ]
