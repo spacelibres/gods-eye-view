@@ -74,9 +74,10 @@ export function mountPalettePicker({ root, primary, onSelect }) {
         />
       </label>`;
 
-  // The phone affordance: one 48 px button showing the scheme in force, which
-  // opens the row as a sheet. Hidden on wide viewports, where the row is shown
-  // directly and hiding it would lose the control.
+  // The phone affordance: one button carrying the scheme in force, built to
+  // the language picker's measurements so the corner reads as one row. It
+  // opens the row upward; on a wide viewport the row is shown inline and the
+  // button stays out of the layout.
   const button = documentRef.createElement('button');
   button.type = 'button';
   button.className = 'palette-toggle';
@@ -107,8 +108,8 @@ export function mountPalettePicker({ root, primary, onSelect }) {
     setOpen(!root.classList.contains('is-open'));
   });
 
-  // A tap outside the picker puts it away, and so does Escape: on a phone the
-  // sheet covers the globe, and the map is what the user is looking at.
+  // A tap outside the picker puts it away, and so does Escape: the popup
+  // covers part of the globe, and the map is what the user is looking at.
   documentRef.addEventListener('pointerdown', (event) => {
     if (!root.classList.contains('is-open')) return;
     if (!root.contains(event.target)) setOpen(false);

@@ -88,17 +88,17 @@
 
 /*
  * Phones: the swatch row was the widest thing in the bottom corner and sat
- * over the map. It now collapses into one thumb-sized button that shows the
- * scheme in force; tapping it opens the full row as a sheet, in the same shape
- * as the language picker beside it. Nothing is taken away — the six presets
- * and the custom colour are all still reachable.
+ * over the map. It collapses into one button — built to the language picker's
+ * measurements beside it, so the corner reads as one row of controls — which
+ * opens the row upward, the way that picker's list does.
  *
- * The wide layout keeps the row inline, so the button and the sheet geometry
- * only apply below the breakpoint.
+ * Every swatch keeps the same box, so the six presets and the custom colour
+ * line up on one grid rather than reading as differently sized dots.
  */
 @media (max-width: 767.98px) {
   #palette-picker {
     position: relative;
+    display: flex;
   }
 
   /* The row is the popup's content on a phone, never an inline strip. */
@@ -110,72 +110,115 @@
     display: flex;
   }
 
+  /* Same box, padding, radius and frame as .locale-picker-button, so the two
+     buttons are the same height and share one baseline in the corner row. */
   .palette-toggle {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: 0.35rem;
-    min-width: 48px;
-    min-height: 48px;
-    justify-content: center;
+    margin: 0;
+    padding: 0.45rem 0.6rem;
     padding-inline: 0.5rem;
-    color: var(--text-primary);
-    background: rgba(10, 27, 37, 0.72);
-    border: 1px solid rgba(54, 220, 255, 0.42);
-    border-radius: 0.55rem;
-    font-size: 1.1rem;
+    color: rgba(225, 244, 248, 0.92);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.09rem;
+    line-height: 1;
+    background: linear-gradient(
+      145deg,
+      rgba(10, 27, 37, 0.92),
+      rgba(7, 13, 22, 0.9)
+    );
+    border: 1px solid rgba(54, 220, 255, 0.38);
+    border-radius: 0.42rem;
+    box-shadow:
+      0 0.4rem 1.6rem rgba(0, 0, 0, 0.5),
+      0 0 1.2rem rgba(0, 212, 255, 0.07);
+    backdrop-filter: blur(18px) saturate(1.2);
+    -webkit-backdrop-filter: blur(18px) saturate(1.2);
     cursor: pointer;
   }
 
-  .palette-toggle[aria-expanded='true'] {
-    border-color: rgba(54, 220, 255, 0.9);
+  .palette-toggle:hover,
+  .palette-toggle:focus-visible,
+  #palette-picker.is-open .palette-toggle {
+    background: linear-gradient(
+      145deg,
+      rgba(14, 38, 51, 0.95),
+      rgba(9, 18, 28, 0.93)
+    );
+    border-color: rgba(54, 220, 255, 0.7);
+  }
+
+  /* The globe glyph's size in the language button, so the two match. */
+  .palette-toggle .material-symbols-outlined {
+    flex: none;
+    width: 0.95rem;
+    height: 0.95rem;
+    font-size: 0.95rem;
+    line-height: 1;
+    color: #55dff5;
   }
 
   /* The dot beside the glyph is the scheme currently in force. */
   .palette-toggle-chip {
-    width: 10px;
-    height: 10px;
+    flex: none;
+    width: 0.5rem;
+    height: 0.5rem;
     border-radius: 50%;
     background: var(--swatch);
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.55);
   }
 
+  /* Opens upward from the corner, aligned to its own end edge — the language
+     picker's placement, not a sheet over the map. */
   .palette-panel {
-    position: fixed;
-    inset-inline: 16px;
-    inset-block-end: 16px;
-    padding: 0.7rem 0.75rem;
+    position: absolute;
+    inset-block-end: calc(100% + 0.4rem);
+    inset-inline-end: 0;
+    display: flex;
+    padding: 0.45rem;
     background:
       linear-gradient(145deg, rgba(10, 27, 37, 0.97), rgba(7, 13, 22, 0.95)),
       rgba(7, 17, 25, 0.96);
     border: 1px solid rgba(54, 220, 255, 0.42);
     border-radius: 0.55rem;
+    box-shadow:
+      0 0.4rem 1.6rem rgba(0, 0, 0, 0.5),
+      0 0 1.2rem rgba(0, 212, 255, 0.07);
+    backdrop-filter: blur(18px) saturate(1.2);
+    -webkit-backdrop-filter: blur(18px) saturate(1.2);
   }
 
   .palette-panel[hidden] {
     display: none;
   }
 
-  /* Thumb-sized targets once the sheet is open, and room to aim. */
+  /* One grid for every choice: six presets and the custom field share a box,
+     so nothing reads as a bigger or smaller dot than its neighbour. */
   .palette-panel .palette-swatches {
-    justify-content: space-between;
-    gap: 0.55rem;
+    gap: 0.4rem;
   }
 
   .palette-panel .palette-swatch,
   .palette-panel .palette-custom {
-    width: 34px;
-    height: 34px;
+    box-sizing: border-box;
+    flex: none;
+    width: 1.6rem;
+    height: 1.6rem;
+    font-size: 0.9rem;
+    line-height: 1;
   }
 }
 
 /* Above the breakpoint the row is shown directly, so the button and the
-   sheet chrome stay out of the layout. */
+   panel chrome stay out of the layout. */
 @media (min-width: 768px) {
   .palette-toggle {
     display: none;
   }
 
-  /* The panel is only the sheet wrapper on a phone. A wide viewport shows the
+  /* The panel is only the popup wrapper on a phone. A wide viewport shows the
      row inline, so the wrapper dissolves — and `hidden` must not take the row
      with it: `[hidden] { display: none }` outranks a bare `display: contents`,
      and the picker is mounted closed on every viewport. */

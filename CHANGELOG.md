@@ -4,6 +4,16 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.35] — 2026-10-20 — Phone colour picker matches the language button
+
+- Match the phone colour picker's button to the language button beside it, and
+  open it upward. The button now takes the language picker's measurements —
+  the same padding, radius, frame and 0.95 rem glyph — so the corner reads as
+  one row of controls instead of two different sizes. The swatches open upward
+  from the corner, aligned to its end edge, the way the language list does.
+  Every choice in the popup shares one box, so the six presets and the custom
+  colour no longer read as differently sized dots.
+
 ## [0.2.34] — 2026-10-20 — Colour schemes behind an icon on a phone
 
 - Put the colour schemes behind an icon on a phone instead of taking them
