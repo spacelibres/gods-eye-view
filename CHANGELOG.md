@@ -4,6 +4,30 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.49] — 2026-10-20 — Doubao audio frames are accepted
+
+- Fix the Doubao audio frame, which every microphone packet was rejected
+  for. The vendor's protocol table settles it: byte 1 of the header packs
+  **Message Type** in the high nibble and **flags** in the low one, and the
+  `event` field is mandatory for every client frame. Audio is Message Type 2
+  with that flag, so byte 1 is `0x24`. Writing `0x20` there said "type 2, no
+  event", and the service then read the event id as a body length and answered
+  `declared body size does not match actual body size: expected=200 actual=684`.
+
+- Complete the session setup the documentation requires. `dialog.extra.model`
+  is mandatory and was missing; `asr` and `tts` blocks must not be null
+  (error 42000020); the TTS speaker is named explicitly; and the output format
+  is `pcm_s16le`, because plain `pcm` is 32-bit and playing 32-bit samples as
+  16-bit is noise. `input_mod: keep_alive` stops a pause in speech from ending
+  the session with an idle timeout.
+
+  Verified through the relay with 20 ms microphone packets, as the guide
+  recommends: no errors, a real Chinese reply, and 518 KB of audio.
+
+- Record the finding that cost the most time: reading a vendor's public sample
+  code is not a substitute for its protocol table. The samples' header arithmetic
+  and body layout disagreed with the service in three separate ways.
+
 ## [0.2.48] — 2026-10-20 — A missing microphone is not a connection error
 
 - Stop reporting a missing microphone as a connection failure. `getUserMedia`

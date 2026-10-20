@@ -75,13 +75,29 @@ test('a session frame carries the id between event and payload', () => {
   );
 });
 
-test('an audio frame uses the audio message type and raw payload', () => {
+test('an audio frame is TaskRequest with the mandatory event flag', () => {
   const pcm = new Uint8Array([0x00, 0x3b, 0x00, 0x1a]);
-  const frame = encodeAudioFrame(200, pcm);
-  assert.equal(frame[1], 0x20, 'message type 2 (audio-only client)');
-  assert.equal(u32At(frame, 4), 200);
-  assert.equal(u32At(frame, 8), pcm.length);
+  const frame = encodeAudioFrame(pcm);
+  assert.equal(frame[0], 0x11);
+  // Byte 1 is Message Type (high nibble) | flags (low nibble). Audio is type 2,
+  // and the `event` field is mandatory for every client frame, so the byte is
+  // 0x24. Writing 0x20 said "type 2, no event", and the service then read the
+  // event id as a body length: "expected=200 actual=684".
+  assert.equal(frame[1], 0x24, 'type 2 (audio-only) with the event flag');
+  assert.equal(frame[2], 0x10, 'JSON serialization, no compression');
+  assert.equal(u32At(frame, 4), DOUBAO_EVENTS.taskRequest, 'event 200');
+  assert.equal(u32At(frame, 8), pcm.length, 'payload length after the event');
   assert.deepEqual([...frame.subarray(12, 16)], [0x00, 0x3b, 0x00, 0x1a]);
+});
+
+test('an audio frame addresses the session when it has an id', () => {
+  const pcm = new Uint8Array([1, 2, 3, 4]);
+  const sid = 'abc12345-6789-4abc-8def-0123456789ab';
+  const frame = encodeAudioFrame(pcm, sid);
+  assert.equal(u32At(frame, 4), DOUBAO_EVENTS.taskRequest);
+  assert.equal(u32At(frame, 8), sid.length, 'session id length');
+  assert.equal(new TextDecoder().decode(frame.subarray(12, 12 + sid.length)), sid);
+  assert.equal(u32At(frame, 12 + sid.length), pcm.length);
 });
 
 test('a text event is parsed with its session id', () => {

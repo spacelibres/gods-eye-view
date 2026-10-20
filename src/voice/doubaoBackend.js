@@ -46,6 +46,17 @@ const newSessionId = () => globalThis.crypto.randomUUID();
  */
 const DEFAULT_SOCKET_URL = '/api/doubao/socket';
 
+/**
+ * Model version, required in `dialog.extra.model`.
+ *
+ * `1.2.1.1` is the O2.0 line, the one this integration was verified against;
+ * `2.2.0.0` is the SC2.0 role-play line.
+ */
+const DIALOG_MODEL = '1.2.1.1';
+
+/** Default voice. `vv` is the O-line default, a bright Mandarin female. */
+const DEFAULT_SPEAKER = 'zh_female_vv_jupiter_bigtts';
+
 /** Event ids, as the service numbers them. */
 export const DOUBAO_EVENTS = Object.freeze({
   startConnection: 1,
@@ -70,10 +81,17 @@ export const DOUBAO_EVENTS = Object.freeze({
 
 const MSG = Object.freeze({ error: 0xf });
 
-/** Header bytes for a JSON client frame. */
+/**
+ * Header bytes for a client frame.
+ *
+ * Byte 1 packs **Message Type** in the high nibble and **flags** in the low
+ * one — not two separate fields. The vendor's own example frame
+ * `[17 20 16 0 …]` is type 1, flags 4. Audio is Message Type 2 with the same
+ * mandatory `event` flag, so its byte 1 is `0x24`; writing `0x20` there said
+ * "type 2, no event", and the service then read the event id as a body length.
+ */
 const JSON_HEADER = Object.freeze([0x11, 0x14, 0x10, 0x00]);
-/** Header bytes for a raw audio client frame. */
-const AUDIO_HEADER = Object.freeze([0x11, 0x20, 0x00, 0x00]);
+const AUDIO_HEADER = Object.freeze([0x11, 0x24, 0x10, 0x00]);
 
 /** Concatenate byte arrays into one `Uint8Array`. */
 function concat(parts) {
@@ -121,15 +139,16 @@ export function encodeJsonFrame(event, payload, sessionId = '') {
 /**
  * A client audio frame.
  *
- * `event` 200 is the task request this service expects for streamed audio.
+ * `TaskRequest` carries the PCM as its payload. The frame keeps the mandatory
+ * `event` field — the protocol table marks it required for every client frame,
+ * and the session id follows it for session-level events.
  *
- * @param {number} event
  * @param {Uint8Array} pcm
  * @param {string} [sessionId]
  * @returns {Uint8Array}
  */
-export function encodeAudioFrame(event, pcm, sessionId = '') {
-  const parts = [new Uint8Array(AUDIO_HEADER), u32(event)];
+export function encodeAudioFrame(pcm, sessionId = '') {
+  const parts = [new Uint8Array(AUDIO_HEADER), u32(DOUBAO_EVENTS.taskRequest)];
   if (sessionId) {
     const id = utf8(sessionId);
     parts.push(u32(id.length), id);
@@ -281,6 +300,7 @@ function sendBinary(socket, bytes) {
 export function createDoubaoBackend({
   tokenEndpoint = '/api/doubao/token',
   socketUrl = DEFAULT_SOCKET_URL,
+  speakerId = DEFAULT_SPEAKER,
   tokenTransport = (...args) => fetch(...args),
   WebSocketImpl = (...args) => new WebSocket(...args),
   origin = globalThis.location?.origin,
@@ -402,16 +422,37 @@ export function createDoubaoBackend({
             encodeJsonFrame(
               DOUBAO_EVENTS.startSession,
               {
+                // `asr` and `tts` blocks must not be null: the service answers
+                // `StartSession event payload asr extra is null` (42000020).
+                asr: {
+                  audio_info: {
+                    format: 'pcm',
+                    sample_rate: 16_000,
+                    channel: 1,
+                  },
+                },
                 tts: {
+                  speaker: speakerId,
                   audio_config: {
                     channel: 1,
-                    format: 'pcm',
+                    // `pcm_s16le` is 16-bit; plain `pcm` is 32-bit, and playing
+                    // 32-bit samples as 16-bit is loud noise.
+                    format: 'pcm_s16le',
                     sample_rate: 24_000,
                   },
                 },
                 dialog: {
                   bot_name: 'Gev',
                   system_role: model || '你是一个简洁的中文语音助手。',
+                  extra: {
+                    // Required by the protocol; the service rejects a session
+                    // without it.
+                    model: DIALOG_MODEL,
+                    // Microphone input, with keep-alive so a pause in speech
+                    // does not end the session with an idle timeout.
+                    input_mod: 'keep_alive',
+                    strict_audit: false,
+                  },
                 },
               },
               sessionId,
@@ -433,14 +474,7 @@ export function createDoubaoBackend({
 
     /** Stream one PCM chunk of microphone audio. */
     appendAudio(socket, pcmBytes) {
-      sendBinary(
-        socket,
-        encodeAudioFrame(
-          DOUBAO_EVENTS.taskRequest,
-          pcmBytes,
-          socket.sessionId ?? '',
-        ),
-      );
+      sendBinary(socket, encodeAudioFrame(pcmBytes, socket.sessionId ?? ''));
     },
 
     /** Ask the assistant to answer a typed question. */
