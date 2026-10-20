@@ -1,5 +1,12 @@
 # Changelog
 
+- Bring the logo back on a phone and put both panel groups behind one
+  thumb-sized switch each. A leftover rule hiding the last span of the title
+  h1 removed the lockup, which is now the h1 itself. The left stack and the
+  right rail start closed and open as overlays; tapping the globe closes them
+  again, and widening past the phone breakpoint closes both. Wider viewports
+  are unchanged.
+
 - Hide Cesium and Google attribution on every viewport, not just phones. The
   block is a licence notice rather than decoration, so the rule carries the
   owner decision and a `.credits-visible` opt-in keeps the original styling

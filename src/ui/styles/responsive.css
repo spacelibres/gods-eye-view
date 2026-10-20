@@ -270,7 +270,9 @@
     left: 16px;
   }
 
-  #title-bar h1 > span:last-child,
+  /* The subtitle is the only thing that has to go: the lockup now IS the
+     <h1>, so hiding the h1's last span (an older layout, when the wordmark was
+     markup next to the logo) removed the product logo from the phone. */
   #title-bar .subtitle {
     display: none;
   }
@@ -284,9 +286,19 @@
    first-run sheet stops competing with the controls underneath it. */
 
 @media (max-width: 720px) {
-  /* The identity lives in the loading screen and the dock; on a phone the
-     wordmark only competed with the globe for the top row. */
+  /* The lockup stays: it is the product's identity, and the top row is the
+     only place a phone shows it. It shrinks to the manual's floor so the
+     action buttons keep their side of the row. */
   #title-bar {
+    top: max(10px, env(safe-area-inset-top));
+    left: 12px;
+  }
+
+  #title-bar .title-logo {
+    width: 132px;
+  }
+
+  #title-bar .subtitle {
     display: none;
   }
 
@@ -300,5 +312,76 @@
   body:has(#first-run-launcher.visible) #location-bar,
   body:has(#first-run-launcher.visible) #scene-panel {
     display: none;
+  }
+}
+
+/* ── Phone panel switches ─────────────────────────────────────────
+   Both panel groups start hidden behind a thumb-sized button: on a phone the
+   collapsed rows alone still covered a third of the globe. Tapping a button
+   shows its group as an overlay; tapping the globe puts it away again.
+   Wider viewports never see the buttons and keep the rails as drawn. */
+
+.mobile-panel-switch {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .mobile-panel-switch {
+    position: fixed;
+    /* 48px is the smallest comfortably tappable square; the buttons sit under
+       the top action row, above the dock. */
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1px solid var(--glass-border-hover);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--sp-deep) 82%, transparent);
+    color: var(--text-primary);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 180;
+    cursor: pointer;
+  }
+
+  .mobile-panel-switch .material-symbols-outlined {
+    font-size: 22px;
+  }
+
+  .mobile-panel-switch[aria-expanded='true'] {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .mobile-panel-switch[data-panel-group='left-panel-stack'] {
+    top: 64px;
+    left: 12px;
+  }
+
+  .mobile-panel-switch[data-panel-group='right-context-rail'] {
+    top: 64px;
+    right: 12px;
+  }
+
+  /* The groups are overlays while open, and gone while closed. */
+  #left-panel-stack,
+  #right-context-rail {
+    display: none;
+  }
+
+  #left-panel-stack.mobile-panel-open,
+  #right-context-rail.mobile-panel-open {
+    display: flex;
+    position: fixed;
+    top: 120px;
+    right: 12px;
+    bottom: 120px;
+    left: 12px;
+    width: auto;
+    max-height: none;
+    z-index: 179;
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 }

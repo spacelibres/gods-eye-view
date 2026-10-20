@@ -47,6 +47,7 @@ import {
 } from '../i18n/index.js';
 import { applyLocaleChoice, mountLocalePicker } from './localePicker.js';
 import { mountPalettePicker } from './palettePicker.js';
+import { initMobilePanelSwitches } from './mobilePanelSwitches.js';
 import {
   DEFAULT_PRESET,
   getActivePalette,
@@ -596,6 +597,9 @@ export class StyleManager extends ShellFacade {
     this._initCctvPanel();
     this._initStreetLevelPanel();
     this._initGlobalContextPanel();
+    // After the panels exist: the phone switches hide the two groups and are
+    // no-ops on a wider viewport.
+    this._mobilePanelSwitches = initMobilePanelSwitches();
     this._initLocationBar();
     this._initShareButton();
     this._initCameraOrientationControls();
