@@ -49,6 +49,12 @@ GEV_USER="${GEV_USER:-gev}"
 GEV_WEBHOOK_PORT="${GEV_WEBHOOK_PORT:-4180}"
 GEV_WEBHOOK_PATH="${GEV_WEBHOOK_PATH:-/webhook}"
 GEV_ENV_FILE="${GEV_ENV_FILE:-/etc/gods-eye-view.env}"
+
+# A push replaces this file while it is still running. Keep the version that
+# started so the source update can tell the two apart (see the re-exec below).
+GEV_SELF_COPY="$(mktemp)"
+cp -f "${BASH_SOURCE[0]}" "$GEV_SELF_COPY" 2>/dev/null || GEV_SELF_COPY=""
+trap '[ -n "$GEV_SELF_COPY" ] && rm -f "$GEV_SELF_COPY"' EXIT
 # Releases are built into their own directory and only become the live one
 # after they finish, so a rebuild never leaves the host serving a half-written
 # tree. GEV_RELEASES holds the published builds; GEV_CURRENT is the symlink the
@@ -131,6 +137,17 @@ else
   git clone --quiet --branch "$GEV_BRANCH" "$GEV_REPO" "$GEV_HOME"
 fi
 chown -R "$GEV_USER:$GEV_USER" "$GEV_HOME"
+
+# `reset --hard` above replaced this script on disk. Bash reads a script
+# incrementally, so the rest of this run would continue with the *old* logic —
+# the very behaviour a deploy fix is meant to change. Re-exec the checkout's own
+# script once, marked so it cannot loop. The copy taken at startup is the
+# comparison: by now the file on disk already *is* the new script.
+if [ -z "${GEV_REEXEC:-}" ] && [ -s "${GEV_SELF_COPY:-}" ] &&
+  ! cmp -s "$GEV_HOME/scripts/install-vps.sh" "$GEV_SELF_COPY"; then
+  log "The deploy script changed in this push; re-running the new one"
+  GEV_REEXEC=1 exec bash "$GEV_HOME/scripts/install-vps.sh" "$@"
+fi
 
 # ------------------------------------------------------------------ build ---
 # npm ci honours the lockfile; the registry fallback keeps a slow or blocked

@@ -4,6 +4,15 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.65] — 2026-10-21 — The deploy script keeps up with itself
+
+- Re-run the deploy script when a push changes it. Bash reads a script as it
+  goes, and the installer updates the checkout at the start of its own run, so a
+  release that changed the installer finished on the logic that was already
+  loaded — the fix only took effect a push later. The installer now keeps the
+  copy it started from and re-executes the new one once, so a deploy fix lands
+  in the deploy that ships it (spacelibre).
+
 ## [0.2.64] — 2026-10-21 — Deploy without dropping the site
 
 - Deploy without taking the site down. A push used to rebuild `dist/` in place
