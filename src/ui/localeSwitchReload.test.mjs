@@ -110,3 +110,19 @@ test('the language already active neither switches nor reloads', () => {
     view.restore();
   }
 });
+
+test('locale owners registered after boot are invoked and can unsubscribe', () => {
+  let calls = 0;
+  const shell = { services: {} };
+  const stop = StyleManager.prototype.registerLocaleRepaint.call(
+    shell,
+    () => calls++,
+  );
+  for (const repaint of StyleManager.prototype._localeRepainters.call(shell))
+    repaint();
+  assert.equal(calls, 1);
+  stop();
+  for (const repaint of StyleManager.prototype._localeRepainters.call(shell))
+    repaint();
+  assert.equal(calls, 1);
+});

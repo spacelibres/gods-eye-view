@@ -21,7 +21,7 @@ import {
   placementVariants,
 } from './worldOverlayDraw.js';
 import { WORLD_OVERLAY_STYLE } from './worldOverlayTokens.js';
-import { t } from '../i18n/index.js';
+import { t, getLocale, retranslateRenderedText } from '../i18n/index.js';
 
 /**
  * @module worldOverlay
@@ -2625,12 +2625,30 @@ function resetFrameDiagnostics() {
   }
 }
 
+let overlayLocale = null;
+function refreshOverlayLocale() {
+  const locale = getLocale();
+  if (overlayLocale === locale) return;
+  overlayLocale = locale;
+  for (const source of _sourceList) {
+    for (const entry of source.entries.values()) {
+      entry.title = retranslateRenderedText(entry.title);
+      entry.details = entry.details.map(retranslateRenderedText);
+      entry.accessibilityLabel = retranslateRenderedText(
+        entry.accessibilityLabel,
+      );
+    }
+  }
+  _solveDirty = true;
+}
+
 function drawWorldOverlay() {
   if (_sonarRenderTimer !== null) {
     clearTimeout(_sonarRenderTimer);
     _sonarRenderTimer = null;
   }
   if (_destroyed || !_viewer || !_canvas || !_ctx) return;
+  refreshOverlayLocale();
   const timestamp = nowMs();
   if (!overlayHasPaintWork(timestamp)) {
     resetFrameDiagnostics();

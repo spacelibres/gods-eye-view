@@ -729,3 +729,26 @@ test('the map-object count in a row title keeps digit grouping', async () => {
   assert.match(row.children[1].title, /12,345 map objects/);
   t.tool.destroy();
 });
+
+test('locale refresh updates composite import tooltips without loading files again', async () => {
+  const { setLocale } = await import('../i18n/index.js');
+  setLocale('en');
+  const f = setup();
+  try {
+    await f.tool.importFiles([file('Airports.geojson')]);
+    const name = () =>
+      rows(f.els)[0].children.find((c) =>
+        c.classList.contains('geo-import-name'),
+      );
+    const before = name().title;
+    setLocale('ja');
+    f.tool.refreshLocale();
+    assert.notEqual(name().title, before);
+    assert.equal(name().textContent, 'Airports.geojson');
+    assert.equal(f.loads.length, 1);
+    assert.equal(f.added.length, 1);
+  } finally {
+    f.tool.destroy();
+    setLocale('en');
+  }
+});

@@ -41,7 +41,7 @@ export function createVoiceControl({ reset = false } = {}) {
     root.innerHTML = `
       <div class="gev-voice-heading">
         <div class="gev-voice-kicker">${t('AI AGENT')}</div>
-        <div id="gev-voice-status">${voiceStatusLabel('idle')}</div>
+        <div id="gev-voice-status" data-i18n-source="OFF" data-i18n-context="voice">${voiceStatusLabel('idle')}</div>
         <div class="gev-voice-cost">
           <select id="gev-voice-provider" class="gev-voice-provider" title="${t('Voice service — applies next session')}" aria-label="${t('Voice service')}"></select>
           <button id="gev-voice-tier" class="gev-voice-tier-btn" type="button" aria-pressed="false" title="${t('Voice model tier — applies next session')}">${t('STD')}</button>
@@ -68,9 +68,9 @@ export function createVoiceControl({ reset = false } = {}) {
           <span id="gev-voice-card-phase" class="gev-voice-card-phase"></span>
           <button id="gev-voice-card-dismiss" class="gev-voice-card-dismiss" type="button" aria-label="${t('Dismiss voice card')}">×</button>
         </div>
-        <p id="gev-voice-card-user" class="gev-voice-card-caption" data-role="user" hidden><span class="gev-voice-card-who">${t('YOU')}</span><span id="gev-voice-card-user-text" class="gev-voice-card-text"></span></p>
+        <p id="gev-voice-card-user" class="gev-voice-card-caption" data-role="user" hidden><span class="gev-voice-card-who">${t('YOU')}</span><span id="gev-voice-card-user-text" translate="no" class="gev-voice-card-text"></span></p>
         <p id="gev-voice-card-pointer" class="gev-voice-card-pointer" hidden><span id="gev-voice-card-pointer-kind" class="gev-voice-card-who">${t('THIS')}</span><span class="gev-voice-card-sr">: </span><span id="gev-voice-card-pointer-text" class="gev-voice-card-pointer-label"></span></p>
-        <p id="gev-voice-card-assistant" class="gev-voice-card-caption" data-role="assistant" hidden><span class="gev-voice-card-who">${ASSISTANT_NAME}</span><span id="gev-voice-card-assistant-text" class="gev-voice-card-text"></span></p>
+        <p id="gev-voice-card-assistant" class="gev-voice-card-caption" data-role="assistant" hidden><span class="gev-voice-card-who">${ASSISTANT_NAME}</span><span id="gev-voice-card-assistant-text" translate="no" class="gev-voice-card-text"></span></p>
         <ol id="gev-voice-card-plan" class="gev-voice-card-plan" aria-label="${t('Plan')}" hidden></ol>
         <div id="gev-voice-card-result" class="gev-voice-card-result" hidden>
           <div id="gev-voice-card-result-title" class="gev-voice-card-result-title"></div>

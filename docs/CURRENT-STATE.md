@@ -1,5 +1,13 @@
 # God's Eye View Current State
 
+The language picker updates static and runtime-created controls in place across
+all seven shipped locales. Dynamic text nodes, hints and accessibility labels
+retain message sources; layer names and composite SDR/import readouts repaint
+from their owners. Explicit context bindings distinguish identical words such
+as weather CLEAR and the CLEAR action. Native names, user scene titles, file
+names, transcripts and editable values remain data. Switching preserves the
+viewer, camera and enabled layers without reloading or refetching sources.
+
 A shared target-icon collision pass sparsifies native billboard and point
 markers across enabled layers. Displaced icons retain their real world positions
 and pick identities, with fine low-opacity single-stroke leaders pointing back to their anchors.

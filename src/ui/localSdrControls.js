@@ -217,6 +217,12 @@ export class LocalSdrControls {
     });
   }
 
+  refreshLocale() {
+    if (this._destroyed) return;
+    this._labelGainOptions();
+    this._render();
+  }
+
   _render() {
     const el = this.elements;
     const view = localSdrCardView(this._state);

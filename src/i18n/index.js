@@ -12,6 +12,11 @@
 // plural form). A missing or empty entry falls back to English.
 // `npm run i18n` keeps the catalogs in step with the code. Guide: docs/I18N.md.
 import {
+  rememberRenderedMessage,
+  resolveRenderedMessage,
+} from './renderedMessages.js';
+import { createLiveDocument } from './liveDocument.js';
+import {
   DEFAULT_LOCALE,
   normalizeLocale,
   writeStoredLocale,
@@ -116,7 +121,11 @@ function lookup(text) {
  */
 export function t(text, values) {
   const entry = lookup(values?.context ? `${values.context}|${text}` : text);
-  return interpolate(typeof entry === 'string' ? entry : text, values);
+  return rememberRenderedMessage(
+    interpolate(typeof entry === 'string' ? entry : text, values),
+    text,
+    values,
+  );
 }
 
 /**
@@ -141,7 +150,40 @@ export function tn(count, one, other, values) {
   } else {
     pattern = pluralRules(DEFAULT_LOCALE).select(count) === 'one' ? one : other;
   }
-  return interpolate(pattern, { count, ...values });
+  return rememberRenderedMessage(
+    interpolate(pattern, { count, ...values }),
+    undefined,
+    values,
+    count,
+    one,
+    other,
+  );
+}
+
+function renderMessage(binding) {
+  return binding.plural
+    ? tn(binding.count, binding.one, binding.other, binding.values)
+    : t(binding.source, binding.values);
+}
+/** Retranslate only text whose English source was actually rendered by t/tn. */
+export function retranslateRenderedText(text) {
+  const binding = resolveRenderedMessage(text);
+  return binding ? renderMessage(binding) : text;
+}
+export function createLiveDocumentTranslations(doc, options = {}) {
+  return createLiveDocument(doc, {
+    resolve: (text, target, attribute) => {
+      const owner = attribute ? target : target.parentElement;
+      const source = !attribute && owner?.getAttribute?.('data-i18n-source');
+      if (source) {
+        const context = owner.getAttribute('data-i18n-context');
+        return { source, values: context ? { context } : undefined };
+      }
+      return resolveRenderedMessage(text);
+    },
+    render: renderMessage,
+    ...options,
+  });
 }
 
 /**
@@ -262,36 +304,48 @@ const DOCUMENT_TRANSLATION_TARGETS = Object.freeze([
  * @param {Document|Element} doc
  * @returns {number} Count of element/attribute writes performed.
  */
+const documentTranslationStates = new WeakMap();
 export function applyDocumentTranslations(doc) {
   if (typeof doc?.querySelectorAll !== 'function') return 0;
   let applied = 0;
   for (const [marker, attribute] of DOCUMENT_TRANSLATION_TARGETS) {
     for (const element of doc.querySelectorAll(`[${marker}]`)) {
-      // The source has to be the English the markup was written with, not what
-      // is on screen. Reading the current text worked only for the first pass:
-      // once the page said "不遗漏任何地方", translating again looked that up as
-      // a ja/ko key, found nothing, and left the element in the old language.
+      const raw = attribute
+        ? element.getAttribute(attribute)
+        : normalizeMarkupText(element.textContent);
+      if (!raw) continue;
       const keyAttribute = `${marker}-key`;
       let source = element.getAttribute(keyAttribute);
       if (source === null) {
-        const raw = attribute
-          ? element.getAttribute(attribute)
-          : normalizeMarkupText(element.textContent);
-        if (!raw) continue;
         source = normalizeMarkupText(raw);
         element.setAttribute(keyAttribute, source);
       }
-      if (!source) continue;
-      // English has no catalog; `t` answers the source itself, which is exactly
-      // how the markup was written and what has to be restored.
-      const text = t(source);
+      let states = documentTranslationStates.get(element);
+      if (!states) {
+        states = new Map();
+        documentTranslationStates.set(element, states);
+      }
+      let state = states.get(marker);
+      if (!state) {
+        state = { last: raw, runtime: false, binding: null };
+        states.set(marker, state);
+      } else if (raw !== state.last) {
+        state.runtime = true;
+        state.binding = resolveRenderedMessage(raw);
+      }
+      // A runtime owner may have replaced a boot placeholder with live data.
+      // Never reset that value merely because the interface language changed.
+      if (state.runtime && !state.binding) {
+        state.last = raw;
+        continue;
+      }
+      const text = state.runtime ? renderMessage(state.binding) : t(source);
       if (attribute) {
         if (element.getAttribute(attribute) !== text)
           element.setAttribute(attribute, text);
-      } else if (element.textContent !== text) {
-        element.textContent = text;
-      }
-      applied += 1;
+      } else if (element.textContent !== text) element.textContent = text;
+      state.last = text;
+      applied++;
     }
   }
   return applied;

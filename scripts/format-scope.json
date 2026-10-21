@@ -1094,5 +1094,7 @@
   "scripts/import-airport-usage.mjs",
   "src/overlays/markerPlacement.test.mjs",
   "src/overlays/markerLayout.test.mjs",
-  "scripts/qa-marker-layout.mjs"
+  "scripts/qa-marker-layout.mjs",
+  "src/i18n/runtimeTranslations.test.mjs",
+  "scripts/qa-live-locale.mjs"
 ]

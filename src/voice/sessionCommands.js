@@ -133,6 +133,16 @@ export function createVoiceCommands({
     ui.root.dataset.status = event.state;
     // States are machine values; only the label is translated.
     ui.status.textContent = voiceStatusLabel(event.state);
+    ui.status.setAttribute?.(
+      'data-i18n-source',
+      {
+        idle: 'OFF',
+        connecting: 'CONNECTING',
+        listening: 'LISTENING',
+        executing: 'EXECUTING',
+        error: 'ERROR',
+      }[event.state] || '',
+    );
     // The portable session reports 'Voice off' in English: show the idle
     // label instead. Other details are provider messages, shown as they come.
     const idle = event.state === 'idle';

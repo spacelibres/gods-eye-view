@@ -299,6 +299,7 @@ export class LayerPanel {
       if (group && group !== previousGroup) {
         const heading = document.createElement('h3');
         heading.className = 'data-layer-group-heading';
+        heading.dataset.localeSource = group;
         heading.textContent = t(group);
         this._toggleContainer.appendChild(heading);
       }
@@ -320,6 +321,7 @@ export class LayerPanel {
       icon.textContent = layer.icon;
       const name = document.createElement('span');
       name.className = 'data-name';
+      name.setAttribute('data-i18n-skip', '');
       setRowText(name, panelLabel(layer));
       left.appendChild(icon);
       left.appendChild(name);
@@ -608,6 +610,21 @@ export class LayerPanel {
     syncRowList(container, list);
   }
 
+  refreshLocale() {
+    this._recentImageryPanel?.refreshLocale?.();
+    if (this._destroyed || !this._toggleContainer) return;
+    for (const heading of this._toggleContainer.querySelectorAll(
+      '.data-layer-group-heading',
+    ))
+      heading.textContent = t(heading.dataset.localeSource);
+    for (const layer of this.getAll()) {
+      const name = this._toggleContainer.querySelector(
+        `[data-layer-id="${layer.id}"] .data-name`,
+      );
+      if (name) setRowText(name, panelLabel(layer));
+    }
+    this._refreshTogglePanel();
+  }
   _refreshTogglePanel() {
     if (this._destroyed || !this._toggleContainer) return;
     // Skip DOM churn while hidden; visibilitychange (main.js) triggers one

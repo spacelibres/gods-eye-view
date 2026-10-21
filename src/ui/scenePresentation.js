@@ -52,6 +52,7 @@ export function renderSceneOptions(element, { scenes, selectedSceneId }) {
   for (const scene of scenes) {
     const option = document.createElement('option');
     option.value = scene.id;
+    option.setAttribute('translate', 'no');
     option.textContent = scene.title;
     element.appendChild(option);
   }
@@ -87,6 +88,7 @@ export function renderSceneShots(
     top.className = 'scene-shot-top';
     const label = document.createElement('div');
     label.className = 'scene-shot-label';
+    if (!shot.displayTitle) label.setAttribute('translate', 'no');
     label.textContent = shownTitle;
     label.title = t('Double-click to rename');
     listen(label, 'click', () => select(shot.id));

@@ -455,6 +455,8 @@ export function directionsRowControls(state) {
   chips.push({
     id: 'clear',
     label: t('CLEAR', { context: 'action' }),
+    labelSource: 'CLEAR',
+    labelContext: 'action',
     disabled: !a && !b && !route,
     state: 'idle',
     title: t('Remove the route and both markers'),

@@ -152,6 +152,7 @@ export function initGeoFileImport({
         if (!item.ownStyles) swatch.style.background = item.color;
         const name = doc.createElement('span');
         name.className = 'geo-import-name';
+        name.setAttribute('translate', 'no');
         // textContent, never markup: the name comes from the file system.
         name.textContent = item.name;
         name.title = `${item.name} — ${item.format.toUpperCase()}, ${tn(
@@ -418,6 +419,9 @@ export function initGeoFileImport({
   renderList();
 
   const handle = {
+    refreshLocale: () => {
+      if (!destroyed) renderList();
+    },
     importFiles,
     list: () =>
       imports.map(({ id, name, format, entityCount, removed, visible }) => ({

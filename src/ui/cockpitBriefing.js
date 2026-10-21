@@ -279,6 +279,9 @@ export function renderRegionalBrief(payload, info) {
   if (this.localCondition) {
     const condition = this.services.weatherCodeLabel(weather?.weatherCode);
     const conditionKey = WEATHER_CONDITION_KEYS[condition];
+    if (conditionKey)
+      this.localCondition.setAttribute?.('data-i18n-source', conditionKey);
+    else this.localCondition.removeAttribute?.('data-i18n-source');
     this.localCondition.textContent = conditionKey
       ? t(conditionKey)
       : condition;

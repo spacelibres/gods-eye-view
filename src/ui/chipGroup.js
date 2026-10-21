@@ -28,6 +28,10 @@ export function syncChipGroup(container, chips = [], { before = null } = {}) {
       `data-toggle-chip chip-${state}${chip.active ? ' active' : ''}`,
     );
     set(button, 'textContent', chip.label);
+    if (chip.labelSource) {
+      button.setAttribute('data-i18n-source', chip.labelSource);
+      button.setAttribute('data-i18n-context', chip.labelContext || '');
+    }
     // Optional per-chip colour; CSS decides how it is used.
     const color = chip.color || '';
     if ((button.dataset.chipColor || '') !== color) {

@@ -39,6 +39,7 @@ import { runCctvLayerEnableTransition } from '../cctvFocusPolicy.js';
 
 import {
   applyDocumentTranslations,
+  createLiveDocumentTranslations,
   getLocale,
   msg,
   persistLocaleInPlace,
@@ -591,6 +592,7 @@ export class StyleManager extends ShellFacade {
     this._applyRuntimeStaticHeaderText();
     this._initPanelChrome();
     this._initLocaleSelector();
+    this._liveTranslations = createLiveDocumentTranslations(document);
     this._sizeDisplayLabelColumn();
     this._initLeftPanelAdaptiveLayout();
     this._initRightPanelAdaptiveLayout();
@@ -783,6 +785,7 @@ export class StyleManager extends ShellFacade {
    * @returns {void}
    */
   _applyLocaleInPlace(locale) {
+    this._liveTranslations?.capture();
     const applied = setLocale(locale);
     const doc = globalThis.document;
     applyDocumentLanguage(doc, applied);
@@ -801,15 +804,32 @@ export class StyleManager extends ShellFacade {
     }
     // The picker's own label and the document title follow the new locale.
     this._localePicker?.setCurrent?.(applied);
+    this._applyRuntimeStaticHeaderText?.();
+    this._liveTranslations?.refresh();
+    this._sizeDisplayLabelColumn?.();
+    this.viewer?.scene?.requestRender?.();
   }
 
   /**
    * Panel repainters that render translated text from state.
    * @returns {Array<() => void>}
    */
+  registerLocaleRepaint(callback) {
+    if (typeof callback !== 'function') return () => {};
+    this._localeCallbacks ??= new Set();
+    this._localeCallbacks.add(callback);
+    return () => this._localeCallbacks?.delete(callback);
+  }
+
   _localeRepainters() {
     const services = this.services ?? {};
-    const repaint = [];
+    const repaint = [...(this._localeCallbacks ?? [])];
+    if (this._localSdrControls?.refreshLocale)
+      repaint.push(() => this._localSdrControls.refreshLocale());
+    if (this._dataManager?._layerPanel?.refreshLocale)
+      repaint.push(() => this._dataManager._layerPanel.refreshLocale());
+    if (this._visualSettings?._updateStyleMiniStatus)
+      repaint.push(() => this._visualSettings._updateStyleMiniStatus());
     const ask = (owner) => {
       if (typeof owner?.refresh === 'function')
         repaint.push(() => owner.refresh());
@@ -1792,6 +1812,9 @@ export class StyleManager extends ShellFacade {
     this._lifetime.destroy();
     for (const unregister of this._unsavedWorkChecks?.splice(0) ?? [])
       unregister();
+    this._localeCallbacks?.clear();
+    this._liveTranslations?.destroy();
+    this._liveTranslations = null;
     this._localePicker?.destroy();
     this._localePicker = null;
     this._recording.destroy();

@@ -411,6 +411,8 @@ export function createRecentImageryPanel({
           {
             id: 'clear',
             label: t('CLEAR', { context: 'action' }),
+            labelSource: 'CLEAR',
+            labelContext: 'action',
             title: t('Forget the box and its images'),
             disabled: !snapshot.box && !snapshot.boxError,
             onClick: () => {
@@ -1182,6 +1184,7 @@ export function createRecentImageryPanel({
 
   return {
     root,
+    refreshLocale: render,
     exportImage,
     destroy() {
       if (destroyed) return;

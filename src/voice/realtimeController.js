@@ -465,6 +465,16 @@ export class GevRealtimeController extends RealtimeFacade {
     this.updateVoiceButtonLabel();
     const shownStatus = STATUS_STATES.has(status) ? status : 'idle';
     this.ui.status.textContent = voiceStatusLabel(shownStatus);
+    this.ui.status.setAttribute?.(
+      'data-i18n-source',
+      {
+        idle: 'OFF',
+        connecting: 'CONNECTING',
+        listening: 'LISTENING',
+        executing: 'EXECUTING',
+        error: 'ERROR',
+      }[shownStatus] || '',
+    );
     const resolvedDetail =
       status === 'listening' && this.pushToTalkMode
         ? this.pushToTalkKeyHeld

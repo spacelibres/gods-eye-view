@@ -346,6 +346,16 @@ export function createRailCardBlocks({ container, cardId, onParams }) {
             }
             action.props = actionProps;
             set(action.node, 'textContent', actionProps.label);
+            if (actionProps.labelSource) {
+              action.node.setAttribute(
+                'data-i18n-source',
+                actionProps.labelSource,
+              );
+              action.node.setAttribute(
+                'data-i18n-context',
+                actionProps.labelContext || '',
+              );
+            }
             set(action.node, 'title', actionProps.title || '');
             set(action.node, 'disabled', Boolean(actionProps.disabled));
             if (action.tag === 'a' && action.href !== actionProps.href) {

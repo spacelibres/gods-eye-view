@@ -57,6 +57,10 @@ export function createApplicationData({
   }
   presentation.mount(document.getElementById('data-toggles'));
   styleManager.attachDataManager(dataManager);
+  const removeLocaleRepaint = styleManager.registerLocaleRepaint?.(() =>
+    presentation.panel.refreshLocale(),
+  );
+  if (removeLocaleRepaint) defer(removeLocaleRepaint);
   defer(createCyberSonarScene(viewer, dataManager));
 
   return { dataManager, catalog, presentation };

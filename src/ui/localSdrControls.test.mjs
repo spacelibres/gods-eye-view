@@ -205,3 +205,33 @@ test('the card shows one read-only decoder-feed line after a single probe', asyn
   assert.equal(line.hidden, false);
   assert.equal(line.textContent, 'Decoder feeds: 1090 live · 978 live');
 });
+
+test('locale refresh repaints decoder feed copy without reconnecting or probing', async () => {
+  const { setLocale } = await import('../i18n/index.js');
+  setLocale('en');
+  const doc = stubDocument();
+  const receiver = stubReceiver();
+  let probes = 0;
+  const feeds = {
+    getState: () => ({
+      configured: true,
+      polling: false,
+      feeds: [{ band: '1090', status: 'idle' }],
+    }),
+    subscribe: () => () => {},
+    probe: () => probes++,
+  };
+  const controls = new LocalSdrControls({ document: doc, receiver, feeds });
+  const before = doc.getElementById('sdr-feed-status').textContent;
+  const initialProbes = probes;
+  try {
+    setLocale('ja');
+    controls.refreshLocale();
+    assert.notEqual(doc.getElementById('sdr-feed-status').textContent, before);
+    assert.equal(probes, initialProbes);
+    assert.deepEqual(receiver.calls, []);
+  } finally {
+    controls.destroy();
+    setLocale('en');
+  }
+});

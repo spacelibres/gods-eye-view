@@ -4,6 +4,14 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.72] — 2026-10-21 — Complete live interface language changes
+
+- Update runtime controls, layer names and headings, tooltips and lazy panels
+  when switching any shipped language, without reloading the map. Preserve
+  camera, layer state and user input; keep saved names and voice transcripts
+  unchanged. Refresh cached map copy and composite SDR/import readouts, and
+  retain message contexts for words with multiple meanings (spacelibre).
+
 ## [0.2.71] — 2026-10-21 — Language switches work more than once
 
 - Switch languages more than once. The page could only be translated once per
