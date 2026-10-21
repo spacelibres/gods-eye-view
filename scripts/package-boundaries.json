@@ -2768,7 +2768,8 @@
       "src/overlays/markerPlacement.js",
       "src/overlays/markerLayout.js",
       "src/i18n/liveDocument.js",
-      "src/i18n/renderedMessages.js"
+      "src/i18n/renderedMessages.js",
+      "src/overlays/airportReadout.js"
     ],
     "external": [
       "hls.js",
@@ -3357,7 +3358,8 @@
       "src/sources/airports/usage.js",
       "src/sources/airports/usage-data.json",
       "src/i18n/liveDocument.js",
-      "src/i18n/renderedMessages.js"
+      "src/i18n/renderedMessages.js",
+      "src/overlays/airportReadout.js"
     ],
     "external": [
       "hls.js",

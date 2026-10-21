@@ -691,17 +691,92 @@ try {
     return {
       details: r.entity.gevLabelModel.details.join('\n'),
       active: getActiveTrackedReadoutId(),
+      card: document.querySelector('#airport-detail-card')?.textContent,
+      visible: document.querySelector('#airport-detail-card')?.hidden === false,
     };
   });
   check(
-    'real map click publishes airport codes, MSL and source in shared detail card',
+    'real map click opens one compact airport card with codes, MSL and source',
     /EGLL/.test(selected.details) &&
       /LHR/.test(selected.details) &&
       /25.3/.test(selected.details) &&
       /OurAirports/.test(selected.details) &&
-      !!selected.active,
+      selected.visible &&
+      !selected.active &&
+      /EGLL/.test(selected.card) &&
+      !/Revision|Usage evidence|Source URL/.test(selected.card),
   );
   await page.screenshot({ path: `${shots}/desktop-details.png` });
+  const beforeLocaleReads = viewReads;
+  await page.$eval('#locale-picker .locale-picker-button', (el) => el.click());
+  await page.$eval('#locale-picker [data-locale="zh-CN"]', (el) => el.click());
+  await page.waitForFunction(
+    () =>
+      document
+        .querySelector('#airport-detail-card .airport-detail-close')
+        ?.getAttribute('aria-label') === '关闭',
+  );
+  check(
+    'open airport card follows live locale without another directory request',
+    viewReads === beforeLocaleReads,
+  );
+  await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 1 });
+  await page.screenshot({ path: `${shots}/mobile-airport-details.png` });
+  check(
+    'mobile airport card stays inside the viewport',
+    await page.$eval('#airport-detail-card', (el) => {
+      const r = el.getBoundingClientRect();
+      return (
+        r.x >= 0 && r.right <= innerWidth && r.y >= 0 && r.bottom <= innerHeight
+      );
+    }),
+  );
+  await page.click('#airport-detail-card .airport-detail-close');
+  check(
+    'close button clears airport context and viewer selection',
+    await page.evaluate(
+      () =>
+        !window.__gevContextStore.selectedEntityId &&
+        !window.__godsEyeView.viewer.selectedEntity &&
+        document.querySelector('#airport-detail-card').hidden,
+    ),
+  );
+  await page.setViewport({ width: 1440, height: 1000, deviceScaleFactor: 1 });
+  await page.$eval('#locale-picker .locale-picker-button', (el) => el.click());
+  await page.$eval('#locale-picker [data-locale="en"]', (el) => el.click());
+  await page.evaluate(() =>
+    window.__godsEyeView.dataManager.layers.get('airports').module.update(),
+  );
+  check(
+    'source refresh cannot reopen a closed airport card',
+    await page.$eval('#airport-detail-card', (el) => el.hidden),
+  );
+  const reopen = async () => {
+    const point = await page.evaluate(() => {
+      const v = window.__godsEyeView.viewer;
+      const e = window.__gevContextStore.entities.get('airport:2434').entity;
+      const p = window.__qaTargetPoint(e),
+        r = v.scene.canvas.getBoundingClientRect();
+      return { x: p.x + r.left, y: p.y + r.top };
+    });
+    await page.mouse.click(point.x, point.y);
+    await page.waitForFunction(
+      () => document.querySelector('#airport-detail-card')?.hidden === false,
+    );
+  };
+  await reopen();
+  await page.keyboard.press('Escape');
+  check(
+    'Escape dismisses airport details and clears selection',
+    await page.evaluate(
+      () =>
+        !window.__gevContextStore.selectedEntityId &&
+        document.querySelector('#airport-detail-card').hidden,
+    ),
+  );
+  await reopen();
+  await page.click('#airport-detail-card .airport-detail-close');
+
   const navClick = await page.evaluate(() => {
     const v = window.__godsEyeView.viewer;
     const e = window.__gevContextStore.entities.get('navaid:501').entity;

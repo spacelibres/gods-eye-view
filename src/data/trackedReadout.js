@@ -1,3 +1,5 @@
+import { createAirportReadout } from '../overlays/airportReadout.js';
+import { clearSelectedEntityContextForLayer } from './contextStore.js';
 import {
   clearOverlaySource,
   setOverlayEntries,
@@ -34,6 +36,7 @@ const DEFAULT_TRACKED_OVERLAY_HOST = Object.freeze({
 });
 
 let _viewer = null;
+let _airportReadout = null;
 let _trackedEntityChangedRemove = null;
 let _selectedContext = null;
 let _contextSelectedHandler = null;
@@ -181,6 +184,11 @@ export function createTrackedOverlayEntry(entity) {
 }
 
 function publishEntity(entity) {
+  if (_airportReadout?.show(entity)) {
+    clearTrackedSource();
+    return;
+  }
+  _airportReadout?.hide();
   const entry = createTrackedOverlayEntry(entity);
   if (!entry) {
     clearTrackedSource();
@@ -232,10 +240,28 @@ const READOUT_CONTEXT_LAYERS = new Set([
  * installed; the already-initialized world-overlay host owns the frame lane.
  * @param {Object} viewer Active Cesium viewer.
  */
-export function initTrackedReadout(viewer) {
+export function initTrackedReadout(
+  viewer,
+  { createAirportCard = createAirportReadout } = {},
+) {
   if (!viewer || _viewer === viewer) return;
   if (_viewer) destroyTrackedReadout();
   _viewer = viewer;
+  _airportReadout = createAirportCard({
+    viewer,
+    onClose: (displayedEntity) => {
+      const entity =
+        displayedEntity || _selectedContext?.entity || _viewer?.trackedEntity;
+      if (typeof entity?.getAirportReadout !== 'function') return;
+      if (_selectedContext?.entity === entity) _selectedContext = null;
+      if (_viewer?.selectedEntity === entity)
+        _viewer.selectedEntity = undefined;
+      if (_viewer?.trackedEntity === entity) _viewer.trackedEntity = undefined;
+      clearSelectedEntityContextForLayer('airports');
+      syncActiveEntity();
+      _viewer?.scene?.requestRender?.();
+    },
+  });
   _overlayHost.setVisible(TRACKED_OVERLAY_SOURCE_ID, true);
   _trackedEntityChangedRemove =
     viewer.trackedEntityChanged?.addEventListener?.(() => {
@@ -265,7 +291,10 @@ export function initTrackedReadout(viewer) {
   };
   _aircraftSelectedHandler = () => {
     _selectedContext = null;
-    if (!_viewer?.trackedEntity) clearTrackedSource();
+    if (!_viewer?.trackedEntity) {
+      _airportReadout?.hide();
+      clearTrackedSource();
+    }
   };
   window.addEventListener('gev:entity-selected', _contextSelectedHandler);
   window.addEventListener(
@@ -284,6 +313,8 @@ export function initTrackedReadout(viewer) {
 
 /** Tear down selection listeners and clear the host source. */
 export function destroyTrackedReadout() {
+  _airportReadout?.destroy();
+  _airportReadout = null;
   _trackedEntityChangedRemove?.();
   _trackedEntityChangedRemove = null;
   if (_contextSelectedHandler)

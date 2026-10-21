@@ -43,13 +43,20 @@ const nearFar = (scalar, distance) => {
   );
 };
 
+// Some scene primitives expose a boolean lifecycle flag, rather than Cesium's
+// method. Optional-call only guards nullish values, not non-callable members.
+function primitiveDestroyed(primitive) {
+  const flag = primitive?.isDestroyed;
+  return typeof flag === 'function' ? flag.call(primitive) : flag === true;
+}
+
 /** Public collection traversal deliberately excludes LabelCollection glyphs and 3D geometry. */
 export function visitTargetSprites(collection, visit, excluded) {
   if (
     !collection ||
     collection === excluded ||
     collection.show === false ||
-    collection.isDestroyed?.()
+    primitiveDestroyed(collection)
   )
     return;
   const first =
@@ -137,7 +144,7 @@ export function createTargetMarkerLayout(
   const restore = (sprite, state) => {
     if (state.proxy) proxies.remove(state.proxy);
     if (state.outlineProxy) proxies.remove(state.outlineProxy);
-    if (state.collection.isDestroyed()) return;
+    if (primitiveDestroyed(state.collection)) return;
     if (
       Cesium.NearFarScalar.equals(
         sprite.translucencyByDistance,

@@ -5,6 +5,7 @@ import {
   selectAirports,
   airportContext,
   airportDescription,
+  airportReadout,
 } from './model.js';
 import { createAirportsLayer } from './index.js';
 const airport = (id = '1', type = 'large_airport') => ({
@@ -578,4 +579,48 @@ test('viewport eviction removes missing carrier, clears viewer selection and pru
   assert.equal(h.viewer.selectedEntity, undefined);
   assert.equal(h.contexts.length, 0);
   h.layer.destroy();
+});
+
+test('airport readout presents compact facts while full provenance remains in context', async () => {
+  const { airportReadout } = await import('./model.js');
+  const a = {
+    ...airport(),
+    name: 'Test Airport',
+    icaoCode: 'ZBAA',
+    iataCode: 'PEK',
+    scheduledService: true,
+  };
+  const snapshot = {
+    source: 'OurAirports',
+    revision: 'very-long-revision',
+    sourceUrl: 'https://ourairports.com/data/',
+    updatedAt: '2026-10-21T00:00:00Z',
+  };
+  const model = airportReadout(a, snapshot);
+  assert.equal(model.title, 'Test Airport');
+  assert.deepEqual(model.codes, [
+    { label: 'ICAO', value: 'ZBAA' },
+    { label: 'IATA', value: 'PEK' },
+  ]);
+  assert.equal(model.rows.length, 6);
+  assert.ok(
+    model.rows.some(
+      ([label, value]) => label === 'Elevation (m MSL)' && value === 50,
+    ),
+  );
+  assert.ok(!JSON.stringify(model.rows).includes('very-long-revision'));
+  assert.equal(
+    airportContext(a, snapshot).properties.revision,
+    'very-long-revision',
+  );
+});
+
+test('airport country display follows locale while source context stays intact', () => {
+  const a = airport();
+  const model = airportReadout(a, {}, (value) => value, 'zh-CN');
+  assert.equal(
+    model.rows.find(([label]) => label === 'Country')[1],
+    '纳米比亚',
+  );
+  assert.equal(airportContext(a, {}).properties.country, 'Namibia');
 });

@@ -314,3 +314,22 @@ test('active tracked readout gets priority over an older selected entity at the 
     h.cleanup();
   }
 });
+
+test('mixed scene primitives may expose boolean lifecycle flags without stopping render traversal', () => {
+  const marker = { computeScreenSpacePosition() {}, pixelSize: 12 };
+  const leaf = { show: true, isDestroyed: false };
+  const nested = {
+    show: true,
+    isDestroyed: false,
+    length: 2,
+    get: (i) =>
+      i === 0 ? leaf : { length: 1, get: () => marker, isDestroyed: 0 },
+  };
+  const seen = [];
+  assert.doesNotThrow(() => visitTargetSprites(nested, (s) => seen.push(s)));
+  assert.deepEqual(seen, [marker]);
+  nested.isDestroyed = true;
+  seen.length = 0;
+  visitTargetSprites(nested, (s) => seen.push(s));
+  assert.equal(seen.length, 0);
+});

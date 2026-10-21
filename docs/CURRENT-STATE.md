@@ -1,5 +1,14 @@
 # God's Eye View Current State
 
+Target-icon traversal accepts method and boolean lifecycle flags in mixed scene
+collections without stopping Cesium rendering. Selecting an airport opens one
+compact DOM card styled with the shared panel surface and palette. Its close
+button and Escape clear the matching selected/tracked entity and shared context,
+so later source refreshes cannot reopen it. The two-column card shows codes,
+facility/use, city/country, coordinates and MSL elevation with a short source link;
+full provenance remains in the context data. Card labels and region names follow
+live language changes, and its mobile position clears the floating controls.
+
 The language picker updates static and runtime-created controls in place across
 all seven shipped locales. Dynamic text nodes, hints and accessibility labels
 retain message sources; layer names and composite SDR/import readouts repaint

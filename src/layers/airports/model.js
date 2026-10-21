@@ -166,3 +166,51 @@ export function airportDescription(a, p, t = (value) => value) {
   const rows = airportDetailRows(a, p, t);
   return `<table>${rows.map(([label, value]) => `<tr><th>${escape(t(label))}</th><td>${escape(value === null || value === undefined || value === '' ? t('Unknown') : value)}</td></tr>`).join('')}</table>`;
 }
+
+/** Primary facts for the on-map card; detailed evidence stays in context. */
+export function airportReadout(a, p, t = (value) => value, locale = 'en') {
+  const facts = new Set([
+    'Type',
+    'Airport use',
+    'Municipality',
+    'Country',
+    'Coordinates',
+    'Elevation (m MSL)',
+  ]);
+  let country = a.country || a.countryCode;
+  try {
+    if (/^[A-Z]{2}$/.test(a.countryCode)) {
+      const name = new Intl.DisplayNames([locale], { type: 'region' }).of(
+        a.countryCode,
+      );
+      if (name && name !== a.countryCode) country = name;
+    }
+  } catch {
+    /* Keep the directory value when region names are unavailable. */
+  }
+  const codes = [];
+  // i18n-ignore: ICAO and IATA are standardized identifier badges.
+  if (a.icaoCode) codes.push({ label: 'ICAO', value: a.icaoCode });
+  // i18n-ignore: IATA code badge.
+  if (a.iataCode) codes.push({ label: 'IATA', value: a.iataCode });
+  if (!codes.length && a.ident)
+    codes.push({ label: t(msg('Ident')), value: a.ident });
+  return {
+    title: a.name,
+    symbol: airportSymbol(a, resolveAirportUsage(a).kind).image,
+    codes,
+    rows: airportDetailRows(a, p, t)
+      .filter(([label]) => facts.has(label))
+      .map(([label, rawValue]) => {
+        const value = label === 'Country' ? country : rawValue;
+        return [
+          label,
+          value === null || value === undefined || value === ''
+            ? t('Unknown')
+            : value,
+        ];
+      }),
+    source: p.source || 'OurAirports',
+    sourceUrl: p.sourceUrl,
+  };
+}

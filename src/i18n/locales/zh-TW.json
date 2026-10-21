@@ -907,7 +907,7 @@
   "Ambient": "氛圍",
   "Blues": "藍調",
   "Classical": "古典",
-  "Country": "鄉村",
+  "Country": "國家／地區",
   "Dance": "舞曲",
   "Electronic": "電子",
   "Folk": "民謠",
@@ -2816,5 +2816,6 @@
   "Usage classification source": "用途分類來源",
   "Usage source URL": "用途來源網址",
   "Usage evidence": "用途分類依據",
-  "Usage checked": "用途資料核對日期"
+  "Usage checked": "用途資料核對日期",
+  "Close": "關閉"
 }

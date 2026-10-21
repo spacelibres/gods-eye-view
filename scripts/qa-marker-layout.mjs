@@ -22,6 +22,8 @@ for(let i=0;i<6;i++)pts.add({id:'point-'+i,position:C.Cartesian3.fromDegrees(19.
 const ds=new C.CustomDataSource('qa-entities');await v.dataSources.add(ds);
 const entity=ds.entities.add({id:'entity-airport',position,billboard:{image:airportSymbol({type:'large_airport'},'civil').image,width:28,height:28,disableDepthTestDistance:Infinity}});
 let selected='target-0';
+// Real scene regression: boolean lifecycle flags are legal on custom primitives.
+const custom=v.scene.primitives.add({show:true,isDestroyed(){return false;},update(){},length:1,get(){return {show:true,isDestroyed:false};}});
 const dispose=createTargetMarkerLayout(v,{getObstacles:()=>[],getSelectedId:()=>selected});
 window.qa={v,bb,pts,ds,entity,dispose,visitTargetSprites,select(id){selected=id;v.scene.requestRender();},read(){const rects=[];visitTargetSprites(v.scene.primitives,(s,c,point)=>{if(point||!s.show||!s.clusterShow||(s.translucencyByDistance?.nearValue===0&&s.translucencyByDistance?.farValue===0))return;const p=s.computeScreenSpacePosition(v.scene);rects.push({id:s.id?.id||s.id,x:p.x,y:p.y,size:Math.max(s.width||32,s.height||32)*s.scale});});return rects;},move(){v.camera.setView({destination:C.Cartesian3.fromDegrees(20,10.15,200000),orientation:{heading:.2,pitch:-1.5,roll:0}});}};
 </script></body></html>`,

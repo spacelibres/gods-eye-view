@@ -4,6 +4,17 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.73] — 2026-10-21 — Rendering recovery and closable airport cards
+
+- Keep the globe rendering when mixed scene collections expose boolean
+  lifecycle flags. Icon collision traversal now checks whether isDestroyed is
+  callable before invoking it, while preserving native picks and visibility.
+- Replace the unclosable airport canvas readout with a compact card using the
+  shared panel skin: airport name and codes, two-column facts and one short
+  source link. Close and Escape clear matching selection and tracking so refresh
+  cannot reopen it. Retain detailed provenance in context data, follow language
+  changes and keep mobile controls clear (spacelibre).
+
 ## [0.2.72] — 2026-10-21 — Complete live interface language changes
 
 - Update runtime controls, layer names and headings, tooltips and lazy panels

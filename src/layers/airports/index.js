@@ -8,6 +8,7 @@ import {
   selectAirports,
   airportContext,
   airportDescription,
+  airportReadout,
   airportDetailRows,
   airportSymbol,
   airportLegend,
@@ -263,6 +264,8 @@ export function createAirportsLayer({
                 airportUsage: usage.kind,
               },
             });
+            entity.getAirportReadout = () =>
+              airportReadout(a, context.properties, t, getLocale());
             entity.gevTrackedId = context.id;
             entity.gevDisplayPosition = () => position;
             entity.gevLabelModel = {
