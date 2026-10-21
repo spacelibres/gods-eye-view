@@ -21,6 +21,7 @@ import { trackBackfillProxies } from './aircraft/tracks.js';
 import { openAiRealtimeProxy } from './openai.js';
 import { dashScopeRealtimeProxy } from './dashscope.js';
 import { doubaoRealtimeProxy } from './doubao.js';
+import { geminiLiveProxy } from './gemini.js';
 import { googlePlacesContextProxy } from './places.js';
 import { googleServerApiKey, googleTilesApiKey } from './places/google-key.js';
 import { googleTilesRelay } from './google-tiles-relay.js';
@@ -35,9 +36,9 @@ import { airportsProxy } from './airports/index.js';
 
 /**
  * Construct the local provider plugins in their established order.
- * `realtime` configures the voice session token endpoint.
+ * `realtime` configures OpenAI; `gemini` explicitly opts into Gemini Live.
  */
-function localProviderPlugins({ realtime } = {}) {
+function localProviderPlugins({ realtime, gemini } = {}) {
   return [
     airportsProxy(),
     openSkyProxy(),
@@ -61,6 +62,7 @@ function localProviderPlugins({ realtime } = {}) {
     aisLiveProxy(),
     trackBackfillProxies(),
     openAiRealtimeProxy({ realtime }),
+    ...(gemini ? [geminiLiveProxy({ realtime: gemini })] : []),
     dashScopeRealtimeProxy({ token: { tools: realtime?.tools } }),
     doubaoRealtimeProxy({ tools: realtime?.tools }),
     googlePlacesContextProxy(),

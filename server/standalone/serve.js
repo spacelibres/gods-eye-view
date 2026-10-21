@@ -82,8 +82,12 @@ const TYPES = {
  * The provider plugins, in the order the dev server mounts them. The API 404
  * stays last so it only answers what nothing else claimed.
  */
+const voiceTools = standaloneVoiceTools();
 const plugins = [
-  ...localProviderPlugins({ realtime: { tools: standaloneVoiceTools() } }),
+  ...localProviderPlugins({
+    realtime: { tools: voiceTools },
+    gemini: { tools: voiceTools },
+  }),
   apiNotFoundPlugin(),
 ];
 

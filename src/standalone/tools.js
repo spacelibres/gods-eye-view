@@ -17,6 +17,10 @@ export function createStandaloneTools(options) {
       },
     },
     ...options,
-    voice: { toolCatalog: loadToolCatalog, ...options?.voice },
+    voice: {
+      supportedProviders: ['openai', 'gemini', 'dashscope', 'doubao'],
+      toolCatalog: loadToolCatalog,
+      ...options?.voice,
+    },
   });
 }

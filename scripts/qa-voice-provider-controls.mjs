@@ -48,7 +48,9 @@ try {
     const { createDoubaoBackend, decodeServerFrame, encodeJsonFrame } =
       await import('/src/voice/doubaoBackend.js');
     const { resolveVoiceModel } = await import('/src/voice/voiceCost.js');
-    const controller = window.__gevVoiceCommands;
+    // The provider facade owns switching; this protocol fixture injects transport
+    // into the mounted realtime controller without replacing the shared runner.
+    const controller = window.__gevVoiceCommands.session.adapter.controller;
     window.voiceQa = { controller, decodeServerFrame, encodeJsonFrame };
     window.voiceQa.start = async (provider) => {
       controller.stop();

@@ -342,6 +342,12 @@ async function main() {
           : input?.url;
         const url = new URL(requestUrl, window.location.href);
         const isAppRequest = url.origin === appOrigin;
+        // Voice availability is unrelated to tracking. Keep the startup probe
+        // hermetic on machines without optional provider credentials.
+        if (isAppRequest && url.searchParams.get('probe') === '1' &&
+            /^\/api\/(realtime|dashscope|doubao)\/token$/.test(url.pathname)) {
+          return Promise.resolve(jsonResponse({ configured: true }));
+        }
         // OpenSky (commercial flights): { states: [ state-vector[] ] }
         if (isAppRequest && url.pathname === '/api/flights') {
           window.__SYNTH_HITS.opensky++;
@@ -1901,7 +1907,8 @@ async function main() {
     // moment the plane reappears in the feed.
     // ============================================================
     console.log('\nChange 2b — tracked readout STALE cue during missed-poll grace');
-    const staleCheck = await evalPage(async () => {
+    const staleCheck = await evalPage(async (sourceBase) => {
+      const { t } = await import(`${sourceBase}/i18n/index.js`);
       const v = window.__godsEyeView.viewer;
       const fl = window.__godsEyeView.dataManager.layers.get('flights').module;
       const labelText = () => {
@@ -1930,14 +1937,14 @@ async function main() {
       await fl.update(v); // plane back → label rebuilt without the cue
       const recoveredLabel = labelText();
       fl.stopTracking(); // leave nothing tracked
-      return { freshLabel, staleLabel, recoveredLabel };
-    });
+      return { freshLabel, staleLabel, recoveredLabel, staleCue: t('STALE') };
+    }, SOURCE_BASE);
     record('stale-readout: tracked label carries STALE cue during grace',
-      !!staleCheck.staleLabel && staleCheck.staleLabel.includes('STALE')
-        && !!staleCheck.freshLabel && !staleCheck.freshLabel.includes('STALE'),
+      !!staleCheck.staleLabel && staleCheck.staleLabel.includes(staleCheck.staleCue)
+        && !!staleCheck.freshLabel && !staleCheck.freshLabel.includes(staleCheck.staleCue),
       `fresh="${staleCheck.freshLabel && staleCheck.freshLabel.split('\n')[0]}" stale="${staleCheck.staleLabel && staleCheck.staleLabel.split('\n')[0]}"`);
     record('stale-readout: STALE cue clears when the plane reappears',
-      !!staleCheck.recoveredLabel && !staleCheck.recoveredLabel.includes('STALE'),
+      !!staleCheck.recoveredLabel && !staleCheck.recoveredLabel.includes(staleCheck.staleCue),
       `recovered="${staleCheck.recoveredLabel && staleCheck.recoveredLabel.split('\n')[0]}"`);
 
     // ============================================================

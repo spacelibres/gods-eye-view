@@ -4,8 +4,167 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
-## [0.2.78] — 2026-10-21 — Use the original HUD density controls
+## [0.2.76] — 2026-10-21 — Upstream synchronization and original HUD density controls
 
+- Keep aircraft route labels on the scheduled airport leg instead of accepting
+  its distant great-circle extensions, preserving generous endpoint tolerance
+  across the signed-angle branch cut (rudycelekli, #1284).
+
+- Report cached CelesTrak satellite records as stale in the Data Layers row,
+  preserving separate core and dense catalog provenance through refresh,
+  removal and lifecycle cleanup (rudycelekli, #1283).
+
+- Add Taiwan's national freeway cameras from the Freeway Bureau, MOTC to CCTV:
+  ~1,800 cameras read at runtime from the official MOTC 2.0 open-data table,
+  with on-demand snapshots and attribution. No API key is required; set
+  `CCTV_TAIWAN_ENABLED=0` to skip it (419vive, #1237).
+
+- Require a geocoded containment anchor for ambiguous analyst region names,
+  preserve boundary provenance and cancellation safety, and retain exact-name
+  precedence for natural outlines (manjunath22466, #1235).
+
+- Serve the camera catalog while it refreshes. An expired catalog made every
+  camera request wait for the slowest pack to reload; it is now answered at
+  once while one background refresh runs, so only the first load waits. Estonia's
+  slow Tarktee feeds get 30 s instead of 15 s, so the pack no longer drops out
+  on about a third of loads (quanticsoul4772, #1234).
+
+- Harden the Tarktee (Estonia) DATEX2 camera catalog fetches: refuse redirects,
+  cancel both response streams when either response fails or overflows the 4 MB
+  byte cap, and deduplicate camera IDs before per-pack prioritization
+  (yaka0007, #1233).
+
+- Load Ontario 511 cameras again. 511on.ca's camera endpoint now requires a
+  free developer key; set `ONTARIO_511_API_KEY` to enable the pack, which is
+  otherwise skipped with one log line saying where to get a key
+  (quanticsoul4772, #1228).
+
+- Avoid starting or queuing a reply when the local channel rejects a typed OpenAI
+  command, while preserving an earlier accepted deferred input
+  (Manjunath, #1220).
+
+- Report actual outcomes when voice enables or disables CCTV through the shared
+  layer lifecycle, including failed and cancelled changes (manjunath22466,
+  #1205).
+
+- Draw CCTV stills at their source aspect on the monitor plane instead of
+  stretching them to the 16:9 canvas. Most DOT cameras publish 4:3 frames, so
+  every still was widened; they are now centered and pillarboxed on the dark
+  the placeholder already ends on (Danielslay86, #1201).
+
+- Color CCTV cameras with a video feed violet. Cameras with an HLS, MP4 or
+  WebM feed were the same cyan as stills, so a DelDOT or Statens vegvesen
+  video camera could only be found by opening it. Stills stay cyan and the
+  active camera stays amber, and focus de-emphasis fades the violet the same
+  way (Danielslay86, #1200).
+
+- Keep Space Missions marked STALE when Launch Library 2 falls back to cached
+  launch data, and return to NOMINAL after a fresh response without discarding
+  retained missions (rudycelekli, #1199).
+
+- Share Launch Library request cache keys across installations refreshing in the
+  same UTC minute, identify the app to the provider, and explain that standard
+  space-missions access needs no key. Optional higher-rate LL2 tokens are paid
+  upgrades; existing local cache and server-only token handling are unchanged
+  (rudycelekli, #1197).
+
+- `aircraft_in_area` and `vessels_in_area` take `group_by` and `stats`, so an
+  MCP client can ask which airlines, countries, aircraft types or ship types
+  dominate an area, or the average altitude or speed, over every match instead
+  of estimating from the returned rows. Airlines come from the ICAO designator
+  in each callsign (SWA1234 counts as SWA), so the breakdown works on feeds
+  that report no operator; operator and type are counted only where the feed
+  reports them. Ship types count by family, so AIS codes 70 to 79 are all
+  cargo; type 0 ("not available") and the reserved codes 100 to 255 count as
+  unknown. Altitude and speed stats cover airborne aircraft only, so parked
+  aircraft do not pull the means down. Every vessel answer, `find_vessel`
+  included, now reads AIS ship-type codes as their family and a destination
+  with no letters as unknown (quanticsoul4772, #1056).
+
+- Add Hong Kong Transport Department traffic snapshot cameras as a keyless CCTV
+  source pack: the public DATA.GOV.HK English locations XML, frames pinned to
+  `tdcctv.data.one.gov.hk`, with DATA.GOV.HK Terms of Use attribution. By
+  default nearly the full TD catalog (~1,013 cameras; cap 1,100) loads,
+  prioritized across Hong Kong Island, Kowloon and the New Territories. Headings
+  use the shared id-hash fallback at low confidence. `CCTV_HK_MAX_SOURCES` sets
+  the cap (8–1,200) and `CCTV_HK_ENABLED=0` turns the pack off (JCY2515, #990).
+
+- Cross-site pages can no longer fill the terrain-height cache or spend the
+  visitor's own `/api/terrain/heights` rate-limit quota through the visitor's
+  browser. The route refuses a cross-site `Sec-Fetch-Site` or a foreign or
+  opaque `Origin` before rate limiting, cache access or upstream work. Unlike
+  the cost-bearing routes it still answers same-origin requests that arrive
+  through a reverse proxy, so terrain keeps rendering behind nginx, Caddy or
+  Cloudflare instead of falling back to the geoid (Sunil56224972, daikaginza,
+  #975).
+
+- Street Level is rebuilt around one small provider registry: Mapillary,
+  KartaView, Panoramax and Google Street View share one coverage drawer and
+  one photo viewer, one source lit at a time. Floating and docked panels,
+  FOLLOW, surface modes, the legend and the Mapillary proxy's disk cache are
+  gone; `.gev-cache/mapillary/` from earlier runs is no longer read and can be
+  deleted (gekh, #974).
+
+- Give each Statens vegvesen camera its own ground height from Kartverket's
+  keyless point-height API (CC BY 4.0) instead of one flat 150 m prior, so
+  mountain-pass cameras no longer sit hundreds of metres below the terrain
+  where neither the point-height prior nor the ground snap resolves. About 850
+  of ~855 cameras get a height; the rest keep the old prior. Requests carry 20
+  points, the most the API answers from its 1 m terrain model, eight at a
+  time; a cold lookup takes about 6–13 s. Cameras over water use the water
+  surface rather than the sea-floor depth the API returns there; for bridge
+  cameras that is still below the deck. Heights are cached for good and misses
+  for 6 h, so a refresh only asks about new or moved cameras. After a
+  failing request (a 408, 429 or 5xx, a network error, a request over 10 s or
+  an unreadable body) the lookup stops and backs off (Retry-After, else
+  30 min, longer than the refresh). The lane waits at most 12 s from its
+  start, and only on a cold cache; a slower first lookup leaves the cameras it
+  had not reached on the flat prior until the next 15-minute refresh, and
+  keeps filling the cache meanwhile.
+  `CCTV_VEGVESEN_HEIGHTS=0` turns it off. Follow-up to #929 (trygvehhh, #945).
+
+- Extract a reusable model-free World Packet from the existing voice
+  `get_current_view_state` owner without restoring disabled layers to the
+  model context. Keep the enabled-only payload, disabled-layer count, source
+  provenance, action result and view-state contract; read the layer roster once
+  per packet; voice retains the speech/card envelope at its own boundary.
+  Credits: original GEV voice/layer contributors and #880 implementation.
+
+- Add optional Gemini Live voice to the standalone app, with a provider chooser,
+  server-held API key, microphone streaming, shared map actions and captions.
+  Switching providers ends the old conversation and preserves the input mode
+  (Manjunath, #872).
+
+- Close the compact Radio disclosure when an adaptive tactical right-rail
+  restore directly expands Context, before Space Missions can be covered.
+  A repeated Context-open request also clears stale disclosure state.
+  Real PanelChrome constructor wiring and the rail reflow path are covered
+  by focused regressions. Credits: kvnloo (#816), raysung-2026's original
+  #804 report, asturksever's review, and quanticsoul4772's independent
+  Windows diagnosis.
+
+- Bound what a caller can grow through `/api/terrain/heights`. Every distinct
+  5-decimal point was a permanent in-memory entry, a permanent line in an
+  uncapped `.gev-cache/terrain-heights.json`, and a live upstream call, with
+  nothing limiting the rate. The point cache now holds at most 50,000 entries
+  and evicts oldest-first, a cache file above
+  24 MB is not read back, and the route is limited to 90 requests/minute per
+  client (270 global). Evicting a point costs one refetch, never a wrong
+  answer, since terrain does not move. Ordinary use is unaffected: a full
+  `test:track` run drives 10 requests, peaking at 8/min (daikaginza, #686).
+
+- Add FL511 (Florida DOT) traffic cameras as an opt-in CCTV source pack:
+  the statewide ArcGIS catalog, read a page at a time under a byte cap with
+  redirects refused, and frames pinned to FL511's two image hosts over HTTPS.
+  FL511's terms limit its content to individual, personal use, and any other
+  use (a public deployment included) needs FDOT's express written consent, so
+  the pack stays off unless `CCTV_FLORIDA_ENABLED=1`. Headings come from the
+  catalog's direction codes, and camera ids come from the image channel, since
+  the catalog's ID column repeats across regions. `CCTV_FLORIDA_MAX_SOURCES`
+  sets the cap (Danielslay86, #605).
+
+- Merge official upstream through `713285b5`, retaining local airport data,
+  provider controls, live language switching and VPS data caches.
 - Remove the extra global icon thinning, lifting and leader-line layer.
   Native icons keep their authored positions and visibility; the existing
   HUD sparse/balanced/dense controls and Off/restore toggle own decluttering.

@@ -1,7 +1,7 @@
 {
   "name": "gods-eye-view",
   "private": true,
-  "version": "0.2.78",
+  "version": "0.2.76",
   "description": "A real-time intelligence console for planet Earth — photorealistic 3D globe, live aircraft/ships/satellites/earthquakes/CCTV, and hands-free voice control. Runs in a browser.",
   "type": "module",
   "license": "MIT",
@@ -49,7 +49,6 @@
     "test": "node scripts/run-unit-tests.mjs",
     "test:track": "node scripts/track-regression.mjs",
     "qa:map-source-tray": "node scripts/qa-map-source-tray.mjs",
-    "qa:panel-resize": "node scripts/qa-panel-resize.mjs",
     "qa:street-level": "node scripts/qa-street-level.mjs",
     "qa:street-level:fixtures": "node scripts/qa-street-level.mjs --fixtures",
     "check:boundaries": "node scripts/check-import-directions.mjs && node scripts/check-package-boundaries.mjs",
@@ -279,6 +278,7 @@
     "./tools/services": "./src/tools/services.js",
     "./view": "./src/view/index.js",
     "./layers/airports": "./src/layers/airports/index.js",
-    "./layers/airports/source": "./src/sources/airports/source.js"
+    "./layers/airports/source": "./src/sources/airports/source.js",
+    "./agent/world-packet": "./src/agent/worldPacket.js"
   }
 }

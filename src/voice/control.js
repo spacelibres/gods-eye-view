@@ -39,11 +39,14 @@ export function createVoiceControl({ reset = false } = {}) {
     root.dataset.status = 'idle';
     root.dataset.speaker = 'idle';
     root.innerHTML = `
+      <label id="gev-voice-provider-field" class="gev-voice-provider-field" hidden>
+        <span>${t('Voice provider')}</span>
+        <select id="gev-voice-provider" aria-label="${t('Voice provider')}" title="${t('Changing provider reconnects voice if it is on.')}"></select>
+      </label>
       <div class="gev-voice-heading">
         <div class="gev-voice-kicker">${t('AI AGENT')}</div>
         <div id="gev-voice-status" data-i18n-source="OFF" data-i18n-context="voice">${voiceStatusLabel('idle')}</div>
         <div class="gev-voice-cost">
-          <select id="gev-voice-provider" class="gev-voice-provider" title="${t('Voice service — applies next session')}" aria-label="${t('Voice service')}"></select>
           <button id="gev-voice-tier" class="gev-voice-tier-btn" type="button" aria-pressed="false" title="${t('Voice model tier — applies next session')}">${t('STD')}</button>
           <span id="gev-voice-cost-value" class="gev-voice-cost-value" data-level="ok" title="${t('Estimated session cost')}">~$0.00</span>
         </div>
@@ -111,6 +114,8 @@ export function createVoiceControl({ reset = false } = {}) {
   }
   return {
     root,
+    providerField: root.querySelector('#gev-voice-provider-field'),
+    providerSelect: root.querySelector('#gev-voice-provider'),
     button: root.querySelector('#gev-voice-button'),
     buttonLabel: root.querySelector('.gev-mic-label'),
     status: root.querySelector('#gev-voice-status'),
@@ -119,7 +124,6 @@ export function createVoiceControl({ reset = false } = {}) {
     errorDetail: root.querySelector('#gev-voice-error-detail'),
     tierButton: root.querySelector('#gev-voice-tier'),
     costValue: root.querySelector('#gev-voice-cost-value'),
-    providerSelect: root.querySelector('#gev-voice-provider'),
     card: root.querySelector('#gev-voice-card'),
   };
 }

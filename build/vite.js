@@ -139,15 +139,11 @@ export function createBrowserViteConfig({
       chunkSizeWarningLimit: 1500,
       rollupOptions: {
         output: {
-          // Name assets after the release instead of their content hash. A
-          // deploy then replaces every URL at once — `index-0.2.14.js` is
-          // unambiguous about which build it came from, where a content hash
-          // says nothing and looks like a different library version — and a
-          // stale tab asking for the previous name gets a 404 from the server
-          // rather than silently reusing whatever is still on disk.
-          entryFileNames: `assets/[name]-v${APP_VERSION}.js`,
+          // Keep the release readable while giving every build a content identity.
+          // A corrected release must never reuse an immutable cached script/CSS URL.
+          entryFileNames: `assets/[name]-v${APP_VERSION}-[hash:8].js`,
           chunkFileNames: `assets/[name]-v${APP_VERSION}-[hash:6].js`,
-          assetFileNames: `assets/[name]-v${APP_VERSION}[extname]`,
+          assetFileNames: `assets/[name]-v${APP_VERSION}-[hash:8][extname]`,
         },
       },
     },

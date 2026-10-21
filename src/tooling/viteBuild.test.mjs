@@ -1,7 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { BROWSER_CSP, createBrowserViteConfig } from '../../build/vite.js';
+import {
+  APP_VERSION,
+  BROWSER_CSP,
+  createBrowserViteConfig,
+} from '../../build/vite.js';
 import standaloneConfig, * as compatibility from '../../vite.config.js';
 import * as providers from '../../server/providers/local.js';
 
@@ -39,6 +43,7 @@ test('explicit build inputs preserve browser-only defines, plugin order and loop
     'import.meta.env.GOOGLE_MAPS_API_KEY': '"browser-fixture"',
     'import.meta.env.CESIUM_ION_TOKEN': '"ion-fixture"',
     'import.meta.env.MAPILLARY_CLIENT_TOKEN': '""',
+    'import.meta.env.APP_VERSION': JSON.stringify(APP_VERSION),
   });
   assert.equal(
     createBrowserViteConfig({ mapillaryToken: 'MLY|1|abc' }).define[
@@ -88,8 +93,19 @@ test('root config retains existing named exports and standalone provider order',
   for (const [name, value] of Object.entries(providers))
     assert.equal(compatibility[name], value, name);
   const config = standaloneConfig({ mode: 'test' });
+  const standaloneProviders = config.plugins
+    .slice(3, -5)
+    .map((plugin) => plugin.name);
+  assert.equal(
+    standaloneProviders.filter((name) => name === 'gemini-live-proxy').length,
+    1,
+  );
+  assert.equal(
+    standaloneProviders.indexOf('gemini-live-proxy'),
+    standaloneProviders.indexOf('openai-realtime-proxy') + 1,
+  );
   assert.deepEqual(
-    config.plugins.slice(3, -5).map((plugin) => plugin.name),
+    standaloneProviders.filter((name) => name !== 'gemini-live-proxy'),
     providers.localProviderPlugins().map((plugin) => plugin.name),
   );
   assert.equal(config.plugins.at(-6).name, 'gev-key-setup');
@@ -245,4 +261,12 @@ test('the CSP admits the event media embeds and the Maps JavaScript API, and no 
   }
   // X posts load in X's own frames.
   assert.ok(frames.includes('https://platform.twitter.com'));
+});
+
+test('reissued releases keep their version and use content identities for cached assets', () => {
+  const output = createBrowserViteConfig().build.rollupOptions.output;
+  for (const name of ['entryFileNames', 'chunkFileNames', 'assetFileNames']) {
+    assert.ok(output[name].includes(`-v${APP_VERSION}-`));
+    assert.match(output[name], /\[hash(?::\d+)?\]/);
+  }
 });
