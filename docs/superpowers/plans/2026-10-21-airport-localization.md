@@ -38,6 +38,13 @@ failures match previously documented cockpit/attribution/first-run/schema and
 Windows Caddy fixtures. The additional terrain quota assertion used a persistent
 cache; all 10 terrain bounds tests passed with a fresh working directory.
 
+Final formatting checked all 1,531 adopted files successfully. The complete
+tracking gate with bundled imagery finished **104 passed, 5 failed, 0 skipped**:
+four assertions depend on two incomplete frame windows (59/60 and 28/30), and one
+tracked-contact display-floor regime assertion failed. These remain unresolved;
+they are not represented as passing or proven baseline failures. Draft PR #2
+remains unmerged and production remains unchanged.
+
 ### Task 1: Local catalog and incremental maintenance
 
 **Files:** server/providers/airports/localization.js, server/providers/airports/localization.test.mjs, scripts/airport-translations.mjs, server/data/airports/translations/.
