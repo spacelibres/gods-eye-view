@@ -57,3 +57,22 @@ test('rotors, skids and water lines retain a light inner stroke on dark imagery 
     assert.doesNotMatch(legend, /stroke="white"/);
   }
 });
+test('land airports show a departing aircraft above a runway and heliports show an H landing pad', () => {
+  for (const usage of ['civil', 'military', 'joint', 'unknown']) {
+    const land = decodeURIComponent(
+      airportSymbol({ type: 'large_airport' }, usage).image,
+    );
+    assert.match(land, /data-symbol="departure"/);
+    assert.match(land, /data-symbol="runway"/);
+    const heli = decodeURIComponent(
+      airportSymbol({ type: 'heliport' }, usage).image,
+    );
+    assert.match(heli, /data-symbol="helipad"/);
+    assert.match(heli, /<circle cx="20" cy="30" r="8"/);
+    assert.match(heli, /data-symbol="helipad-h"/);
+  }
+  const water = decodeURIComponent(
+    airportSymbol({ type: 'seaplane_base' }).image,
+  );
+  assert.doesNotMatch(water, /data-symbol="departure"|data-symbol="runway"/);
+});
