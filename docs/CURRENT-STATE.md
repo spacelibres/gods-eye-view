@@ -5963,3 +5963,6 @@ the checkout, owned by the `gev` service user. See `docs/ADSB-CACHE-OPERATIONS.m
 for persistence, recovery and validation. Focused regression tests are
 `server/providers/aircraft/adsb-*.test.mjs`, `src/sources/live/contract.test.mjs`,
 `src/data/militaryFlights.test.mjs` and existing provider/GNSS integration tests.
+
+
+The custom global marker thinning/lifting/leader layer has been removed. Native sprite presentation is unchanged; the original HUD density slider and Off/restore control govern detection labels and frames. The detection renderer, density policy and label arbiter retain their v0.2.75 implementation. Airport data, symbols, search and closeable detail cards remain available.

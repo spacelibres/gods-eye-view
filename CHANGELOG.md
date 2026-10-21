@@ -4,6 +4,14 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.78] — 2026-10-21 — Use the original HUD density controls
+
+- Remove the extra global icon thinning, lifting and leader-line layer.
+  Native icons keep their authored positions and visibility; the existing
+  HUD sparse/balanced/dense controls and Off/restore toggle own decluttering.
+- Retain the v0.2.75 detection renderer, label allocation and density policy.
+  Verify native icon offsets, HUD controls and the full airport browser flow.
+
 ## [0.2.75] — 2026-10-21 — Aircraft detection follows displayed icons
 
 - Keep live-flight detection brackets and callouts attached to the displayed

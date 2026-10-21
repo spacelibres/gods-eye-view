@@ -326,9 +326,13 @@ try {
       document.getElementById('loading-screen')?.classList.contains('hidden'),
     { timeout: 90000 },
   );
+  check(
+    'original HUD owns decluttering without a custom global marker layer',
+    !(await page.$('.target-marker-leaders')),
+  );
   await page.evaluate(async () => {
     const { visitTargetSprites } =
-      await import('/src/overlays/markerLayout.js');
+      await import('/scripts/testSupport/nativeSprites.mjs');
     window.__qaTargetPoint = (entity) => {
       const v = window.__godsEyeView.viewer;
       let point = null;
@@ -419,16 +423,9 @@ try {
         ),
     ),
   );
-  await page.waitForFunction(
-    () =>
-      Number(
-        document.querySelector('.target-marker-leaders')?.dataset
-          .displacedCount,
-      ) > 0,
-  );
   await page.waitForFunction(async () => {
     const { visitTargetSprites } =
-      await import('/src/overlays/markerLayout.js');
+      await import('/scripts/testSupport/nativeSprites.mjs');
     const v = window.__godsEyeView.viewer;
     let count = 0,
       ready = true;
@@ -448,186 +445,69 @@ try {
     v.scene.requestRender();
     return count >= 5 && ready;
   });
-  const collision = await page.evaluate(async () => {
-    const { visitTargetSprites } =
-      await import('/src/overlays/markerLayout.js');
-    const v = window.__godsEyeView.viewer;
-    const rects = [];
-    visitTargetSprites(v.scene.primitives, (sprite, collection, point) => {
-      if (
-        point ||
-        !sprite.show ||
-        !sprite.clusterShow ||
-        (sprite.translucencyByDistance?.nearValue === 0 &&
-          sprite.translucencyByDistance?.farValue === 0) ||
-        sprite.color.alpha < 0.02
-      )
-        return;
-      const p = sprite.computeScreenSpacePosition(v.scene);
-      if (
-        !p ||
-        p.x < 0 ||
-        p.y < 0 ||
-        p.x > v.scene.canvas.clientWidth ||
-        p.y > v.scene.canvas.clientHeight
-      )
-        return;
-      const size =
-        Math.max(sprite.width || 32, sprite.height || 32) * sprite.scale;
-      rects.push({ x: p.x, y: p.y, size });
-    });
-    for (let i = 0; i < rects.length; i++)
-      for (const b of rects.slice(i + 1)) {
-        const a = rects[i];
-        if (
-          Math.abs(a.x - b.x) < (a.size + b.size) / 2 - 0.5 &&
-          Math.abs(a.y - b.y) < (a.size + b.size) / 2 - 0.5
-        )
-          return { ok: false, count: rects.length, a, b };
-      }
-    return { ok: true, count: rects.length };
-  });
-  if (collision.count < 5)
-    console.log(
-      'Collision diagnostics',
-      await page.evaluate(async () => {
-        const { visitTargetSprites } =
-          await import('/src/overlays/markerLayout.js');
-        const rows = [];
-        visitTargetSprites(
-          window.__godsEyeView.viewer.scene.primitives,
-          (s, c, point) => {
-            const p = s.computeScreenSpacePosition(
-              window.__godsEyeView.viewer.scene,
-            );
-            rows.push({
-              id: s.id?.id || s.id,
-              show: s.show,
-              cluster: s.clusterShow,
-              point: !!point,
-              alpha: s.color.alpha,
-              p: { x: p?.x, y: p?.y },
-            });
-          },
+  check(
+    'native airport icons retain authored offsets without custom lifting',
+    await page.evaluate(async () => {
+      const { visitTargetSprites } =
+        await import('/scripts/testSupport/nativeSprites.mjs');
+      const viewer = window.__godsEyeView.viewer;
+      const entities = new Set(
+        [...window.__gevContextStore.entities.values()]
+          .filter((r) => r.layerId === 'airports')
+          .map((r) => r.entity),
+      );
+      let checked = 0,
+        unchanged = true;
+      visitTargetSprites(viewer.scene.primitives, (sprite) => {
+        if (!entities.has(sprite.id) || !sprite.pixelOffset) return;
+        const authored = sprite.id.billboard?.pixelOffset?.getValue(
+          viewer.clock.currentTime,
         );
-        return {
-          rows,
-          canvas: {
-            ...document.querySelector('.target-marker-leaders')?.dataset,
-          },
-        };
-      }),
-    );
-  check(
-    'native airport and navaid sprites share one nonoverlapping screen layout',
-    collision.ok && collision.count >= 5,
-    JSON.stringify(collision),
-  );
-  const mixed = await page.evaluate(async () => {
-    const C = await import('/node_modules/cesium/Build/Cesium/index.js');
-    const v = window.__godsEyeView.viewer;
-    const collection = v.scene.primitives.add(new C.BillboardCollection());
-    const points = v.scene.primitives.add(new C.PointPrimitiveCollection());
-    const position = C.Cartesian3.fromDegrees(-0.461941, 51.4706, 100);
-    const image = window.__gevContextStore.entities
-      .get('airport:2434')
-      .entity.billboard.image.getValue();
-    let mixedIndex = 0;
-    for (const [id, color] of [
-      ['qa-plane', '#ffa526'],
-      ['qa-vessel', '#39d0ff'],
-      ['qa-camera', '#c7a0ff'],
-    ])
-      collection.add({
-        id,
-        image,
-        position: C.Cartesian3.fromDegrees(
-          -0.4,
-          51.44 + mixedIndex++ * 0.025,
-          100,
-        ),
-        width: 28,
-        height: 28,
-        color: C.Color.fromCssColorString(color),
-        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        if (
+          sprite.pixelOffset.x !== (authored?.x || 0) ||
+          sprite.pixelOffset.y !== (authored?.y || 0)
+        )
+          unchanged = false;
+        checked++;
       });
-    points.add({
-      id: 'qa-satellite',
-      position: C.Cartesian3.fromDegrees(-0.4, 51.515, 100),
-      pixelSize: 20,
-      color: C.Color.LIME,
-      disableDepthTestDistance: Number.POSITIVE_INFINITY,
-    });
-    window.__qaMixed = { collection, points };
-    v.scene.requestRender();
-    return true;
-  });
-  await page.waitForFunction(async () => {
-    const { visitTargetSprites } =
-      await import('/src/overlays/markerLayout.js');
-    const v = window.__godsEyeView.viewer;
-    const ids = new Set();
-    visitTargetSprites(v.scene.primitives, (s) => {
-      if (s.show && s.clusterShow && String(s.id).startsWith('qa-'))
-        ids.add(s.id);
-    });
-    v.scene.requestRender();
-    return ids.size === 4;
-  });
-  await page.waitForFunction(async () => {
-    const { visitTargetSprites } =
-      await import('/src/overlays/markerLayout.js');
-    let ready = true;
-    visitTargetSprites(window.__godsEyeView.viewer.scene.primitives, (s, c) => {
-      if (c.ready === false) ready = false;
-    });
-    window.__godsEyeView.viewer.scene.requestRender();
-    return ready;
-  });
-  await page.evaluate(
-    () =>
-      new Promise((resolve) => {
-        const scene = window.__godsEyeView.viewer.scene;
-        let frames = 0;
-        const remove = scene.postRender.addEventListener(() => {
-          if (++frames >= 2) {
-            remove();
-            resolve();
-          } else scene.requestRender();
-        });
-        scene.requestRender();
-      }),
+      return unchanged && checked >= 5;
+    }),
   );
-  const mixedPicks = await page.evaluate(async () => {
-    const { visitTargetSprites } =
-      await import('/src/overlays/markerLayout.js');
-    const v = window.__godsEyeView.viewer;
-    const found = [];
-    visitTargetSprites(v.scene.primitives, (s) => {
-      if (!s.show || !s.clusterShow || !String(s.id).startsWith('qa-')) return;
-      const p = s.computeScreenSpacePosition(v.scene);
-      for (let x = -8; x <= 8; x += 2)
-        for (let y = -8; y <= 8; y += 2)
-          if (v.scene.pick({ x: p.x + x, y: p.y + y })?.id === s.id) {
-            found.push(s.id);
-            return;
-          }
-    });
-    return [...new Set(found)];
+  const hudModes = await page.evaluate(async () => {
+    const { getMode, getDetectionTuning } =
+      await import('/src/data/detection.js');
+    const slider = document.getElementById('detection-density-slider');
+    const previousMode = getMode();
+    const previous = slider.value,
+      results = [];
+    for (const pct of [0, 25, 50, 100]) {
+      slider.value = String(pct);
+      slider.dispatchEvent(new Event('input', { bubbles: true }));
+      results.push([getMode(), getDetectionTuning().densityPct]);
+    }
+    const toggle = document.getElementById('detection-toggle');
+    toggle.click();
+    results.push([getMode(), getDetectionTuning().densityPct]);
+    toggle.click();
+    results.push([getMode(), getDetectionTuning().densityPct]);
+    slider.value = previous;
+    slider.dispatchEvent(new Event('input', { bubbles: true }));
+    if (previousMode === 'OFF') toggle.click();
+    return results;
   });
   check(
-    'mixed aircraft vessel camera and point targets remain individually pickable after separation',
-    mixed && mixedPicks.length === 4,
-    JSON.stringify(mixedPicks),
+    'original HUD sparse/balanced/dense slider and Off/restore toggle remain authoritative',
+    JSON.stringify(hudModes) ===
+      JSON.stringify([
+        ['SPARSE', 0],
+        ['SPARSE', 25],
+        ['BALANCED', 50],
+        ['DENSE', 100],
+        ['OFF', 100],
+        ['DENSE', 100],
+      ]),
+    JSON.stringify(hudModes),
   );
-  await page.screenshot({ path: `${shots}/global-target-collisions.png` });
-  await page.evaluate(() => {
-    const v = window.__godsEyeView.viewer;
-    v.scene.primitives.remove(window.__qaMixed.collection);
-    v.scene.primitives.remove(window.__qaMixed.points);
-    delete window.__qaMixed;
-    v.scene.requestRender();
-  });
   await page.screenshot({ path: `${shots}/airport-categories.png` });
   for (const [record, label] of [
     [militaryAirport, 'military'],
