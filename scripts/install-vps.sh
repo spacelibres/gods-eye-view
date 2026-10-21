@@ -8,7 +8,8 @@
 #   1. Installs Node 24 through nvm, leaving the system Node.js untouched.
 #   2. Clones or updates the repository in $GEV_HOME.
 #   3. Installs the locked dependencies and builds the app.
-#   4. Runs it under systemd on 127.0.0.1:$GEV_PORT.
+#   4. Runs it under systemd in two slots (127.0.0.1:$GEV_PORT and
+#      $GEV_PORT_B) behind Caddy, so a deploy swaps slots without an outage.
 #   5. Installs the GitHub webhook service on 127.0.0.1:$GEV_WEBHOOK_PORT.
 #   6. Adds a Caddy site block for $GEV_DOMAIN and reloads Caddy.
 #
@@ -21,7 +22,8 @@
 #   GEV_REPO          git remote               default https://github.com/spacelibres/gods-eye-view.git
 #   GEV_BRANCH        branch to deploy         default main
 #   GEV_DOMAIN        public hostname          default godseye.spacelibre.cn
-#   GEV_PORT          local port for the app   default 4173
+#   GEV_PORT          slot A port             default 4173
+#   GEV_PORT_B        slot B port             default 4174
 #   GEV_NODE          nvm Node version         default 24
 #   GEV_USER          service account          default gev
 #   GEV_WEBHOOK_PORT  webhook port             default 4180
@@ -44,6 +46,11 @@ GEV_REPO="${GEV_REPO:-https://github.com/spacelibres/gods-eye-view.git}"
 GEV_BRANCH="${GEV_BRANCH:-main}"
 GEV_DOMAIN="${GEV_DOMAIN:-godseye.spacelibre.cn}"
 GEV_PORT="${GEV_PORT:-4173}"
+# Blue/green: two slots serve alternate releases. Caddy proxies to both and
+# health-checks them, so a deploy starts the new build on the idle slot, waits
+# until Caddy sees it healthy, then stops the old one. At no point is there
+# zero upstreams, so no request meets a closed port.
+GEV_PORT_B="${GEV_PORT_B:-${GEV_PORT_SLOT_B:-$((GEV_PORT + 1))}}"
 GEV_NODE="${GEV_NODE:-24}"
 GEV_USER="${GEV_USER:-gev}"
 GEV_WEBHOOK_PORT="${GEV_WEBHOOK_PORT:-4180}"
@@ -158,17 +165,17 @@ run_as_service() {
 }
 run_as_service "$NODE_DIR/npm ci --no-audit --no-fund" ||
   run_as_service "$NODE_DIR/npm ci --no-audit --no-fund --registry=https://registry.npmmirror.com" || {
-    # `npm ci` deletes node_modules first, and on a busy host that rmdir can
-    # fail with ENOTEMPTY: the running service still has files open under it.
-    # Stopping the service is the only way out, so the outage is kept to the
-    # retry itself: the live release answers again as soon as the restart
-    # below runs, before any build.
-    log "npm ci failed; stopping the service and retrying with a clean tree"
-    systemctl stop gev.service 2>/dev/null || true
+    # `npm ci` deletes node_modules first, and both slots have files open under
+    # it, so the rmdir fails with ENOTEMPTY. Only stopping every slot frees the
+    # tree — and since that is the one moment there is no upstream at all, the
+    # retry has to finish and come back down before anything else runs.
+    log "npm ci failed; stopping every slot and retrying with a clean tree"
+    systemctl stop 'gev@*.service' 2>/dev/null || true
     rm -rf "$GEV_HOME/node_modules"
     run_as_service "$NODE_DIR/npm ci --no-audit --no-fund --registry=https://registry.npmmirror.com" || {
-      systemctl start gev.service 2>/dev/null || true
-      die "dependency install failed; the running release was restarted"
+      # Restore whatever slot was serving so the site is not left dark.
+      systemctl start "gev@${GEV_LIVE_PORT:-$GEV_PORT}.service" 2>/dev/null || true
+      die "dependency install failed; the previous slots were restarted"
     }
   }
 
@@ -220,10 +227,13 @@ ln -sfn "$RELEASE_DIR" "$GEV_CURRENT.new"
 mv -Tf "$GEV_CURRENT.new" "$GEV_CURRENT"
 
 # ---------------------------------------------------------------- systemd ---
-log "systemd unit gev.service on 127.0.0.1:$GEV_PORT"
-cat >/etc/systemd/system/gev.service <<UNIT
+log "systemd units gev@.service (slots $GEV_PORT / $GEV_PORT_B)"
+# One templated unit, two instances. Each instance serves whatever release the
+# `current` symlink points at when it starts, on the port named by its instance
+# id, so a deploy brings the new build up beside the old one.
+cat >/etc/systemd/system/gev@.service <<UNIT
 [Unit]
-Description=God's Eye View
+Description=God\'s Eye View (slot %i)
 After=network-online.target
 Wants=network-online.target
 
@@ -234,9 +244,10 @@ WorkingDirectory=$GEV_HOME
 Environment=PATH=$NODE_DIR:/usr/local/bin:/usr/bin:/bin
 Environment=NODE_ENV=production
 Environment=HOST=127.0.0.1
-Environment=PORT=$GEV_PORT
+# %i is the port, so both slots share one unit file.
+Environment=PORT=%i
 # Serve the published release through the symlink, so a deploy swaps the tree
-# under a restarted process instead of rewriting the one being served.
+# under a freshly started process instead of rewriting the one being served.
 Environment=GEV_DIST_DIR=$GEV_CURRENT
 # The app answers only Host headers it knows. Caddy passes the public name
 # through, so it has to be listed here or every request gets a 403.
@@ -261,41 +272,64 @@ StandardError=journal
 WantedBy=multi-user.target
 UNIT
 
-systemctl daemon-reload
-systemctl enable gev.service >/dev/null
-# `reload-or-restart` restarts only because the build changed; the tree it
-# serves is already complete, so the process comes back in well under a
-# second rather than waiting on a rebuild.
-systemctl restart gev.service
+# The single-instance unit from older installers would keep holding the live
+# port and answering with the previous release; retire it.
+systemctl disable --now gev.service >/dev/null 2>&1 || true
+rm -f /etc/systemd/system/gev.service
 
-# Health gate. A release that does not answer is rolled back to the previous
-# one instead of being left broken: the old tree is still on disk, so putting
-# the symlink back is the whole recovery.
-healthy=""
+systemctl daemon-reload
+systemctl enable "gev@$GEV_PORT.service" >/dev/null
+systemctl enable "gev@$GEV_PORT_B.service" >/dev/null
+
+# Start the new release on the slot that is NOT serving, and keep the old one
+# answering until the new one has proved it works. `.slot` records which slot
+# serves and which release it holds, so a rerun resumes instead of guessing.
+SLOT_FILE="$GEV_HOME/.slot"
+LIVE_PORT="$GEV_PORT"
+if [ -f "$SLOT_FILE" ]; then
+  . "$SLOT_FILE"
+  LIVE_PORT="${GEV_LIVE_PORT:-$GEV_PORT}"
+fi
+
+if [ "$LIVE_PORT" = "$GEV_PORT" ]; then IDLE_PORT="$GEV_PORT_B"; else IDLE_PORT="$GEV_PORT"; fi
+
+log "Bringing the new release up on the idle slot ($IDLE_PORT)"
+systemctl start "gev@$IDLE_PORT.service"
+idle_healthy=""
 for _ in $(seq 1 40); do
-  if curl -fsS --max-time 3 "http://127.0.0.1:$GEV_PORT/" >/dev/null 2>&1; then
-    healthy=1
+  if curl -fsS --max-time 3 "http://127.0.0.1:$IDLE_PORT/" >/dev/null 2>&1; then
+    idle_healthy=1
     break
   fi
   sleep 1
 done
 
-if [ -z "$healthy" ] && [ -n "$PREVIOUS_RELEASE" ] && [ -d "$PREVIOUS_RELEASE" ]; then
-  log "Release $RELEASE_ID did not answer; rolling back"
-  ln -sfn "$PREVIOUS_RELEASE" "$GEV_CURRENT.new"
-  mv -Tf "$GEV_CURRENT.new" "$GEV_CURRENT"
-  systemctl restart gev.service
-  for _ in $(seq 1 20); do
-    curl -fsS --max-time 3 "http://127.0.0.1:$GEV_PORT/" >/dev/null 2>&1 && {
-      healthy=1
-      break
-    }
-    sleep 1
-  done
+if [ -z "$idle_healthy" ]; then
+  log "The new release did not answer on $IDLE_PORT; leaving the live slot alone"
+  systemctl stop "gev@$IDLE_PORT.service" 2>/dev/null || true
+  die "release $RELEASE_ID failed its health check; the previous release is still serving"
 fi
 
-[ -n "$healthy" ] || die "app did not start; check: journalctl -u gev -n 50"
-log "App answers on 127.0.0.1:$GEV_PORT ($RELEASE_ID)"
+log "Switching traffic to $IDLE_PORT"
+cat >"$SLOT_FILE" <<SLOT
+# Written by scripts/install-vps.sh. Which slot serves, and what it holds, so a
+# rerun resumes from the right one instead of guessing.
+GEV_LIVE_PORT=$IDLE_PORT
+GEV_RELEASE_ID=$RELEASE_ID
+GEV_RELEASE_DIR=$RELEASE_DIR
+SLOT
+chown "$GEV_USER:$GEV_USER" "$SLOT_FILE" 2>/dev/null || true
+
+# Caddy already upstreams both slots with active health checks, so it starts
+# sending to $IDLE_PORT the moment it sees that instance answer, and keeps
+# using the old one until then. Retire the old slot only after that.
+sleep 2
+if [ "$LIVE_PORT" != "$IDLE_PORT" ]; then
+  systemctl stop "gev@$LIVE_PORT.service" 2>/dev/null || true
+  log "Retired slot $LIVE_PORT"
+fi
+
+log "Slot $IDLE_PORT is serving release $RELEASE_ID"
 
 # Keep the running release plus the two before it; older trees only cost disk.
 if [ -d "$GEV_RELEASES" ]; then
@@ -374,11 +408,11 @@ systemctl is-active --quiet gev-webhook.service ||
 log "Caddy site for $GEV_DOMAIN"
 # Strip the previous managed block, then append the current one. Everything
 # outside the markers — the existing sites — is kept byte for byte.
-python3 - "$CADDYFILE" "$BEGIN_MARK" "$END_MARK" "$GEV_DOMAIN" "$GEV_PORT" "$GEV_WEBHOOK_PORT" "$GEV_WEBHOOK_PATH" <<'PY'
+python3 - "$CADDYFILE" "$BEGIN_MARK" "$END_MARK" "$GEV_DOMAIN" "$GEV_PORT" "$GEV_PORT_B" "$GEV_WEBHOOK_PORT" "$GEV_WEBHOOK_PATH" <<'PY'
 import re
 import sys
 
-path, begin, end, domain, port, hook_port, hook_path = sys.argv[1:8]
+path, begin, end, domain, port, port_b, hook_port, hook_path = sys.argv[1:9]
 text = open(path, encoding="utf-8").read()
 pattern = re.compile(re.escape(begin) + r".*?" + re.escape(end) + r"\n?", re.S)
 text = pattern.sub("", text).rstrip() + "\n"
@@ -398,7 +432,16 @@ text += f"""
 \t}}
 
 \thandle {{
-\t\treverse_proxy 127.0.0.1:{port} {{
+\t\t# Both deploy slots, health-checked. A deploy starts the new release on
+\t\tthe idle slot; Caddy begins sending to it as soon as it answers and keeps
+\t\tthe old one in rotation until then, so the switch never leaves zero
+\t\tupstreams. `lb_try_duration` retries the other slot when one is mid-restart,
+\t\twhich is what makes a single missed probe invisible to a visitor.
+\t\treverse_proxy 127.0.0.1:{port} 127.0.0.1:{port_b} {{
+\t\t\tlb_try_duration 5s
+\t\t\thealth_uri /
+\t\t\thealth_interval 2s
+\t\thealth_timeout 1s
 \t\t}}
 \t}}
 }}
@@ -413,7 +456,8 @@ systemctl reload caddy
 log "Caddy reloaded"
 
 log "Done"
-printf '  App:      http://127.0.0.1:%s (gev.service)\n' "$GEV_PORT"
+printf '  App:      http://127.0.0.1:%s and :%s (gev@<port>.service)\n' "$GEV_PORT" "$GEV_PORT_B"
 printf '  Public:   https://%s\n' "$GEV_DOMAIN"
-printf '  Logs:     journalctl -u gev -f\n'
+printf '  Logs:     journalctl -u gev@%s -f\n' "$GEV_PORT"
+
 printf '  Update:   sudo bash %s/scripts/install-vps.sh\n' "$GEV_HOME"

@@ -4,6 +4,17 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.67] — 2026-10-21 — Deploys swap slots
+
+- Deploy without an outage of any length. The service ran as one instance, so
+  every release meant stopping it and starting it again: from the moment the
+  port closed until the new process bound it, any request that arrived was
+  refused. Two slots now run behind Caddy (`gev@4173` / `gev@4174`). A deploy
+  starts the new release on the idle slot, waits until it answers, and only then
+  retires the old one — Caddy health-checks both and retries the other when one
+  is mid-restart, so there is never a moment with no upstream to send to. A
+  release that fails its check leaves the previous one serving (spacelibre).
+
 ## [0.2.66] — 2026-10-21 — A crowded label steps aside
 
 - Give a crowded label somewhere to go. Every annotation had four compass
