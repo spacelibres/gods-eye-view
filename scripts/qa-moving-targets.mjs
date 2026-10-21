@@ -108,8 +108,8 @@ try {
   );
   assert.equal(
     await page.evaluate(() => qa.getDetectionDiagnostics().visibleCount),
-    0,
-    'ordinary targets do not all get selection brackets',
+    48,
+    'every detailed target retains its classic detection bracket',
   );
   await page.screenshot({ path: 'qa-shots/moving-targets/detail.png' });
   await check(50000000, 0, 0, 'zooming back out preserves every record');

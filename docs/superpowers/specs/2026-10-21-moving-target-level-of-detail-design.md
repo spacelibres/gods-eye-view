@@ -33,3 +33,8 @@ No new external service, new color system, changes to the spacelibre logo, or ch
 ## Verification
 
 Write failing regressions for orphaned aircraft and satellite labels, budget exhaustion retaining point coverage, point-to-icon-to-detail transitions, selected target priority, moving proxy alignment and restored original styles. Exercise real Cesium with dense civil aircraft, military aircraft and satellites, mixed layers, repeated zoom-in/out, camera movement, DPR 1 / 1.25 / 2 and laptop/mobile viewports. Confirm zero feed requests during pure zoom and unchanged search/selection identities. Verify selected/tracked highlights and model handoff, offscreen/disabled cleanup, no label replay after a target becomes ineligible. Compare screenshots at each level, then run relevant unit suites, build, formatting, version bump, GitHub push and VPS/public-version checks.
+
+
+## User correction: preserve classic detection frames
+
+On 2026-10-21 the user explicitly rejected removing the classic frames. Compact and detailed icons retain the existing four-corner detection brackets. Unselected overview dots and suppressed targets do not emit frames. Selection/tracking still preserves the classic highlight at every zoom; labels remain subject to detail level and space. This overrides the earlier selected-only bracket rule without changing the established frame artwork.

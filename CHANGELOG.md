@@ -4,6 +4,12 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.77] — 2026-10-21 — Restore classic detection brackets
+
+- Restore the original four-corner detection frames around compact and
+  detailed aircraft/satellite icons. Keep overview dots unframed, selected
+  targets highlighted and hidden targets free of orphan frames or labels.
+
 ## [0.2.76] — 2026-10-21 — Progressive aircraft and satellite detail
 
 - Preserve every loaded moving target as a small overview point instead of

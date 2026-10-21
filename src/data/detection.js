@@ -1476,7 +1476,12 @@ function _drawOverlay(frame) {
     const bracketAlpha =
       admissionAlpha *
       sonarFactor *
-      (presentation && !presentation.selected && !isTracked ? 0 : 1);
+      (presentation &&
+      presentation.level === 0 &&
+      !presentation.selected &&
+      !isTracked
+        ? 0
+        : 1);
     if (bracketAlpha > 0) {
       const transit = obj.tier?.startsWith('transit_');
       (transit ? appendTransitBracket : appendCornerBracket)(

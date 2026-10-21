@@ -989,7 +989,7 @@ test('aircraft detection follows the displaced billboard in CSS pixels at every 
   }
 });
 
-test('moving targets show labels only at detail level, clear stale labels immediately, and reserve brackets for selection', () => {
+test('moving targets show labels only at detail level, clear stale labels immediately, and preserve classic brackets on visible icons', () => {
   for (const type of ['AIR', 'SAT']) {
     const env = installEnvironment();
     const sprite = {
@@ -1041,8 +1041,8 @@ test('moving targets show labels only at detail level, clear stale labels immedi
       env.postRender.raise();
       assert.equal(
         getDetectionDiagnostics().visibleCount,
-        0,
-        'ambient detail does not draw a selection bracket',
+        1,
+        'detailed targets retain their classic detection bracket',
       );
       assert.ok(
         env.ctx.calls.some(
@@ -1058,6 +1058,7 @@ test('moving targets show labels only at detail level, clear stale labels immedi
         env.ctx.calls.length = 0;
         env.advance(250);
         env.postRender.raise();
+        assert.equal(getDetectionDiagnostics().visibleCount, visible && level > 0 ? 1 : 0, 'classic brackets follow icons, never hidden targets or overview dots');
         assert.equal(
           getDetectionDiagnostics().calloutRects.length,
           0,
