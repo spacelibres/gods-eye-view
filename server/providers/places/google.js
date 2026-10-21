@@ -62,6 +62,34 @@ export function validatePlacesCoordinates(searchParams) {
 const GEOCODE_MAX_QUERY = 200;
 
 /**
+ * Longest language tag accepted from the client. BCP 47 tags are short
+ * (`zh-CN`, `sr-Latn-RS`); anything longer is not a locale.
+ */
+const LANGUAGE_MAX = 35;
+
+/** `en`, `zh-CN`, `sr-Latn-RS` — letters/digits subtags joined by a hyphen. */
+const LANGUAGE_TAG = /^[a-z]{2,3}(?:-[A-Za-z0-9]{1,8})*$/;
+
+/**
+ * Google's `languageCode` for the UI locale the client is showing.
+ *
+ * Without it Google answers in a language it infers from the caller, which for
+ * a server-side request is the host's region — so a Chinese session on a
+ * European VPS reads place names in English. The client is the only party that
+ * knows which language the user chose, so it names it explicitly. A missing or
+ * malformed value is dropped rather than refused: it only localises the answer,
+ * and a bad tag must not cost the search itself.
+ *
+ * @param {URLSearchParams} searchParams The proxied request's query.
+ * @returns {string|null}
+ */
+export function placesLanguageCode(searchParams) {
+  const raw = String(searchParams.get('lang') || '').trim();
+  if (!raw || raw.length > LANGUAGE_MAX) return null;
+  return LANGUAGE_TAG.test(raw) ? raw : null;
+}
+
+/**
  * Upstream deadline and body ceiling for the geocode routes. The deadline stays
  * armed through body consumption, so a stalled upstream cannot hold a handler
  * open, and the cap bounds a chunked or length-omitted reply. A geocode answer
@@ -160,6 +188,7 @@ export function googlePlacesContextProxy({
         25,
         Math.min(5000, Number(requestUrl.searchParams.get('radiusM')) || 250),
       );
+      const languageCode = placesLanguageCode(requestUrl.searchParams);
 
       try {
         const response = await fetchImpl(
@@ -183,6 +212,7 @@ export function googlePlacesContextProxy({
               ].join(','),
             },
             body: JSON.stringify({
+              ...(languageCode ? { languageCode } : {}),
               maxResultCount: 20,
               rankPreference: 'DISTANCE',
               locationRestriction: {
@@ -282,6 +312,7 @@ export function googlePlacesContextProxy({
         50,
         Math.min(50000, Number(requestUrl.searchParams.get('radiusM')) || 4000),
       );
+      const languageCode = placesLanguageCode(requestUrl.searchParams);
 
       try {
         const response = await fetchImpl(
@@ -305,6 +336,7 @@ export function googlePlacesContextProxy({
             },
             body: JSON.stringify({
               textQuery,
+              ...(languageCode ? { languageCode } : {}),
               locationBias: {
                 circle: {
                   center: { latitude, longitude },

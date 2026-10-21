@@ -7,7 +7,12 @@ import { createStandaloneControls } from './controls.js';
 import { createStandaloneData } from './data.js';
 import { createStandaloneTools } from './tools.js';
 import { resolveLocale, applyDocumentLanguage } from '../i18n/locale.js';
-import { applyDocumentTranslations, setLocale, t } from '../i18n/index.js';
+import {
+  applyDocumentTranslations,
+  getLocale,
+  setLocale,
+  t,
+} from '../i18n/index.js';
 import { initColorSystem } from '../ui/colorSystemRuntime.js';
 import { chooseTileRoute } from '../maps/tileRoute.js';
 import { mountBrandLockups } from '../ui/brandLockup.js';
@@ -98,6 +103,8 @@ export function createStandaloneApplication({
         presets: CITY_POIS,
         ...geospatial,
         resolveApiKey: () => googleApiKey,
+        // Place names come back in the language the UI runs in.
+        getLocale,
         signal: context.signal,
       });
       const scene = await createStandaloneScene({

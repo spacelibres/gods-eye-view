@@ -51,6 +51,7 @@ export function createHttpGeospatialProvider({
   fetchImpl = (...args) => fetch(...args),
   resolveApiKey,
   endpoints = {},
+  getLocale = () => null,
 } = {}) {
   const urls = {
     // Same-origin like its siblings below: Google's Geocoding web service
@@ -61,11 +62,21 @@ export function createHttpGeospatialProvider({
     route: '/api/route',
     ...endpoints,
   };
+  /**
+   * Place names follow the UI language, so a Chinese session reads Chinese
+   * names rather than the ones the hosting region implies.
+   */
+  function localeParams() {
+    const locale = getLocale?.();
+    return typeof locale === 'string' && locale.trim()
+      ? { lang: locale.trim() }
+      : {};
+  }
   async function json(endpoint, params, { signal } = {}) {
     if (!endpoint) return null;
     const separator = endpoint.includes('?') ? '&' : '?';
     const response = await fetchImpl(
-      `${endpoint}${separator}${new URLSearchParams(params)}`,
+      `${endpoint}${separator}${new URLSearchParams({ ...params, ...localeParams() })}`,
       { signal },
     );
     signal?.throwIfAborted();

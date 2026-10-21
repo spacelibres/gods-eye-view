@@ -27,6 +27,7 @@ export function createDefaultPlaceSearch({
   providers = {},
   presets = null,
   geocoding = null,
+  getLocale = () => null,
 } = {}) {
   if (geocoding && geocoding.provider !== 'nominatim')
     throw new TypeError('Unsupported geocoding provider');
@@ -89,6 +90,7 @@ export function createDefaultPlaceSearch({
     fetchImpl,
     resolveApiKey,
     endpoints,
+    getLocale,
   });
   return {
     ...forward,

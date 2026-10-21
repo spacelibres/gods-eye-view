@@ -135,9 +135,22 @@ export function placeFromGeocodeResult(result) {
 /** Search points of interest; `configured` is false when the server has no search key. */
 export function createPlaceSearchService({
   fetchImpl = (...args) => globalThis.fetch(...args),
+  getLocale = () => null,
 } = {}) {
+  /**
+   * The UI language, sent so Google returns place names in it rather than in
+   * whatever language the server's region implies. Optional: an absent value
+   * leaves Google's own default in place.
+   */
+  function localeParams() {
+    const locale = getLocale?.();
+    return typeof locale === 'string' && locale.trim()
+      ? { lang: locale.trim() }
+      : {};
+  }
   async function read(path, params, signal) {
-    const response = await fetchImpl(`${path}?${new URLSearchParams(params)}`, {
+    const query = new URLSearchParams({ ...params, ...localeParams() });
+    const response = await fetchImpl(`${path}?${query}`, {
       signal,
     });
     let payload = null;

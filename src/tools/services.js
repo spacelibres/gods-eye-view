@@ -42,7 +42,7 @@ import {
 } from './places.js';
 
 /** Construct every service Core's tools read. */
-export function createToolServices({ fetchImpl, appUrl, panelKey }) {
+export function createToolServices({ fetchImpl, appUrl, panelKey, getLocale }) {
   if (typeof fetchImpl !== 'function')
     throw new TypeError('A fetch implementation is required');
   const requests = createApplicationRequestServices({ fetchImpl });
@@ -60,7 +60,7 @@ export function createToolServices({ fetchImpl, appUrl, panelKey }) {
     satellites: createSatelliteSource({ fetchImpl }),
     cctv: createCctvSource({ fetchImpl }),
     radio: createRadioSource({ fetchImpl }),
-    placeSearch: createPlaceSearchService({ fetchImpl }),
+    placeSearch: createPlaceSearchService({ fetchImpl, getLocale }),
     routing: createRouteService({ fetchImpl }),
     bikeshare: {
       systems: GBFS_CITY_REGISTRY,
