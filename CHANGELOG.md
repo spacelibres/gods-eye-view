@@ -4,6 +4,15 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.68] — 2026-10-21 — The switch is told to Caddy first
+
+- Finish the slot switch. `v0.2.67` introduced two slots but told Caddy about
+  the second one only after the switch: the old slot was retired while the proxy
+  still knew a single upstream, so the deploy still dropped requests. Caddy is
+  now given both slots before either is started or stopped, and the
+  pre-slot `gev.service` is retired only after a checked slot is serving. A
+  release that fails its check leaves the live slot untouched (spacelibre).
+
 ## [0.2.67] — 2026-10-21 — Deploys swap slots
 
 - Deploy without an outage of any length. The service ran as one instance, so

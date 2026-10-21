@@ -92,6 +92,21 @@ die() { printf '\033[1;31mERROR: %s\033[0m\n' "$*" >&2; exit 1; }
 [ "$(id -u)" -eq 0 ] || die "run this as root (sudo bash scripts/install-vps.sh)"
 [ -f "$CADDYFILE" ] || die "$CADDYFILE not found; this script expects Caddy to be installed"
 
+install_caddy_site() {
+  log "Caddy site for $GEV_DOMAIN"
+  # Strip the previous managed block, then append the current one. Everything
+  # outside the markers — the existing sites — is kept byte for byte.
+  python3 "$GEV_HOME/scripts/write-caddy-block.py" \
+    "$CADDYFILE" "$BEGIN_MARK" "$END_MARK" "$GEV_DOMAIN" \
+    "$GEV_PORT" "$GEV_PORT_B" "$GEV_WEBHOOK_PORT" "$GEV_WEBHOOK_PATH"
+
+  caddy validate --config "$CADDYFILE" --adapter caddyfile >/dev/null ||
+    die "Caddy rejected the new configuration; nothing was reloaded"
+  systemctl reload caddy
+  log "Caddy reloaded"
+}
+
+
 # ---------------------------------------------------------------- Node 24 ---
 # The service runs as an unprivileged user, which cannot read /root — where
 # nvm installs by default. A dedicated prefix keeps the app's Node separate
@@ -272,14 +287,16 @@ StandardError=journal
 WantedBy=multi-user.target
 UNIT
 
-# The single-instance unit from older installers would keep holding the live
-# port and answering with the previous release; retire it.
-systemctl disable --now gev.service >/dev/null 2>&1 || true
-rm -f /etc/systemd/system/gev.service
-
 systemctl daemon-reload
 systemctl enable "gev@$GEV_PORT.service" >/dev/null
 systemctl enable "gev@$GEV_PORT_B.service" >/dev/null
+# The single-instance unit from an older installer is NOT stopped here: it is
+# the only thing answering until a slot is up, and stopping it now is exactly
+# the outage this release removes. It is retired below, after the switch.
+LEGACY_UNIT=0
+if systemctl is-active --quiet gev.service 2>/dev/null; then
+  LEGACY_UNIT=1
+fi
 
 # Start the new release on the slot that is NOT serving, and keep the old one
 # answering until the new one has proved it works. `.slot` records which slot
@@ -292,6 +309,10 @@ if [ -f "$SLOT_FILE" ]; then
 fi
 
 if [ "$LIVE_PORT" = "$GEV_PORT" ]; then IDLE_PORT="$GEV_PORT_B"; else IDLE_PORT="$GEV_PORT"; fi
+
+# Teach Caddy about both slots before touching either one. It keeps using
+# the live slot until the new one passes its health probe.
+install_caddy_site
 
 log "Bringing the new release up on the idle slot ($IDLE_PORT)"
 systemctl start "gev@$IDLE_PORT.service"
@@ -327,6 +348,14 @@ sleep 2
 if [ "$LIVE_PORT" != "$IDLE_PORT" ]; then
   systemctl stop "gev@$LIVE_PORT.service" 2>/dev/null || true
   log "Retired slot $LIVE_PORT"
+fi
+if [ "$LEGACY_UNIT" = "1" ]; then
+  # Only now, with a checked slot serving, is the old single instance safe to
+  # remove from the rotation.
+  systemctl disable --now gev.service >/dev/null 2>&1 || true
+  rm -f /etc/systemd/system/gev.service
+  systemctl daemon-reload
+  log "Retired the pre-slot gev.service"
 fi
 
 log "Slot $IDLE_PORT is serving release $RELEASE_ID"
@@ -404,56 +433,7 @@ sleep 1
 systemctl is-active --quiet gev-webhook.service ||
   die "webhook did not start; check: journalctl -u gev-webhook -n 50"
 
-# ----------------------------------------------------------------- Caddy ---
-log "Caddy site for $GEV_DOMAIN"
-# Strip the previous managed block, then append the current one. Everything
-# outside the markers — the existing sites — is kept byte for byte.
-python3 - "$CADDYFILE" "$BEGIN_MARK" "$END_MARK" "$GEV_DOMAIN" "$GEV_PORT" "$GEV_PORT_B" "$GEV_WEBHOOK_PORT" "$GEV_WEBHOOK_PATH" <<'PY'
-import re
-import sys
 
-path, begin, end, domain, port, port_b, hook_port, hook_path = sys.argv[1:9]
-text = open(path, encoding="utf-8").read()
-pattern = re.compile(re.escape(begin) + r".*?" + re.escape(end) + r"\n?", re.S)
-text = pattern.sub("", text).rstrip() + "\n"
-
-text += f"""
-{begin}
-{domain} {{
-\tencode zstd gzip
-
-\t# Caddy's forwarding headers are kept: the app runs behind this proxy and
-\t# reads X-Forwarded-Proto to know the visitor's scheme (see GEV_TRUSTED_PROXY
-\t# on the service), because the hop to 127.0.0.1 is always plain HTTP.
-\t# GitHub pushes land here; everything else is the app.
-\thandle {hook_path}* {{
-\t\treverse_proxy 127.0.0.1:{hook_port} {{
-\t\t}}
-\t}}
-
-\thandle {{
-\t\t# Both deploy slots, health-checked. A deploy starts the new release on
-\t\tthe idle slot; Caddy begins sending to it as soon as it answers and keeps
-\t\tthe old one in rotation until then, so the switch never leaves zero
-\t\tupstreams. `lb_try_duration` retries the other slot when one is mid-restart,
-\t\twhich is what makes a single missed probe invisible to a visitor.
-\t\treverse_proxy 127.0.0.1:{port} 127.0.0.1:{port_b} {{
-\t\t\tlb_try_duration 5s
-\t\t\thealth_uri /
-\t\t\thealth_interval 2s
-\t\thealth_timeout 1s
-\t\t}}
-\t}}
-}}
-{end}
-"""
-open(path, "w", encoding="utf-8").write(text)
-PY
-
-caddy validate --config "$CADDYFILE" --adapter caddyfile >/dev/null ||
-  die "Caddy rejected the new configuration; nothing was reloaded"
-systemctl reload caddy
-log "Caddy reloaded"
 
 log "Done"
 printf '  App:      http://127.0.0.1:%s and :%s (gev@<port>.service)\n' "$GEV_PORT" "$GEV_PORT_B"

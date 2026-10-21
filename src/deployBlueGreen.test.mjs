@@ -26,15 +26,26 @@ test('two slots are configured, one above the other', () => {
   );
 });
 
-test('Caddy proxies both slots with health checks and retries', () => {
-  assert.match(
-    script,
-    /reverse_proxy 127\.0\.0\.1:\{port\} 127\.0\.0\.1:\{port_b\}/,
-    'both slots must be upstreams of the same handler',
+test('Caddy learns both slots before anything is started or stopped', () => {
+  // The template lives in its own script (pinned by deployCaddyBlock.test), so
+  // the installer only has to hand it both ports and reload Caddy — but it has
+  // to do so first.
+  assert.match(script, /write-caddy-block\.py/);
+  assert.match(script, /"\$GEV_PORT" "\$GEV_PORT_B"/);
+  assert.match(script, /systemctl reload caddy/);
+
+  const caddy = script.indexOf('install_caddy_site\n');
+  const startIdle = script.indexOf('systemctl start "gev@$IDLE_PORT.service"');
+  const stopLive = script.indexOf('systemctl stop "gev@$LIVE_PORT.service"');
+  assert.ok(caddy > 0, 'the Caddy block is written');
+  assert.ok(
+    caddy < startIdle,
+    'Caddy must know both slots before the new one starts',
   );
-  assert.match(script, /lb_try_duration/, 'a mid-restart slot needs a retry');
-  assert.match(script, /health_uri \//, 'Caddy must probe each slot');
-  assert.match(script, /health_interval/, 'a stopped slot has to be rechecked');
+  assert.ok(
+    caddy < stopLive,
+    'retiring the live slot must not leave Caddy with one unknown upstream',
+  );
 });
 
 test('the new release starts on the idle slot before the old one stops', () => {
