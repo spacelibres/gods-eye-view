@@ -8,13 +8,13 @@ const airliner =
   '<path d="M16 2c-1 0-2 1-2 3v7L3 20v3l11-4v6l-4 3v2l6-2 6 2v-2l-4-3v-6l11 4v-3l-11-8V5c0-2-1-3-2-3Z"/><path d="M8 17v5m16-5v5" stroke-width="3"/>';
 const fighter =
   '<path d="m16 1-3 11-2 3-9 8v3l10-3-1 5-4 2v1l9-2 9 2v-1l-4-2-1-5 10 3v-3l-9-8-2-3Z"/><path d="M16 9v17" fill="none"/>';
-// Side-on helicopter above the conventional circled H landing pad.
+// Draw the landing pad first so the helicopter overlaps its upper rim.
 const helicopter =
-  '<g transform="translate(0 -1)"><path d="M17 8h8a5 5 0 0 1 0 10h-8l-4-4H5L2 9h4l2 2h7Z"/>' +
+  '<g data-symbol="helipad"><circle cx="20" cy="27" r="11" fill="black" stroke="black" stroke-width="4"/><circle cx="20" cy="27" r="11" fill="none" stroke="white" stroke-width="2"/>' +
+  '<path data-symbol="helipad-h" d="M16.5 24v9m7-9v9m-7-4.5h7" fill="none" stroke="white" stroke-width="2.2"/></g>' +
+  '<g data-symbol="helicopter" transform="translate(0 3)"><path d="M17 8h8a5 5 0 0 1 0 10h-8l-4-4H5L2 9h4l2 2h7Z"/>' +
   outlinedLines('M19 3v5M10 3h23M15 20h15M18 18v2m9-2v2', 1.8) +
-  '<path d="M24 9v5h5" fill="black" stroke="none"/></g>' +
-  '<g data-symbol="helipad"><circle cx="20" cy="30" r="8" fill="black" stroke="black" stroke-width="4"/><circle cx="20" cy="30" r="8" fill="none" stroke="white" stroke-width="2"/>' +
-  '<path data-symbol="helipad-h" d="M17 26v8m6-8v8m-6-4h6" fill="none" stroke="white" stroke-width="2"/></g>';
+  '<path d="M24 9v5h5" fill="black" stroke="none"/></g>';
 // Keep the existing seaplane silhouette independent of land-airport symbols.
 const departingAirliner =
   '<path d="m3 23 7 1 9-5-8-9 4-2 11 7 7-4c5-3 8 1 3 4L14 28 4 27Z"/>';
