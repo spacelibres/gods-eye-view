@@ -4,6 +4,16 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.70] — 2026-10-21 — The language changes in place
+
+- Change the language without starting over. Picking a language reloaded the
+  page, which threw away the camera, the open panels and every layer the
+  visitor had switched on — for a change that only alters the words. The choice
+  now re-translates the running page in place: the catalog swaps, `<html lang>`
+  follows, every marked-up element is rewritten, and the panels that paint names
+  from their own state are asked to redraw. The choice is still remembered for
+  the next visit, and asking first is gone because nothing is lost (spacelibre).
+
 ## [0.2.69] — 2026-10-21 — Both slots stay up
 
 - Keep both slots running. `v0.2.68` switched slots without an outage, but then

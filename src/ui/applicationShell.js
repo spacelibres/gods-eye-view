@@ -38,14 +38,15 @@ import { ShellFeedback } from './shellFeedback.js';
 import { runCctvLayerEnableTransition } from '../cctvFocusPolicy.js';
 
 import {
-  describeUnsavedWork,
+  applyDocumentTranslations,
   getLocale,
   msg,
-  persistLocaleAndReload,
-  registerUnsavedWork,
+  persistLocaleInPlace,
+  setLocale,
   t,
 } from '../i18n/index.js';
 import { applyLocaleChoice, mountLocalePicker } from './localePicker.js';
+import { applyDocumentLanguage } from '../i18n/locale.js';
 import { mountPalettePicker } from './palettePicker.js';
 import { initMobilePanelSwitches } from './mobilePanelSwitches.js';
 import {
@@ -728,25 +729,12 @@ export class StyleManager extends ShellFacade {
   }
 
   /**
-   * Mounts the language picker (src/ui/localePicker.js). A choice reloads the
-   * page; _confirmLocaleReload asks first when that would lose work.
+   * Mounts the language picker (src/ui/localePicker.js). Choosing a language
+   * re-translates the page in place; nothing is reloaded, so the camera, the
+   * open panels and every switched-on layer stay exactly as they were.
    * @returns {void}
    */
   _initLocaleSelector() {
-    // Work this shell can see that a reload drops. Other modules register
-    // their own (registerUnsavedWork in src/i18n/index.js).
-    this._unsavedWorkChecks = [
-      registerUnsavedWork(() =>
-        this.services?.cctvLayer
-          ?.getUIState?.()
-          ?.cameras?.some((camera) => camera.calDirty)
-          ? msg('unsaved CCTV calibration')
-          : null,
-      ),
-      registerUnsavedWork(() =>
-        this.cockpitView?.active ? msg('the open cockpit') : null,
-      ),
-    ];
     const root = globalThis.document?.getElementById?.('locale-picker');
     if (!root) return;
     this._localePicker = mountLocalePicker({
@@ -768,33 +756,85 @@ export class StyleManager extends ShellFacade {
   }
 
   /**
-   * Switch to `locale`: nothing for the active language, otherwise store it
-   * and reload once _confirmLocaleReload agrees.
+   * Switch to `locale` without reloading.
+   *
+   * The camera, the open panels and the live layers are the visitor's session;
+   * changing the language is a change of words, so it must not cost any of
+   * that. `setLocale` swaps the catalog, `applyDocumentLanguage` sets
+   * `<html lang>`, and `applyDocumentTranslations` rewrites every opted-in
+   * element — including the ones the templates marked for runtime text.
+   *
+   * Anything a panel renders from its own state is redrawn by the shell rather
+   * than re-translated in place, so the UI is asked to repaint after the swap.
    * @param {string} locale
    * @returns {'unchanged'|'declined'|'switched'}
    */
   _chooseLocale(locale) {
     return applyLocaleChoice(locale, {
       current: getLocale(),
-      confirmSwitch: () => this._confirmLocaleReload(),
-      switchLocale: (next) => persistLocaleAndReload(next),
+      confirmSwitch: () => true,
+      switchLocale: (next) => this._applyLocaleInPlace(next),
     });
   }
 
   /**
-   * Switching language reloads the page. While that would lose work the page
-   * cannot restore, ask first.
+   * Apply `locale` to the running page and repaint what the shell owns.
+   * @param {string} locale
+   * @returns {void}
+   */
+  _applyLocaleInPlace(locale) {
+    const applied = setLocale(locale);
+    const doc = globalThis.document;
+    applyDocumentLanguage(doc, applied);
+    // Every template element that opted in, translated from its English source.
+    applyDocumentTranslations(doc);
+    // Remember it for the next visit; no navigation, no history rewrite.
+    persistLocaleInPlace(applied);
+    // Panels that paint names from their own state (layer rows, status chips,
+    // readouts) carry the old language until asked again.
+    for (const repaint of this._localeRepainters()) {
+      try {
+        repaint();
+      } catch {
+        // One panel failing to repaint must not stop the others.
+      }
+    }
+    // The picker's own label and the document title follow the new locale.
+    this._localePicker?.setCurrent?.(applied);
+  }
+
+  /**
+   * Panel repainters that render translated text from state.
+   * @returns {Array<() => void>}
+   */
+  _localeRepainters() {
+    const services = this.services ?? {};
+    const repaint = [];
+    const ask = (owner) => {
+      if (typeof owner?.refresh === 'function')
+        repaint.push(() => owner.refresh());
+      else if (typeof owner?.render === 'function')
+        repaint.push(() => owner.render());
+    };
+    for (const key of [
+      'cctvLayer',
+      'streetLevelLayer',
+      'radioLayer',
+      'airportsLayer',
+    ]) {
+      ask(services[key]);
+    }
+    for (const target of this._localeRepaintTargets ?? []) ask(target);
+    return repaint;
+  }
+
+  /**
+   * Nothing is reloaded any more, so no work is lost and the answer is always
+   * yes. Kept because `applyLocaleChoice` asks before switching.
    * @returns {boolean} true to switch.
    */
   _confirmLocaleReload() {
-    const lost = describeUnsavedWork();
-    if (!lost.length || typeof globalThis.confirm !== 'function') return true;
-    return globalThis.confirm(
-      t(
-        'Switching language reloads the page. This will be lost: {items}. Switch anyway?',
-        { items: lost.join(', ') },
-      ),
-    );
+    return true;
   }
 
   /**

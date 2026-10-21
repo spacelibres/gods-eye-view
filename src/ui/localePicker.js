@@ -614,6 +614,28 @@ export function mountLocalePicker({
     open,
     close,
     isOpen: () => model.open,
+    /**
+     * Reflect a language applied elsewhere (the live switch in the shell).
+     * The picker is the one control whose own label names the current locale,
+     * so its code badge and accessible name have to follow.
+     * @param {string} locale
+     */
+    setCurrent(locale) {
+      if (!locale) return;
+      code.textContent = locale.toUpperCase();
+      button.setAttribute(
+        'aria-label',
+        t('Language: {language}', {
+          language: nativeNames[locale] || locale,
+        }),
+      );
+      button.title = t('Change the interface language');
+      for (const option of model.options) {
+        const item = optionNodes.get(option.code);
+        if (item)
+          item.setAttribute('aria-selected', String(option.code === locale));
+      }
+    },
     destroy() {
       close();
       button.removeEventListener('click', onButtonClick);

@@ -315,6 +315,24 @@ export function describeUnsavedWork() {
 }
 
 /**
+ * Store the choice so it survives a later visit, without touching the page.
+ *
+ * `persistLocaleAndReload` exists for boot-time entry and for share links that
+ * deliberately re-enter the app. A live switch must not navigate: it stores the
+ * value and stops there, leaving `?lang=` alone because that parameter is for
+ * sharing a page in a language, and rewriting history mid-session would make
+ * the address bar disagree with what the visitor sees.
+ *
+ * @param {string} locale
+ * @param {{storage?: Storage}} [options]
+ * @returns {boolean} true when the choice was stored.
+ */
+export function persistLocaleInPlace(locale, { storage } = {}) {
+  const normalized = normalizeLocale(locale) || DEFAULT_LOCALE;
+  return writeStoredLocale(normalized, storage);
+}
+
+/**
  * Persist a locale choice, then reload preserving window.location.hash exactly
  * and stripping ?lang from the search string, so the stored choice applies.
  * Where storage is blocked, ?lang carries the choice instead (share links

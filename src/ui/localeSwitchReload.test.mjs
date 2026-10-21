@@ -1,57 +1,56 @@
-// The language picker reloads the page, so it asks first while the
-// reload would lose work (unsaved CCTV calibration, the open cockpit, anything
-// a module registers). Choosing the language already active does nothing.
+// The language picker changes the words, not the session. It used to reload
+// the page — losing the camera, the open panels and every live layer — and ask
+// first when that would lose work. It now applies the chosen locale in place.
+// Choosing the language already active still does nothing.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { StyleManager } from './applicationShell.js';
-import {
-  describeUnsavedWork,
-  msg,
-  registerUnsavedWork,
-  setLocale,
-} from '../i18n/index.js';
+import { getLocale, setLocale } from '../i18n/index.js';
 
-/** Wire the shell's language choice with the given shell state. No picker
- * markup here: the picker's own behaviour is covered by localePicker.test. */
-function renderSwitch({ calDirty = false, cockpit = false } = {}) {
+/** Wire the shell's language choice. No picker markup here: the picker's own
+ * behaviour is covered by localePicker.test. */
+function renderSwitch() {
   const previous = {
     document: globalThis.document,
     location: globalThis.location,
-    history: globalThis.history,
     confirm: globalThis.confirm,
   };
   const reloads = [];
   const prompts = [];
-  let answer = true;
-  globalThis.document = { getElementById: () => null };
+  const applied = [];
+  globalThis.document = {
+    documentElement: { lang: '', dir: '' },
+    getElementById: () => null,
+    querySelectorAll: () => [],
+  };
   globalThis.location = {
     href: 'https://gev.example/#v=2',
     assign() {},
     reload: () => reloads.push(true),
   };
-  globalThis.history = { replaceState() {} };
   globalThis.confirm = (text) => {
     prompts.push(text);
-    return answer;
+    return true;
   };
   const shell = {
-    services: {
-      cctvLayer: {
-        getUIState: () => ({ cameras: [{ calDirty: false }, { calDirty }] }),
-      },
-    },
-    cockpitView: { active: cockpit },
+    services: {},
     _confirmLocaleReload: StyleManager.prototype._confirmLocaleReload,
     _chooseLocale: StyleManager.prototype._chooseLocale,
+    _applyLocaleInPlace(locale) {
+      applied.push(locale);
+      StyleManager.prototype._applyLocaleInPlace.call(this, locale);
+    },
+    _localeRepainters: () => [],
+    _localePicker: null,
   };
   StyleManager.prototype._initLocaleSelector.call(shell);
   return {
+    shell,
     choose: (locale) => shell._chooseLocale(locale),
     reloads,
     prompts,
-    answer: (value) => (answer = value),
+    applied,
     restore() {
-      for (const unregister of shell._unsavedWorkChecks) unregister();
       Object.assign(globalThis, previous);
     },
   };
@@ -63,75 +62,50 @@ test.before(() => {
 });
 test.after(() => {
   globalThis.localStorage = storage;
+  setLocale('en');
 });
 
-test('nothing to lose: the switch reloads without asking', () => {
+test('choosing a language never reloads the page', () => {
   const view = renderSwitch();
   try {
     view.choose('es');
+    assert.equal(view.reloads.length, 0, 'the session must survive a switch');
+    assert.deepEqual(view.applied, ['es']);
+    assert.equal(getLocale(), 'es');
+  } finally {
+    view.restore();
+  }
+});
+
+test('a switch asks nothing, even with work on screen', () => {
+  const view = renderSwitch();
+  try {
+    view.choose('ru');
     assert.deepEqual(view.prompts, []);
-    assert.equal(view.reloads.length, 1);
+    assert.equal(getLocale(), 'ru');
   } finally {
     view.restore();
   }
 });
 
-test('unsaved calibration or the open cockpit: the switch asks first', () => {
-  const view = renderSwitch({ calDirty: true, cockpit: true });
-  try {
-    view.answer(false);
-    view.choose('ru');
-    assert.equal(view.prompts.length, 1);
-    assert.match(view.prompts[0], /unsaved CCTV calibration/);
-    assert.match(view.prompts[0], /the open cockpit/);
-    assert.equal(view.reloads.length, 0, 'declined: no reload');
-    view.answer(true);
-    view.choose('ru');
-    assert.equal(view.reloads.length, 1, 'confirmed: reload');
-  } finally {
-    view.restore();
-  }
-});
-
-test('modules register their own unsaved work', () => {
-  const unregister = registerUnsavedWork(() => msg('drawings on the map'));
-  const failing = registerUnsavedWork(() => {
-    throw new Error('broken check');
-  });
+test('the document language follows the choice', () => {
   const view = renderSwitch();
   try {
-    view.answer(false);
-    view.choose('es');
-    assert.match(view.prompts[0], /drawings on the map/);
-    assert.equal(view.reloads.length, 0);
+    view.choose('ja');
+    assert.equal(globalThis.document.documentElement.lang, 'ja');
   } finally {
     view.restore();
-    unregister();
-    failing();
-  }
-  assert.deepEqual(describeUnsavedWork(), []);
-});
-
-test('the prompt reads in the active language', () => {
-  setLocale('es');
-  const view = renderSwitch({ calDirty: true });
-  try {
-    view.answer(false);
-    view.choose('en');
-    assert.equal(view.prompts.length, 1);
-    assert.doesNotMatch(view.prompts[0], /Switching language/);
-  } finally {
-    view.restore();
-    setLocale('en');
   }
 });
 
-test('the language already active neither asks nor reloads', () => {
-  const view = renderSwitch({ calDirty: true });
+test('the language already active neither switches nor reloads', () => {
+  setLocale('en');
+  const view = renderSwitch();
   try {
     assert.equal(view.choose('en'), 'unchanged');
     assert.deepEqual(view.prompts, []);
     assert.equal(view.reloads.length, 0);
+    assert.deepEqual(view.applied, []);
   } finally {
     view.restore();
   }
