@@ -1,5 +1,7 @@
 import { paintTransitBracket } from './detectionDraw.js';
 import * as Cesium from 'cesium';
+
+const billboardScreenScratch = new Cesium.Cartesian2();
 import { governorRequestRender } from '../renderGovernor.js';
 import {
   DETECTION_ENABLE_FADE_MS,
@@ -1378,10 +1380,24 @@ function _drawOverlay(frame) {
     const clipW = vp3 * px + vp7 * py + vp11 * pz + vp15;
     if (clipW <= 0) continue;
     const invW = 1 / clipW;
-    const sx =
+    let sx =
       ((vp0 * px + vp4 * py + vp8 * pz + vp12) * invW * 0.5 + 0.5) * width;
-    const sy =
+    let sy =
       (0.5 - (vp1 * px + vp5 * py + vp9 * pz + vp13) * invW * 0.5) * height;
+
+    // Billboard projection includes pixel/eye offsets and distance scaling,
+    // including the global marker collision displacement. Coordinates are CSS
+    // pixels, matching this canvas even on high-DPI laptop displays.
+    if (obj.billboard) {
+      const point = obj.billboard.computeScreenSpacePosition(
+        _viewer.scene,
+        billboardScreenScratch,
+      );
+      if (!point || !Number.isFinite(point.x) || !Number.isFinite(point.y))
+        continue;
+      sx = point.x;
+      sy = point.y;
+    }
 
     // Tracked objects (skipLabel) get larger boxes. AIR reticles scale with the
     // plane's on-screen size (same scaleByDistance curve as the billboards) so

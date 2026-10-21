@@ -960,3 +960,30 @@ test('transit contacts take the vehicle tier, not the civil-air one', () => {
   assert.equal(resolveTier({ type: 'AIR' }), 'civil');
   assert.equal(resolveTier({ type: 'SEA' }), 'sea');
 });
+
+
+test('aircraft detection follows the displaced billboard in CSS pixels at every pixel ratio', () => {
+  for (const dpr of [1, 1.25, 2]) {
+    const env = installEnvironment({ dpr });
+    let screenX = 440;
+    const contact = {
+      position: new Cesium.Cartesian3(0, 0, 6_356_752),
+      sourceId: 'displaced', id: 'OFFSET', type: 'AIR',
+      billboard: {
+        computeScreenSpacePosition(scene, result) {
+          assert.equal(scene, env.viewer.scene);
+          result.x = screenX; result.y = 240; return result;
+        },
+      },
+    };
+    try {
+      initWorldOverlay(env.viewer);
+      initDetection(env.viewer, [{ id: 'flights', getDetectableObjects: () => [contact] }], () => {});
+      setMode('DENSE'); env.advance(250); env.postRender.raise();
+      assert.equal(contact._candidateScreenX, 440, `DPR ${dpr}: bracket follows visual x`);
+      assert.equal(contact._candidateScreenY, 240, `DPR ${dpr}: bracket follows visual y`);
+      screenX = 470; env.advance(250); env.postRender.raise();
+      assert.equal(contact._candidateScreenX, 470, 'moving visual does not leave the bracket at its previous position');
+    } finally { env.cleanup(); }
+  }
+});

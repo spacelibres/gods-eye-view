@@ -4,6 +4,12 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.75] — 2026-10-21 — Aircraft detection follows displayed icons
+
+- Keep live-flight detection brackets and callouts attached to the displayed
+  aircraft icon after collision avoidance, including high-DPI screens and
+  camera movement. Preserve model-based anchors when a 3D aircraft is visible.
+
 ## [0.2.74] — 2026-10-21 — Local airport sources and naturally sized cards
 
 - Bundle all six airport source datasets, including runways and frequencies,

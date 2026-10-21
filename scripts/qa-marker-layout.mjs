@@ -5,10 +5,12 @@ const base = process.env.QA_BASE_URL || 'http://127.0.0.1:4198';
 const file = '.gev-marker-layout-fixture.html';
 fs.writeFileSync(
   file,
-  `<!doctype html><html><head><link rel="stylesheet" href="/node_modules/cesium/Build/Cesium/Widgets/widgets.css"><style>html,body,#globe{width:100%;height:100%;margin:0;overflow:hidden}</style></head><body><div id="globe"></div><script type="module">
+  `<!doctype html><html><head><link rel="stylesheet" href="/src/ui/styles/foundation.css"><link rel="stylesheet" href="/node_modules/cesium/Build/Cesium/Widgets/widgets.css"><style>html,body,#globe{width:100%;height:100%;margin:0;overflow:hidden}</style></head><body><div id="globe"></div><script type="module">
 import * as C from 'cesium';
 import {createTargetMarkerLayout,visitTargetSprites} from '/src/overlays/markerLayout.js';
 import {airportSymbol} from '/src/layers/airports/symbols.js';
+import {initWorldOverlay} from '/src/overlays/worldOverlay.js';
+import {initDetection,setMode} from '/src/data/detection.js';
 const v=new C.Viewer('globe',{baseLayer:false,timeline:false,animation:false,baseLayerPicker:false,geocoder:false,homeButton:false,sceneModePicker:false,navigationHelpButton:false,selectionIndicator:false,infoBox:false,skyBox:false});
 v.scene.globe.baseColor=C.Color.fromCssColorString('#10243b');
 v.scene.backgroundColor=C.Color.fromCssColorString('#10243b');
@@ -22,10 +24,12 @@ for(let i=0;i<6;i++)pts.add({id:'point-'+i,position:C.Cartesian3.fromDegrees(19.
 const ds=new C.CustomDataSource('qa-entities');await v.dataSources.add(ds);
 const entity=ds.entities.add({id:'entity-airport',position,billboard:{image:airportSymbol({type:'large_airport'},'civil').image,width:28,height:28,disableDepthTestDistance:Infinity}});
 let selected='target-0';
+const contact={sourceId:'target-0',id:'QA FLIGHT',type:'AIR',position:bb.get(0).position,billboard:bb.get(0)};
+initWorldOverlay(v);initDetection(v,[{id:'flights',getDetectableObjects:()=>bb.show?[contact]:[]}],()=>{});setMode('DENSE');
 // Real scene regression: boolean lifecycle flags are legal on custom primitives.
 const custom=v.scene.primitives.add({show:true,isDestroyed(){return false;},update(){},length:1,get(){return {show:true,isDestroyed:false};}});
 const dispose=createTargetMarkerLayout(v,{getObstacles:()=>[],getSelectedId:()=>selected});
-window.qa={v,bb,pts,ds,entity,dispose,visitTargetSprites,select(id){selected=id;v.scene.requestRender();},read(){const rects=[];visitTargetSprites(v.scene.primitives,(s,c,point)=>{if(point||!s.show||!s.clusterShow||(s.translucencyByDistance?.nearValue===0&&s.translucencyByDistance?.farValue===0))return;const p=s.computeScreenSpacePosition(v.scene);rects.push({id:s.id?.id||s.id,x:p.x,y:p.y,size:Math.max(s.width||32,s.height||32)*s.scale});});return rects;},move(){v.camera.setView({destination:C.Cartesian3.fromDegrees(20,10.15,200000),orientation:{heading:.2,pitch:-1.5,roll:0}});}};
+window.qa={v,bb,pts,ds,entity,contact,dispose,visitTargetSprites,select(id){selected=id;v.scene.requestRender();},read(){const rects=[];visitTargetSprites(v.scene.primitives,(s,c,point)=>{if(point||!s.show||!s.clusterShow||(s.translucencyByDistance?.nearValue===0&&s.translucencyByDistance?.farValue===0))return;const p=s.computeScreenSpacePosition(v.scene);rects.push({id:s.id?.id||s.id,x:p.x,y:p.y,size:Math.max(s.width||32,s.height||32)*s.scale});});return rects;},move(){v.camera.setView({destination:C.Cartesian3.fromDegrees(20,10.15,200000),orientation:{heading:.2,pitch:-1.5,roll:0}});}};
 </script></body></html>`,
 );
 const browser = await puppeteer.launch({
@@ -66,7 +70,19 @@ const check = async (label) => {
           Math.abs(a.y - b.y) >= (a.size + b.size) / 2 - 0.5,
         JSON.stringify({ a, b }),
       );
-  console.log('[PASS]', label, rects.length);
+  await page.waitForFunction(() => {
+    const p = qa.bb.get(0).computeScreenSpacePosition(qa.v.scene);
+    return (
+      Math.abs(p.x - qa.contact._candidateScreenX) < 0.5 &&
+      Math.abs(p.y - qa.contact._candidateScreenY) < 0.5
+    );
+  });
+  console.log(
+    '[PASS]',
+    label,
+    rects.length,
+    'and aircraft bracket follows displaced icon',
+  );
 };
 try {
   await page.setViewport({ width: 1000, height: 750 });
@@ -112,7 +128,7 @@ try {
   await page.evaluate(() => qa.move());
   await settle();
   await check('camera orbit and zoom recompute collision layout');
-  await page.setViewport({ width: 390, height: 844 });
+  await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 2 });
   await settle();
   await check('mobile targets remain separated');
   await page.screenshot({ path: 'qa-shots/markers/mobile.png' });

@@ -489,6 +489,10 @@ export function createQueries({
             : bb.position;
         if (!pos) continue;
         object.position = pos;
+        // Decluttering moves sprites in screen space, without changing their
+        // geographic position. Detection must follow that final visual anchor.
+        // Model-owned contacts retain the world-space model anchor above.
+        object.billboard = modelOwnsVisual ? null : bb;
         object.skipLabel = isTracked;
         // Card text only — declutter/cohort identity is `object.sourceId` (icao24).
         const id = _contactLabel(icao24, info);

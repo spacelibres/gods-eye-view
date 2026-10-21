@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createCivilFlightLayer } from './index.js';
 import { createFlightState } from './state.js';
+import { createQueries } from './queries.js';
 import { createEnrichment } from './enrichment.js';
 
 function services() {
@@ -123,4 +124,36 @@ test('a synchronous enrichment failure stays bounded and releases its slot', asy
   );
   await new Promise((done) => setImmediate(done));
   assert.equal(flightState._enrichActive, 0);
+});
+
+test('detection descriptors retain the current sprite but release it when a model owns the visual', () => {
+  const svc = services();
+  svc.labels.formatFlightLevel = () => 'FL100';
+  const state = createFlightState({ services: svc });
+  const billboard = { show: true, position: { x: 1, y: 2, z: 3 } };
+  state._billboards.set('abc123', billboard);
+  state._billboardCollection = { show: true };
+  state.records.data.set('abc123', { callsign: 'TEST', klass: 'airliner' });
+  let modelOwnsVisual = false;
+  const parts = {
+    testing: {},
+    rendering: {
+      _modelOwnsVisual: () => modelOwnsVisual,
+      _modelSpec: () => ({
+        visualCenterNative: { x: 0, y: 0, z: 0 },
+        scale: 1,
+      }),
+    },
+  };
+  const queries = createQueries({ flightState: state, services: svc, parts });
+  const first = queries.methods.getDetectableObjects()[0];
+  assert.equal(first.billboard, billboard);
+  modelOwnsVisual = true;
+  state._models.set('abc123', {
+    modelMatrix: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 2, 3, 1],
+    computedScale: 1,
+  });
+  const next = queries.methods.getDetectableObjects()[0];
+  assert.equal(next, first);
+  assert.equal(next.billboard, null);
 });
