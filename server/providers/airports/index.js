@@ -1,3 +1,4 @@
+import { AIRPORT_SOURCE_FILES } from './archive.js';
 import { createAirportCollector } from './collector.js';
 import {
   airportIndexes,
@@ -21,19 +22,25 @@ export function airportsProxy(options = {}) {
     } catch {
       return next();
     }
+    const fileMatch = /^\/api\/airports\/files\/([a-z-]+\.csv)$/.exec(
+      url.pathname,
+    );
     if (
+      !fileMatch &&
       ![
         '/api/airports',
         '/api/airports/search',
         '/api/airports/detail',
         '/api/airports/navaids',
         '/api/airports/countries',
+        '/api/airports/provenance',
       ].includes(url.pathname)
     )
       return next();
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.setHeader('Cache-Control', 'public, max-age=300');
     const send = (status, body) => {
+      if (status >= 400) res.setHeader('Cache-Control', 'no-store');
       res.statusCode = status;
       res.end(JSON.stringify(body));
     };
@@ -52,6 +59,44 @@ export function airportsProxy(options = {}) {
     if (!snapshot) return send(503, { error: 'Airport directory unavailable' });
     const q = Object.fromEntries(url.searchParams);
     try {
+      if (fileMatch) {
+        const name = fileMatch[1];
+        if (!AIRPORT_SOURCE_FILES.includes(name) || !collector.readSourceFile)
+          return send(404, { error: 'Airport source file not found' });
+        if (q.revision && q.revision !== snapshot.revision)
+          return send(409, { error: 'Airport revision changed' });
+        let body;
+        try {
+          body = await collector.readSourceFile(name, {
+            revision: snapshot.revision,
+          });
+        } catch {
+          return send(503, { error: 'Airport source file unavailable' });
+        }
+        res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+        res.setHeader('Content-Disposition', `attachment; filename="${name}"`);
+        res.setHeader('X-Content-Type-Options', 'nosniff');
+        res.statusCode = 200;
+        return res.end(body);
+      }
+      if (url.pathname.endsWith('/provenance')) {
+        const provenance = collector.getProvenance?.() || metadata(snapshot);
+        return send(200, {
+          ...provenance,
+          ...metadata(snapshot),
+          files: Object.fromEntries(
+            Object.entries(provenance.files || {})
+              .filter(([name]) => AIRPORT_SOURCE_FILES.includes(name))
+              .map(([name, info]) => [
+                name,
+                {
+                  ...info,
+                  url: `/api/airports/files/${name}?revision=${snapshot.revision}`,
+                },
+              ]),
+          ),
+        });
+      }
       if (url.pathname.endsWith('/countries'))
         return snapshot.countries
           ? send(200, { ...metadata(snapshot), countries: snapshot.countries })

@@ -160,3 +160,20 @@ test('refresh updates the active card without reopening a dismissed one', () => 
   );
   f.card.destroy();
 });
+
+test('airport source link uses the project backend even when metadata points at GitHub', () => {
+  const f = fixture();
+  f.entity.getAirportReadout = () => ({
+    title: 'Airport',
+    rows: [],
+    codes: [],
+    source: 'OurAirports',
+    sourceUrl: 'https://github.com/upstream/data',
+  });
+  f.card.show(f.entity);
+  assert.equal(
+    f.all().find((n) => n.tagName === 'A').href,
+    '/api/airports/provenance',
+  );
+  f.card.destroy();
+});

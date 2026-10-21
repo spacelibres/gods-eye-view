@@ -9,6 +9,13 @@ Field definitions: https://ourairports.com/help/data-dictionary.html.
 ## Initial data and storage
 
 The initial snapshot and source provenance live in `server/data/airports/`.
+All six original CSV tables are checked into `server/data/airports/raw/`:
+`airports.csv`, `countries.csv`, `regions.csv`, `navaids.csv`, `runways.csv` and
+`airport-frequencies.csv`. Preserve their original bytes (`.gitattributes` marks
+these generated files as non-normalized) so SHA-256 matches the provenance.
+The collector seeds a private persistent `raw/<revision>/` archive from this
+project bundle using local disk only. A corrupt archive is quarantined and
+repaired from validated complete files; a concurrently published valid copy wins.
 `node scripts/import-airports.mjs <40-character Git revision> [ISO retrieval time]`
 reproduces a snapshot from one pinned upstream revision. Read the bundled
 `provenance.json` for its revision and retrieval time before reproducing a release.
@@ -43,11 +50,18 @@ before publication. State and snapshot files use mode 600, with flushed writes.
 
 ## Requests and update behavior
 
-The server checks for changes at most once per day and pins related upstream
-files to one source revision. Browser search, camera movement and airport detail
+The server checks for changes at most once per day and pins all six upstream
+files to one source revision. A complete local revision matching the upstream
+SHA requires only the metadata check; CSV downloads are skipped. A new revision
+is downloaded and validated as a complete source archive before publishing the
+normalized snapshot. Failures keep both last-good data and the project bundle. Browser search, camera movement and airport detail
 reads never start an upstream download. Collector retry deadlines also survive
 restart. No airport API key, OpenSky credit or ADS-B request allowance is used.
 
+- `/api/airports/provenance`: locally stored version/checksums and same-origin
+  links to the six source downloads. The airport card links here, never GitHub.
+- `/api/airports/files/<filename>`: validated local CSV download; no upstream
+  fetch or redirect. A revision query prevents silently mixing data versions.
 - `/api/airports`: bounded viewport points, type filters and honest match/limit
   metadata. A viewport can cross the antimeridian.
 - `/api/airports/search?q=EGLL`: ranked directory matches; duplicate codes remain
@@ -67,7 +81,7 @@ persisted deadline. A newer durable revision is never replaced by older data.
 The UI defaults to active facilities and prioritizes large/medium airports from
 far away. Closer views admit smaller airfields and heliports. The full directory
 also retains closed facilities marked as such. Runways and communication
-frequencies are not included in this feature.
+frequency CSV files are included in the local source archive and download API.
 
 Airport markers use outlined facility/use symbols tinted by the active theme.
 Heliports always show a helicopter; seaplane bases and balloonports retain their
@@ -122,3 +136,8 @@ known ICAO code (`EGLL`) and IATA code (`LHR`), inspect airport detail and verif
 map layer. Check the returned revision/date and that repeated requests leave the
 server's acquisition checkpoint unchanged. Preserve the independent OpenSky and
 ADS-B directories and all existing environment credentials.
+
+For an entirely offline rebuild after acquiring the six pinned CSV files, set
+`GEV_AIRPORTS_IMPORT_DIR` to their directory before running the importer. The
+normal import command downloads upstream only in this server/operator workflow;
+no browser airport query performs a download.

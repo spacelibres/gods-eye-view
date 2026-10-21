@@ -155,10 +155,20 @@ let viewReads = 0,
   searchReads = 0,
   failViews = false;
 const pageErrors = [];
+const githubRequests = [];
 page.on('pageerror', (error) => pageErrors.push(error.message));
 await page.setRequestInterception(true);
 page.on('request', (request) => {
   const url = new URL(request.url());
+  if (
+    url.hostname === 'github.com' ||
+    url.hostname.endsWith('.github.com') ||
+    url.hostname.endsWith('.githubusercontent.com')
+  ) {
+    githubRequests.push(url.href);
+    return void request.abort();
+  }
+
   const reply = (body, status = 200) =>
     request.respond({
       status,
@@ -707,6 +717,59 @@ try {
       !/Revision|Usage evidence|Source URL/.test(selected.card),
   );
   await page.screenshot({ path: `${shots}/desktop-details.png` });
+  check(
+    'airport source link remains on our backend',
+    await page.$eval(
+      '#airport-detail-card a',
+      (el) => new URL(el.href).origin === location.origin,
+    ),
+  );
+  await page.evaluate(async () => {
+    const entity = window.__gevContextStore.entities.get('airport:2434').entity;
+    window.__qaAirportOriginalReadout = entity.getAirportReadout;
+    entity.getAirportReadout = () => ({
+      ...window.__qaAirportOriginalReadout(),
+      title:
+        "Los Angeles County Sheriff's Department Lester J White Search and Rescue Regional Training Facility Heliport",
+    });
+    const { refreshTrackedReadout } =
+      await import('/src/data/trackedReadout.js');
+    refreshTrackedReadout(entity);
+  });
+  for (const [width, height] of [
+    [1440, 1000],
+    [320, 568],
+    [667, 375],
+  ]) {
+    await page.setViewport({ width, height, deviceScaleFactor: 1 });
+    check(
+      `airport card grows naturally without scrollbars at ${width}x${height}`,
+      await page.$eval('#airport-detail-card', (el) => {
+        const r = el.getBoundingClientRect(),
+          css = getComputedStyle(el);
+        return (
+          css.overflowY === 'visible' &&
+          el.scrollHeight <= el.clientHeight + 1 &&
+          el.scrollWidth <= el.clientWidth + 1 &&
+          r.left >= 0 &&
+          r.right <= innerWidth + 1 &&
+          r.top >= 0 &&
+          r.bottom <= innerHeight
+        );
+      }),
+    );
+    if (width === 320)
+      await page.screenshot({ path: `${shots}/long-name-no-scroll.png` });
+  }
+  await page.setViewport({ width: 1440, height: 1000, deviceScaleFactor: 1 });
+  await page.evaluate(async () => {
+    const entity = window.__gevContextStore.entities.get('airport:2434').entity;
+    entity.getAirportReadout = window.__qaAirportOriginalReadout;
+    const { refreshTrackedReadout } =
+      await import('/src/data/trackedReadout.js');
+    refreshTrackedReadout(entity);
+  });
+
   const beforeLocaleReads = viewReads;
   await page.$eval('#locale-picker .locale-picker-button', (el) => el.click());
   await page.$eval('#locale-picker [data-locale="zh-CN"]', (el) => el.click());
@@ -966,6 +1029,11 @@ try {
     'airport feature causes no JavaScript exception',
     pageErrors.length === 0,
     pageErrors.join('; '),
+  );
+  check(
+    'airport browsing makes zero GitHub requests with GitHub blocked',
+    githubRequests.length === 0,
+    githubRequests.join('; '),
   );
   console.log('Airport browser gate passed.');
 } catch (error) {

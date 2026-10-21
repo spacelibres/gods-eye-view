@@ -61,7 +61,8 @@
       "server/providers/airports/index.js",
       "server/providers/airports/collector.js",
       "server/providers/airports/model.js",
-      "src/sources/airports/records.js"
+      "src/sources/airports/records.js",
+      "server/providers/airports/archive.js"
     ],
     "external": ["ws"]
   },

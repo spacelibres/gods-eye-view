@@ -4,6 +4,14 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.74] — 2026-10-21 — Local airport sources and naturally sized cards
+
+- Bundle all six airport source datasets, including runways and frequencies,
+  and retain verified copies on the VPS. Serve data and provenance locally;
+  check upstream revisions daily and download only when a new version exists.
+- Let airport cards grow with their contents without internal scrollbars,
+  with compact layouts for narrow and landscape screens.
+
 ## [0.2.73] — 2026-10-21 — Rendering recovery and closable airport cards
 
 - Keep the globe rendering when mixed scene collections expose boolean

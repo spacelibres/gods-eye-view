@@ -1,4 +1,11 @@
 import {
+  AIRPORT_SOURCE_FILES,
+  BUNDLED_SOURCE_DIR,
+  hasSourceArchive,
+  writeSourceArchive,
+  readArchivedSource,
+} from './archive.js';
+import {
   readFile,
   writeFile,
   mkdir,
@@ -17,6 +24,7 @@ import {
   parseNavaidCsv,
   validateAirportReferences,
   validateSnapshot,
+  parseCsv,
 } from './model.js';
 export const DAY = 86400000;
 const bundledUrl = new URL(
@@ -69,6 +77,7 @@ export async function downloadSnapshot({
   now = Date.now,
   signal,
   revision,
+  currentRevision,
 } = {}) {
   const get = async (url, maxBytes) => {
     const response = await abortable(
@@ -106,17 +115,20 @@ export async function downloadSnapshot({
   }
   if (!/^[a-f0-9]{40}$/.test(revision))
     throw Error('Invalid upstream revision');
+  if (revision === currentRevision) return null;
   const sourceUrl =
     'https://github.com/davidmegginson/ourairports-data/tree/' + revision;
   const files = {};
-  for (const name of ['airports', 'countries', 'regions', 'navaids'])
+  for (const name of AIRPORT_SOURCE_FILES.map((name) =>
+    name.replace(/\.csv$/, ''),
+  ))
     files[name] = await get(
       'https://raw.githubusercontent.com/davidmegginson/ourairports-data/' +
         revision +
         '/' +
         name +
         '.csv',
-      name === 'airports' ? 20000000 : 5000000,
+      ['airports', 'runways'].includes(name) ? 20000000 : 5000000,
     );
   validateAirportReferences(files.countries, files.regions, []);
   const countries = parseCountryCsv(files.countries);
@@ -134,8 +146,23 @@ export async function downloadSnapshot({
     { production: true },
   );
   validateAirportReferences(files.countries, files.regions, snapshot.records);
+  for (const name of ['runways', 'airport-frequencies']) {
+    const table = parseCsv(files[name]);
+    const required =
+      name === 'runways'
+        ? ['id', 'airport_ref', 'airport_ident', 'length_ft', 'surface']
+        : ['id', 'airport_ref', 'airport_ident', 'type', 'frequency_mhz'];
+    if (
+      !table.rows.length ||
+      required.some((key) => !table.headers.includes(key))
+    )
+      throw Error('Invalid airport source table: ' + name);
+  }
   return {
     snapshot,
+    files: Object.fromEntries(
+      Object.entries(files).map(([name, body]) => [name + '.csv', body]),
+    ),
     provenance: {
       schemaVersion: 1,
       source: 'OurAirports',
@@ -188,6 +215,7 @@ export function createAirportCollector(options = {}) {
   const production = options.production !== false;
   const setTimer = options.setTimeoutImpl || setTimeout,
     clearTimer = options.clearTimeoutImpl || clearTimeout;
+  let provenance, bundledProvenance;
   let snapshot,
     state,
     timer,
@@ -199,6 +227,15 @@ export function createAirportCollector(options = {}) {
   const statePath = join(stateDir, 'state.json'),
     snapshotPath = join(stateDir, 'directory.json'),
     lockPath = join(stateDir, 'refresh.lock');
+  const currentProvenance = () =>
+    snapshot.revision === bundledProvenance?.revision
+      ? {
+          ...bundledProvenance,
+          ...provenance,
+          files: { ...bundledProvenance.files, ...provenance?.files },
+        }
+      : provenance;
+
   const readState = async () => {
     try {
       const s = await json(statePath, 10000);
@@ -234,8 +271,10 @@ export function createAirportCollector(options = {}) {
           snapshot?.revision === candidate.revision &&
           snapshot?.navaids &&
           !candidate.navaids
-        ))
+        )) {
           snapshot = candidate;
+          provenance = envelope.provenance;
+        }
         peerVersion = version;
       } catch {
         /* Keep the validated in-memory/bundled snapshot. */
@@ -266,7 +305,43 @@ export function createAirportCollector(options = {}) {
       options.bundledSnapshot || (await json(bundledUrl)),
       { production },
     );
+    bundledProvenance =
+      options.bundledProvenance ||
+      (!options.bundledSnapshot
+        ? await json(
+            new URL('../../data/airports/provenance.json', import.meta.url),
+          )
+        : {
+            revision: snapshot.revision,
+            source: snapshot.source,
+            sourceUrl: snapshot.sourceUrl,
+          });
+    provenance = bundledProvenance;
     await loadPeer();
+    // Seed the persistent source archive from the checkout, never the network.
+    const initialProvenance = currentProvenance();
+    if (
+      snapshot.revision === bundledProvenance?.revision &&
+      !(await hasSourceArchive(
+        join(stateDir, 'raw', snapshot.revision),
+        initialProvenance,
+      )) &&
+      (await hasSourceArchive(BUNDLED_SOURCE_DIR, bundledProvenance))
+    ) {
+      try {
+        const files = Object.fromEntries(
+          await Promise.all(
+            AIRPORT_SOURCE_FILES.map(async (name) => [
+              name,
+              await readFile(new URL(name, BUNDLED_SOURCE_DIR), 'utf8'),
+            ]),
+          ),
+        );
+        await writeSourceArchive(stateDir, initialProvenance, files);
+      } catch (error) {
+        options.onError?.(error);
+      }
+    }
     state = await readState();
     if (!state) {
       state = {
@@ -321,19 +396,29 @@ export function createAirportCollector(options = {}) {
         timeout?.unref?.();
         try {
           const load = options.loadSnapshot || downloadSnapshot;
+          const localProvenance = currentProvenance();
+          const complete =
+            (await hasSourceArchive(
+              join(stateDir, 'raw', snapshot.revision),
+              localProvenance,
+            )) ||
+            (snapshot.revision === bundledProvenance?.revision &&
+              (await hasSourceArchive(BUNDLED_SOURCE_DIR, bundledProvenance)));
           const result = await abortable(
             load({
+              currentRevision: complete ? snapshot.revision : undefined,
               fetchImpl: options.fetchImpl,
               now,
               signal: controller.signal,
             }),
             controller.signal,
           );
+          if (!result) return;
           const next = validateSnapshot(result.snapshot || result, {
             production,
           });
           if (closed) return;
-          const provenance = result.provenance || {
+          const nextProvenance = result.provenance || {
             schemaVersion: 1,
             source: next.source,
             sourceUrl: next.sourceUrl,
@@ -345,21 +430,24 @@ export function createAirportCollector(options = {}) {
             .update(JSON.stringify(next))
             .digest('hex');
           if (
-            provenance.revision !== next.revision ||
-            (provenance.snapshotSha256 &&
-              provenance.snapshotSha256 !== checksum)
+            nextProvenance.revision !== next.revision ||
+            (nextProvenance.snapshotSha256 &&
+              nextProvenance.snapshotSha256 !== checksum)
           )
             throw Error('Airport provenance mismatch');
+          if (result.files)
+            await writeSourceArchive(stateDir, nextProvenance, result.files);
           await atomic(
             snapshotPath,
             {
               schemaVersion: 1,
               snapshot: next,
-              provenance: { ...provenance, snapshotSha256: checksum },
+              provenance: { ...nextProvenance, snapshotSha256: checksum },
             },
             options.renameImpl,
           );
           snapshot = next;
+          provenance = { ...nextProvenance, snapshotSha256: checksum };
         } catch (e) {
           if (Number.isFinite(e.retryAt) && e.retryAt > state.nextCheckAt) {
             state.nextCheckAt = e.retryAt;
@@ -387,6 +475,19 @@ export function createAirportCollector(options = {}) {
   return {
     ready,
     refresh,
+    getProvenance: currentProvenance,
+    async readSourceFile(name, { revision } = {}) {
+      await ready;
+      await loadPeer();
+      if (revision && revision !== snapshot.revision)
+        throw Error('Airport revision changed');
+      return readArchivedSource(
+        stateDir,
+        currentProvenance(),
+        name,
+        bundledProvenance,
+      );
+    },
     getSnapshot: () => snapshot,
     async readSnapshot() {
       await ready;

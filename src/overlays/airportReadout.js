@@ -111,14 +111,7 @@ export function createAirportReadout({
     }
     sourceLabel.textContent = t('Source');
     sourceLink.textContent = model.source || 'OurAirports'; // i18n-ignore: provider name
-    let url = null;
-    try {
-      const parsed = new URL(model.sourceUrl);
-      if (['https:', 'http:'].includes(parsed.protocol)) url = parsed.href;
-    } catch {
-      /* Missing source URLs do not create an unsafe link. */
-    }
-    sourceLink.href = url || 'https://ourairports.com/';
+    sourceLink.href = '/api/airports/provenance';
   };
   const observer =
     typeof Observer === 'function' ? new Observer(refresh) : null;

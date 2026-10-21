@@ -384,10 +384,13 @@
   left: 50%;
   bottom: 96px;
   transform: translateX(-50%);
-  width: min(380px, calc(100vw - 32px));
+  width: max-content;
+  min-width: min(380px, calc(100vw - 32px));
+  max-width: min(640px, calc(100vw - 32px));
+  height: auto;
   box-sizing: border-box;
-  max-height: calc(100dvh - 180px);
-  overflow: auto;
+  max-height: none;
+  overflow: visible;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -531,5 +534,49 @@
   }
   .airport-detail-title {
     font-size: 16px;
+  }
+}
+
+@media (max-height: 700px) {
+  .airport-detail-card[data-panel-popup] {
+    padding: 12px;
+    gap: 8px;
+  }
+  .airport-detail-header {
+    gap: 8px;
+  }
+  .airport-detail-title {
+    font-size: 14px;
+    line-height: 1.25;
+  }
+  .airport-detail-symbol {
+    width: 32px;
+    height: 32px;
+  }
+  .airport-detail-kicker {
+    margin-bottom: 2px;
+  }
+  .airport-detail-fields {
+    padding-top: 8px;
+    gap: 8px 12px;
+  }
+  .airport-detail-field dt {
+    font-size: 10px;
+    margin-bottom: 2px;
+  }
+  .airport-detail-field dd {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  .airport-detail-footer {
+    padding-top: 8px;
+  }
+}
+@media (min-width: 601px) and (max-height: 700px) {
+  .airport-detail-card[data-panel-popup] {
+    bottom: 64px;
+  }
+  .airport-detail-fields {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }

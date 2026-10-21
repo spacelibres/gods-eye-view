@@ -1097,5 +1097,6 @@
   "scripts/qa-marker-layout.mjs",
   "src/i18n/runtimeTranslations.test.mjs",
   "scripts/qa-live-locale.mjs",
-  "src/overlays/airportReadout.test.mjs"
+  "src/overlays/airportReadout.test.mjs",
+  "server/providers/airports/archive.test.mjs"
 ]

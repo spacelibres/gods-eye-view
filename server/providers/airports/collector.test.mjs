@@ -484,3 +484,57 @@ test('navaids acquisition failure keeps complete last-good envelope', async () =
     await rm(dir, { recursive: true, force: true });
   }
 });
+
+test('unchanged complete revision checks metadata without downloading CSV files', async () => {
+  const { downloadSnapshot } = await import('./collector.js');
+  const seen = [];
+  const result = await downloadSnapshot({
+    currentRevision: 'a'.repeat(40),
+    fetchImpl: async (url) => {
+      seen.push(url);
+      return Response.json({ sha: 'a'.repeat(40) });
+    },
+  });
+  assert.equal(result, null);
+  assert.equal(seen.length, 1);
+  assert.ok(seen[0].startsWith('https://api.github.com/'));
+});
+
+test('project bundle serves all six datasets with upstream fully unavailable and seeds durable files', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'airport-offline-'));
+  let calls = 0;
+  let collector;
+  try {
+    collector = createAirportCollector({
+      stateDir: dir,
+      now: () => Date.parse('2026-10-20T18:00:00Z'),
+      fetchImpl: () => {
+        calls++;
+        throw Error('GitHub blocked');
+      },
+    });
+    await collector.ready;
+    const checkpoint = collector.getState().nextCheckAt;
+    const p = collector.getProvenance();
+    assert.equal(Object.keys(p.files).length, 6);
+    for (const name of Object.keys(p.files)) {
+      const body = await collector.readSourceFile(name);
+      assert.equal(body.length, p.files[name].bytes);
+      const { createHash } = await import('node:crypto');
+      assert.equal(
+        createHash('sha256').update(body).digest('hex'),
+        p.files[name].sha256,
+      );
+      assert.equal(
+        (await readFile(join(dir, 'raw', p.revision, name))).length,
+        body.length,
+      );
+    }
+    assert.ok((await collector.readSnapshot()).records.length > 50000);
+    assert.equal(calls, 0);
+    assert.equal(collector.getState().nextCheckAt, checkpoint);
+  } finally {
+    await collector?.close();
+    await rm(dir, { recursive: true, force: true });
+  }
+});

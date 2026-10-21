@@ -98,3 +98,72 @@ test('cache-only middleware serves search detail bounds and proper errors', asyn
   assert.equal(reads, 1);
   await plugin.closeBundle();
 });
+
+test('local provenance and source downloads never invoke collection', async () => {
+  let middleware,
+    collections = 0;
+  const calls = [];
+  const collector = {
+    ready: Promise.resolve(),
+    getSnapshot: () => snapshot,
+    getProvenance: () => ({
+      revision: snapshot.revision,
+      files: { 'runways.csv': { bytes: 8, sha256: 'abc' } },
+    }),
+    readSourceFile: async (name) => {
+      calls.push(name);
+      return Buffer.from('id\n123\n');
+    },
+    refresh: () => collections++,
+    close: async () => {},
+  };
+  const proxy = airportsProxy({ collector });
+  proxy.configureServer({
+    middlewares: {
+      use(fn) {
+        middleware = fn;
+      },
+    },
+    httpServer: { once() {} },
+  });
+  await proxy.ready;
+  async function request(url) {
+    const headers = {};
+    let body, status;
+    await middleware(
+      { url, method: 'GET' },
+      {
+        setHeader(k, v) {
+          headers[k] = v;
+        },
+        set statusCode(n) {
+          status = n;
+        },
+        end(value) {
+          body = value;
+        },
+      },
+      () => {
+        status = 404;
+      },
+    );
+    return { headers, status, body };
+  }
+  const info = await request('/api/airports/provenance');
+  assert.equal(info.status, 200);
+  assert.equal(
+    JSON.parse(info.body).files['runways.csv'].url.startsWith(
+      '/api/airports/files/',
+    ),
+    true,
+  );
+  const csv = await request('/api/airports/files/runways.csv');
+  assert.equal(csv.status, 200);
+  assert.equal(csv.body.toString(), 'id\n123\n');
+  assert.match(csv.headers['Content-Type'], /text\/csv/);
+  const invalid = await request('/api/airports/files/secrets.csv');
+  assert.equal(invalid.status, 404);
+  assert.deepEqual(calls, ['runways.csv']);
+  assert.equal(collections, 0);
+  await proxy.closeBundle();
+});

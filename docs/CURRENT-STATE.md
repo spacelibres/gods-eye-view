@@ -1,5 +1,12 @@
 # God's Eye View Current State
 
+All six OurAirports source CSVs ship with the project and are seeded into the
+VPS persistent archive without network access. Airport map/search/detail reads,
+country geometry and source downloads stay on our own server. Daily acquisition
+checks the upstream revision and downloads only a changed or incomplete version;
+failed updates preserve the complete local dataset. Airport cards grow to their
+content without internal scrollbars, with compact layouts for short viewports.
+
 Target-icon traversal accepts method and boolean lifecycle flags in mixed scene
 collections without stopping Cesium rendering. Selecting an airport opens one
 compact DOM card styled with the shared panel surface and palette. Its close
