@@ -1,3 +1,4 @@
+import { getLocale } from '../i18n/index.js';
 import { createDirectionsSource } from '../layers/directions/source.js';
 import { createRecentImagerySource } from '../layers/recentImagery/source.js';
 import { createOpenFreeMapSource } from '../sources/openFreeMap.js';
@@ -34,7 +35,7 @@ export function createStandaloneLayerSources(overrides = {}) {
     directions: createDirectionsSource(),
     'recent-imagery': createRecentImagerySource(),
     flights: createFlightSource(),
-    airports: createAirportSource(),
+    airports: createAirportSource({ getLocale }),
     military: createMilitarySource(),
     vessels: createVesselSource({
       apiUrl: import.meta.env?.VITE_AIS_LIVE_API_URL || '/api/vessels',

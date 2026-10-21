@@ -1,5 +1,10 @@
 import { AIRPORT_SOURCE_FILES } from './archive.js';
 import { createAirportCollector } from './collector.js';
+import { loadTranslationCatalog, localizeSnapshot } from './localization.js';
+import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
+import { homedir } from 'node:os';
+import { writePendingTranslations } from './translationMaintenance.js';
 import {
   airportIndexes,
   metadata,
@@ -10,9 +15,36 @@ import {
 export function airportsProxy(options = {}) {
   let collector = options.collector;
   let ready;
+  let catalog, translationsReady;
   const start = () => {
-    if (!collector) collector = createAirportCollector(options);
-    ready = collector.ready;
+    translationsReady ||= loadTranslationCatalog(
+      options.translationsDir ||
+        process.env.GEV_AIRPORTS_TRANSLATIONS_DIR ||
+        fileURLToPath(
+          new URL('../../data/airports/translations/', import.meta.url),
+        ),
+    ).then((value) => {
+      catalog = value;
+    });
+    if (!collector)
+      collector = createAirportCollector({
+        ...options,
+        async onSnapshot(snapshot) {
+          await translationsReady;
+          await writePendingTranslations(
+            snapshot,
+            catalog,
+            join(
+              options.stateDir ||
+                process.env.GEV_AIRPORTS_STATE_DIR ||
+                join(homedir(), '.gods-eye-view', 'airports'),
+              'translations',
+            ),
+          );
+          await options.onSnapshot?.(snapshot);
+        },
+      });
+    ready = Promise.all([collector.ready, translationsReady]);
     return ready;
   };
   async function middleware(req, res, next) {
@@ -53,12 +85,14 @@ export function airportsProxy(options = {}) {
     } catch {
       return send(503, { error: 'Airport directory unavailable' });
     }
-    const snapshot = collector.readSnapshot
+    const canonical = collector.readSnapshot
       ? await collector.readSnapshot()
       : collector.getSnapshot();
-    if (!snapshot) return send(503, { error: 'Airport directory unavailable' });
+    if (!canonical)
+      return send(503, { error: 'Airport directory unavailable' });
     const q = Object.fromEntries(url.searchParams);
     try {
+      const snapshot = localizeSnapshot(canonical, catalog, q.lang || 'en');
       if (fileMatch) {
         const name = fileMatch[1];
         if (!AIRPORT_SOURCE_FILES.includes(name) || !collector.readSourceFile)

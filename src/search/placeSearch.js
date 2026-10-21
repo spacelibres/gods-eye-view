@@ -16,6 +16,7 @@ export function createPlaceSearch({
   signal: lifetime,
   timeoutMs = 12_000,
   now = Date.now,
+  getLocale = () => 'en',
 }) {
   const cache = new Map();
   return {
@@ -26,7 +27,8 @@ export function createPlaceSearch({
       combined.throwIfAborted();
       const text = String(query ?? '').trim();
       if (!text) return { place: null, answered: true };
-      const key = `${bias || ''}\n${text}`;
+      const locale = getLocale();
+      const key = `${locale || ''}\n${bias || ''}\n${text}`;
       const cached = cache.get(key);
       if (cached && cached.expires > now()) return cached.result;
       cache.delete(key);
@@ -36,6 +38,7 @@ export function createPlaceSearch({
           combined.throwIfAborted();
           const next = await provider.geocode(text, { bias, signal: combined });
           combined.throwIfAborted();
+          if (getLocale() !== locale) return { place: null, answered: false };
           result = {
             place: next.place,
             answered: Boolean(next.place) || (result.answered && next.answered),

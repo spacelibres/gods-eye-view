@@ -62,7 +62,11 @@
       "server/providers/airports/collector.js",
       "server/providers/airports/model.js",
       "src/sources/airports/records.js",
-      "server/providers/airports/archive.js"
+      "server/providers/airports/archive.js",
+      "server/providers/airports/localization.js",
+      "server/providers/airports/translationMaintenance.js",
+      "server/providers/airports/authoredTranslations.js",
+      "server/providers/airports/fileLock.js"
     ],
     "external": ["ws"]
   },
@@ -748,6 +752,10 @@
       "src/ui/localePicker.js",
       "src/ui/cyberSonarControls.js",
       "src/ui/locationNavigation.js",
+      "src/sources/airports/source.js",
+      "src/sources/airports/records.js",
+      "src/sources/httpBody.js",
+      "src/search/airports.js",
       "src/ui/cockpitCoordinator.js",
       "src/ui/cameraOrientationControls.js",
       "src/ui/applicationShortcuts.js",

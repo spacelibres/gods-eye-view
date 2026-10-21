@@ -23,7 +23,14 @@ export function createAirportGeocoder({ source = createAirportSource() } = {}) {
       const code = /^[A-Z]{3,4}$/.test(query);
       const explicit = explicitAirport(query);
       const normalized = normalizeName(query);
-      if (!code && !explicit && !normalized.includes(' '))
+      if (
+        !code &&
+        !explicit &&
+        !normalized.includes(' ') &&
+        !/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(
+          query,
+        )
+      )
         return { place: null, answered: true };
       try {
         const result = await source.search(query, { limit: 8, signal });
@@ -35,7 +42,10 @@ export function createAirportGeocoder({ source = createAirportSource() } = {}) {
           : explicit
             ? result.airports
             : result.airports.filter(
-                (a) => normalizeName(a.name) === normalized,
+                (a) =>
+                  normalizeName(a.name) === normalized ||
+                  (a.originalName &&
+                    normalizeName(a.originalName) === normalized),
               );
         if (!airports.length && !explicit)
           return { place: null, answered: true };

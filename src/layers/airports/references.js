@@ -208,8 +208,13 @@ export function createAviationReferences({
       controller?.abort();
       controller = new AbortController();
       const own = controller,
-        gen = ++generation;
-      const valid = () => enabled && !own.signal.aborted && gen === generation;
+        gen = ++generation,
+        locale = getLocale();
+      const valid = () =>
+        enabled &&
+        !own.signal.aborted &&
+        gen === generation &&
+        getLocale() === locale;
       const tasks = [];
       if (typeof source?.getNavaids === 'function')
         tasks.push(
@@ -350,13 +355,13 @@ export function createAviationReferences({
               if (valid()) countryEntries = [];
               return;
             }
-            if (!countryCache) {
+            if (!countryCache || countryCache.locale !== locale) {
               const [result, pack] = await Promise.all([
                 source.getCountries({ signal: own.signal }),
                 loadCountries(own.signal),
               ]);
               if (!valid()) return;
-              countryCache = { result, pack };
+              countryCache = { result, pack, locale };
             }
             if (!valid()) return;
             const { result, pack } = countryCache;

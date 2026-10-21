@@ -34,6 +34,33 @@ const snapshot = {
   sourceUrl: 'https://ourairports.com/data/',
   records: [record],
 };
+test('background publication notifies local translation maintenance and isolates its failures', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'airport-local-maintenance-'));
+  const seen = [],
+    errors = [];
+  const collector = createAirportCollector({
+    stateDir: dir,
+    bundledSnapshot: snapshot,
+    production: false,
+    now: () => Date.parse(snapshot.updatedAt) + 86400001,
+    loadSnapshot: async () => ({ ...snapshot, revision: 'b'.repeat(40) }),
+    onSnapshot: async (value) => {
+      seen.push(value.revision);
+      throw Error('maintenance failed');
+    },
+    onError: (error) => errors.push(error.message),
+  });
+  try {
+    await collector.ready;
+    await collector.refresh();
+    assert.deepEqual(seen, [snapshot.revision, 'b'.repeat(40)]);
+    assert.equal(errors.length, 2);
+    assert.equal(collector.getSnapshot().revision, 'b'.repeat(40));
+  } finally {
+    await collector.close();
+    await rm(dir, { recursive: true, force: true });
+  }
+});
 test('daily reservation survives failure, restart and peer reads', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'airports-'));
   let calls = 0;

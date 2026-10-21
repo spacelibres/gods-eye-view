@@ -6,6 +6,69 @@ Source data is public domain:
 https://ourairports.com/data/ and https://github.com/davidmegginson/ourairports-data.
 Field definitions: https://ourairports.com/help/data-dictionary.html.
 
+## Local translations and field-level maintenance
+
+Airport APIs accept `lang=en|es|ru|zh-CN|zh-TW|ja|ko`. The server overlays locally
+stored translations onto canonical records; original files, IDs, codes and
+coordinates remain unchanged. Map labels, details and search use these same
+names. Language switching reads only our server. No translation service is
+called by the browser or background collector.
+
+`server/data/airports/translations/` ships the language database. `manifest.json`
+selects immutable, SHA-256 verified language files. A successful import publishes
+the whole batch by replacing this single manifest. Optional server-only
+`GEV_AIRPORTS_TRANSLATIONS_DIR` selects an independently maintained directory;
+initialize it from the shipped translation directory before configuring it.
+The server loads its catalog at startup; restart both VPS workers after an
+import. The project bundle remains part of every release.
+
+Initial authored coverage is **255 airport names across 76 countries**, six
+target languages. Context reuse additionally covers **3,535 municipality fields
+and 38,646 region fields per language**. Navigation-station names are not yet
+translated. The remaining **86,003 airport names per language** display their
+original names. This is an initial catalog, not a completed global translation.
+Countries retain the existing ISO-code based language display.
+
+Run the offline tools from the project root:
+
+```sh
+node scripts/airport-translations.mjs report
+node scripts/airport-translations.mjs export --locale zh-CN --limit 100 --output pending-zh-CN.ndjson
+node scripts/airport-translations.mjs import --input completed-zh-CN.ndjson
+node scripts/airport-translations.mjs import --authored server/data/airports/translations/authored.json
+```
+
+Exported entries include stable ID, entity kind, field, locale, original text and
+source fingerprint. Add a `text` value for each completed translation and import
+it. Use `--snapshot /var/lib/gods-eye-view/airports/directory.json` to work against
+the current VPS source; the tool accepts its snapshot envelope. Use
+`--catalog /path/to/translations` for an independent local language directory.
+Reports distinguish original English, valid translations, missing fields and
+stale entries, including separate name/city/region/navigation-station totals.
+
+Background collection also publishes
+`$GEV_AIRPORTS_STATE_DIR/translations/pending.ndjson`: a durable compact list
+grouped by entity and field with its missing languages. Its checkpoint tracks
+source and catalog versions, so restarts do not rewrite an unchanged list.
+Maintenance failures retain the source and retry on a later background check;
+browser requests never start this work. No paid model worker runs. Translate
+the listed changes offline, import them and restart the workers to publish.
+
+Fingerprints exclude coordinates, frequency, elevation and the overall source
+revision. Updating those values keeps existing translations valid. Renaming a
+field invalidates only that field; stale imports fail before any catalog is
+published. Names and cities in different countries/regions are never merged
+solely by matching text. `authored.json` records reviewed source names; its
+compiler verifies identities and contextual city/region reuse before import.
+
+Imports preserve manual corrections and audit their replacements. Pending or
+failed entries cannot enter the active catalog. Interrupted writers on the same
+host recover through recorded process ownership; locks are never removed merely
+because they are old. When moving a shared directory to a different hostname,
+stop its writers and confirm the previous host is retired before manually
+removing its recorded `.import.lock` or `pending.lock`. Different-host ownership
+is deliberately not treated as an abandoned process.
+
 ## Initial data and storage
 
 The initial snapshot and source provenance live in `server/data/airports/`.

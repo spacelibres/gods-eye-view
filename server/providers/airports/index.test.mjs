@@ -167,3 +167,87 @@ test('local provenance and source downloads never invoke collection', async () =
   assert.equal(collections, 0);
   await proxy.closeBundle();
 });
+
+test('locale overlays serve local names while retaining original search and raw identity', async () => {
+  const { fieldFingerprint } = await import('./localization.js');
+  const { mkdtemp, writeFile, rm } = await import('node:fs/promises');
+  const { tmpdir } = await import('node:os');
+  const { join } = await import('node:path');
+  const directory = await mkdtemp(join(tmpdir(), 'gev-airport-locale-'));
+  try {
+    // The maintenance command produces this exact on-disk format.
+    await writeFile(
+      join(directory, 'zh-CN.json'),
+      JSON.stringify({
+        schemaVersion: 1,
+        locale: 'zh-CN',
+        entries: [
+          {
+            kind: 'airport',
+            id: airport.id,
+            field: 'name',
+            locale: 'zh-CN',
+            fingerprint: fieldFingerprint(airport, 'name'),
+            text: '示例机场',
+          },
+        ],
+      }),
+    );
+    let middleware;
+    const plugin = airportsProxy({
+      translationsDir: directory,
+      collector: {
+        ready: Promise.resolve(),
+        getSnapshot: () => snapshot,
+        close: async () => {},
+      },
+    });
+    plugin.configureServer({
+      middlewares: {
+        use(fn) {
+          middleware = fn;
+        },
+      },
+      httpServer: { once() {} },
+    });
+    const request = async (url) => {
+      let body, status;
+      await middleware(
+        { url, method: 'GET' },
+        {
+          setHeader() {},
+          set statusCode(value) {
+            status = value;
+          },
+          end(value) {
+            body = JSON.parse(value);
+          },
+        },
+        () => {},
+      );
+      return { body, status };
+    };
+    const localized = await request('/api/airports/detail?id=1&lang=zh-CN');
+    assert.equal(localized.status, 200);
+    assert.equal(localized.body.airport.name, '示例机场');
+    assert.equal(localized.body.airport.originalName, 'Airport');
+    assert.equal(localized.body.airport.id, airport.id);
+    assert.equal(
+      (await request('/api/airports/search?q=示例机场&lang=zh-CN')).body
+        .matched,
+      1,
+    );
+    assert.equal(
+      (await request('/api/airports/search?q=Airport&lang=zh-CN')).body.matched,
+      1,
+    );
+    assert.equal(
+      (await request('/api/airports/detail?id=1&lang=en')).body.airport.name,
+      'Airport',
+    );
+    assert.equal(airport.name, 'Airport');
+    await plugin.closeBundle();
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});

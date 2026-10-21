@@ -823,6 +823,8 @@ export class StyleManager extends ShellFacade {
   _localeRepainters() {
     const services = this.services ?? {};
     const repaint = [...(this._localeCallbacks ?? [])];
+    if (this._locationNavigation?.refreshLocale)
+      repaint.push(() => this._locationNavigation.refreshLocale());
     if (this._localSdrControls?.refreshLocale)
       repaint.push(() => this._localSdrControls.refreshLocale());
     if (this._dataManager?._layerPanel?.refreshLocale)

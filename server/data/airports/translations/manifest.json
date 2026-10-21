@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "files": {
+    "es": "es.19f1fbaef8147cae1c93bdef10c6f9afab2ebb2e4b4cc5787e656d46978e9d7e.json",
+    "ru": "ru.7665a31cd5bac8c1a7615fa83f033e319c9cbc2c589d98efe303014c061ad60b.json",
+    "zh-CN": "zh-CN.3a8b3c17c112a85e430e324ce39333c8fa12e1bcab3eb1c295abb44751f0d8b4.json",
+    "zh-TW": "zh-TW.38eed1f16eb3e222d73e0fb9962788ca395aaba60729d3ab1f9603c59ace0308.json",
+    "ja": "ja.24716cbd6c4fb558073c9340fbc732a7e4df224a752950ef33a4a5dfcd09d5ae.json",
+    "ko": "ko.eb06825f0cb0877138d10eca3dd88b99103ac6373022c17120192c78ef42b6b8.json"
+  }
+}

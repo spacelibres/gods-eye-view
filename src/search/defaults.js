@@ -38,10 +38,15 @@ export function createDefaultPlaceSearch({
     throw new TypeError('Nominatim searchEndpoint is required');
   const forward = createPlaceSearch({
     signal,
+    getLocale,
     providers: providers.geocode || [
       createCoordinateGeocoder(),
       createAirportGeocoder({
-        source: createAirportSource({ fetchImpl, baseUrl: endpoints.airports }),
+        source: createAirportSource({
+          fetchImpl,
+          baseUrl: endpoints.airports,
+          getLocale,
+        }),
       }),
       ...(presets ? [createPresetGeocoder({ presets })] : []),
       createAlpsGeocoder(),

@@ -242,6 +242,9 @@ export function metadata(s) {
     updatedAt: s.updatedAt,
     source: s.source,
     sourceUrl: s.sourceUrl,
+    ...(s.locale
+      ? { locale: s.locale, translationRevision: s.translationRevision }
+      : {}),
   };
 }
 function limitValue(v, max = 2000) {

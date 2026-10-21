@@ -169,12 +169,27 @@ page.on('request', (request) => {
     return void request.abort();
   }
 
-  const reply = (body, status = 200) =>
-    request.respond({
+  const reply = (body, status = 200) => {
+    if (url.searchParams.get('lang') === 'zh-CN') {
+      const localized = (record) =>
+        record.id === '2434'
+          ? {
+              ...record,
+              originalName: record.name,
+              name: '伦敦希思罗机场',
+              municipality: '伦敦',
+            }
+          : record;
+      if (body.airports)
+        body = { ...body, airports: body.airports.map(localized) };
+      if (body.airport) body = { ...body, airport: localized(body.airport) };
+    }
+    return request.respond({
       status,
       contentType: 'application/json',
       body: JSON.stringify(body),
     });
+  };
   if (url.hostname === 'photon.komoot.io')
     return void reply({
       features: [
@@ -659,9 +674,22 @@ try {
         .querySelector('#airport-detail-card .airport-detail-close')
         ?.getAttribute('aria-label') === '关闭',
   );
+  await page.waitForFunction(() =>
+    document
+      .querySelector('#airport-detail-card')
+      ?.textContent.includes('伦敦希思罗机场'),
+  );
   check(
-    'open airport card follows live locale without another directory request',
-    viewReads === beforeLocaleReads,
+    'open airport name follows live locale through a local directory read',
+    viewReads > beforeLocaleReads,
+  );
+  check(
+    'localized refresh preserves selected airport identity',
+    await page.evaluate(
+      () =>
+        window.__gevContextStore.selectedEntityId === 'airport:2434' &&
+        window.__godsEyeView.viewer.selectedEntity?.id === 'airport:2434',
+    ),
   );
   await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 1 });
   await page.screenshot({ path: `${shots}/mobile-airport-details.png` });
