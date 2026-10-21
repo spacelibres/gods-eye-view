@@ -5,7 +5,7 @@ import { admitSameSiteRequest } from '../../../src/localRequestGate.mjs';
  * install sets GEV_TRUSTED_PROXY=1). Read per call so a restart picks a change
  * up without a module reload.
  */
-function trustedProxy() {
+export function trustedProxy() {
   const value = String(process.env?.GEV_TRUSTED_PROXY ?? '')
     .trim()
     .toLowerCase();

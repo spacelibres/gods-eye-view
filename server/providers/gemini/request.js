@@ -1,4 +1,5 @@
 import { readRequestBody } from '../common/request.js';
+import { trustedProxy } from '../common/same-site.js';
 import { admitSameSiteRequest } from '../../../src/localRequestGate.mjs';
 import {
   isAllowedHost,
@@ -29,6 +30,7 @@ export function isGeminiRequestOriginAllowed(
       origin,
       secFetchSite: req.headers?.['sec-fetch-site'],
       proxyHeaders: req.headers || {},
+      trustedProxy: trustedProxy(),
     }).ok
   )
     return false;
