@@ -1,4 +1,3 @@
-import { getMovingTargetPresentation } from '../../overlays/movingTargetPresentation.js';
 import {
   ISS_NORAD,
   DOCKED_SCAN_INTERVAL_MS,
@@ -13,17 +12,7 @@ export function createLabels({ state: layerState, services, parts, source }) {
   function createIssOverlayEntry(position) {
     return {
       id: String(ISS_NORAD),
-      position: () => {
-        const presentation = getMovingTargetPresentation(
-          layerState._points.get(ISS_NORAD),
-        );
-        if (
-          presentation &&
-          (!presentation.frame.visible || presentation.frame.level !== 2)
-        )
-          return null;
-        return typeof position === 'function' ? position() : position;
-      },
+      position,
       variant: 'label',
       title: 'ISS', // i18n-ignore: satellite name, as in the satellite catalog
       accent: '#ff4444',

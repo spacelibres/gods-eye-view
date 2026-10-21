@@ -1,4 +1,3 @@
-import { registerMovingTarget } from '../../overlays/movingTargetPresentation.js';
 import * as Cesium from 'cesium';
 import { formatNumber, t } from '../../i18n/index.js';
 import { unitLabel } from '../../ui/unitLabels.js';
@@ -1007,7 +1006,6 @@ export function createTracking({
         }, false),
       },
     });
-    registerMovingTarget(flightState._trackedEntity, 'AIR');
     flightState._trackedEntity.gevSelectionOrigin = origin;
     flightState._trackedEntity.gevTrackedId = `flights:${icao24}`;
     flightState._trackedEntity.gevLabelModel = trackedLabelModelFromText(

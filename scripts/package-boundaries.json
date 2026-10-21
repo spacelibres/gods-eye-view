@@ -1051,8 +1051,7 @@
       "src/i18n/locales/ko.json",
       "src/ui/unitLabels.js",
       "src/i18n/liveDocument.js",
-      "src/i18n/renderedMessages.js",
-      "src/overlays/movingTargetPresentation.js"
+      "src/i18n/renderedMessages.js"
     ],
     "external": ["cesium"]
   },
@@ -1104,8 +1103,7 @@
       "src/i18n/locales/ja.json",
       "src/i18n/locales/ko.json",
       "src/i18n/liveDocument.js",
-      "src/i18n/renderedMessages.js",
-      "src/overlays/movingTargetPresentation.js"
+      "src/i18n/renderedMessages.js"
     ],
     "external": ["cesium"]
   },
@@ -1280,8 +1278,7 @@
       "src/i18n/locales/ko.json",
       "src/ui/unitLabels.js",
       "src/i18n/liveDocument.js",
-      "src/i18n/renderedMessages.js",
-      "src/overlays/movingTargetPresentation.js"
+      "src/i18n/renderedMessages.js"
     ],
     "external": ["cesium", "satellite.js"]
   },
@@ -2773,8 +2770,7 @@
       "src/overlays/markerLayout.js",
       "src/i18n/liveDocument.js",
       "src/i18n/renderedMessages.js",
-      "src/overlays/airportReadout.js",
-      "src/overlays/movingTargetPresentation.js"
+      "src/overlays/airportReadout.js"
     ],
     "external": [
       "hls.js",
@@ -3364,8 +3360,7 @@
       "src/sources/airports/usage-data.json",
       "src/i18n/liveDocument.js",
       "src/i18n/renderedMessages.js",
-      "src/overlays/airportReadout.js",
-      "src/overlays/movingTargetPresentation.js"
+      "src/overlays/airportReadout.js"
     ],
     "external": [
       "hls.js",

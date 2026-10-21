@@ -1,8 +1,3 @@
-import {
-  getMovingTargetPresentation,
-  movingTargetLevel,
-  publishMovingTargetPresentation,
-} from './movingTargetPresentation.js';
 import * as Cesium from 'cesium';
 import { placeTargetMarkers } from './markerPlacement.js';
 import { getWorldOverlayPaintRects } from './worldOverlay.js';
@@ -47,46 +42,6 @@ const nearFar = (scalar, distance) => {
     scalar.nearValue + (scalar.farValue - scalar.nearValue) * Math.pow(t, 0.2)
   );
 };
-
-function movingRect(x, y, size) {
-  const half = size / 2 + 2;
-  return { left: x - half, right: x + half, top: y - half, bottom: y + half };
-}
-function movingRectCells(rect, visit) {
-  for (
-    let x = Math.floor(rect.left / 24);
-    x <= Math.floor(rect.right / 24);
-    x++
-  )
-    for (
-      let y = Math.floor(rect.top / 24);
-      y <= Math.floor(rect.bottom / 24);
-      y++
-    )
-      visit(`${x}:${y}`);
-}
-function occupiedMovingCell(cells, x, y, size) {
-  const rect = movingRect(x, y, size);
-  let collision = false;
-  movingRectCells(rect, (key) => {
-    for (const prior of cells.get(key) || [])
-      if (
-        rect.left < prior.right &&
-        rect.right > prior.left &&
-        rect.top < prior.bottom &&
-        rect.bottom > prior.top
-      )
-        collision = true;
-  });
-  return collision;
-}
-function reserveMovingCells(cells, x, y, size) {
-  const rect = movingRect(x, y, size);
-  movingRectCells(rect, (key) => {
-    if (!cells.has(key)) cells.set(key, []);
-    cells.get(key).push(rect);
-  });
-}
 
 // Some scene primitives expose a boolean lifecycle flag, rather than Cesium's
 // method. Optional-call only guards nullish values, not non-callable members.
@@ -178,23 +133,15 @@ export function createTargetMarkerLayout(
   let serial = 0,
     previous = new Map();
   const world = new Cesium.Cartesian3(),
-    scratch = new Cesium.Cartesian2(),
-    movingOffset = new Cesium.Cartesian2(),
-    movingColor = new Cesium.Color();
+    scratch = new Cesium.Cartesian2();
   const occluder = new Cesium.EllipsoidalOccluder(
     scene.globe?.ellipsoid || Cesium.Ellipsoid.WGS84,
   );
   const hideProxies = (state) => {
-    if (state.source)
-      publishMovingTargetPresentation(state.source, {
-        visible: false,
-        level: 0,
-      });
     if (state.proxy) state.proxy.show = false;
     if (state.outlineProxy) state.outlineProxy.show = false;
   };
   const restore = (sprite, state) => {
-    publishMovingTargetPresentation(sprite, { visible: false, level: 0 });
     if (state.proxy) proxies.remove(state.proxy);
     if (state.outlineProxy) proxies.remove(state.outlineProxy);
     if (primitiveDestroyed(state.collection)) return;
@@ -253,8 +200,6 @@ export function createTargetMarkerLayout(
       candidates = [],
       byId = new Map(),
       anchors = new Map();
-    const movingCells = new Map();
-    let movingCount = 0;
     const selectedId = getSelectedId();
     let selectedKey,
       selectedRank = 0,
@@ -267,7 +212,6 @@ export function createTargetMarkerLayout(
         let state = states.get(sprite);
         if (!state) {
           state = {
-            source: sprite,
             key: String(++serial),
             collection,
             point,
@@ -399,89 +343,6 @@ export function createTargetMarkerLayout(
           return;
         }
         if (!point && sprite.sizeInMeters) return; // Geometric/model-sized billboards are physical world content.
-        const moving = getMovingTargetPresentation(sprite);
-        if (moving) {
-          // Moving fleets retain a point for every loaded in-view target. Only
-          // detailed symbols compete for screen space; the static collision
-          // budget must never erase moving target coverage.
-          state.movingDistanceLevel = movingTargetLevel(
-            moving.kind,
-            distance,
-            state.movingDistanceLevel,
-            isSelected,
-          );
-          let level = state.movingDistanceLevel;
-          if (!isSelected) {
-            if (level === 2 && occupiedMovingCell(movingCells, x, y, size))
-              level = 1;
-            if (level === 1 && occupiedMovingCell(movingCells, x, y, 10))
-              level = 0;
-          }
-          if (level > 0)
-            reserveMovingCells(movingCells, x, y, level === 2 ? size : 10);
-          if (!state.proxy)
-            state.proxy = proxies.add({ image: POINT_IMAGE, id: sprite.id });
-          const proxySize =
-            level === 0
-              ? 3
-              : level === 1
-                ? 10
-                : Math.max(
-                    1,
-                    point
-                      ? state.bodySize
-                      : Math.max(sprite.width || 32, sprite.height || 32) *
-                          scale,
-                  );
-          const image = level === 0 || point ? POINT_IMAGE : sprite.image;
-          if (state.proxy.image !== image) state.proxy.image = image;
-          const visual = state.proxy;
-          visual.show = true;
-          visual.id = sprite.id;
-          visual.position = world;
-          visual.width = proxySize;
-          visual.height = proxySize;
-          visual.scale = 1;
-          visual.rotation = level === 0 || point ? 0 : sprite.rotation;
-          movingOffset.x = (state.baseOffset?.x || 0) * pixelFactor + originX;
-          movingOffset.y = (state.baseOffset?.y || 0) * pixelFactor + originY;
-          visual.pixelOffset = movingOffset;
-          visual.eyeOffset = point ? Cesium.Cartesian3.ZERO : sprite.eyeOffset;
-          visual.color = Cesium.Color.fromAlpha(
-            sprite.color,
-            sprite.color.alpha * state.pointAlpha,
-            movingColor,
-          );
-          visual.disableDepthTestDistance = sprite.disableDepthTestDistance;
-          if (point && level === 2 && sprite.outlineWidth > 0) {
-            if (!state.outlineProxy)
-              state.outlineProxy = proxies.add({ id: sprite.id });
-            const total = proxySize + 2 * sprite.outlineWidth * scale;
-            Object.assign(state.outlineProxy, {
-              show: true,
-              id: sprite.id,
-              image: pointRingImage(proxySize, total),
-              position: world,
-              width: total,
-              height: total,
-              pixelOffset: state.proxy.pixelOffset,
-              color: sprite.outlineColor.withAlpha(
-                sprite.outlineColor.alpha * state.pointAlpha,
-              ),
-              disableDepthTestDistance: sprite.disableDepthTestDistance,
-            });
-          } else if (state.outlineProxy) state.outlineProxy.show = false;
-          sprite.translucencyByDistance = HIDDEN_SPRITE_FADE;
-          const frame = state.movingFrame || (state.movingFrame = {});
-          frame.visible = true;
-          frame.level = level;
-          frame.selected = isSelected;
-          frame.visual = visual;
-          frame.outlineVisual = state.outlineProxy;
-          publishMovingTargetPresentation(sprite, frame);
-          movingCount++;
-          return;
-        }
         if (candidates.length >= MAX_CANDIDATES && !isSelected) {
           if (
             !Cesium.NearFarScalar.equals(
@@ -623,7 +484,7 @@ export function createTargetMarkerLayout(
         states.delete(sprite);
       }
     canvas.dataset.visibleCount = String(
-      layout.filter((p) => p.visible).length + movingCount,
+      layout.filter((p) => p.visible).length,
     );
     canvas.dataset.displacedCount = String(
       layout.filter((p) => p.visible && (p.dx || p.dy)).length,

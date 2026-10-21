@@ -1098,7 +1098,5 @@
   "src/i18n/runtimeTranslations.test.mjs",
   "scripts/qa-live-locale.mjs",
   "src/overlays/airportReadout.test.mjs",
-  "server/providers/airports/archive.test.mjs",
-  "src/overlays/movingTargetPresentation.test.mjs",
-  "scripts/qa-moving-targets.mjs"
+  "server/providers/airports/archive.test.mjs"
 ]
