@@ -4,6 +4,97 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.62] — 2026-10-21 — Places speak your language
+
+- Search places in the language you are reading the app in. Places nearby and
+  text search now send the UI locale, so a Chinese session gets Chinese place
+  names instead of whatever language the hosting region implies. All seven
+  shipped locales are forwarded, and an absent or malformed tag falls back to
+  Google's own default rather than failing the search (spacelibre).
+
+## [0.2.61] — 2026-10-21 — Space out crowded target icons
+
+- Thin out target icons that crowd each other apart. Dense areas used to stack
+  markers until they covered one another; neighbouring targets are now spaced,
+  and the ones that cannot keep their place are joined to it by a faint vertical
+  leader so the association stays readable (spacelibre).
+
+## [0.2.60] — 2026-10-21 — Draw the helicopter on its pad
+
+- Draw the helicopter symbol over its circled H landing pad. The two had been
+  drawn side by side, which read as two separate facilities at one heliport
+  (spacelibre).
+
+## [0.2.59] — 2026-10-21 — Chart symbols for airfields and helipads
+
+- Use the departure arrow for an airfield and a circled H for a helipad. The
+  facility symbols had been a generic plane and a bare H, which read as menu
+  glyphs rather than the marks a chart uses (spacelibre).
+
+## [0.2.58] — 2026-10-21 — Tell each kind of airfield apart
+
+- Tell an airport from a heliport, a seaplane base or a glider field. The layer
+  now draws a distinct facility symbol for each, and airports report how much
+  traffic they actually carry so the panel can rank them: scheduled service,
+  general aviation, or the traffic figure the source publishes (spacelibre).
+
+## [0.2.57] — 2026-10-21 — Name the navigation aids
+
+- Name the navigation aids at an airport, and the country in the reader's own
+  language. An airport row now lists its ILS, VOR and NDB references where the
+  directory has them, and the country below the name follows the selected locale
+  instead of always reading back in English (spacelibre).
+
+## [0.2.56] — 2026-10-21 — Airport markers follow the theme
+
+- Draw airport markers with the map's own aircraft symbols. The layer had been
+  using generic pins, which read the same as a place of interest; airport
+  markers now follow the theme and stay legible against both the light and dark
+  basemaps (spacelibre).
+
+## [0.2.55] — 2026-10-21 — A worldwide airport directory
+
+- Add a worldwide airport directory that does not need a network call. Every
+  civil airport, heliport and seaplane base now ships with the app, so the layer
+  draws instantly and keeps working offline. Airports can be found by name or
+  code from the location search, and voice can turn the layer on like any other
+  (spacelibre).
+
+## [0.2.54] — 2026-10-21 — Shared flight snapshots within budget
+
+- Serve shared flight snapshots within OpenSky's credit budget. OpenSky bills by
+  the hour of data requested, not by the response, so the server now fetches one
+  window per group and hands every visitor the same snapshot. A durable ledger
+  survives restarts, tracks and metadata respect the remaining credits, and the
+  layer says when it is showing a cached read rather than a live one
+  (spacelibre).
+
+## [0.2.53] — 2026-10-21 — Military data inside a shared quota
+
+- Keep military aircraft inside a shared request budget. The VPS collects one
+  ADS-B snapshot for every visitor instead of letting each browser spend the
+  provider's credits, so a busy hour no longer exhausts the quota and blanks the
+  layer for everyone. Rates are counted per provider against a durable ledger,
+  and the layer reports when it is serving a cached snapshot (spacelibre).
+
+## [0.2.52] — 2026-10-20 — Qwen and Doubao drive the app
+
+- Give Qwen and Doubao the same application controls OpenAI already had. Both
+  Chinese voice providers can now drive the app's own tools — layers, places,
+  routes — instead of only answering questions, so a session in Alibaba Bailian
+  or Volcengine speaks reaches the map the way a Realtime session does. The
+  controls travel through the server relay each provider already uses, and the
+  provider picker marks which services are configured (spacelibre).
+
+## [0.2.51] — 2026-10-20 — A touch hold no longer ends the call
+
+- Hold to talk on a phone without dropping the call. Releasing the button used
+  to end the voice session, so the next press paid for a fresh token and socket.
+  A touch hold now only mutes capture: the session stays open, and a press that
+  is still acquiring the microphone is not cancelled by the release. Pointer
+  events also stopped toggling the button a second time, which had been closing
+  the very session the first press opened (spacelibre).
+
 ## [0.2.50] — 2026-10-20 — Hold the button to speak
 
 - Give a phone hold-to-talk. The voice button's gesture was built around a
