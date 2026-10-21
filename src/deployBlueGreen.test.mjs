@@ -36,27 +36,33 @@ test('Caddy learns both slots before anything is started or stopped', () => {
 
   const caddy = script.indexOf('install_caddy_site\n');
   const startIdle = script.indexOf('systemctl start "gev@$IDLE_PORT.service"');
-  const stopLive = script.indexOf('systemctl stop "gev@$LIVE_PORT.service"');
   assert.ok(caddy > 0, 'the Caddy block is written');
   assert.ok(
     caddy < startIdle,
     'Caddy must know both slots before the new one starts',
   );
+});
+
+test('the new release starts on the idle slot before the old one is touched', () => {
+  const startIdle = script.indexOf('systemctl start "gev@$IDLE_PORT.service"');
+  const standby = script.indexOf('systemctl restart "gev@$LIVE_PORT.service"');
+  assert.ok(startIdle > 0, 'the idle slot is started explicitly');
+  assert.ok(standby > 0, 'the old slot is refreshed as a standby');
   assert.ok(
-    caddy < stopLive,
-    'retiring the live slot must not leave Caddy with one unknown upstream',
+    startIdle < standby,
+    'the live slot is only touched after the idle one has started',
   );
 });
 
-test('the new release starts on the idle slot before the old one stops', () => {
-  const startIdle = script.indexOf('systemctl start "gev@$IDLE_PORT.service"');
-  const stopLive = script.indexOf('systemctl stop "gev@$LIVE_PORT.service"');
-  assert.ok(startIdle > 0, 'the idle slot is started explicitly');
-  assert.ok(stopLive > 0, 'the live slot is retired explicitly');
-  assert.ok(
-    startIdle < stopLive,
-    'the live slot is stopped only after the idle one is started',
+test('both slots stay running so one failure still has an upstream', () => {
+  // Retiring the old slot on every deploy leaves a single upstream: one failed
+  // health check then has nowhere to retry, which is the 502 this replaces.
+  assert.doesNotMatch(
+    script,
+    /systemctl stop "gev@\$LIVE_PORT\.service"/,
+    'the old slot must become a standby, not be stopped',
   );
+  assert.match(script, /refreshed as standby/);
 });
 
 test('the idle slot must answer before it becomes live', () => {

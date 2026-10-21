@@ -345,9 +345,19 @@ chown "$GEV_USER:$GEV_USER" "$SLOT_FILE" 2>/dev/null || true
 # sending to $IDLE_PORT the moment it sees that instance answer, and keeps
 # using the old one until then. Retire the old slot only after that.
 sleep 2
+# Keep BOTH slots running, on the same release. The slot that just stopped
+# serving becomes the standby: it answers the same build, so a failed health
+# check on the live slot has somewhere to retry instead of returning 502.
+# Restarting it (rather than leaving the previous release loaded) keeps a
+# visitor who lands on either slot on one version — a standby serving stale
+# code would answer half the requests with the old bundle.
 if [ "$LIVE_PORT" != "$IDLE_PORT" ]; then
-  systemctl stop "gev@$LIVE_PORT.service" 2>/dev/null || true
-  log "Retired slot $LIVE_PORT"
+  systemctl restart "gev@$LIVE_PORT.service" 2>/dev/null || true
+  for _ in $(seq 1 20); do
+    curl -fsS --max-time 2 "http://127.0.0.1:$LIVE_PORT/" >/dev/null 2>&1 && break
+    sleep 1
+  done
+  log "Slot $LIVE_PORT refreshed as standby on $RELEASE_ID"
 fi
 if [ "$LEGACY_UNIT" = "1" ]; then
   # Only now, with a checked slot serving, is the old single instance safe to

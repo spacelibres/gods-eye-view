@@ -4,6 +4,15 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.69] — 2026-10-21 — Both slots stay up
+
+- Keep both slots running. `v0.2.68` switched slots without an outage, but then
+  stopped the previous one — leaving a single upstream, so a visitor arriving
+  while the live slot restarted met a 502 that Caddy had nowhere to retry. The
+  old slot is now restarted onto the same release and kept as a standby, with
+  both slots health-checked, so a failing upstream always has another to fall
+  back to (spacelibre).
+
 ## [0.2.68] — 2026-10-21 — The switch is told to Caddy first
 
 - Finish the slot switch. `v0.2.67` introduced two slots but told Caddy about
