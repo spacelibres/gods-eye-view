@@ -1,3 +1,4 @@
+import { registerMovingTarget } from '../../overlays/movingTargetPresentation.js';
 import * as Cesium from 'cesium';
 import { satelliteClassLabel } from '../../data/satelliteClass.js';
 import { t } from '../../i18n/index.js';
@@ -456,6 +457,7 @@ export function createTracking({ state: layerState, services, parts, source }) {
         disableDepthTestDistance: Number.POSITIVE_INFINITY,
       },
     });
+    registerMovingTarget(layerState._trackedEntity, 'SAT');
     layerState._trackedEntity.gevSelectionOrigin = origin;
     layerState._trackedEntity.gevTrackedId = `satellites:${noradId}`;
     layerState._trackedEntity.gevDisplayPosition = _trackedDisplayCached;

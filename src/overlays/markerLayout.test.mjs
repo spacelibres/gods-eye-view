@@ -1,3 +1,7 @@
+import {
+  registerMovingTarget,
+  getMovingTargetPresentation,
+} from './movingTargetPresentation.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as C from 'cesium';
@@ -332,4 +336,73 @@ test('mixed scene primitives may expose boolean lifecycle flags without stopping
   seen.length = 0;
   visitTargetSprites(nested, (s) => seen.push(s));
   assert.equal(seen.length, 0);
+});
+
+test('moving targets retain overview points beyond the static collision budget and reveal detail on zoom', () => {
+  const h = harness();
+  try {
+    const sprites = [];
+    for (let i = 0; i < 2405; i++) {
+      const s = h.add('air-' + i);
+      registerMovingTarget(s, 'AIR');
+      s.computeScreenSpacePosition = () => new C.Cartesian2(260, 200);
+      sprites.push(s);
+    }
+    h.viewer.camera.positionWC = new C.Cartesian3(10000000, 0, 0);
+    h.event.raiseEvent();
+    for (const s of sprites) {
+      const p = getMovingTargetPresentation(s).frame;
+      assert.equal(p.visible, true);
+      assert.equal(p.level, 0);
+      assert.equal(p.visual.show, true);
+      assert.equal(p.visual.width, 3);
+    }
+    const position = C.Cartesian3.clone(sprites[0].position);
+    h.viewer.camera.positionWC = new C.Cartesian3(6400000, 0, 0);
+    h.event.raiseEvent();
+    assert.equal(getMovingTargetPresentation(sprites[0]).frame.level, 2);
+    assert.equal(
+      getMovingTargetPresentation(sprites[1]).frame.level,
+      0,
+      'crowding falls back to a point',
+    );
+    assert.deepEqual(sprites[0].position, position);
+    h.dispose();
+    assert.equal(getMovingTargetPresentation(sprites[0]).frame.visible, false);
+    assert.equal(sprites[0].translucencyByDistance, undefined);
+  } finally {
+    h.cleanup();
+  }
+});
+
+test('moving detail falls back one level when compact space remains and preserves satellite selection outlines', () => {
+  const h = harness({ getSelectedId: () => 'satellites:25544' });
+  try {
+    const a = h.add('first'),
+      b = h.add('nearby'),
+      satellite = h.add(25544, true);
+    registerMovingTarget(a, 'AIR');
+    registerMovingTarget(b, 'AIR');
+    registerMovingTarget(satellite, 'SAT');
+    a.computeScreenSpacePosition = () => new C.Cartesian2(200, 200);
+    b.computeScreenSpacePosition = () => new C.Cartesian2(224, 200);
+    satellite.color = C.Color.YELLOW;
+    satellite.outlineWidth = 2;
+    satellite.outlineColor = C.Color.WHITE;
+    h.viewer.camera.positionWC = new C.Cartesian3(6400000, 0, 0);
+    h.event.raiseEvent();
+    assert.equal(getMovingTargetPresentation(a).frame.level, 2);
+    assert.equal(getMovingTargetPresentation(b).frame.level, 1);
+    const frame = getMovingTargetPresentation(satellite).frame;
+    assert.equal(frame.selected, true);
+    assert.equal(frame.visual.width, 20);
+    assert.equal(frame.outlineVisual.show, true);
+    assert.equal(frame.outlineVisual.width, 24);
+    assert.equal(
+      frame.outlineVisual.color.toCssColorString(),
+      C.Color.WHITE.toCssColorString(),
+    );
+  } finally {
+    h.cleanup();
+  }
 });

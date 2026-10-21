@@ -4,6 +4,17 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.76] — 2026-10-21 — Progressive aircraft and satellite detail
+
+- Preserve every loaded moving target as a small overview point instead of
+  deleting it through collision thinning. Reveal compact icons and full detail
+  as the camera approaches; crowded icons fall back to compact symbols or
+  points without changing positions, search identities or feed requests.
+- Share visibility and displayed anchors across aircraft, military aircraft,
+  satellites and detection labels. Show ambient names only at detail level,
+  reserve brackets for selected/tracked targets and clear stale callouts on
+  zoom-out. Preserve satellite selection outlines and original close styles.
+
 ## [0.2.75] — 2026-10-21 — Aircraft detection follows displayed icons
 
 - Keep live-flight detection brackets and callouts attached to the displayed

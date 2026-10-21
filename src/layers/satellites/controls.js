@@ -151,6 +151,8 @@ export function createControls({ state: layerState, services, parts, source }) {
           layerState._detectionObjects.set(noradId, object);
         }
         object.position = point.position;
+        object.pointPrimitive = point;
+        object.movingKind = 'SAT';
         object.skipLabel = isTracked;
         result.push(object);
         if (result.length >= maxCount) break;

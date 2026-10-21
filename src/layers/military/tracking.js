@@ -1,3 +1,4 @@
+import { registerMovingTarget } from '../../overlays/movingTargetPresentation.js';
 import * as Cesium from 'cesium';
 import { t } from '../../i18n/index.js';
 import { nextCockpitNearContacts } from '../../data/cockpitAirLod.js';
@@ -965,6 +966,7 @@ export function createTracking({
         }, false),
       },
     });
+    registerMovingTarget(flightState._trackedEntity, 'AIR');
     flightState._trackedEntity.gevSelectionOrigin = origin;
     flightState._trackedEntity.gevTrackedId = `military:${icao24}`;
     flightState._trackedEntity.gevLabelModel = trackedLabelModelFromText(

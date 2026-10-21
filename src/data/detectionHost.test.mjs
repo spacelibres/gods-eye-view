@@ -1,3 +1,4 @@
+import { registerMovingTarget, publishMovingTargetPresentation } from '../overlays/movingTargetPresentation.js';
 import { readShellSource } from '../testSupport/readShellSource.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -985,5 +986,100 @@ test('aircraft detection follows the displaced billboard in CSS pixels at every 
       screenX = 470; env.advance(250); env.postRender.raise();
       assert.equal(contact._candidateScreenX, 470, 'moving visual does not leave the bracket at its previous position');
     } finally { env.cleanup(); }
+  }
+});
+
+test('moving targets show labels only at detail level, clear stale labels immediately, and reserve brackets for selection', () => {
+  for (const type of ['AIR', 'SAT']) {
+    const env = installEnvironment();
+    const sprite = {
+      computeScreenSpacePosition(_scene, result) {
+        result.x = 400;
+        result.y = 300;
+        return result;
+      },
+    };
+    registerMovingTarget(sprite, type);
+    const visual = {
+      computeScreenSpacePosition(_scene, result) {
+        result.x = 400;
+        result.y = 300;
+        return result;
+      },
+    };
+    const object = {
+      position: new Cesium.Cartesian3(0, 0, 6356752),
+      sourceId: 'lod',
+      id: 'MOVING LOD',
+      type,
+    };
+    object[type === 'AIR' ? 'billboard' : 'pointPrimitive'] = sprite;
+    const frame = (level, selected = false, visible = true) =>
+      publishMovingTargetPresentation(sprite, {
+        level,
+        selected,
+        visible,
+        visual,
+      });
+    try {
+      frame(2);
+      initWorldOverlay(env.viewer);
+      initDetection(
+        env.viewer,
+        [
+          {
+            id: type === 'AIR' ? 'flights' : 'satellites',
+            getDetectableObjects: () => [object],
+          },
+        ],
+        () => {},
+      );
+      setMode('DENSE');
+      env.advance(250);
+      env.postRender.raise();
+      env.advance(250);
+      env.postRender.raise();
+      assert.equal(
+        getDetectionDiagnostics().visibleCount,
+        0,
+        'ambient detail does not draw a selection bracket',
+      );
+      assert.ok(
+        env.ctx.calls.some(
+          ([name, text]) => name === 'fillText' && text === 'MOVING LOD',
+        ),
+      );
+      for (const [level, visible] of [
+        [0, true],
+        [1, true],
+        [2, false],
+      ]) {
+        frame(level, false, visible);
+        env.ctx.calls.length = 0;
+        env.advance(250);
+        env.postRender.raise();
+        assert.equal(
+          getDetectionDiagnostics().calloutRects.length,
+          0,
+          'no stale callouts for dots, compact icons or hidden targets',
+        );
+        assert.ok(
+          !env.ctx.calls.some(
+            ([name, text]) => name === 'fillText' && text === 'MOVING LOD',
+          ),
+        );
+      }
+      frame(2, true);
+      object.skipLabel = true;
+      env.advance(250);
+      env.postRender.raise();
+      assert.equal(
+        getDetectionDiagnostics().visibleCount,
+        1,
+        'selected target retains its bracket',
+      );
+    } finally {
+      env.cleanup();
+    }
   }
 });

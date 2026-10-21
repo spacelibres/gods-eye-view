@@ -1,3 +1,4 @@
+import { registerMovingTarget } from '../../overlays/movingTargetPresentation.js';
 import { twoline2satrec } from 'satellite.js';
 import * as Cesium from 'cesium';
 import { msg } from '../../i18n/index.js';
@@ -145,6 +146,7 @@ export function createIngestion({
             id: noradId,
           });
 
+          registerMovingTarget(point, 'SAT');
           layerState._points.set(noradId, point);
         }
 

@@ -5963,3 +5963,6 @@ the checkout, owned by the `gev` service user. See `docs/ADSB-CACHE-OPERATIONS.m
 for persistence, recovery and validation. Focused regression tests are
 `server/providers/aircraft/adsb-*.test.mjs`, `src/sources/live/contract.test.mjs`,
 `src/data/militaryFlights.test.mjs` and existing provider/GNSS integration tests.
+
+
+Moving targets use coordinated display levels: overview points, compact symbols and close detail. Aircraft distance bands are 1,500 / 150 km; satellite bands are 30,000 / 3,000 km, with 20 percent hysteresis. Crowding reduces symbol detail rather than removing loaded targets; labels follow the same frame state and brackets are reserved for selected/tracked subjects. Zooming does not reload feeds.

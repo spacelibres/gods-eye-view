@@ -1,3 +1,4 @@
+import { registerMovingTarget } from '../../overlays/movingTargetPresentation.js';
 import * as Cesium from 'cesium';
 import { cyberSonarBaseAlpha } from '../../cyberSonar.js';
 import { CLASS_SCALE_2D } from '../../data/aircraftClass.js';
@@ -174,6 +175,7 @@ export function createMilitarySnapshotRenderer({
           id: icao24,
           show: !isTracked, // hidden if currently tracked (entity replaces it)
         });
+        registerMovingTarget(bb, 'AIR');
         flightState._billboards.set(icao24, bb);
         rendering._applyFleetBillboardPresentation(icao24, bb);
       }

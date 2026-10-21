@@ -498,6 +498,9 @@ export function createQueries({
             : bb.position;
         if (!pos) continue;
         object.position = pos;
+        object.billboard = modelOwnsVisual ? null : bb;
+        object.movingKind = 'AIR';
+        object.modelOwnsVisual = modelOwnsVisual;
         object.skipLabel = isTracked;
         const id = callsign || registration || icao24;
         if (object.id !== id) object.id = id;

@@ -1,3 +1,4 @@
+import { registerMovingTarget } from '../../overlays/movingTargetPresentation.js';
 import * as Cesium from 'cesium';
 import { twoline2satrec } from 'satellite.js';
 import { noradIdFromSatnum } from '../../sources/tle.js';
@@ -137,6 +138,7 @@ export function createCatalog({ state: layerState, services, parts, source }) {
             scaleByDistance: new Cesium.NearFarScalar(1e6, 1.5, 2e7, 0.6),
             id: noradId,
           });
+          registerMovingTarget(point, 'SAT');
           layerState._points.set(noradId, point);
           layerState._denseIds.push(noradId);
           added++;

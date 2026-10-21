@@ -1,3 +1,7 @@
+import {
+  movingDetectionPresentation,
+  movingTargetLabelsVisible,
+} from '../overlays/movingTargetPresentation.js';
 import { paintTransitBracket } from './detectionDraw.js';
 import * as Cesium from 'cesium';
 
@@ -1040,6 +1044,11 @@ function _buildLabelPlacements(
  */
 function _stashCallout(entry, acquireFade, keyhole) {
   const { candidate, placement, temporalAlpha } = entry;
+  if (
+    candidate.movingSource &&
+    !movingTargetLabelsVisible(candidate.movingSource)
+  )
+    return;
   const radialAlpha = keyholeLabelAlphaFromGeometry(
     placement.centerX,
     placement.centerY,
@@ -1075,6 +1084,7 @@ function _stashCallout(entry, acquireFade, keyhole) {
     };
     _calloutPool[_calloutCount] = row;
   }
+  row.movingSource = candidate.movingSource || null;
   row.x = placement.cardX;
   row.y = placement.cardY;
   row.w = placement.rect.w;
@@ -1129,6 +1139,8 @@ function _paintCalloutLane(frame) {
   ctx.textBaseline = 'alphabetic';
   for (let i = 0; i < _calloutCount; i++) {
     const row = _calloutPool[i];
+    if (row.movingSource && !movingTargetLabelsVisible(row.movingSource))
+      continue;
     paintDetectionCallout(ctx, row, row.alpha);
   }
   ctx.globalAlpha = 1;
@@ -1189,6 +1201,7 @@ function _materializeCandidate(
     layerId,
     sourceId,
     type: obj.type || 'UNK',
+    movingSource: obj._movingManaged ? obj : null,
     priority: obj._cohortPriority,
     screenX: obj._candidateScreenX,
     screenY: obj._candidateScreenY,
@@ -1360,15 +1373,35 @@ function _drawOverlay(frame) {
   const bracketOpacityCounts = { full: 0, partial: 0, hidden: 0 };
   const aircraftBracketSectors = { left: 0, front: 0, right: 0 };
   let protectedVisibleCount = 0;
+  for (let i = 0; i < _calloutCount; i++) {
+    const source = _calloutPool[i].movingSource;
+    if (source) source._movingLabelEligible = false;
+  }
   const candidateMap = new Map();
   const cohortBuilders = shouldSolve ? new Map() : null;
   const demandByLayer = shouldSolve ? new Map() : null;
   let placementBuildCount = 0;
   for (let i = 0; i < objects.length; i++) {
     const obj = objects[i];
+    obj._movingLabelEligible = false;
     if (!obj.position) continue;
     // Skip objects occluded by the ellipsoid (behind the horizon)
     if (!occluder.isPointVisible(obj.position)) continue;
+
+    const presentation = movingDetectionPresentation(
+      obj,
+      Cesium.Cartesian3.distance(camPos, obj.position),
+    );
+    obj._movingManaged = Boolean(presentation);
+    obj._movingLabelEligible =
+      !presentation ||
+      Boolean(
+        presentation.visible &&
+        presentation.level === 2 &&
+        !presentation.selected &&
+        !obj.skipLabel,
+      );
+    if (presentation && !presentation.visible) continue;
 
     // This product renders in Cesium's 3D scene mode. Multiplying by the
     // once-per-frame view-projection matrix is equivalent to the general
@@ -1388,8 +1421,9 @@ function _drawOverlay(frame) {
     // Billboard projection includes pixel/eye offsets and distance scaling,
     // including the global marker collision displacement. Coordinates are CSS
     // pixels, matching this canvas even on high-DPI laptop displays.
-    if (obj.billboard) {
-      const point = obj.billboard.computeScreenSpacePosition(
+    const visual = presentation?.visual || obj.billboard;
+    if (visual) {
+      const point = visual.computeScreenSpacePosition(
         _viewer.scene,
         billboardScreenScratch,
       );
@@ -1439,7 +1473,10 @@ function _drawOverlay(frame) {
       keyholeOutsideOpacity,
       cyberMapActive,
     );
-    const bracketAlpha = admissionAlpha * sonarFactor;
+    const bracketAlpha =
+      admissionAlpha *
+      sonarFactor *
+      (presentation && !presentation.selected && !isTracked ? 0 : 1);
     if (bracketAlpha > 0) {
       const transit = obj.tier?.startsWith('transit_');
       (transit ? appendTransitBracket : appendCornerBracket)(
@@ -1467,6 +1504,7 @@ function _drawOverlay(frame) {
       continue;
     }
 
+    if (!obj._movingLabelEligible) continue;
     const primary = String(obj.id || '');
     const micro = String(obj.metric || '');
     if (!primary && !micro) continue;
