@@ -4,6 +4,15 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.63] — 2026-10-21 — The relay keeps its own key
+
+- Let the Map Tiles relay use its own key. The relay had been sharing
+  `GOOGLE_MAPS_SERVER_API_KEY` with the Places proxy, so a deployment holding a
+  relay-only key had to break Places to use it, and the reverse. A third
+  variable, `GOOGLE_MAPS_TILES_API_KEY`, now feeds `/api/google/tiles` alone;
+  unset, it falls back exactly as before, so a single-key setup is unchanged
+  (spacelibre).
+
 ## [0.2.62] — 2026-10-21 — Places speak your language
 
 - Search places in the language you are reading the app in. Places nearby and

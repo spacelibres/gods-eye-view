@@ -1,4 +1,7 @@
-import { resolveGoogleServerKey } from '../../../scripts/google-server-key.mjs';
+import {
+  resolveGoogleServerKey,
+  resolveGoogleTilesKey,
+} from '../../../scripts/google-server-key.mjs';
 
 /**
  * Optional Google place context is an empty capability when no key is present,
@@ -45,4 +48,17 @@ export function keylessGoogleGeocodeResponse(apiKey) {
  */
 export function googleServerApiKey() {
   return resolveGoogleServerKey(process.env);
+}
+
+/**
+ * Google API key for the SERVER-SIDE tile relay (`/api/google/tiles`).
+ *
+ * Separate from the Places key because the two keys need different APIs
+ * enabled and are often owned by different Cloud projects: a deployment may
+ * hold a Map Tiles key it cannot use for Places, and the reverse. Unset, this
+ * falls back to the Places key, which is the single-key setup the relay had
+ * before the split.
+ */
+export function googleTilesApiKey(environment = process.env) {
+  return resolveGoogleTilesKey(environment);
 }

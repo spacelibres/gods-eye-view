@@ -22,7 +22,7 @@ import { openAiRealtimeProxy } from './openai.js';
 import { dashScopeRealtimeProxy } from './dashscope.js';
 import { doubaoRealtimeProxy } from './doubao.js';
 import { googlePlacesContextProxy } from './places.js';
-import { googleServerApiKey } from './places/google-key.js';
+import { googleServerApiKey, googleTilesApiKey } from './places/google-key.js';
 import { googleTilesRelay } from './google-tiles-relay.js';
 import { mapillaryProxy } from './mapillary.js';
 import { keySetupEndpoint } from '../standalone/key-setup.js';
@@ -66,7 +66,7 @@ function localProviderPlugins({ realtime } = {}) {
     googlePlacesContextProxy(),
     // Used only by browsers that cannot reach tile.googleapis.com themselves;
     // without a server key it answers 404 and they stay on the direct route.
-    googleTilesRelay({ apiKey: googleServerApiKey }),
+    googleTilesRelay({ apiKey: googleTilesApiKey }),
     windProxy(),
     weatherProxy(),
     cycloneProxy(),
@@ -92,7 +92,7 @@ export {
 } from './radio.js';
 export { LL2_CACHE_TTL_MS, launchLibraryRequestHeaders } from './space.js';
 export { googlePlacesContextProxy } from './places.js';
-export { googleServerApiKey } from './places.js';
+export { googleServerApiKey, googleTilesApiKey } from './places.js';
 export { googleTilesRelay, GOOGLE_TILES_PATH } from './google-tiles-relay.js';
 export { keylessGooglePlacesResponse } from './places.js';
 export { keylessGoogleGeocodeResponse } from './places.js';

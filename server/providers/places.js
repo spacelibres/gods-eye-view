@@ -6,6 +6,7 @@ export {
 } from './places/google.js';
 export {
   googleServerApiKey,
+  googleTilesApiKey,
   keylessGooglePlacesResponse,
   keylessGoogleGeocodeResponse,
 } from './places/google-key.js';
