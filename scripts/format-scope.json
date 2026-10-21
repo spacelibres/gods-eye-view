@@ -1091,5 +1091,8 @@
   "src/layers/airports/references.test.mjs",
   "src/layers/airports/symbols.test.mjs",
   "src/sources/airports/usage.test.mjs",
-  "scripts/import-airport-usage.mjs"
+  "scripts/import-airport-usage.mjs",
+  "src/overlays/markerPlacement.test.mjs",
+  "src/overlays/markerLayout.test.mjs",
+  "scripts/qa-marker-layout.mjs"
 ]

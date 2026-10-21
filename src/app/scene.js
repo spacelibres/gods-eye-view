@@ -15,6 +15,8 @@ import {
 } from '../renderGovernor.js';
 import { describeError } from './errors.js';
 import { t } from '../i18n/index.js';
+import { createTargetMarkerLayout } from '../overlays/markerLayout.js';
+import { getActiveTrackedReadoutId } from '../data/trackedReadout.js';
 
 /** Construct the application globe using the caller's local configuration. */
 export async function createApplicationScene({
@@ -62,6 +64,14 @@ export async function createApplicationScene({
     if (!viewer.isDestroyed()) viewer.destroy();
   });
   defer(installTrackpadPinchZoom(viewer));
+  defer(
+    createTargetMarkerLayout(viewer, {
+      getSelectedId: () =>
+        getActiveTrackedReadoutId() ||
+        viewer.selectedEntity?.id ||
+        viewer.trackedEntity?.id,
+    }),
+  );
   registerDataCredits(viewer, credits);
   configureCreditKeyboardAccess(document);
   loaderStatus.textContent =

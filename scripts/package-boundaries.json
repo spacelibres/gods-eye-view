@@ -2704,7 +2704,9 @@
       "src/layers/airports/references.js",
       "src/layers/airports/symbols.js",
       "src/sources/airports/usage.js",
-      "src/sources/airports/usage-data.json"
+      "src/sources/airports/usage-data.json",
+      "src/overlays/markerPlacement.js",
+      "src/overlays/markerLayout.js"
     ],
     "external": [
       "hls.js",

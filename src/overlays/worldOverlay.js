@@ -1065,6 +1065,14 @@ export function getOverlayPaintRect(sourceId, entryId) {
   return rect && rect.key === key && rect.stamp === _frameStamp ? rect : null;
 }
 
+/** Current painted cards/labels are obstacles for the global target-icon pass. */
+export function getWorldOverlayPaintRects() {
+  if (_destroyed) return [];
+  return [..._paintRectByKey.values()].filter(
+    (rect) => rect.stamp === _frameStamp,
+  );
+}
+
 /**
  * Resolve the topmost interactive world-overlay entry at CSS-pixel coords.
  * @param {number} x
