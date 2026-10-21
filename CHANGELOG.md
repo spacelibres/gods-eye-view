@@ -4,6 +4,17 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.64] — 2026-10-21 — Deploy without dropping the site
+
+- Deploy without taking the site down. A push used to rebuild `dist/` in place
+  and then restart the service, so for the minutes a build takes the host was
+  serving a half-written tree and answering 502. Each build now lands in its own
+  directory and goes live by swapping a symlink, which is a single rename: the
+  service restarts against an already-complete tree in well under a second, and
+  a release that fails its health check is rolled back to the previous one
+  instead of being left broken. The three most recent releases stay on disk
+  (spacelibre).
+
 ## [0.2.63] — 2026-10-21 — The relay keeps its own key
 
 - Let the Map Tiles relay use its own key. The relay had been sharing

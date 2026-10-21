@@ -37,7 +37,16 @@ import {
 } from '../../build/allowedHosts.js';
 
 const ROOT = path.resolve(fileURLToPath(new URL('../..', import.meta.url)));
-const DIST = path.join(ROOT, 'dist');
+/**
+ * The build to serve. Defaults to `dist/` beside the repository; a deploy that
+ * stages a new build elsewhere points this at it, so switching releases is one
+ * process restart over an already-complete tree rather than a rebuild in
+ * place (which leaves the host serving a half-written `dist/` for minutes).
+ */
+const DIST = path.resolve(
+  ROOT,
+  String(process.env.GEV_DIST_DIR || 'dist').trim() || 'dist',
+);
 
 const HOST = process.env.HOST || '127.0.0.1';
 const PORT = Number(process.env.PORT || 4173);
@@ -292,6 +301,7 @@ server.on('close', () => dashScopeSocketRelay.close());
 
 server.listen(PORT, HOST, () => {
   console.log(`[serve] ${ROOT} on http://${HOST}:${PORT}`);
+  console.log(`[serve] serving ${DIST}`);
   console.log(
     `[serve] API routes from ${plugins.length} plugin(s); allowed hosts: ${ALLOWED_HOSTS.join(', ')}`,
   );

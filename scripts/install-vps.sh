@@ -49,6 +49,12 @@ GEV_USER="${GEV_USER:-gev}"
 GEV_WEBHOOK_PORT="${GEV_WEBHOOK_PORT:-4180}"
 GEV_WEBHOOK_PATH="${GEV_WEBHOOK_PATH:-/webhook}"
 GEV_ENV_FILE="${GEV_ENV_FILE:-/etc/gods-eye-view.env}"
+# Releases are built into their own directory and only become the live one
+# after they finish, so a rebuild never leaves the host serving a half-written
+# tree. GEV_RELEASES holds the published builds; GEV_CURRENT is the symlink the
+# service reads, swapped in one rename.
+GEV_RELEASES="${GEV_RELEASES:-$GEV_HOME/releases}"
+GEV_CURRENT="${GEV_CURRENT:-$GEV_HOME/current}"
 
 # Build-time credentials. The env file is the durable home for them: the
 # webhook rebuilds in a fresh shell with only this file loaded, so a value
@@ -137,11 +143,16 @@ run_as_service "$NODE_DIR/npm ci --no-audit --no-fund" ||
   run_as_service "$NODE_DIR/npm ci --no-audit --no-fund --registry=https://registry.npmmirror.com" || {
     # `npm ci` deletes node_modules first, and on a busy host that rmdir can
     # fail with ENOTEMPTY: the running service still has files open under it.
-    # Stop the service before clearing the tree, then start it again.
+    # Stopping the service is the only way out, so the outage is kept to the
+    # retry itself: the live release answers again as soon as the restart
+    # below runs, before any build.
     log "npm ci failed; stopping the service and retrying with a clean tree"
     systemctl stop gev.service 2>/dev/null || true
     rm -rf "$GEV_HOME/node_modules"
-    run_as_service "$NODE_DIR/npm ci --no-audit --no-fund --registry=https://registry.npmmirror.com"
+    run_as_service "$NODE_DIR/npm ci --no-audit --no-fund --registry=https://registry.npmmirror.com" || {
+      systemctl start gev.service 2>/dev/null || true
+      die "dependency install failed; the running release was restarted"
+    }
   }
 
 log "Build"
@@ -155,7 +166,41 @@ if [ -n "$GOOGLE_MAPS_API_KEY" ]; then
 else
   log "Google Maps key: absent — Google 3D loads through Cesium ion"
 fi
-run_as_service "$NODE_DIR/npm run build"
+run_as_service "$NODE_DIR/npm run build -- --outDir '$GEV_RELEASES/incoming' --emptyOutDir"
+
+# ------------------------------------------------------- atomic switch ---
+# A build writes into its own directory; `dist` is never touched while the
+# service is serving. Publishing is one rename of a symlink followed by a
+# restart that finds an already-complete tree, so the outage is the restart
+# itself (a few hundred milliseconds) rather than the minutes a rebuild takes.
+RELEASE_ID="$(git -C "$GEV_HOME" rev-parse --short HEAD)-$(date +%s)"
+RELEASE_DIR="$GEV_RELEASES/$RELEASE_ID"
+log "Publishing release $RELEASE_ID"
+mkdir -p "$GEV_RELEASES"
+rm -rf "$RELEASE_DIR"
+mv "$GEV_RELEASES/incoming" "$RELEASE_DIR"
+chown -R "$GEV_USER:$GEV_USER" "$GEV_RELEASES"
+[ -f "$RELEASE_DIR/index.html" ] || die "the build produced no index.html; keeping the running release"
+
+# The served root is the symlink, so swapping it is atomic on the filesystem:
+# a reader sees the old tree or the new one, never a mixture.
+PREVIOUS_RELEASE=""
+if [ -L "$GEV_CURRENT" ]; then
+  PREVIOUS_RELEASE="$(readlink -f "$GEV_CURRENT" || true)"
+fi
+# First run on a host that predates releases: the tree it is serving from
+# `dist/` is the only copy of a working build, so keep it as a rollback target
+# before the symlink takes over.
+if [ -z "$PREVIOUS_RELEASE" ] && [ -f "$GEV_HOME/dist/index.html" ]; then
+  LEGACY_DIR="$GEV_RELEASES/legacy-$(date +%s)"
+  mkdir -p "$GEV_RELEASES"
+  cp -a "$GEV_HOME/dist" "$LEGACY_DIR"
+  chown -R "$GEV_USER:$GEV_USER" "$LEGACY_DIR"
+  PREVIOUS_RELEASE="$LEGACY_DIR"
+  log "Kept the existing dist/ as a rollback target"
+fi
+ln -sfn "$RELEASE_DIR" "$GEV_CURRENT.new"
+mv -Tf "$GEV_CURRENT.new" "$GEV_CURRENT"
 
 # ---------------------------------------------------------------- systemd ---
 log "systemd unit gev.service on 127.0.0.1:$GEV_PORT"
@@ -173,6 +218,9 @@ Environment=PATH=$NODE_DIR:/usr/local/bin:/usr/bin:/bin
 Environment=NODE_ENV=production
 Environment=HOST=127.0.0.1
 Environment=PORT=$GEV_PORT
+# Serve the published release through the symlink, so a deploy swaps the tree
+# under a restarted process instead of rewriting the one being served.
+Environment=GEV_DIST_DIR=$GEV_CURRENT
 # The app answers only Host headers it knows. Caddy passes the public name
 # through, so it has to be listed here or every request gets a 403.
 Environment=GEV_ALLOWED_HOSTS=$GEV_DOMAIN
@@ -198,17 +246,45 @@ UNIT
 
 systemctl daemon-reload
 systemctl enable gev.service >/dev/null
+# `reload-or-restart` restarts only because the build changed; the tree it
+# serves is already complete, so the process comes back in well under a
+# second rather than waiting on a rebuild.
 systemctl restart gev.service
 
-for _ in $(seq 1 30); do
-  if curl -fsS "http://127.0.0.1:$GEV_PORT/" >/dev/null 2>&1; then
-    log "App answers on 127.0.0.1:$GEV_PORT"
+# Health gate. A release that does not answer is rolled back to the previous
+# one instead of being left broken: the old tree is still on disk, so putting
+# the symlink back is the whole recovery.
+healthy=""
+for _ in $(seq 1 40); do
+  if curl -fsS --max-time 3 "http://127.0.0.1:$GEV_PORT/" >/dev/null 2>&1; then
+    healthy=1
     break
   fi
-  sleep 2
+  sleep 1
 done
-curl -fsS "http://127.0.0.1:$GEV_PORT/" >/dev/null 2>&1 ||
-  die "app did not start; check: journalctl -u gev -n 50"
+
+if [ -z "$healthy" ] && [ -n "$PREVIOUS_RELEASE" ] && [ -d "$PREVIOUS_RELEASE" ]; then
+  log "Release $RELEASE_ID did not answer; rolling back"
+  ln -sfn "$PREVIOUS_RELEASE" "$GEV_CURRENT.new"
+  mv -Tf "$GEV_CURRENT.new" "$GEV_CURRENT"
+  systemctl restart gev.service
+  for _ in $(seq 1 20); do
+    curl -fsS --max-time 3 "http://127.0.0.1:$GEV_PORT/" >/dev/null 2>&1 && {
+      healthy=1
+      break
+    }
+    sleep 1
+  done
+fi
+
+[ -n "$healthy" ] || die "app did not start; check: journalctl -u gev -n 50"
+log "App answers on 127.0.0.1:$GEV_PORT ($RELEASE_ID)"
+
+# Keep the running release plus the two before it; older trees only cost disk.
+if [ -d "$GEV_RELEASES" ]; then
+  find "$GEV_RELEASES" -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p\n' |
+    sort -rn | tail -n +4 | cut -d' ' -f2- | xargs -r rm -rf
+fi
 
 # -------------------------------------------------------------------- webhook ---
 log "Webhook service gev-webhook.service on 127.0.0.1:$GEV_WEBHOOK_PORT"
