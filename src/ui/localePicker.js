@@ -378,6 +378,10 @@ export function mountLocalePicker({
 }) {
   const documentRef = root.ownerDocument;
   const windowRef = documentRef.defaultView;
+  // The locale the picker believes is applied. `current` is the argument this
+  // mount was created with and never changes, so it cannot answer "is this
+  // already the active language?" after a live switch.
+  let currentLocale = current;
   const model = createLocalePickerModel({
     locales,
     current,
@@ -519,7 +523,11 @@ export function mountLocalePicker({
 
   const choose = (localeCode) => {
     close({ restoreFocus: true });
-    if (localeCode !== current) onSelect(localeCode);
+    // The list is a control over live state, not over the language the page
+    // loaded with: after the first switch, `current` no longer describes what
+    // is on screen, and comparing against it made a later return to that
+    // original language a silent no-op.
+    if (localeCode !== currentLocale) onSelect(localeCode);
   };
 
   const open = () => {
@@ -622,6 +630,7 @@ export function mountLocalePicker({
      */
     setCurrent(locale) {
       if (!locale) return;
+      currentLocale = locale;
       code.textContent = locale.toUpperCase();
       button.setAttribute(
         'aria-label',

@@ -264,18 +264,33 @@ const DOCUMENT_TRANSLATION_TARGETS = Object.freeze([
  */
 export function applyDocumentTranslations(doc) {
   if (typeof doc?.querySelectorAll !== 'function') return 0;
-  if (!getCatalog(currentLocale)) return 0;
   let applied = 0;
   for (const [marker, attribute] of DOCUMENT_TRANSLATION_TARGETS) {
     for (const element of doc.querySelectorAll(`[${marker}]`)) {
-      const source = attribute
-        ? element.getAttribute(attribute)
-        : normalizeMarkupText(element.textContent);
+      // The source has to be the English the markup was written with, not what
+      // is on screen. Reading the current text worked only for the first pass:
+      // once the page said "不遗漏任何地方", translating again looked that up as
+      // a ja/ko key, found nothing, and left the element in the old language.
+      const keyAttribute = `${marker}-key`;
+      let source = element.getAttribute(keyAttribute);
+      if (source === null) {
+        const raw = attribute
+          ? element.getAttribute(attribute)
+          : normalizeMarkupText(element.textContent);
+        if (!raw) continue;
+        source = normalizeMarkupText(raw);
+        element.setAttribute(keyAttribute, source);
+      }
       if (!source) continue;
+      // English has no catalog; `t` answers the source itself, which is exactly
+      // how the markup was written and what has to be restored.
       const text = t(source);
-      if (text === source) continue;
-      if (attribute) element.setAttribute(attribute, text);
-      else element.textContent = text;
+      if (attribute) {
+        if (element.getAttribute(attribute) !== text)
+          element.setAttribute(attribute, text);
+      } else if (element.textContent !== text) {
+        element.textContent = text;
+      }
       applied += 1;
     }
   }

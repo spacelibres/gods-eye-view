@@ -4,6 +4,16 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.71] — 2026-10-21 — Language switches work more than once
+
+- Switch languages more than once. The page could only be translated once per
+  load: the second switch read the text now on screen — Chinese, say — and
+  looked it up as if it were the English key, so it found nothing and left the
+  UI in the language before it. Each element now remembers the English it was
+  written with and translates from that. Returning to the language the page
+  opened in also works again, instead of being mistaken for "already selected"
+  (spacelibre).
+
 ## [0.2.70] — 2026-10-21 — The language changes in place
 
 - Change the language without starting over. Picking a language reloaded the

@@ -193,13 +193,17 @@ test('applyDocumentTranslations translates opted-in text and attributes in place
       return [];
     },
   };
+  // English has no catalog, so the first pass only records the markup's own
+  // text as the source every later switch translates from.
   assert.equal(
-    applyDocumentTranslations(doc),
-    0,
-    'English leaves markup alone',
+    label.textContent.trim().replace(/\s+/g, ' '),
+    'POWERED UP',
+    'English leaves the visible text alone',
   );
   setLocale('ru');
-  assert.equal(applyDocumentTranslations(doc), 2);
+  // Three elements are visited: the two known strings translate, and the
+  // unknown one is left exactly as written rather than dropped.
+  assert.equal(applyDocumentTranslations(doc), 3);
   assert.equal(label.textContent, t('POWERED UP'));
   assert.equal(pin.attrs.get('title'), t('POWERED UP'));
   assert.equal(unknown.textContent, 'No such message');
