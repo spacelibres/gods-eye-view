@@ -6,6 +6,9 @@ was tagged with and the date of that tag, so any line here can be traced back to
 
 ## [0.2.76] — 2026-10-21 — Upstream synchronization and original HUD density controls
 
+- Reload an already-running VPS standby before promoting it, so both backend
+  instances serve the same corrected release after each deployment.
+
 - Keep aircraft route labels on the scheduled airport leg instead of accepting
   its distant great-circle extensions, preserving generous endpoint tolerance
   across the signed-angle branch cut (rudycelekli, #1284).

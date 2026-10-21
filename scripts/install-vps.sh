@@ -315,7 +315,9 @@ if [ "$LIVE_PORT" = "$GEV_PORT" ]; then IDLE_PORT="$GEV_PORT_B"; else IDLE_PORT=
 install_caddy_site
 
 log "Bringing the new release up on the idle slot ($IDLE_PORT)"
-systemctl start "gev@$IDLE_PORT.service"
+# Both slots remain running between deploys. Start would leave the standby
+# process on its old backend; reload it while the current live slot still serves.
+systemctl restart "gev@$IDLE_PORT.service"
 idle_healthy=""
 for _ in $(seq 1 40); do
   if curl -fsS --max-time 3 "http://127.0.0.1:$IDLE_PORT/" >/dev/null 2>&1; then

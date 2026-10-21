@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 
 /**
  * A deploy must never leave the site with zero upstreams. The old flow ran
@@ -35,7 +36,9 @@ test('Caddy learns both slots before anything is started or stopped', () => {
   assert.match(script, /systemctl reload caddy/);
 
   const caddy = script.indexOf('install_caddy_site\n');
-  const startIdle = script.indexOf('systemctl start "gev@$IDLE_PORT.service"');
+  const startIdle = script.indexOf(
+    'systemctl restart "gev@$IDLE_PORT.service"',
+  );
   assert.ok(caddy > 0, 'the Caddy block is written');
   assert.ok(
     caddy < startIdle,
@@ -44,7 +47,9 @@ test('Caddy learns both slots before anything is started or stopped', () => {
 });
 
 test('the new release starts on the idle slot before the old one is touched', () => {
-  const startIdle = script.indexOf('systemctl start "gev@$IDLE_PORT.service"');
+  const startIdle = script.indexOf(
+    'systemctl restart "gev@$IDLE_PORT.service"',
+  );
   const standby = script.indexOf('systemctl restart "gev@$LIVE_PORT.service"');
   assert.ok(startIdle > 0, 'the idle slot is started explicitly');
   assert.ok(standby > 0, 'the old slot is refreshed as a standby');
@@ -92,4 +97,41 @@ test('the single-instance unit from older installers is retired', () => {
 test('the slot that serves is recorded so a rerun resumes', () => {
   assert.match(script, /SLOT_FILE=/, 'the live slot must be persisted');
   assert.match(script, /GEV_LIVE_PORT=/, 'the slot file records the live port');
+});
+
+test('a running standby reloads the new backend while the live slot remains untouched', () => {
+  const start = script.indexOf(
+    'log "Bringing the new release up on the idle slot',
+  );
+  const end = script.indexOf('idle_healthy=""', start);
+  assert.ok(start > 0 && end > start);
+  const command = script.slice(start, end);
+  const harness = `
+set -e
+IDLE_PORT=4174
+idle_loaded=previous
+live_loaded=previous
+log() { :; }
+systemctl() {
+  [ "$2" = "gev@4174.service" ] || { echo 'live slot touched too early'; exit 9; }
+  case "$1" in
+    start) : ;; # An already-running systemd unit keeps its previous process.
+    restart) idle_loaded=new ;;
+    *) exit 10 ;;
+  esac
+}
+${command}
+[ "$idle_loaded" = new ] || { echo 'standby still serves the previous backend'; exit 11; }
+[ "$live_loaded" = previous ]
+`;
+  const bash =
+    process.platform === 'win32' ? 'C:/Program Files/Git/bin/bash.exe' : 'bash';
+  const result = spawnSync(bash, ['--noprofile', '--norc', '-c', harness], {
+    encoding: 'utf8',
+  });
+  assert.equal(
+    result.status,
+    0,
+    result.stderr || result.stdout || result.error?.message,
+  );
 });
