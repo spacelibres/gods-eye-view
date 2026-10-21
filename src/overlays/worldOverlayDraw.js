@@ -501,6 +501,7 @@ export function placementVariants(
     leaderOffset = 0,
     verticalOnly = false,
     viewportMargin = 4,
+    stackSteps = 0,
   },
   out = [],
 ) {
@@ -513,6 +514,7 @@ export function placementVariants(
     positiveLeaderOffset = Math.round(leaderOffset);
     negativeLeaderOffset = -positiveLeaderOffset;
   }
+  let written = 0;
   for (let i = 0; i < order.length; i++) {
     const corner = order[i];
     let x = anchorX - width / 2;
@@ -525,8 +527,8 @@ export function placementVariants(
       x = anchorX - gap - width;
       y = anchorY - height / 2;
     }
-    out[i] = writePlacement(
-      out[i],
+    out[written++] = writePlacement(
+      out[written],
       corner,
       clampPlacementCoordinate(x, width, viewportWidth, viewportMargin),
       clampPlacementCoordinate(y, height, viewportHeight, viewportMargin),
@@ -539,7 +541,41 @@ export function placementVariants(
         : positiveLeaderOffset,
     );
   }
-  out.length = order.length;
+  // Stacking: further rows on the same side, each one a full row clear of the
+  // one before it. Crowded anchors run out of compass positions long before
+  // they run out of the room to step away from the anchor, and a label lifted
+  // with a leader back to its point reads far better than one that overlaps
+  // its neighbour or blinks out of existence.
+  const steps = Math.max(0, Math.min(8, Math.trunc(Number(stackSteps) || 0)));
+  if (steps > 0) {
+    const row = height + gap;
+    const sides = verticalOnly
+      ? [order[0] === 'below' ? 'below' : 'above']
+      : order.filter((corner) => corner === 'above' || corner === 'below');
+    for (const corner of sides) {
+      const sign = corner === 'above' ? -1 : 1;
+      for (let step = 1; step <= steps; step++) {
+        const offset = step * row;
+        const y =
+          corner === 'above'
+            ? anchorY - gap - height - offset
+            : anchorY + gap + offset;
+        const x = anchorX - width / 2;
+        out[written++] = writePlacement(
+          out[written],
+          corner,
+          clampPlacementCoordinate(x, width, viewportWidth, viewportMargin),
+          clampPlacementCoordinate(y, height, viewportHeight, viewportMargin),
+          width,
+          height,
+          anchorX,
+          anchorY,
+          sign * (Math.abs(negativeLeaderOffset) + offset),
+        );
+      }
+    }
+  }
+  out.length = written;
   return out;
 }
 

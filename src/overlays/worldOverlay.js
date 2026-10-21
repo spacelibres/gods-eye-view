@@ -587,6 +587,13 @@ export function normalizeOverlayEntry(sourceId, entry) {
       : Number.POSITIVE_INFINITY,
     pinnedBypassesSafeTop: entry.pinnedBypassesSafeTop === true,
     placement: String(entry.placement || 'auto'),
+    // How many extra rows a label may step away from its anchor before the
+    // solver gives up on it. Without this a crowded anchor leaves an entry
+    // nothing but four compass positions, so it either overlaps a neighbour or
+    // disappears. 0 restores the pre-stacking behaviour per entry.
+    stackSteps: Number.isFinite(Number(entry.stackSteps))
+      ? Math.max(0, Math.min(8, Math.trunc(Number(entry.stackSteps))))
+      : 3,
     cardStyle: entry.cardStyle,
     image: entry.image ?? null,
     metadata: entry.metadata ?? null,
@@ -2037,6 +2044,11 @@ function snapshotAndProject(entry, source, viewProjection, keyhole) {
   record.placementInput.preferred = entry.placement;
   record.placementInput.verticalOnly = entry.verticalOnly;
   record.placementInput.viewportMargin = entry.viewportMargin;
+  // Stacked rows are what keeps a crowded anchor readable: an entry that cannot
+  // sit beside its point steps further away instead of overlapping or dropping
+  // out. Ambient labels default to a few rows; a card or a selected entry is
+  // worth more room because it carries the reason it is on screen.
+  record.placementInput.stackSteps = entry.stackSteps;
   placementVariants(record.placementInput, record.placements);
   // UI exclusion is a PREFERENCE for chrome that composites ABOVE the host, and
   // a HARD VETO for chrome that composites below it.

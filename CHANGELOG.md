@@ -4,6 +4,16 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.66] — 2026-10-21 — A crowded label steps aside
+
+- Give a crowded label somewhere to go. Every annotation had four compass
+  positions around its point, so wherever five entries shared an anchor — a busy
+  airport, a satellite pass, a chain of cables — the extras either stacked on
+  top of each other or vanished. Each label may now step up to three further
+  rows away from its anchor, each with a leader back to the point it belongs to,
+  and the placement solver picks the first row that is actually clear. Entries
+  opt out with `stackSteps: 0` (spacelibre).
+
 ## [0.2.65] — 2026-10-21 — The deploy script keeps up with itself
 
 - Re-run the deploy script when a push changes it. Bash reads a script as it
