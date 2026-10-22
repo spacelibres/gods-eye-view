@@ -172,27 +172,58 @@ if [ -z "${GEV_REEXEC:-}" ] && [ -s "${GEV_SELF_COPY:-}" ] &&
 fi
 
 # ------------------------------------------------------------------ build ---
-# npm ci honours the lockfile; the registry fallback keeps a slow or blocked
-# npmjs reachable on hosts in mainland China.
-log "Dependencies"
 run_as_service() {
   su -s /bin/bash "$GEV_USER" -c "export PATH=$NODE_DIR:\$PATH; cd $GEV_HOME && $*"
 }
-run_as_service "$NODE_DIR/npm ci --no-audit --no-fund" ||
-  run_as_service "$NODE_DIR/npm ci --no-audit --no-fund --registry=https://registry.npmmirror.com" || {
-    # `npm ci` deletes node_modules first, and both slots have files open under
-    # it, so the rmdir fails with ENOTEMPTY. Only stopping every slot frees the
-    # tree — and since that is the one moment there is no upstream at all, the
-    # retry has to finish and come back down before anything else runs.
-    log "npm ci failed; stopping every slot and retrying with a clean tree"
-    systemctl stop 'gev@*.service' 2>/dev/null || true
-    rm -rf "$GEV_HOME/node_modules"
+# Reuse the installed tree when the lockfile has not changed. `npm ci` deletes
+# and re-downloads every dependency (about 380 MB) on each deploy; only a
+# changed lockfile or a missing tree needs that again. The hash file is
+# untracked, so `git reset --hard` leaves it in place.
+DEPS_HASH_FILE="$GEV_HOME/.deps-lock-hash"
+LOCK_HASH="$(sha256sum "$GEV_HOME/package-lock.json" | cut -d' ' -f1)"
+if [ -d "$GEV_HOME/node_modules" ] && [ -f "$DEPS_HASH_FILE" ] &&
+  [ "$(cat "$DEPS_HASH_FILE")" = "$LOCK_HASH" ]; then
+  log "Dependencies unchanged; reusing node_modules"
+else
+  # npm ci honours the lockfile; the registry fallback keeps a slow or blocked
+  # npmjs reachable on hosts in mainland China.
+  log "Dependencies"
+  run_as_service "$NODE_DIR/npm ci --no-audit --no-fund" ||
     run_as_service "$NODE_DIR/npm ci --no-audit --no-fund --registry=https://registry.npmmirror.com" || {
-      # Restore whatever slot was serving so the site is not left dark.
-      systemctl start "gev@${GEV_LIVE_PORT:-$GEV_PORT}.service" 2>/dev/null || true
-      die "dependency install failed; the previous slots were restarted"
+      # `npm ci` deletes node_modules first, and both slots have files open under
+      # it, so the rmdir fails with ENOTEMPTY. Only stopping every slot frees the
+      # tree — and since that is the one moment there is no upstream at all, the
+      # retry has to finish and come back down before anything else runs.
+      log "npm ci failed; stopping every slot and retrying with a clean tree"
+      systemctl stop 'gev@*.service' 2>/dev/null || true
+      rm -rf "$GEV_HOME/node_modules"
+      run_as_service "$NODE_DIR/npm ci --no-audit --no-fund --registry=https://registry.npmmirror.com" || {
+        # Restore whatever slot was serving so the site is not left dark.
+        systemctl start "gev@${GEV_LIVE_PORT:-$GEV_PORT}.service" 2>/dev/null || true
+        die "dependency install failed; the previous slots were restarted"
+      }
     }
-  }
+  printf '%s\n' "$LOCK_HASH" >"$DEPS_HASH_FILE"
+  chown "$GEV_USER:$GEV_USER" "$DEPS_HASH_FILE" 2>/dev/null || true
+fi
+
+# ------------------------------------------------------- memory headroom ---
+# A build beside both blue/green slots exceeds a small host's RAM and thrashes
+# swap (an 8-12 minute build). Stop the standby slot for the build only: the
+# live slot keeps serving, and the switch below restarts the standby with the
+# new release. Read `.slot` early so we stop the slot that is genuinely idle.
+SLOT_FILE="$GEV_HOME/.slot"
+LIVE_PORT="$GEV_PORT"
+if [ -f "$SLOT_FILE" ]; then
+  . "$SLOT_FILE"
+  LIVE_PORT="${GEV_LIVE_PORT:-$GEV_PORT}"
+fi
+if [ "$LIVE_PORT" = "$GEV_PORT" ]; then IDLE_PORT="$GEV_PORT_B"; else IDLE_PORT="$GEV_PORT"; fi
+if [ "$IDLE_PORT" != "$LIVE_PORT" ] &&
+  systemctl is-active --quiet "gev@$LIVE_PORT.service" 2>/dev/null; then
+  log "Stopping standby slot gev@$IDLE_PORT to free memory for the build"
+  systemctl stop "gev@$IDLE_PORT.service" 2>/dev/null || true
+fi
 
 log "Build"
 if [ -n "$CESIUM_ION_TOKEN" ]; then
@@ -315,8 +346,8 @@ if [ "$LIVE_PORT" = "$GEV_PORT" ]; then IDLE_PORT="$GEV_PORT_B"; else IDLE_PORT=
 install_caddy_site
 
 log "Bringing the new release up on the idle slot ($IDLE_PORT)"
-# Both slots remain running between deploys. Start would leave the standby
-# process on its old backend; reload it while the current live slot still serves.
+# The standby slot was stopped for the build; restart it now with the new
+# release while the live slot still serves, so traffic never moves to a cold slot.
 systemctl restart "gev@$IDLE_PORT.service"
 idle_healthy=""
 for _ in $(seq 1 40); do

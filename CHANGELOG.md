@@ -4,6 +4,17 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.83] — 2026-10-22 — Leaner VPS builds
+
+- Skip `npm ci` when `package-lock.json` is unchanged since the last install,
+  reusing the existing `node_modules` instead of re-downloading every dependency
+  (about 380 MB) on each deploy.
+- Stop the standby blue/green slot before the VPS build and restart it with the
+  new release at the switch. On the 2 GB host the build ran beside both slots,
+  thrashed swap and took 8-12 minutes; the live slot keeps serving throughout,
+  so the build now runs with one fewer server process resident.
+- Verify `bash -n scripts/install-vps.sh`; this is a deploy-script change only.
+
 ## [0.2.82] — 2026-10-22 — Mandatory version, changelog and tag rules
 
 - Make versioning, changelog and tagging a hard gate in `AGENTS.md` §8: every
