@@ -4,6 +4,16 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.82] — 2026-10-22 — Mandatory version, changelog and tag rules
+
+- Make versioning, changelog and tagging a hard gate in `AGENTS.md` §8: every
+  commit bumps the patch version by one, adds its `CHANGELOG.md` entry, and
+  pushes an annotated `vX.Y.Z` tag. Commits land directly on `main`, and
+  published history is never rewritten without explicit written approval.
+- Verify 8,767 passing unit/allocation checks (11 existing platform skips) with
+  zero failures; build, formatting, dependency boundaries and all six locales
+  pass.
+
 ## [0.2.81] — 2026-10-22 — Country flag icons and a complete install icon
 
 - Show a country's flag beside its name in airport and navigation-aid cards and
