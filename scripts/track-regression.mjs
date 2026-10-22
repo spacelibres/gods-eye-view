@@ -2911,6 +2911,16 @@ async function main() {
         const c = Cesium.Cartographic.fromCartesian(pos, Cesium.Ellipsoid.WGS84);
         return { lat: Cesium.Math.toDegrees(c.latitude), lon: Cesium.Math.toDegrees(c.longitude), h: c.height };
       };
+      window.__dfSeedTrackedFloor = (gf, c, heightM) => {
+        if (!c) throw new Error('tracked floor fixture has no current display position');
+        const lat = Number(c.lat.toFixed(3));
+        const lon = Number(c.lon.toFixed(3));
+        for (let dy = -2; dy <= 2; dy++) {
+          for (let dx = -2; dx <= 2; dx++) {
+            gf.reportMeshFloorCell(lat + dy * 0.001, lon + dx * 0.001, heightM);
+          }
+        }
+      };
       // The fleet pass is rate-limited, so counting raw frames under-waits.
       window.__dfSettle = (ms) => new Promise((res) => {
         let done = false;
@@ -3476,6 +3486,13 @@ async function main() {
         // aaa097's pick id (a real defect, and the case the old scene-wide
         // probe reported as a pass).
         const anyModelsIn = window.__dfCountModels();
+        // aaa097 is still taxiing at 12 m/s. Waiting for the model can carry
+        // its display beyond the original seed grid, making the IN no-clamp
+        // discriminator vacuous (raw altitude already above the real DEM).
+        // Keep the independent fixture floor under its CURRENT display cell.
+        const currentInPos = v.trackedEntity?.position?.getValue(Cesium.JulianDate.now());
+        gf._clearMeshFloorCellsForTest();
+        window.__dfSeedTrackedFloor(gf, currentInPos ? window.__dfCarto(currentInPos) : null, seeded);
         await window.__dfSettle(600);
         const zoomedIn = readTracked();
         if (!zoomedIn) return { error: 'tracked entity has no position (zoomed in)' };
@@ -3501,6 +3518,9 @@ async function main() {
         const trackedEntity = v.trackedEntity;
         const trackedModel = findOwnModel();
         const achievedOut = await window.__dfZoomAbove(window.__dfRegime.exit + 5000);
+        const currentOutPos = v.trackedEntity?.position?.getValue(Cesium.JulianDate.now());
+        gf._clearMeshFloorCellsForTest();
+        window.__dfSeedTrackedFloor(gf, currentOutPos ? window.__dfCarto(currentOutPos) : null, seeded);
         const zoomedOut = await window.__dfObserveTrackedExit({
           scene: v.scene, trackedEntity, trackedModel, getTrackedModel: findOwnModel,
           getTrackedEntity: () => v.trackedEntity,
@@ -3568,6 +3588,7 @@ async function main() {
       const dfOutFloored = Number.isFinite(dfOut.h) && Number.isFinite(dfOut.floor)
         && dfOut.h >= dfOut.floor + DISPLAY_FLOOR_LIFT_M - 0.5;
       const dfInStandsAside = Number.isFinite(dfIn.h) && Number.isFinite(dfIn.floor)
+        && dfIn.floor === dfTracked.seeded && dfOut.floor === dfTracked.seeded
         && dfIn.h < dfIn.floor + DISPLAY_FLOOR_LIFT_M - 0.5;
       const dfInModelOwns = dfIn.models?.rendering > 0;
       const dfOutBillboardOwns = dfOut.models?.rendering === 0;
@@ -4120,6 +4141,7 @@ async function main() {
       delete window.__dfSkinSamples;
       delete window.__dfSkinM;
       delete window.__dfObserveTrackedExit;
+      delete window.__dfSeedTrackedFloor;
       await fl.update(v);
     });
 
@@ -4172,10 +4194,12 @@ async function sampleFrames(page, count, sampleFn, ...args) {
     await new Promise((resolve) => {
       let i = 0;
       let settled = false;
+      let animationFrame;
       const finish = () => {
         if (settled) return;
         settled = true;
         clearTimeout(timer);
+        cancelAnimationFrame(animationFrame);
         remove();
         resolve();
       };
@@ -4185,16 +4209,21 @@ async function sampleFrames(page, count, sampleFn, ...args) {
           finish();
           return;
         }
-        // Cesium runs with requestRenderMode enabled, so one request produces
-        // one postRender callback. Drive every sample explicitly instead of
-        // waiting forever after the first frame.
-        v.scene.requestRender();
       });
       const timer = setTimeout(() => {
         timedOut = true;
         finish();
       }, Math.max(15000, n * 1500));
-      v.scene.requestRender();
+      // Render requests coalesce; issuing the next one from the current
+      // postRender alone can leave the sampler waiting on an idle scene.
+      // Keep requesting on the browser's frame clock, but count only actual
+      // Cesium postRender events. Stop the pump on success AND timeout.
+      const pump = () => {
+        if (settled) return;
+        v.scene.requestRender();
+        animationFrame = requestAnimationFrame(pump);
+      };
+      pump();
     });
     return { values: out, timedOut };
   }, sampleFn.toString(), count, args);

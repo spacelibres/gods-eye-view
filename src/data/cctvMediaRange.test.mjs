@@ -12,7 +12,10 @@ import { Readable, Writable } from 'node:stream';
 import { cctvProxy } from '../../server/providers/cctv.js';
 import { proxyMediaResponse } from '../../server/providers/cctv/media.js';
 import { sanitizeCctvRangeHeader } from '../../server/providers/cctv/range.js';
-import { CCTV_MEDIA_MAX_BODY_BYTES as CAP } from '../../server/providers/cctv/constants.js';
+import {
+  CCTV_MEDIA_FETCH_TIMEOUT_MS,
+  CCTV_MEDIA_MAX_BODY_BYTES as CAP,
+} from '../../server/providers/cctv/constants.js';
 
 test('single well-formed byte ranges pass through canonicalized', () => {
   assert.equal(sanitizeCctvRangeHeader('bytes=0-1023'), 'bytes=0-1023');
@@ -449,56 +452,79 @@ test('a client that disconnects mid-stream stops the upstream read', async (t) =
   assert.equal(entry.status, 'ok');
 });
 
-test('a client that leaves before the headers arrive cancels the upstream request', async (t) => {
-  // The camera is slow, or dead: nothing comes back until the request is
-  // cancelled. Everything worth testing here happens before any header.
-  let aborted = false;
-  const app = mount(t, ({ init }) => {
-    return new Promise((_resolve, reject) => {
-      init.signal.addEventListener('abort', () => {
-        aborted = true;
-        reject(Object.assign(new Error('aborted'), { name: 'AbortError' }));
+test(
+  'a client that leaves before the headers arrive cancels the upstream request',
+  { timeout: 2 * CCTV_MEDIA_FETCH_TIMEOUT_MS },
+  async (t) => {
+    // The camera is slow, or dead: nothing comes back until the request is
+    // cancelled. Everything worth testing here happens before any header.
+    let aborted = false;
+    let upstreamStartedAt = 0;
+    const upstreamStarted = Promise.withResolvers();
+    const upstreamAborted = Promise.withResolvers();
+    const app = mount(t, ({ init }) => {
+      upstreamStartedAt = performance.now();
+      upstreamStarted.resolve();
+      return new Promise((_resolve, reject) => {
+        init.signal.addEventListener('abort', () => {
+          aborted = true;
+          upstreamAborted.resolve();
+          reject(Object.assign(new Error('aborted'), { name: 'AbortError' }));
+        });
       });
     });
-  });
 
-  const server = http.createServer((req, res) => {
-    req.url = req.url.replace('/api/cctv', '') || '/';
-    Promise.resolve(app.handler(req, res)).catch(() => {});
-  });
-  t.after(() => new Promise((resolve) => server.close(resolve)));
-  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
-  const { port } = server.address();
+    let request;
+    const server = http.createServer((req, res) => {
+      req.url = req.url.replace('/api/cctv', '') || '/';
+      Promise.resolve(app.handler(req, res)).catch(() => {});
+    });
+    t.after(() => {
+      request?.destroy();
+      server.closeAllConnections();
+      return new Promise((resolve) => server.close(resolve));
+    });
+    await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+    const { port } = server.address();
 
-  const failures = [];
-  const onUncaught = (error) => failures.push(error);
-  process.on('uncaughtException', onUncaught);
-  t.after(() => process.off('uncaughtException', onUncaught));
+    const failures = [];
+    const onUncaught = (error) => failures.push(error);
+    process.on('uncaughtException', onUncaught);
+    t.after(() => process.off('uncaughtException', onUncaught));
 
-  const request = http.get({
-    host: '127.0.0.1',
-    port,
-    path: `/api/cctv/media/${CAMERA.id}`,
-    headers: { Range: 'bytes=0-1023' },
-  });
-  request.on('error', () => {});
-  // Let the route reach its upstream request, then walk away before it answers.
-  await new Promise((resolve) => setTimeout(resolve, 150));
-  assert.equal(app.requests.length, 1, 'the upstream request went out');
-  assert.equal(aborted, false, 'nothing was cancelled while the client waited');
-  request.destroy();
-  await new Promise((resolve) => setTimeout(resolve, 250));
+    request = http.get({
+      host: '127.0.0.1',
+      port,
+      path: `/api/cctv/media/${CAMERA.id}`,
+      headers: { Range: 'bytes=0-1023' },
+    });
+    request.on('error', (error) => upstreamStarted.reject(error));
+    // Let the route reach its upstream request, then walk away before it answers.
+    await upstreamStarted.promise;
+    assert.equal(app.requests.length, 1, 'the upstream request went out');
+    assert.equal(
+      aborted,
+      false,
+      'nothing was cancelled while the client waited',
+    );
+    request.destroy();
+    await upstreamAborted.promise;
 
-  assert.equal(aborted, true, 'the upstream request outlived the client');
-  assert.deepEqual(
-    failures.map((error) => error?.message),
-    [],
-    'a client leaving early must not fault the server',
-  );
-  // The camera did nothing wrong; the viewer left.
-  const entry = await app.health();
-  assert.notEqual(entry?.status, 'degraded');
-});
+    assert.equal(aborted, true, 'the upstream request outlived the client');
+    assert.ok(
+      performance.now() - upstreamStartedAt < CCTV_MEDIA_FETCH_TIMEOUT_MS,
+      'the disconnect must cancel upstream before its independent header deadline',
+    );
+    assert.deepEqual(
+      failures.map((error) => error?.message),
+      [],
+      'a client leaving early must not fault the server',
+    );
+    // The camera did nothing wrong; the viewer left.
+    const entry = await app.health();
+    assert.notEqual(entry?.status, 'degraded');
+  },
+);
 
 test('a folded CR/LF range never reaches the upstream through a real client', async (t) => {
   // Node's own parser, not a hand-built headers object, so the reachability of

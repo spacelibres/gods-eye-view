@@ -47,6 +47,14 @@ remains unmerged and production remains unchanged.
 
 ### Task 1: Local catalog and incremental maintenance
 
+**2026-10-22 validation repair:** the failures recorded in the checkpoint above
+are now resolved on this feature branch. Full unit tests pass (8,686 passed,
+11 existing platform skips, zero failures), tracking passes 109/109 and the
+attribution browser gate passes 26/26. See
+`2026-10-22-fix-validation-failures.md` for root causes and commands. Translation
+coverage remains partial as previously recorded; this repair does not complete
+the outstanding worldwide translation content or deploy production.
+
 **Files:** server/providers/airports/localization.js, server/providers/airports/localization.test.mjs, scripts/airport-translations.mjs, server/data/airports/translations/.
 
 **Interfaces:** export fieldFingerprint(record, field), localizeSnapshot(snapshot, catalog, locale), translationWorklist(snapshot, catalog), mergeTranslations(snapshot, catalog, entries). Entries identify entity kind, ID, field, locale, source fingerprint and translated text. Locale databases store verified translations only.

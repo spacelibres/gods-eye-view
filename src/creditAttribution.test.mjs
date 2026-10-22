@@ -205,6 +205,7 @@ const RECOGNIZED = new Set([
   // rail
   '#right-context-rail',
   '#right-context-rail.layout-focus',
+  '#right-context-rail.mobile-panel-open',
   '#right-context-rail[data-rail-measuring]',
   // tray
   '#command-dock .dock-popover-content',
@@ -418,7 +419,7 @@ test('the model refuses every cascade construct it cannot resolve', () => {
         // modelled band by the rail clearance test) and `.layout-focus`
         // (proven inapplicable at <=720px by the mobile-mode test), plus
         // synchronous measurement, which is removed before any paint.
-        const railOwn = part === '#right-context-rail' && decl.prop === 'max-height';
+        const railOwn = ['#right-context-rail', '#right-context-rail.mobile-panel-open'].includes(part) && decl.prop === 'max-height';
         const railFocus = part === '#right-context-rail.layout-focus';
         if (!railOwn && !railFocus && !railMeasurement) complaints.push(`${decl.prop}: ${decl.value} on "${part}"`);
       }
@@ -561,12 +562,12 @@ test('the full-width context rail clears the required credit at every modelled v
     // `bottom` only governs the floor while the box is not height-capped:
     // top + bottom + a resolved height is over-constrained and drops `bottom`.
     assert.equal(
-      resolve(['#right-context-rail'], 'max-height', width, 'context rail').decl.value,
+      resolve(['#right-context-rail', '#right-context-rail.mobile-panel-open'], 'max-height', width, 'context rail').decl.value,
       'none',
       `at ${width}px the rail is height-capped, so its bottom anchor no longer decides its floor`,
     );
     for (const height of HEIGHTS) {
-      const rail = resolve(['#right-context-rail'], 'bottom', width, 'context rail');
+      const rail = resolve(['#right-context-rail', '#right-context-rail.mobile-panel-open'], 'bottom', width, 'context rail');
       const clearance = toPx(rail.decl.value, height, 'rail bottom') - creditTopPx(width, height);
       if (clearance < MIN_CLEARANCE_PX) failures.push(`${width}x${height}: ${clearance.toFixed(1)}px`);
     }

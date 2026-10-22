@@ -888,10 +888,7 @@ test('markup, startup ordering and accessibility remain pinned', () => {
     'the launcher must keep its OWN prefers-reduced-motion block, covering the card and the scrolling list',
   );
   // The card must be click-through until revealed and again while it fades out.
-  const base = css.slice(
-    css.indexOf('#first-run-launcher {'),
-    css.indexOf('#first-run-launcher.visible'),
-  );
+  const base = css.match(/#first-run-launcher \{([^}]*)\}/)?.[1] || '';
   assert.match(base, /pointer-events: none/);
   assert.match(
     css,
@@ -994,11 +991,13 @@ test('the voice TOOL SCHEMA matches the pinned contract — the mission mapping 
   // schema, which may not carry top-level anyOf), and Contacts requested-radius
   // list descriptions; the missions still ride existing tools.
   // Street Level and GNSS extend the manifest; broadcast caveats describe tracked and analyst aircraft.
-  // Air quality (ECCC AQHI) extends the manifest.
-  assert.equal(block.length, 30655, 'serialized tool schema length drifted');
+  // Air quality (ECCC AQHI) extends the manifest. Airports adds 61 bytes:
+  // three enum entries (33) and its spoken alias hint (28); actionSchemas.test
+  // verifies removing exactly these additions restores the previous payload.
+  assert.equal(block.length, 30716, 'serialized tool schema length drifted');
   assert.equal(
     crypto.createHash('sha256').update(block).digest('hex'),
-    '3b1d5e77c10a92f6543a4f9d1ff1870101a0306b65e5b8a6113111c81eda371e',
+    '85453ff141a146fce53a75071e905d0173fa09c32f9af04541e9c3f3d9a3ce88',
     'the first-run missions must ride EXISTING tools: no schema edit, no cache bust',
   );
   const instructions = fs.readFileSync(

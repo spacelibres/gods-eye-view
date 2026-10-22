@@ -15,9 +15,10 @@
  *   (iv)  toggling recording-mode keeps #cesium-credits visible (screenshot).
  *
  * Run:  node scripts/qa-attribution-b12.mjs --url http://localhost:4300
+ * Optional hermetic fixtures: --offline-imagery --offline-providers
  */
 import puppeteer from 'puppeteer';
-import { existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
@@ -29,6 +30,8 @@ function getOpt(flag, def) {
 }
 const APP_URL = getOpt('--url', 'http://localhost:4300');
 const APP_ORIGIN = new URL(APP_URL).origin;
+const OFFLINE_IMAGERY = argv.includes('--offline-imagery');
+const OFFLINE_PROVIDERS = argv.includes('--offline-providers');
 const SHOT_DIR = resolve(__dirname, '..', 'qa-shots', 'b12');
 mkdirSync(SHOT_DIR, { recursive: true });
 
@@ -70,17 +73,46 @@ const REQUIRED_CREDIT_SUBSTRINGS = [
 ];
 
 async function main() {
+  const offlineImageryTile = OFFLINE_IMAGERY
+    ? readFileSync(new URL('../node_modules/cesium/Build/Cesium/Assets/Textures/NaturalEarthII/0/0/0.jpg', import.meta.url))
+    : null;
+  const pendingRequests = new Set();
   const chromeExecutable = findChromeExecutable();
   const browser = await puppeteer.launch({
     headless: 'new',
     ...(chromeExecutable ? { executablePath: chromeExecutable } : {}),
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--use-gl=angle', '--use-angle=swiftshader'],
   });
+  try {
   const page = await browser.newPage();
   await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
   await page.setRequestInterception(true);
   page.on('request', (request) => {
+    pendingRequests.add(request.url());
     const url = new URL(request.url());
+    // Same image-only fixture as tracking; provider metadata and credits stay live.
+    const knownImageryTile = request.method() === 'GET' && (
+      (url.origin === 'https://services.arcgisonline.com'
+        && /^\/ArcGIS\/rest\/services\/World_Imagery\/MapServer\/tile\/\d+\/\d+\/\d+$/.test(url.pathname))
+      || (url.origin === 'https://tile.openstreetmap.org'
+        && /^\/\d+\/\d+\/\d+\.png$/.test(url.pathname))
+    );
+    if (OFFLINE_IMAGERY && knownImageryTile) {
+      request.respond({ status: 200, contentType: 'image/jpeg',
+        headers: { 'Access-Control-Allow-Origin': '*' }, body: offlineImageryTile });
+      return;
+    }
+    // Capability probes never mint credentials in this fixture. Match tracking's
+    // configured voice response; an empty Google token payload means no token
+    // service, per src/maps/googleTokens.js, preserving fallback imagery credits.
+    const voiceProbe = url.origin === APP_ORIGIN && url.searchParams.get('probe') === '1'
+      && /^\/api\/(realtime|dashscope|doubao)\/token$/.test(url.pathname);
+    const googleTokenProbe = url.origin === APP_ORIGIN && url.pathname === '/api/google/tiles-token';
+    if (OFFLINE_PROVIDERS && request.method() === 'GET' && (voiceProbe || googleTokenProbe)) {
+      request.respond({ status: 200, contentType: 'application/json',
+        body: JSON.stringify(voiceProbe ? { configured: true } : {}) });
+      return;
+    }
     if (url.origin === APP_ORIGIN && url.pathname === '/api/openai/hud-summary') {
       request.respond({
         status: 200,
@@ -100,6 +132,8 @@ async function main() {
     request.continue();
   });
 
+  page.on('requestfinished', (request) => pendingRequests.delete(request.url()));
+  page.on('requestfailed', (request) => pendingRequests.delete(request.url()));
   const consoleErrors = [];
   const failedResponses = [];
   page.on('console', (msg) => {
@@ -108,6 +142,7 @@ async function main() {
       consoleErrors.push(sourceUrl ? `${msg.text()} [${sourceUrl}]` : msg.text());
     }
   });
+  page.on('pageerror', (error) => consoleErrors.push(`Uncaught: ${error.message}`));
   page.on('response', (response) => {
     if (response.status() >= 500) {
       failedResponses.push(`HTTP ${response.status()} ${response.url()}`);
@@ -115,13 +150,18 @@ async function main() {
   });
 
   console.log(`\n  qa-attribution-b12 → ${APP_URL}\n`);
-  await page.goto(APP_URL, { waitUntil: 'domcontentloaded', timeout: 60000 });
-
-  // Wait for the app + viewer.creditDisplay to be live.
-  await page.waitForFunction(
-    () => window.__godsEyeView && window.__godsEyeView.viewer && window.__godsEyeView.viewer.creditDisplay,
-    { timeout: 60000 },
-  );
+  // Wait for document navigation and the app's viewer.creditDisplay to be live.
+  try {
+    await page.goto(APP_URL, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    await page.waitForFunction(
+      () => window.__godsEyeView && window.__godsEyeView.viewer && window.__godsEyeView.viewer.creditDisplay,
+      { timeout: 60000 },
+    );
+  } catch (error) {
+    await page.screenshot({ path: resolve(SHOT_DIR, 'startup-failure.png') });
+    console.error('Startup diagnostics:', { consoleErrors, failedResponses, pendingRequests: [...pendingRequests] });
+    throw error;
+  }
   // Give Cesium a few frames to render the on-screen credit line (logo + link).
   await new Promise((r) => setTimeout(r, 2500));
 
@@ -297,6 +337,79 @@ async function main() {
   );
   await page.screenshot({ path: resolve(SHOT_DIR, 'attribution-lightbox-mobile.png') });
   await page.evaluate(() => window.__godsEyeView.viewer.creditDisplay.hideLightbox());
+  // The mobile overlay has a more specific bottom anchor than the base rail.
+  // Exercise the real switch so that open-state cascade cannot cover credits.
+  for (const height of [844, 1600]) {
+    await page.setViewport({ width: 390, height, deviceScaleFactor: 1 });
+    const switchSelector = '.mobile-panel-switch[data-panel-group="right-context-rail"]';
+    await page.waitForSelector(switchSelector, { visible: true });
+    await page.waitForFunction((selector) => {
+      const button = document.querySelector(selector);
+      const rect = button?.getBoundingClientRect();
+      return rect && button.contains(document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2));
+    }, { timeout: 10000 }, switchSelector).catch(async (error) => {
+      await page.screenshot({ path: resolve(SHOT_DIR, `mobile-switch-blocked-${height}.png`) });
+      console.error('Mobile switch blocked:', await page.evaluate((selector) => {
+        const button = document.querySelector(selector);
+        const rect = button?.getBoundingClientRect();
+        return { bodyClass: document.body.className, button: button?.outerHTML,
+          blocker: rect ? document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2)?.outerHTML : null };
+      }, switchSelector));
+      throw error;
+    });
+    await page.click(switchSelector);
+    await page.waitForFunction(() =>
+      document.getElementById('right-context-rail')?.classList.contains('mobile-panel-open'));
+    await page.evaluate(() => {
+      const viewer = window.__godsEyeView.viewer;
+      viewer.resize();
+      viewer.scene.requestRender();
+    });
+    await page.waitForFunction(() => {
+      const link = document.querySelector('#cesium-credits .cesium-credit-expand-link');
+      return link?.getBoundingClientRect().height > 0;
+    }, { timeout: 10000 });
+    const clearance = await page.evaluate(async () => {
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const rail = document.getElementById('right-context-rail');
+      const credit = document.getElementById('cesium-credits');
+      const railRect = rail.getBoundingClientRect();
+      // Cesium floats its rendered row, so the credit host may have zero height.
+      // Measure the actual visible logo/text/link boxes, including their ink area.
+      const boxes = [...credit.querySelectorAll('.cesium-credit-logoContainer, .cesium-credit-textContainer, .cesium-credit-expand-link')]
+        .filter((node) => {
+          for (let current = node; current; current = current.parentElement) {
+            const style = getComputedStyle(current);
+            if (style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity) === 0) return false;
+          }
+          return true;
+        }).map((node) => node.getBoundingClientRect()).filter((rect) => rect.width > 0 && rect.height > 0);
+      const creditRect = {
+        left: Math.min(...boxes.map((rect) => rect.left)),
+        right: Math.max(...boxes.map((rect) => rect.right)),
+        top: Math.min(...boxes.map((rect) => rect.top)),
+        bottom: Math.max(...boxes.map((rect) => rect.bottom)),
+      };
+      creditRect.height = creditRect.bottom - creditRect.top;
+      const style = getComputedStyle(credit);
+      return {
+        gap: creditRect.top - railRect.bottom,
+        railHeight: railRect.height,
+        creditHeight: creditRect.height,
+        creditVisible: style.display !== 'none' && style.visibility !== 'hidden'
+          && Number(style.opacity) > 0 && boxes.length > 0 && creditRect.height > 0
+          && /Data attribution/i.test(credit.querySelector('.cesium-credit-expand-link')?.textContent || ''),
+        creditInViewport: creditRect.left >= 0 && creditRect.right <= innerWidth
+          && creditRect.top >= 0 && creditRect.bottom <= innerHeight,
+      };
+    });
+    check(`mobile right panel clears visible credits at 390x${height}`,
+      clearance.railHeight > 0 && clearance.creditVisible && clearance.creditInViewport
+        && clearance.gap >= 8,
+      `gap=${clearance.gap.toFixed(1)}px credit=${clearance.creditHeight}px rail=${clearance.railHeight}px`);
+    await page.screenshot({ path: resolve(SHOT_DIR, `attribution-mobile-panel-${height}.png`) });
+    await page.click(switchSelector);
+  }
   await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
 
   // ── (ii) enable datacenters + cables; credits still present ────────
@@ -391,13 +504,14 @@ async function main() {
     failedResponses.slice(0, 3).join(' | ') || 'clean',
   );
 
-  await browser.close();
-
   console.log('\n────────────────────────────────────────────────────────────');
   console.log(`  RESULT: ${passed} passed, ${failed} failed`);
   console.log(`  Screenshots: ${SHOT_DIR}`);
   console.log('────────────────────────────────────────────────────────────\n');
-  process.exit(failed === 0 ? 0 : 1);
+  process.exitCode = failed === 0 ? 0 : 1;
+  } finally {
+    await browser.close();
+  }
 }
 
 main().catch((e) => {

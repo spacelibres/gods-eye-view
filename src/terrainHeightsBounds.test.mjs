@@ -30,6 +30,19 @@ function install(plugin) {
   return routes;
 }
 
+// Each route owns an empty disk cache: developer terrain data must neither
+// suppress expected upstream calls nor be overwritten by these fixtures.
+async function terrainRoute(t, options = {}) {
+  const dir = await mkdtemp(path.join(tmpdir(), 'gev-terrain-bounds-'));
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  return install(
+    terrainHeightsProxy({
+      ...options,
+      cachePath: path.join(dir, 'terrain-heights.json'),
+    }),
+  ).get('/api/terrain/heights');
+}
+
 function request(
   handler,
   { url = '/', remoteAddress = '127.0.0.1', reqHeaders = {} } = {},
@@ -122,7 +135,7 @@ test('an out-of-range point is refused before it reaches upstream or the cache',
     upstreamCalls += 1;
     return new Response('[]', { status: 200 });
   });
-  const route = install(terrainHeightsProxy()).get('/api/terrain/heights');
+  const route = await terrainRoute(t);
 
   const refused = await request(route, { url: '/?points=0,91' });
   assert.equal(refused.statusCode, 400);
@@ -135,7 +148,7 @@ test('an out-of-range point is refused before it reaches upstream or the cache',
 
 test('one out-of-range point rejects the batch it is hidden in', async (t) => {
   stubFetch(t, async () => new Response('[]', { status: 200 }));
-  const route = install(terrainHeightsProxy()).get('/api/terrain/heights');
+  const route = await terrainRoute(t);
   const mixed = await request(route, {
     url: '/?points=-97.74,30.26;0,999;-97.75,30.27',
   });
@@ -145,9 +158,7 @@ test('one out-of-range point rejects the batch it is hidden in', async (t) => {
 test('the point cache stops growing, and an evicted point is simply refetched', async (t) => {
   const asked = stubTerrainUpstream(t);
   // A ceiling of 3 exercises the same code path 50,000 does, in four requests.
-  const route = install(terrainHeightsProxy({ cacheMaxEntries: 3 })).get(
-    '/api/terrain/heights',
-  );
+  const route = await terrainRoute(t, { cacheMaxEntries: 3 });
 
   const point = (i) => `-97.7${i}000,30.26000`;
   for (let i = 1; i <= 4; i += 1)
@@ -201,7 +212,7 @@ test('an over-large cache file is not read back into memory', async (t) => {
 
 test('the route refuses a flood of requests from one client', async (t) => {
   stubTerrainUpstream(t);
-  const route = install(terrainHeightsProxy()).get('/api/terrain/heights');
+  const route = await terrainRoute(t);
 
   let refusedAt = 0;
   for (let i = 1; i <= 95; i += 1) {
@@ -218,7 +229,7 @@ test('the route refuses a flood of requests from one client', async (t) => {
 
 test('a cross-site page cannot fill the cache or spend the visitor quota', async (t) => {
   const asked = stubTerrainUpstream(t);
-  const route = install(terrainHeightsProxy()).get('/api/terrain/heights');
+  const route = await terrainRoute(t);
   const host = 'localhost:5173';
   const refused = [
     { host, 'sec-fetch-site': 'cross-site' }, // <img src> from any web page
@@ -253,7 +264,7 @@ test('a cross-site page cannot fill the cache or spend the visitor quota', async
 
 test('the app served behind a reverse proxy still gets terrain', async (t) => {
   const asked = stubTerrainUpstream(t);
-  const route = install(terrainHeightsProxy()).get('/api/terrain/heights');
+  const route = await terrainRoute(t);
   const host = 'globe.example.lan';
   // What nginx/Caddy/Cloudflare add in front of a same-origin app fetch. The
   // cost-bearing routes refuse these; terrain is keyless and needed to render,
@@ -344,10 +355,8 @@ test('cost-bearing routes still refuse proxied requests', () => {
 });
 
 test('a second client keeps its own quota', async (t) => {
-  stubFetch(t, async () =>
-    Response.json([{ lng: -97.74, lat: 30.26, height: 150 }]),
-  );
-  const route = install(terrainHeightsProxy()).get('/api/terrain/heights');
+  stubTerrainUpstream(t);
+  const route = await terrainRoute(t);
 
   for (let i = 0; i < 90; i += 1)
     await request(route, {
@@ -364,5 +373,5 @@ test('a second client keeps its own quota', async (t) => {
     url: '/?points=-99.6,30.26',
     remoteAddress: '198.51.100.8',
   });
-  assert.notEqual(neighbour.statusCode, 429);
+  assert.equal(neighbour.statusCode, 200);
 });

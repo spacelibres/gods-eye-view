@@ -224,6 +224,36 @@ test('placement variants flip below near the top and stay viewport-clamped', () 
   assert.equal(reused[0].corner, 'above');
 });
 
+test('placement variants retain each pooled placement and rectangle across moving frames', () => {
+  for (const verticalOnly of [false, true]) {
+    for (const stackSteps of [0, 3]) {
+      const input = {
+        anchorX: 100,
+        anchorY: 80,
+        width: 40,
+        height: 20,
+        viewportWidth: 800,
+        viewportHeight: 600,
+        verticalOnly,
+        stackSteps,
+      };
+      const out = placementVariants(input);
+      const placements = out.slice();
+      const rectangles = out.map((placement) => placement.rect);
+      input.anchorX += 17;
+      placementVariants(input, out);
+      for (let i = 0; i < out.length; i++) {
+        assert.equal(
+          out[i],
+          placements[i],
+          `placement ${i} must retain its pool slot`,
+        );
+        assert.equal(out[i].rect, rectangles[i]);
+      }
+    }
+  }
+});
+
 test('tactical cards retain vertical-only placement and sprite-edge leaders', () => {
   const placements = placementVariants({
     anchorX: 100,

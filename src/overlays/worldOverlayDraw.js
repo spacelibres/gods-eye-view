@@ -401,18 +401,65 @@ export function measureOverlayEntry(ctx, entry, out = {}) {
   return out;
 }
 
-function writePlacement(
-  out,
-  corner,
-  x,
-  y,
-  w,
-  h,
-  anchorX,
-  anchorY,
-  signedLeaderOffset = 0,
-) {
-  const placement = out || {};
+// Pass the pooled input and integer row index across this call boundary.
+// Passing computed coordinates boxed doubles for every stacked placement when
+// the expanded placement generator exceeded V8's inlining budget.
+function writePlacement(input, corner, step, out) {
+  const {
+    anchorX,
+    anchorY,
+    width: w,
+    height: h,
+    viewportWidth,
+    viewportHeight,
+    gap = 12,
+    leaderOffset = 0,
+    viewportMargin = 4,
+  } = input;
+  const offset = step * (h + gap);
+  let x = anchorX - w / 2;
+  let y = anchorY - gap - h - offset;
+  if (corner === 'below') y = anchorY + gap + offset;
+  else if (corner === 'right') {
+    x = anchorX + gap;
+    y = anchorY - h / 2;
+  } else if (corner === 'left') {
+    x = anchorX - gap - w;
+    y = anchorY - h / 2;
+  }
+  x = Math.max(
+    viewportMargin,
+    Math.min(x, Math.max(viewportMargin, viewportWidth - w - viewportMargin)),
+  );
+  y = Math.max(
+    viewportMargin,
+    Math.min(y, Math.max(viewportMargin, viewportHeight - h - viewportMargin)),
+  );
+  const roundedLeaderOffset = leaderOffset === 0 ? 0 : Math.round(leaderOffset);
+  const signedLeaderOffset =
+    step > 0
+      ? (corner === 'above' ? -1 : 1) * (Math.abs(roundedLeaderOffset) + offset)
+      : leaderOffset === 0
+        ? 0
+        : corner === 'above' || corner === 'left'
+          ? -roundedLeaderOffset
+          : roundedLeaderOffset;
+  // Establish double fields before their first integral coordinate. Otherwise
+  // mixed integer/fractional placements retain tagged fields and box numeric
+  // writes every moving frame, even though the placement object itself is pooled.
+  const placement = out || {
+    corner: '',
+    rect: { x: 0.5, y: 0.5, w: 0.5, h: 0.5 },
+    centerX: 0.5,
+    centerY: 0.5,
+    anchorX: 0.5,
+    anchorY: 0.5,
+    leaderOffset: 0.5,
+    leadFromX: 0.5,
+    leadFromY: 0.5,
+    leadToX: 0.5,
+    leadToY: 0.5,
+  };
   placement.corner = corner;
   placement.rect ||= {};
   placement.rect.x = Math.round(x);
@@ -423,9 +470,7 @@ function writePlacement(
   placement.centerY = placement.rect.y + h / 2;
   placement.anchorX = anchorX;
   placement.anchorY = anchorY;
-  // This value is computed once per entry below and copied into every pooled
-  // placement. Keeping the signed pixel offset a Smi avoids boxing a fresh
-  // `anchor +/- offset` double on every placement write.
+  // Retain the authored leader offset separately from the anchor coordinates.
   placement.leaderOffset = signedLeaderOffset;
   if (corner === 'above' || corner === 'below') {
     placement.leadFromX = anchorX;
@@ -463,13 +508,6 @@ const VERTICAL_PLACEMENT_ORDERS = Object.freeze({
   below: Object.freeze(['below', 'above']),
 });
 
-function clampPlacementCoordinate(value, size, viewportSize, margin = 4) {
-  return Math.max(
-    margin,
-    Math.min(value, Math.max(margin, viewportSize - size - margin)),
-  );
-}
-
 /**
  * Build deterministic above/below/right/left placements, clamped to the live
  * viewport. The caller may reuse `out` and its placement objects every frame.
@@ -488,90 +526,33 @@ function clampPlacementCoordinate(value, size, viewportSize, margin = 4) {
  * @param {Array<object>} [out]
  * @returns {Array<object>}
  */
-export function placementVariants(
-  {
-    anchorX,
+export function placementVariants(input, out = []) {
+  const {
     anchorY,
-    width,
     height,
-    viewportWidth,
-    viewportHeight,
     gap = 12,
     preferred = 'auto',
-    leaderOffset = 0,
     verticalOnly = false,
-    viewportMargin = 4,
     stackSteps = 0,
-  },
-  out = [],
-) {
+  } = input;
   const automatic = anchorY - gap - height >= 4 ? 'above' : 'below';
   const orders = verticalOnly ? VERTICAL_PLACEMENT_ORDERS : PLACEMENT_ORDERS;
   const order = orders[preferred] || orders[automatic];
-  let positiveLeaderOffset = leaderOffset;
-  let negativeLeaderOffset = leaderOffset;
-  if (leaderOffset !== 0) {
-    positiveLeaderOffset = Math.round(leaderOffset);
-    negativeLeaderOffset = -positiveLeaderOffset;
-  }
   let written = 0;
   for (let i = 0; i < order.length; i++) {
-    const corner = order[i];
-    let x = anchorX - width / 2;
-    let y = anchorY - gap - height;
-    if (corner === 'below') y = anchorY + gap;
-    else if (corner === 'right') {
-      x = anchorX + gap;
-      y = anchorY - height / 2;
-    } else if (corner === 'left') {
-      x = anchorX - gap - width;
-      y = anchorY - height / 2;
-    }
-    out[written++] = writePlacement(
-      out[written],
-      corner,
-      clampPlacementCoordinate(x, width, viewportWidth, viewportMargin),
-      clampPlacementCoordinate(y, height, viewportHeight, viewportMargin),
-      width,
-      height,
-      anchorX,
-      anchorY,
-      corner === 'above' || corner === 'left'
-        ? negativeLeaderOffset
-        : positiveLeaderOffset,
-    );
+    out[written] = writePlacement(input, order[i], 0, out[written]);
+    written++;
   }
-  // Stacking: further rows on the same side, each one a full row clear of the
-  // one before it. Crowded anchors run out of compass positions long before
-  // they run out of the room to step away from the anchor, and a label lifted
-  // with a leader back to its point reads far better than one that overlaps
-  // its neighbour or blinks out of existence.
   const steps = Math.max(0, Math.min(8, Math.trunc(Number(stackSteps) || 0)));
   if (steps > 0) {
-    const row = height + gap;
-    const sides = verticalOnly
-      ? [order[0] === 'below' ? 'below' : 'above']
-      : order.filter((corner) => corner === 'above' || corner === 'below');
-    for (const corner of sides) {
-      const sign = corner === 'above' ? -1 : 1;
+    // Preserve compass order without constructing a per-candidate sides array.
+    const sideCount = verticalOnly ? 1 : order.length;
+    for (let side = 0; side < sideCount; side++) {
+      const corner = order[side];
+      if (corner !== 'above' && corner !== 'below') continue;
       for (let step = 1; step <= steps; step++) {
-        const offset = step * row;
-        const y =
-          corner === 'above'
-            ? anchorY - gap - height - offset
-            : anchorY + gap + offset;
-        const x = anchorX - width / 2;
-        out[written++] = writePlacement(
-          out[written],
-          corner,
-          clampPlacementCoordinate(x, width, viewportWidth, viewportMargin),
-          clampPlacementCoordinate(y, height, viewportHeight, viewportMargin),
-          width,
-          height,
-          anchorX,
-          anchorY,
-          sign * (Math.abs(negativeLeaderOffset) + offset),
-        );
+        out[written] = writePlacement(input, corner, step, out[written]);
+        written++;
       }
     }
   }
