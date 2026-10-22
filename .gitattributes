@@ -21,3 +21,8 @@
 
 # Preserve exact upstream CSV bytes so source checksums survive checkout.
 server/data/airports/raw/*.csv -text
+
+# Compiled local translations are generated from the reviewed source catalog.
+server/data/airports/translations/*.json linguist-generated=true
+server/data/airports/translations/authored.json linguist-generated=false
+server/data/airports/translations/manifest.json linguist-generated=false

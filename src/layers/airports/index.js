@@ -186,10 +186,14 @@ export function createAirportsLayer({
       overlayHost.setVisible('airports', false);
       render();
     },
+    refresh() {
+      return layer.update();
+    },
     update() {
       if (!enabled || !data) return Promise.resolve(false);
       const options = query();
-      const key = JSON.stringify(options);
+      const locale = getLocale();
+      const key = JSON.stringify([locale, options]);
       if (request && requestKey === key) return pending;
       request?.abort();
       const controller = new AbortController();
@@ -205,7 +209,12 @@ export function createAirportsLayer({
             ...options,
             signal: controller.signal,
           });
-          if (controller.signal.aborted || request !== controller || !enabled)
+          if (
+            controller.signal.aborted ||
+            request !== controller ||
+            !enabled ||
+            getLocale() !== locale
+          )
             return false;
           const next = selectAirports(snapshot.airports, options.types);
           const accent = accentColor();
@@ -339,7 +348,12 @@ export function createAirportsLayer({
               snapshot.airports.length > next.length,
           };
           await referenceUpdate;
-          if (controller.signal.aborted || request !== controller || !enabled)
+          if (
+            controller.signal.aborted ||
+            request !== controller ||
+            !enabled ||
+            getLocale() !== locale
+          )
             return false;
           lastUpdate = Date.now();
           error = null;

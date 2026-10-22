@@ -789,3 +789,39 @@ test('airport ambiguity flies only to the selected choice',async()=>{
  const viewer=stubViewer();const choices=[{lat:51,lng:0,label:'First Airport',types:['airport'],exact:true},{lat:40,lng:10,label:'Second Airport',types:['airport'],exact:true}];let offered;
  const result=await searchAndFlyTo(viewer,'ABC',{placeSearch:{geocode:async()=>({place:null,answered:true,terminal:true,choices})},chooseAirport:async values=>{offered=values;return values[1]},recoverNearView:()=>{throw Error('must not recover')}});assert.deepEqual(offered,choices);assert.equal(result.label,'Second Airport');assert.equal(viewer.flights.length,1);
 });
+import { chooseAirportDestination } from './ui/locationNavigation.js';
+test('localized airport choice flies using trusted original coordinates without changing cached choices', async () => {
+  const viewer = stubViewer();
+  const choice = { airportId: '1', lat: 51, lng: 0, label: 'Original', name: 'Original', types: ['airport'], exact: true };
+  const choices = [choice];
+  let refresh;
+  const makeElement = () => ({ children: [], listeners: {}, classList: { add() {}, remove() {} }, setAttribute() {}, removeAttribute() {}, focus() {}, replaceChildren() { this.children = []; }, appendChild(child) { this.children.push(child); }, addEventListener(type, listener) { this.listeners[type] = listener; }, removeEventListener(type) { delete this.listeners[type]; } });
+  const row = makeElement(); row.ownerDocument = { createElement: makeElement };
+  const result = await searchAndFlyTo(viewer, 'ABC', {
+    placeSearch: { geocode: async () => ({ place: null, answered: true, terminal: true, choices }) },
+    chooseAirport: async (offered) => {
+      const pending = chooseAirportDestination(row, makeElement(), offered, {
+        registerLocaleRefresh: (fn) => { refresh = fn; },
+        source: { getAirport: async () => ({ airport: { id: '1', name: '本地机场', municipality: '', country: '', lat: -30, lon: 100 } }) },
+      });
+      await refresh();
+      assert.equal(viewer.flights.length, 0);
+      row.children[0].listeners.click();
+      return pending;
+    },
+    recoverNearView: () => { throw Error('must not recover'); },
+  });
+  assert.equal(result.label, '本地机场');
+  assert.equal(viewer.flights.length, 1);
+  const target = Cesium.Cartographic.fromCartesian(viewer.flights[0].destination || viewer.flights[0].sphere.center);
+  assert.ok(Math.abs(Cesium.Math.toDegrees(target.latitude) - 51) < 0.01);
+  assert.equal(choice.label, 'Original');
+  assert.equal(choice.name, 'Original');
+});
+test('airport choice with an unrelated ID cannot fly', async () => {
+  const viewer = stubViewer();
+  const choice = { airportId: '1', lat: 51, lng: 0, label: 'Original', types: ['airport'], exact: true };
+  const result = await searchAndFlyTo(viewer, 'ABC', { placeSearch: { geocode: async () => ({ place: null, answered: true, terminal: true, choices: [choice] }) }, chooseAirport: async () => ({ ...choice, airportId: '2' }) });
+  assert.equal(result, CANCELLED_SEARCH);
+  assert.equal(viewer.flights.length, 0);
+});

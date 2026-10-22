@@ -141,3 +141,67 @@ test('multiword directory names match exactly after normalization without claimi
   });
   assert.equal((await unavailable.geocode('New York')).terminal, undefined);
 });
+test('localized names and original aliases resolve including no-space Korean names', async () => {
+  const localized = {
+    ...a,
+    name: '인천국제공항',
+    originalName: 'Incheon International Airport',
+  };
+  const provider = createAirportGeocoder({
+    source: {
+      search: async () => ({ airports: [localized], truncated: false }),
+    },
+  });
+  for (const query of [localized.name, localized.originalName]) {
+    assert.equal((await provider.geocode(query)).place?.name, localized.name);
+  }
+  assert.equal((await provider.geocode('서울')).terminal, undefined);
+});
+test('default search airport results and in-flight responses are scoped by locale', async () => {
+  let locale = 'en',
+    release;
+  const service = createDefaultPlaceSearch({
+    getLocale: () => locale,
+    fetchImpl: async (url) => {
+      const lang = new URL(url, 'https://local').searchParams.get('lang');
+      if (lang === 'en')
+        await new Promise((resolve) => {
+          release = resolve;
+        });
+      return Response.json({
+        revision: 'r1',
+        updatedAt: '2026-10-21',
+        source: 'OurAirports',
+        sourceUrl: 'https://ourairports.com/data/',
+        total: 1,
+        matched: 1,
+        truncated: false,
+        airports: [
+          {
+            ...a,
+            elevationM: null,
+            gpsCode: '',
+            localCode: '',
+            keywords: '',
+            website: '',
+            wikipedia: '',
+            type: 'large_airport',
+            name: lang === 'en' ? a.name : '希思罗机场',
+            countryCode: 'GB',
+            regionCode: '',
+            region: '',
+            scheduledService: true,
+          },
+        ],
+      });
+    },
+  });
+  const old = service.geocode('LHR');
+  await new Promise((resolve) => setImmediate(resolve));
+  locale = 'zh-CN';
+  const localized = await service.geocode('LHR');
+  assert.equal(localized.place?.name, '希思罗机场');
+  release();
+  assert.equal((await old).place, null);
+  assert.equal((await service.geocode('LHR')).place?.name, '希思罗机场');
+});

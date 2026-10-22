@@ -306,19 +306,9 @@ body.cockpit-mode #cockpit-cloud-effects.active {
   display: none !important;
 }
 
-/* Cesium's and Google's attribution.
-   Hidden at the deployment owner's request (2026-10-19). This block is a
-   licence requirement, not decoration: Cesium ion and the Google Maps Platform
-   terms both require the notice wherever their data is shown. Removing it is
-   the owner's call for this deployment; a public or commercial site should
-   keep it visible (the styling below already makes it unobtrusive). */
+/* Keep provider attribution visible wherever its data is displayed. */
 #cesium-credits {
-  display: none !important;
-}
-
-/* Kept for any host that turns the block back on. */
-#cesium-credits.credits-visible {
-  display: block !important;
+  display: block;
   position: fixed;
   /* Bottom-LEFT corner, mirrored from the GEV mic pill (right:36/bottom:36) so the two bottom
      corners are symmetric; sits below the coordinate HUD (.hud-bottom-left, bottom:180). Was

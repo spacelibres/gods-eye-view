@@ -1083,6 +1083,12 @@
   "server/providers/aircraft/tracks.test.mjs",
   "server/providers/aircraft/opensky-http.test.mjs",
   "scripts/import-airports.mjs",
+  "scripts/airport-translations.mjs",
+  "server/providers/airports/localization.test.mjs",
+  "server/providers/airports/localization-cli.test.mjs",
+  "server/providers/airports/translationMaintenance.test.mjs",
+  "server/providers/airports/authoredTranslations.test.mjs",
+  "server/providers/airports/fileLock.test.mjs",
   "scripts/qa-airports.mjs",
   "server/providers/airports/model.test.mjs",
   "server/providers/airports/collector.test.mjs",
@@ -1100,5 +1106,6 @@
   "server/providers/airports/archive.test.mjs",
   "scripts/testSupport/nativeSprites.mjs",
   "src/testSupport/nativeSprites.test.mjs",
-  "src/standalone/voiceRoutes.test.mjs"
+  "src/standalone/voiceRoutes.test.mjs",
+  "src/qaTrackFrames.test.mjs"
 ]

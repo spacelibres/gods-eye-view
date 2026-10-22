@@ -126,3 +126,13 @@ test('locale owners registered after boot are invoked and can unsubscribe', () =
     repaint();
   assert.equal(calls, 1);
 });
+test('locale repainters include pending navigation choices', () => {
+  let calls = 0;
+  const shell = {
+    services: {},
+    _locationNavigation: { refreshLocale: () => calls++ },
+  };
+  for (const repaint of StyleManager.prototype._localeRepainters.call(shell))
+    repaint();
+  assert.equal(calls, 1);
+});

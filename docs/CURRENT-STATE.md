@@ -1,5 +1,14 @@
 # God's Eye View Current State
 
+The airport localization feature branch stores its initial six-language name
+catalog locally and supports seven-language map/detail/search switching. Offline
+imports validate field fingerprints and publish immutable files through one
+manifest; daily collection writes only the outstanding translation worklist.
+This initial content covers 255 airport names, 3,535 city fields and 38,646 region
+fields per target language. Worldwide airport-name and navigation-name
+translation is still incomplete; missing or renamed text uses its original.
+No runtime translation provider is called.
+
 All six OurAirports source CSVs ship with the project and are seeded into the
 VPS persistent archive without network access. Airport map/search/detail reads,
 country geometry and source downloads stay on our own server. Daily acquisition

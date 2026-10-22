@@ -227,6 +227,13 @@ export function createAirportCollector(options = {}) {
   const statePath = join(stateDir, 'state.json'),
     snapshotPath = join(stateDir, 'directory.json'),
     lockPath = join(stateDir, 'refresh.lock');
+  const notifySnapshot = async () => {
+    try {
+      await options.onSnapshot?.(snapshot);
+    } catch (error) {
+      options.onError?.(error);
+    }
+  };
   const currentProvenance = () =>
     snapshot.revision === bundledProvenance?.revision
       ? {
@@ -349,6 +356,7 @@ export function createAirportCollector(options = {}) {
         nextCheckAt: Math.max(now(), Date.parse(snapshot.updatedAt) + DAY),
       }; /* Persist only while holding refresh lock, so workers cannot overwrite a reservation. */
     }
+    await notifySnapshot();
     schedule();
   })();
   async function refresh() {
@@ -465,6 +473,7 @@ export function createAirportCollector(options = {}) {
           await lock.close();
           await unlink(lockPath).catch(() => {});
         }
+        if (!closed) await notifySnapshot();
         schedule();
       }
     })().finally(() => {

@@ -252,3 +252,66 @@ test('navaid consumers cancel independently and malformed reference responses ne
     name: 'AbortError',
   });
 });
+test('locale scopes every airport endpoint and cached response', async () => {
+  let locale = 'en';
+  const urls = [];
+  const source = createAirportSource({
+    getLocale: () => locale,
+    fetchImpl: async (url) => {
+      urls.push(url);
+      return Response.json(
+        url.includes('/detail')
+          ? { ...list, airport }
+          : url.includes('/countries')
+            ? { ...list, countries: [] }
+            : url.includes('/navaids')
+              ? { ...list, navaids: [], matched: 0 }
+              : list,
+      );
+    },
+  });
+  await source.search('LHR');
+  locale = 'zh-CN';
+  await source.search('LHR');
+  await source.getSnapshot();
+  await source.getAirport('2434');
+  await source.getCountries();
+  await source.getNavaids();
+  assert.equal(urls.length, 6);
+  assert.equal(
+    new URL(urls[0], 'https://local').searchParams.get('lang'),
+    'en',
+  );
+  for (const url of urls.slice(1))
+    assert.equal(
+      new URL(url, 'https://local').searchParams.get('lang'),
+      'zh-CN',
+    );
+});
+
+test('a translation-only version change invalidates just that language cache', async () => {
+  let locale = 'ja',
+    translationRevision = 'old',
+    reads = 0;
+  const source = createAirportSource({
+    getLocale: () => locale,
+    fetchImpl: async (url) => {
+      reads++;
+      return Response.json({
+        ...list,
+        translationRevision,
+        ...(url.includes('/detail') ? { airport } : {}),
+      });
+    },
+  });
+  await source.getAirport('2434');
+  locale = 'zh-CN';
+  await source.getAirport('2434');
+  translationRevision = 'new';
+  await source.search('EGLL');
+  await source.getAirport('2434');
+  assert.equal(reads, 4);
+  locale = 'ja';
+  await source.getAirport('2434');
+  assert.equal(reads, 4);
+});

@@ -50,13 +50,15 @@ def main(argv):
         return 2
     path, begin, end, domain, port, port_b, hook_port, hook_path = argv[1:9]
 
-    with open(path, encoding="utf-8") as handle:
+    with open(path, encoding="utf-8", newline="") as handle:
         text = handle.read()
 
     # Drop the previous managed block, wherever it sits, then append the new
     # one at the end.
-    pattern = re.compile(re.escape(begin) + r".*?" + re.escape(end) + r"\n?", re.S)
-    text = pattern.sub("", text).rstrip() + "\n"
+    pattern = re.compile(re.escape(begin) + r".*?" + re.escape(end) + r"(?:\r?\n)?", re.S)
+    text = pattern.sub("", text)
+    if text and not text.endswith(("\n", "\r")):
+        text += "\n"
     text += TEMPLATE.format(
         begin=begin,
         end=end,
@@ -67,7 +69,7 @@ def main(argv):
         hook_path=hook_path,
     )
 
-    with open(path, "w", encoding="utf-8") as handle:
+    with open(path, "w", encoding="utf-8", newline="") as handle:
         handle.write(text)
     return 0
 

@@ -624,3 +624,31 @@ test('airport country display follows locale while source context stays intact',
   );
   assert.equal(airportContext(a, {}).properties.country, 'Namibia');
 });
+test('locale refresh retains selected carrier and rejects late prior locale response', async () => {
+  let locale = 'en',
+    resolveOld;
+  const h = harness(
+    {
+      getSnapshot: () =>
+        locale === 'en'
+          ? new Promise((resolve) => {
+              resolveOld = resolve;
+            })
+          : Promise.resolve({ airports: [{ ...airport(), name: '机场' }] }),
+    },
+    { getLocale: () => locale },
+  );
+  h.layer.enable();
+  const old = h.layer.update();
+  locale = 'zh-CN';
+  await h.layer.refresh();
+  const entity = h.sources[0].entities.values[0];
+  h.viewer.selectedEntity = entity;
+  resolveOld({ airports: [airport()] });
+  await old;
+  assert.equal(entity.name, '机场');
+  await h.layer.refresh();
+  assert.equal(h.viewer.selectedEntity, entity);
+  assert.equal(h.sources[0].entities.values[0], entity);
+  h.layer.destroy();
+});

@@ -1,0 +1,7652 @@
+[
+  {
+    "ident": "KATL",
+    "sourceName": "Hartsfield Jackson Atlanta International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Hartsfield-Jackson de Atlanta",
+      "ru": "Международный аэропорт Атланта Хартсфилд-Джексон",
+      "zh-CN": "亚特兰大哈茨菲尔德-杰克逊国际机场",
+      "zh-TW": "亞特蘭大哈茨菲爾德-傑克遜國際機場",
+      "ja": "ハーツフィールド・ジャクソン・アトランタ国際空港",
+      "ko": "하츠필드 잭슨 애틀랜타 국제공항"
+    },
+    "sourceMunicipality": "Atlanta",
+    "municipality": {
+      "es": "Atlanta",
+      "ru": "Атланта",
+      "zh-CN": "亚特兰大",
+      "zh-TW": "亞特蘭大",
+      "ja": "アトランタ",
+      "ko": "애틀랜타"
+    },
+    "sourceRegion": "Georgia",
+    "region": {
+      "es": "Georgia",
+      "ru": "Джорджия",
+      "zh-CN": "佐治亚州",
+      "zh-TW": "喬治亞州",
+      "ja": "ジョージア州",
+      "ko": "조지아주"
+    }
+  },
+  {
+    "ident": "KDFW",
+    "sourceName": "Dallas Fort Worth International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Dallas-Fort Worth",
+      "ru": "Международный аэропорт Даллас/Форт-Уэрт",
+      "zh-CN": "达拉斯-沃思堡国际机场",
+      "zh-TW": "達拉斯-沃斯堡國際機場",
+      "ja": "ダラス・フォートワース国際空港",
+      "ko": "댈러스 포트워스 국제공항"
+    },
+    "sourceMunicipality": "Dallas-Fort Worth",
+    "municipality": {
+      "es": "Dallas-Fort Worth",
+      "ru": "Даллас-Форт-Уэрт",
+      "zh-CN": "达拉斯-沃思堡",
+      "zh-TW": "達拉斯-沃斯堡",
+      "ja": "ダラス・フォートワース",
+      "ko": "댈러스 포트워스"
+    },
+    "sourceRegion": "Texas",
+    "region": {
+      "es": "Texas",
+      "ru": "Техас",
+      "zh-CN": "得克萨斯州",
+      "zh-TW": "德克薩斯州",
+      "ja": "テキサス州",
+      "ko": "텍사스주"
+    }
+  },
+  {
+    "ident": "KDEN",
+    "sourceName": "Denver International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Denver",
+      "ru": "Международный аэропорт Денвер",
+      "zh-CN": "丹佛国际机场",
+      "zh-TW": "丹佛國際機場",
+      "ja": "デンバー国際空港",
+      "ko": "덴버 국제공항"
+    },
+    "sourceMunicipality": "Denver",
+    "municipality": {
+      "es": "Denver",
+      "ru": "Денвер",
+      "zh-CN": "丹佛",
+      "zh-TW": "丹佛",
+      "ja": "デンバー",
+      "ko": "덴버"
+    },
+    "sourceRegion": "Colorado",
+    "region": {
+      "es": "Colorado",
+      "ru": "Колорадо",
+      "zh-CN": "科罗拉多州",
+      "zh-TW": "科羅拉多州",
+      "ja": "コロラド州",
+      "ko": "콜로라도주"
+    }
+  },
+  {
+    "ident": "KORD",
+    "sourceName": "Chicago O'Hare International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional O'Hare de Chicago",
+      "ru": "Международный аэропорт Чикаго О’Хара",
+      "zh-CN": "芝加哥奥黑尔国际机场",
+      "zh-TW": "芝加哥歐海爾國際機場",
+      "ja": "シカゴ・オヘア国際空港",
+      "ko": "시카고 오헤어 국제공항"
+    },
+    "sourceMunicipality": "Chicago",
+    "municipality": {
+      "es": "Chicago",
+      "ru": "Чикаго",
+      "zh-CN": "芝加哥",
+      "zh-TW": "芝加哥",
+      "ja": "シカゴ",
+      "ko": "시카고"
+    },
+    "sourceRegion": "Illinois",
+    "region": {
+      "es": "Illinois",
+      "ru": "Иллинойс",
+      "zh-CN": "伊利诺伊州",
+      "zh-TW": "伊利諾州",
+      "ja": "イリノイ州",
+      "ko": "일리노이주"
+    }
+  },
+  {
+    "ident": "KLAX",
+    "sourceName": "Los Angeles International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Los Ángeles",
+      "ru": "Международный аэропорт Лос-Анджелес",
+      "zh-CN": "洛杉矶国际机场",
+      "zh-TW": "洛杉磯國際機場",
+      "ja": "ロサンゼルス国際空港",
+      "ko": "로스앤젤레스 국제공항"
+    },
+    "sourceMunicipality": "Los Angeles",
+    "municipality": {
+      "es": "Los Ángeles",
+      "ru": "Лос-Анджелес",
+      "zh-CN": "洛杉矶",
+      "zh-TW": "洛杉磯",
+      "ja": "ロサンゼルス",
+      "ko": "로스앤젤레스"
+    },
+    "sourceRegion": "California",
+    "region": {
+      "es": "California",
+      "ru": "Калифорния",
+      "zh-CN": "加利福尼亚州",
+      "zh-TW": "加利福尼亞州",
+      "ja": "カリフォルニア州",
+      "ko": "캘리포니아주"
+    }
+  },
+  {
+    "ident": "KJFK",
+    "sourceName": "John F. Kennedy International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional John F. Kennedy",
+      "ru": "Международный аэропорт имени Джона Кеннеди",
+      "zh-CN": "约翰·肯尼迪国际机场",
+      "zh-TW": "約翰·甘迺迪國際機場",
+      "ja": "ジョン・F・ケネディ国際空港",
+      "ko": "존 F. 케네디 국제공항"
+    },
+    "sourceMunicipality": "New York",
+    "municipality": {
+      "es": "Nueva York",
+      "ru": "Нью-Йорк",
+      "zh-CN": "纽约",
+      "zh-TW": "紐約",
+      "ja": "ニューヨーク",
+      "ko": "뉴욕"
+    },
+    "sourceRegion": "New York",
+    "region": {
+      "es": "Nueva York",
+      "ru": "Нью-Йорк",
+      "zh-CN": "纽约州",
+      "zh-TW": "紐約州",
+      "ja": "ニューヨーク州",
+      "ko": "뉴욕주"
+    }
+  },
+  {
+    "ident": "KSFO",
+    "sourceName": "San Francisco International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de San Francisco",
+      "ru": "Международный аэропорт Сан-Франциско",
+      "zh-CN": "旧金山国际机场",
+      "zh-TW": "舊金山國際機場",
+      "ja": "サンフランシスコ国際空港",
+      "ko": "샌프란시스코 국제공항"
+    },
+    "sourceMunicipality": "San Francisco",
+    "municipality": {
+      "es": "San Francisco",
+      "ru": "Сан-Франциско",
+      "zh-CN": "旧金山",
+      "zh-TW": "舊金山",
+      "ja": "サンフランシスコ",
+      "ko": "샌프란시스코"
+    },
+    "sourceRegion": "California",
+    "region": {
+      "es": "California",
+      "ru": "Калифорния",
+      "zh-CN": "加利福尼亚州",
+      "zh-TW": "加利福尼亞州",
+      "ja": "カリフォルニア州",
+      "ko": "캘리포니아주"
+    }
+  },
+  {
+    "ident": "KSEA",
+    "sourceName": "Seattle–Tacoma International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Seattle-Tacoma",
+      "ru": "Международный аэропорт Сиэтл/Такома",
+      "zh-CN": "西雅图-塔科马国际机场",
+      "zh-TW": "西雅圖-塔科馬國際機場",
+      "ja": "シアトル・タコマ国際空港",
+      "ko": "시애틀 터코마 국제공항"
+    },
+    "sourceMunicipality": "Seattle",
+    "municipality": {
+      "es": "Seattle",
+      "ru": "Сиэтл",
+      "zh-CN": "西雅图",
+      "zh-TW": "西雅圖",
+      "ja": "シアトル",
+      "ko": "시애틀"
+    },
+    "sourceRegion": "Washington",
+    "region": {
+      "es": "Washington",
+      "ru": "Вашингтон",
+      "zh-CN": "华盛顿州",
+      "zh-TW": "華盛頓州",
+      "ja": "ワシントン州",
+      "ko": "워싱턴주"
+    }
+  },
+  {
+    "ident": "KLAS",
+    "sourceName": "Harry Reid International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Harry Reid",
+      "ru": "Международный аэропорт имени Гарри Рида",
+      "zh-CN": "哈里·里德国际机场",
+      "zh-TW": "哈里·里德國際機場",
+      "ja": "ハリー・リード国際空港",
+      "ko": "해리 리드 국제공항"
+    },
+    "sourceMunicipality": "Las Vegas",
+    "municipality": {
+      "es": "Las Vegas",
+      "ru": "Лас-Вегас",
+      "zh-CN": "拉斯维加斯",
+      "zh-TW": "拉斯維加斯",
+      "ja": "ラスベガス",
+      "ko": "라스베이거스"
+    },
+    "sourceRegion": "Nevada",
+    "region": {
+      "es": "Nevada",
+      "ru": "Невада",
+      "zh-CN": "内华达州",
+      "zh-TW": "內華達州",
+      "ja": "ネバダ州",
+      "ko": "네바다주"
+    }
+  },
+  {
+    "ident": "KMIA",
+    "sourceName": "Miami International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Miami",
+      "ru": "Международный аэропорт Майами",
+      "zh-CN": "迈阿密国际机场",
+      "zh-TW": "邁阿密國際機場",
+      "ja": "マイアミ国際空港",
+      "ko": "마이애미 국제공항"
+    },
+    "sourceMunicipality": "Miami",
+    "municipality": {
+      "es": "Miami",
+      "ru": "Майами",
+      "zh-CN": "迈阿密",
+      "zh-TW": "邁阿密",
+      "ja": "マイアミ",
+      "ko": "마이애미"
+    },
+    "sourceRegion": "Florida",
+    "region": {
+      "es": "Florida",
+      "ru": "Флорида",
+      "zh-CN": "佛罗里达州",
+      "zh-TW": "佛羅里達州",
+      "ja": "フロリダ州",
+      "ko": "플로리다주"
+    }
+  },
+  {
+    "ident": "KMCO",
+    "sourceName": "Orlando International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Orlando",
+      "ru": "Международный аэропорт Орландо",
+      "zh-CN": "奥兰多国际机场",
+      "zh-TW": "奧蘭多國際機場",
+      "ja": "オーランド国際空港",
+      "ko": "올랜도 국제공항"
+    },
+    "sourceMunicipality": "Orlando",
+    "municipality": {
+      "es": "Orlando",
+      "ru": "Орландо",
+      "zh-CN": "奥兰多",
+      "zh-TW": "奧蘭多",
+      "ja": "オーランド",
+      "ko": "올랜도"
+    },
+    "sourceRegion": "Florida",
+    "region": {
+      "es": "Florida",
+      "ru": "Флорида",
+      "zh-CN": "佛罗里达州",
+      "zh-TW": "佛羅里達州",
+      "ja": "フロリダ州",
+      "ko": "플로리다주"
+    }
+  },
+  {
+    "ident": "KEWR",
+    "sourceName": "Newark Liberty International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Libertad de Newark",
+      "ru": "Международный аэропорт Ньюарк Либерти",
+      "zh-CN": "纽瓦克自由国际机场",
+      "zh-TW": "紐華克自由國際機場",
+      "ja": "ニューアーク・リバティー国際空港",
+      "ko": "뉴어크 리버티 국제공항"
+    },
+    "sourceMunicipality": "Newark",
+    "municipality": {
+      "es": "Newark",
+      "ru": "Ньюарк",
+      "zh-CN": "纽瓦克",
+      "zh-TW": "紐華克",
+      "ja": "ニューアーク",
+      "ko": "뉴어크"
+    },
+    "sourceRegion": "New Jersey",
+    "region": {
+      "es": "Nueva Jersey",
+      "ru": "Нью-Джерси",
+      "zh-CN": "新泽西州",
+      "zh-TW": "紐澤西州",
+      "ja": "ニュージャージー州",
+      "ko": "뉴저지주"
+    }
+  },
+  {
+    "ident": "KBOS",
+    "sourceName": "Boston Logan International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Logan de Boston",
+      "ru": "Международный аэропорт Бостон Логан",
+      "zh-CN": "波士顿洛根国际机场",
+      "zh-TW": "波士頓洛根國際機場",
+      "ja": "ボストン・ローガン国際空港",
+      "ko": "보스턴 로건 국제공항"
+    },
+    "sourceMunicipality": "Boston",
+    "municipality": {
+      "es": "Boston",
+      "ru": "Бостон",
+      "zh-CN": "波士顿",
+      "zh-TW": "波士頓",
+      "ja": "ボストン",
+      "ko": "보스턴"
+    },
+    "sourceRegion": "Massachusetts",
+    "region": {
+      "es": "Massachusetts",
+      "ru": "Массачусетс",
+      "zh-CN": "马萨诸塞州",
+      "zh-TW": "麻薩諸塞州",
+      "ja": "マサチューセッツ州",
+      "ko": "매사추세츠주"
+    }
+  },
+  {
+    "ident": "KIAD",
+    "sourceName": "Washington Dulles International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Washington-Dulles",
+      "ru": "Международный аэропорт Вашингтон Даллес",
+      "zh-CN": "华盛顿杜勒斯国际机场",
+      "zh-TW": "華盛頓杜勒斯國際機場",
+      "ja": "ワシントン・ダレス国際空港",
+      "ko": "워싱턴 덜레스 국제공항"
+    },
+    "sourceMunicipality": "Dulles",
+    "municipality": {
+      "es": "Dulles",
+      "ru": "Даллес",
+      "zh-CN": "杜勒斯",
+      "zh-TW": "杜勒斯",
+      "ja": "ダレス",
+      "ko": "덜레스"
+    },
+    "sourceRegion": "Virginia",
+    "region": {
+      "es": "Virginia",
+      "ru": "Виргиния",
+      "zh-CN": "弗吉尼亚州",
+      "zh-TW": "維吉尼亞州",
+      "ja": "バージニア州",
+      "ko": "버지니아주"
+    }
+  },
+  {
+    "ident": "KIAH",
+    "sourceName": "George Bush Intercontinental Airport",
+    "name": {
+      "es": "Aeropuerto Intercontinental George Bush",
+      "ru": "Межконтинентальный аэропорт имени Джорджа Буша",
+      "zh-CN": "乔治·布什洲际机场",
+      "zh-TW": "喬治·布希洲際機場",
+      "ja": "ジョージ・ブッシュ・インターコンチネンタル空港",
+      "ko": "조지 부시 인터콘티넨털 공항"
+    },
+    "sourceMunicipality": "Houston",
+    "municipality": {
+      "es": "Houston",
+      "ru": "Хьюстон",
+      "zh-CN": "休斯敦",
+      "zh-TW": "休士頓",
+      "ja": "ヒューストン",
+      "ko": "휴스턴"
+    },
+    "sourceRegion": "Texas",
+    "region": {
+      "es": "Texas",
+      "ru": "Техас",
+      "zh-CN": "得克萨斯州",
+      "zh-TW": "德克薩斯州",
+      "ja": "テキサス州",
+      "ko": "텍사스주"
+    }
+  },
+  {
+    "ident": "CYYZ",
+    "sourceName": "Toronto Pearson International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Pearson de Toronto",
+      "ru": "Международный аэропорт Торонто Пирсон",
+      "zh-CN": "多伦多皮尔逊国际机场",
+      "zh-TW": "多倫多皮爾遜國際機場",
+      "ja": "トロント・ピアソン国際空港",
+      "ko": "토론토 피어슨 국제공항"
+    },
+    "sourceMunicipality": "Toronto",
+    "municipality": {
+      "es": "Toronto",
+      "ru": "Торонто",
+      "zh-CN": "多伦多",
+      "zh-TW": "多倫多",
+      "ja": "トロント",
+      "ko": "토론토"
+    },
+    "sourceRegion": "Ontario",
+    "region": {
+      "es": "Ontario",
+      "ru": "Онтарио",
+      "zh-CN": "安大略省",
+      "zh-TW": "安大略省",
+      "ja": "オンタリオ州",
+      "ko": "온타리오주"
+    }
+  },
+  {
+    "ident": "CYVR",
+    "sourceName": "Vancouver International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Vancouver",
+      "ru": "Международный аэропорт Ванкувер",
+      "zh-CN": "温哥华国际机场",
+      "zh-TW": "溫哥華國際機場",
+      "ja": "バンクーバー国際空港",
+      "ko": "밴쿠버 국제공항"
+    },
+    "sourceMunicipality": "Vancouver",
+    "municipality": {
+      "es": "Vancouver",
+      "ru": "Ванкувер",
+      "zh-CN": "温哥华",
+      "zh-TW": "溫哥華",
+      "ja": "バンクーバー",
+      "ko": "밴쿠버"
+    },
+    "sourceRegion": "British Columbia",
+    "region": {
+      "es": "Columbia Británica",
+      "ru": "Британская Колумбия",
+      "zh-CN": "不列颠哥伦比亚省",
+      "zh-TW": "英屬哥倫比亞省",
+      "ja": "ブリティッシュコロンビア州",
+      "ko": "브리티시컬럼비아주"
+    }
+  },
+  {
+    "ident": "CYUL",
+    "sourceName": "Montreal / Pierre Elliott Trudeau International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Pierre Elliott Trudeau de Montreal",
+      "ru": "Международный аэропорт Монреаль имени Пьера Эллиота Трюдо",
+      "zh-CN": "蒙特利尔皮埃尔·埃利奥特·特鲁多国际机场",
+      "zh-TW": "蒙特婁皮耶·艾略特·杜魯道國際機場",
+      "ja": "モントリオール・ピエール・エリオット・トルドー国際空港",
+      "ko": "몬트리올 피에르 엘리오트 트뤼도 국제공항"
+    },
+    "sourceMunicipality": "Montréal",
+    "municipality": {
+      "es": "Montreal",
+      "ru": "Монреаль",
+      "zh-CN": "蒙特利尔",
+      "zh-TW": "蒙特婁",
+      "ja": "モントリオール",
+      "ko": "몬트리올"
+    },
+    "sourceRegion": "Quebec",
+    "region": {
+      "es": "Quebec",
+      "ru": "Квебек",
+      "zh-CN": "魁北克省",
+      "zh-TW": "魁北克省",
+      "ja": "ケベック州",
+      "ko": "퀘벡주"
+    }
+  },
+  {
+    "ident": "MMMX",
+    "sourceName": "Mexico City Benito Juárez International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Benito Juárez de la Ciudad de México",
+      "ru": "Международный аэропорт Мехико имени Бенито Хуареса",
+      "zh-CN": "墨西哥城贝尼托·胡亚雷斯国际机场",
+      "zh-TW": "墨西哥城貝尼托·胡亞雷斯國際機場",
+      "ja": "メキシコ・シティ・ベニート・フアレス国際空港",
+      "ko": "멕시코시티 베니토 후아레스 국제공항"
+    },
+    "sourceMunicipality": "Mexico City",
+    "municipality": {
+      "es": "Ciudad de México",
+      "ru": "Мехико",
+      "zh-CN": "墨西哥城",
+      "zh-TW": "墨西哥城",
+      "ja": "メキシコシティ",
+      "ko": "멕시코시티"
+    },
+    "sourceRegion": "Ciudad de México",
+    "region": {
+      "es": "Ciudad de México",
+      "ru": "Мехико",
+      "zh-CN": "墨西哥城",
+      "zh-TW": "墨西哥城",
+      "ja": "メキシコシティ",
+      "ko": "멕시코시티"
+    }
+  },
+  {
+    "ident": "MMUN",
+    "sourceName": "Cancún International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Cancún",
+      "ru": "Международный аэропорт Канкун",
+      "zh-CN": "坎昆国际机场",
+      "zh-TW": "坎昆國際機場",
+      "ja": "カンクン国際空港",
+      "ko": "칸쿤 국제공항"
+    },
+    "sourceMunicipality": "Cancún",
+    "municipality": {
+      "es": "Cancún",
+      "ru": "Канкун",
+      "zh-CN": "坎昆",
+      "zh-TW": "坎昆",
+      "ja": "カンクン",
+      "ko": "칸쿤"
+    },
+    "sourceRegion": "Quintana Roo",
+    "region": {
+      "es": "Quintana Roo",
+      "ru": "Кинтана-Роо",
+      "zh-CN": "金塔纳罗奥州",
+      "zh-TW": "金塔納羅奧州",
+      "ja": "キンタナ・ロー州",
+      "ko": "킨타나로오주"
+    }
+  },
+  {
+    "ident": "SBGR",
+    "sourceName": "São Paulo/Guarulhos–Governor André Franco Montoro International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de São Paulo-Guarulhos Gobernador André Franco Montoro",
+      "ru": "Международный аэропорт Сан-Паулу/Гуарульюс имени губернатора Андре Франку Монтору",
+      "zh-CN": "圣保罗瓜鲁柳斯安德烈·弗朗哥·蒙托罗州长国际机场",
+      "zh-TW": "聖保羅瓜魯柳斯安德烈·弗朗哥·蒙托羅州長國際機場",
+      "ja": "サンパウロ・グアルーリョス・アンドレ・フランコ・モントロ州知事国際空港",
+      "ko": "상파울루 구아룰류스 안드레 프랑쿠 몬토루 주지사 국제공항"
+    },
+    "sourceMunicipality": "São Paulo",
+    "municipality": {
+      "es": "São Paulo",
+      "ru": "Сан-Паулу",
+      "zh-CN": "圣保罗",
+      "zh-TW": "聖保羅",
+      "ja": "サンパウロ",
+      "ko": "상파울루"
+    },
+    "sourceRegion": "São Paulo",
+    "region": {
+      "es": "São Paulo",
+      "ru": "Сан-Паулу",
+      "zh-CN": "圣保罗州",
+      "zh-TW": "聖保羅州",
+      "ja": "サンパウロ州",
+      "ko": "상파울루주"
+    }
+  },
+  {
+    "ident": "SBGL",
+    "sourceName": "Rio de Janeiro Galeão – Tom Jobim International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Río de Janeiro-Galeão Tom Jobim",
+      "ru": "Международный аэропорт Рио-де-Жанейро Галеан имени Тома Жобима",
+      "zh-CN": "里约热内卢加利昂汤姆·若宾国际机场",
+      "zh-TW": "里約熱內盧加利昂湯姆·若賓國際機場",
+      "ja": "リオデジャネイロ・ガレオン・トム・ジョビン国際空港",
+      "ko": "리우데자네이루 갈레앙 톰 조빙 국제공항"
+    },
+    "sourceMunicipality": "Rio De Janeiro",
+    "municipality": {
+      "es": "Río de Janeiro",
+      "ru": "Рио-де-Жанейро",
+      "zh-CN": "里约热内卢",
+      "zh-TW": "里約熱內盧",
+      "ja": "リオデジャネイロ",
+      "ko": "리우데자네이루"
+    },
+    "sourceRegion": "Rio de Janeiro",
+    "region": {
+      "es": "Río de Janeiro",
+      "ru": "Рио-де-Жанейро",
+      "zh-CN": "里约热内卢州",
+      "zh-TW": "里約熱內盧州",
+      "ja": "リオデジャネイロ州",
+      "ko": "리우데자네이루주"
+    }
+  },
+  {
+    "ident": "SAEZ",
+    "sourceName": "Ezeiza International Airport - Ministro Pistarini",
+    "name": {
+      "es": "Aeropuerto Internacional de Ezeiza Ministro Pistarini",
+      "ru": "Международный аэропорт Эсейса имени министра Пистарини",
+      "zh-CN": "埃塞萨皮斯塔里尼部长国际机场",
+      "zh-TW": "埃塞薩皮斯塔里尼部長國際機場",
+      "ja": "エセイサ・ミニストロ・ピスタリーニ国際空港",
+      "ko": "에세이사 미니스트로 피스타리니 국제공항"
+    },
+    "sourceMunicipality": "Buenos Aires (Ezeiza)",
+    "municipality": {
+      "es": "Buenos Aires (Ezeiza)",
+      "ru": "Буэнос-Айрес (Эсейса)",
+      "zh-CN": "布宜诺斯艾利斯（埃塞萨）",
+      "zh-TW": "布宜諾斯艾利斯（埃塞薩）",
+      "ja": "ブエノスアイレス（エセイサ）",
+      "ko": "부에노스아이레스(에세이사)"
+    },
+    "sourceRegion": "Buenos Aires Province",
+    "region": {
+      "es": "Provincia de Buenos Aires",
+      "ru": "Провинция Буэнос-Айрес",
+      "zh-CN": "布宜诺斯艾利斯省",
+      "zh-TW": "布宜諾斯艾利斯省",
+      "ja": "ブエノスアイレス州",
+      "ko": "부에노스아이레스주"
+    }
+  },
+  {
+    "ident": "SCEL",
+    "sourceName": "Comodoro Arturo Merino Benítez International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Comodoro Arturo Merino Benítez",
+      "ru": "Международный аэропорт имени коммодора Артуро Мерино Бенитеса",
+      "zh-CN": "阿图罗·梅里诺·贝尼特斯准将国际机场",
+      "zh-TW": "阿圖羅·梅里諾·貝尼特斯准將國際機場",
+      "ja": "コモドロ・アルトゥーロ・メリノ・ベニテス国際空港",
+      "ko": "코모도로 아르투로 메리노 베니테스 국제공항"
+    },
+    "sourceMunicipality": "Santiago",
+    "municipality": {
+      "es": "Santiago",
+      "ru": "Сантьяго",
+      "zh-CN": "圣地亚哥",
+      "zh-TW": "聖地牙哥",
+      "ja": "サンティアゴ",
+      "ko": "산티아고"
+    },
+    "sourceRegion": "Santiago Metropolitan Region",
+    "region": {
+      "es": "Región Metropolitana de Santiago",
+      "ru": "Столичная область Сантьяго",
+      "zh-CN": "圣地亚哥首都大区",
+      "zh-TW": "聖地牙哥首都大區",
+      "ja": "サンティアゴ首都州",
+      "ko": "산티아고 수도주"
+    }
+  },
+  {
+    "ident": "SPIM",
+    "sourceName": "Jorge Chávez International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Jorge Chávez",
+      "ru": "Международный аэропорт имени Хорхе Чавеса",
+      "zh-CN": "豪尔赫·查韦斯国际机场",
+      "zh-TW": "豪爾赫·查韋斯國際機場",
+      "ja": "ホルヘ・チャベス国際空港",
+      "ko": "호르헤 차베스 국제공항"
+    },
+    "sourceMunicipality": "Lima",
+    "municipality": {
+      "es": "Lima",
+      "ru": "Лима",
+      "zh-CN": "利马",
+      "zh-TW": "利馬",
+      "ja": "リマ",
+      "ko": "리마"
+    },
+    "sourceRegion": "Lima Region",
+    "region": {
+      "es": "Región de Lima",
+      "ru": "Регион Лима",
+      "zh-CN": "利马大区",
+      "zh-TW": "利馬大區",
+      "ja": "リマ県",
+      "ko": "리마주"
+    }
+  },
+  {
+    "ident": "SKBO",
+    "sourceName": "El Dorado International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional El Dorado",
+      "ru": "Международный аэропорт Эль-Дорадо",
+      "zh-CN": "埃尔多拉多国际机场",
+      "zh-TW": "埃爾多拉多國際機場",
+      "ja": "エルドラド国際空港",
+      "ko": "엘도라도 국제공항"
+    },
+    "sourceMunicipality": "Bogota",
+    "municipality": {
+      "es": "Bogotá",
+      "ru": "Богота",
+      "zh-CN": "波哥大",
+      "zh-TW": "波哥大",
+      "ja": "ボゴタ",
+      "ko": "보고타"
+    },
+    "sourceRegion": "Bogotá Capital District",
+    "region": {
+      "es": "Distrito Capital de Bogotá",
+      "ru": "Столичный округ Богота",
+      "zh-CN": "波哥大首都区",
+      "zh-TW": "波哥大首都區",
+      "ja": "ボゴタ首都地区",
+      "ko": "보고타 수도구"
+    }
+  },
+  {
+    "ident": "MPTO",
+    "sourceName": "Tocumen International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Tocumen",
+      "ru": "Международный аэропорт Токумен",
+      "zh-CN": "托库门国际机场",
+      "zh-TW": "托庫門國際機場",
+      "ja": "トクメン国際空港",
+      "ko": "토쿠멘 국제공항"
+    },
+    "sourceMunicipality": "Tocumen",
+    "municipality": {
+      "es": "Tocumen",
+      "ru": "Токумен",
+      "zh-CN": "托库门",
+      "zh-TW": "托庫門",
+      "ja": "トクメン",
+      "ko": "토쿠멘"
+    },
+    "sourceRegion": "Panamá Province",
+    "region": {
+      "es": "Provincia de Panamá",
+      "ru": "Провинция Панама",
+      "zh-CN": "巴拿马省",
+      "zh-TW": "巴拿馬省",
+      "ja": "パナマ県",
+      "ko": "파나마주"
+    }
+  },
+  {
+    "ident": "EGLL",
+    "sourceName": "London Heathrow Airport",
+    "name": {
+      "es": "Aeropuerto de Londres-Heathrow",
+      "ru": "Аэропорт Лондон Хитроу",
+      "zh-CN": "伦敦希思罗机场",
+      "zh-TW": "倫敦希斯洛機場",
+      "ja": "ロンドン・ヒースロー空港",
+      "ko": "런던 히스로 공항"
+    },
+    "sourceMunicipality": "London",
+    "municipality": {
+      "es": "Londres",
+      "ru": "Лондон",
+      "zh-CN": "伦敦",
+      "zh-TW": "倫敦",
+      "ja": "ロンドン",
+      "ko": "런던"
+    },
+    "sourceRegion": "England",
+    "region": {
+      "es": "Inglaterra",
+      "ru": "Англия",
+      "zh-CN": "英格兰",
+      "zh-TW": "英格蘭",
+      "ja": "イングランド",
+      "ko": "잉글랜드"
+    }
+  },
+  {
+    "ident": "EGKK",
+    "sourceName": "London Gatwick Airport",
+    "name": {
+      "es": "Aeropuerto de Londres-Gatwick",
+      "ru": "Аэропорт Лондон Гатвик",
+      "zh-CN": "伦敦盖特威克机场",
+      "zh-TW": "倫敦蓋特威克機場",
+      "ja": "ロンドン・ガトウィック空港",
+      "ko": "런던 개트윅 공항"
+    },
+    "sourceMunicipality": "London",
+    "municipality": {
+      "es": "Londres",
+      "ru": "Лондон",
+      "zh-CN": "伦敦",
+      "zh-TW": "倫敦",
+      "ja": "ロンドン",
+      "ko": "런던"
+    },
+    "sourceRegion": "England",
+    "region": {
+      "es": "Inglaterra",
+      "ru": "Англия",
+      "zh-CN": "英格兰",
+      "zh-TW": "英格蘭",
+      "ja": "イングランド",
+      "ko": "잉글랜드"
+    }
+  },
+  {
+    "ident": "LFPG",
+    "sourceName": "Charles de Gaulle International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Charles de Gaulle",
+      "ru": "Международный аэропорт имени Шарля де Голля",
+      "zh-CN": "巴黎夏尔·戴高乐国际机场",
+      "zh-TW": "巴黎夏爾·戴高樂國際機場",
+      "ja": "シャルル・ド・ゴール国際空港",
+      "ko": "파리 샤를 드골 국제공항"
+    },
+    "sourceMunicipality": "Paris (Roissy-en-France, Val-d'Oise)",
+    "municipality": {
+      "es": "París (Roissy-en-France, Valle del Oise)",
+      "ru": "Париж (Руасси-ан-Франс, Валь-д’Уаз)",
+      "zh-CN": "巴黎（瓦兹河谷省鲁瓦西昂弗朗斯）",
+      "zh-TW": "巴黎（瓦茲河谷省魯瓦西昂弗朗斯）",
+      "ja": "パリ（ヴァル＝ドワーズ県ロワシー＝アン＝フランス）",
+      "ko": "파리(발두아즈주 루아시앙프랑스)"
+    },
+    "sourceRegion": "Île-de-France",
+    "region": {
+      "es": "Isla de Francia",
+      "ru": "Иль-де-Франс",
+      "zh-CN": "法兰西岛大区",
+      "zh-TW": "法蘭西島大區",
+      "ja": "イル＝ド＝フランス地域圏",
+      "ko": "일드프랑스"
+    }
+  },
+  {
+    "ident": "LFPO",
+    "sourceName": "Paris-Orly Airport",
+    "name": {
+      "es": "Aeropuerto de París-Orly",
+      "ru": "Аэропорт Париж Орли",
+      "zh-CN": "巴黎奥利机场",
+      "zh-TW": "巴黎奧利機場",
+      "ja": "パリ・オルリー空港",
+      "ko": "파리 오를리 공항"
+    },
+    "sourceMunicipality": "Paris (Orly, Val-de-Marne)",
+    "municipality": {
+      "es": "París (Orly, Valle del Marne)",
+      "ru": "Париж (Орли, Валь-де-Марн)",
+      "zh-CN": "巴黎（马恩河谷省奥利）",
+      "zh-TW": "巴黎（馬恩河谷省奧利）",
+      "ja": "パリ（ヴァル＝ド＝マルヌ県オルリー）",
+      "ko": "파리(발드마른주 오를리)"
+    },
+    "sourceRegion": "Île-de-France",
+    "region": {
+      "es": "Isla de Francia",
+      "ru": "Иль-де-Франс",
+      "zh-CN": "法兰西岛大区",
+      "zh-TW": "法蘭西島大區",
+      "ja": "イル＝ド＝フランス地域圏",
+      "ko": "일드프랑스"
+    }
+  },
+  {
+    "ident": "EHAM",
+    "sourceName": "Amsterdam Airport Schiphol",
+    "name": {
+      "es": "Aeropuerto de Ámsterdam-Schiphol",
+      "ru": "Аэропорт Амстердам Схипхол",
+      "zh-CN": "阿姆斯特丹史基浦机场",
+      "zh-TW": "阿姆斯特丹史基浦機場",
+      "ja": "アムステルダム・スキポール空港",
+      "ko": "암스테르담 스히폴 공항"
+    },
+    "sourceMunicipality": "Amsterdam",
+    "municipality": {
+      "es": "Ámsterdam",
+      "ru": "Амстердам",
+      "zh-CN": "阿姆斯特丹",
+      "zh-TW": "阿姆斯特丹",
+      "ja": "アムステルダム",
+      "ko": "암스테르담"
+    },
+    "sourceRegion": "Noord-Holland",
+    "region": {
+      "es": "Holanda Septentrional",
+      "ru": "Северная Голландия",
+      "zh-CN": "北荷兰省",
+      "zh-TW": "北荷蘭省",
+      "ja": "北ホラント州",
+      "ko": "노르트홀란트주"
+    }
+  },
+  {
+    "ident": "EDDF",
+    "sourceName": "Frankfurt Main Airport",
+    "name": {
+      "es": "Aeropuerto de Fráncfort del Meno",
+      "ru": "Аэропорт Франкфурт-на-Майне",
+      "zh-CN": "法兰克福机场",
+      "zh-TW": "法蘭克福機場",
+      "ja": "フランクフルト空港",
+      "ko": "프랑크푸르트 공항"
+    },
+    "sourceMunicipality": "Frankfurt am Main",
+    "municipality": {
+      "es": "Fráncfort del Meno",
+      "ru": "Франкфурт-на-Майне",
+      "zh-CN": "美因河畔法兰克福",
+      "zh-TW": "美因河畔法蘭克福",
+      "ja": "フランクフルト・アム・マイン",
+      "ko": "프랑크푸르트암마인"
+    },
+    "sourceRegion": "Hesse",
+    "region": {
+      "es": "Hesse",
+      "ru": "Гессен",
+      "zh-CN": "黑森州",
+      "zh-TW": "黑森州",
+      "ja": "ヘッセン州",
+      "ko": "헤센주"
+    }
+  },
+  {
+    "ident": "EDDM",
+    "sourceName": "Munich Airport",
+    "name": {
+      "es": "Aeropuerto de Múnich",
+      "ru": "Аэропорт Мюнхен",
+      "zh-CN": "慕尼黑机场",
+      "zh-TW": "慕尼黑機場",
+      "ja": "ミュンヘン空港",
+      "ko": "뮌헨 공항"
+    },
+    "sourceMunicipality": "Munich",
+    "municipality": {
+      "es": "Múnich",
+      "ru": "Мюнхен",
+      "zh-CN": "慕尼黑",
+      "zh-TW": "慕尼黑",
+      "ja": "ミュンヘン",
+      "ko": "뮌헨"
+    },
+    "sourceRegion": "Bavaria",
+    "region": {
+      "es": "Baviera",
+      "ru": "Бавария",
+      "zh-CN": "巴伐利亚州",
+      "zh-TW": "巴伐利亞州",
+      "ja": "バイエルン州",
+      "ko": "바이에른주"
+    }
+  },
+  {
+    "ident": "LEMD",
+    "sourceName": "Adolfo Suárez Madrid–Barajas Airport",
+    "name": {
+      "es": "Aeropuerto Adolfo Suárez Madrid-Barajas",
+      "ru": "Аэропорт Мадрид Барахас имени Адольфо Суареса",
+      "zh-CN": "阿道弗·苏亚雷斯马德里-巴拉哈斯机场",
+      "zh-TW": "阿道弗·蘇亞雷斯馬德里-巴拉哈斯機場",
+      "ja": "アドルフォ・スアレス・マドリード＝バラハス空港",
+      "ko": "아돌포 수아레스 마드리드 바라하스 공항"
+    },
+    "sourceMunicipality": "Madrid",
+    "municipality": {
+      "es": "Madrid",
+      "ru": "Мадрид",
+      "zh-CN": "马德里",
+      "zh-TW": "馬德里",
+      "ja": "マドリード",
+      "ko": "마드리드"
+    },
+    "sourceRegion": "Madrid (community)",
+    "region": {
+      "es": "Comunidad de Madrid",
+      "ru": "Сообщество Мадрид",
+      "zh-CN": "马德里自治区",
+      "zh-TW": "馬德里自治區",
+      "ja": "マドリード州",
+      "ko": "마드리드 자치지방"
+    }
+  },
+  {
+    "ident": "LEBL",
+    "sourceName": "Josep Tarradellas Barcelona-El Prat Airport",
+    "name": {
+      "es": "Aeropuerto Josep Tarradellas Barcelona-El Prat",
+      "ru": "Аэропорт Барселона Эль-Прат имени Жозепа Таррадельяса",
+      "zh-CN": "何塞普·塔拉德利亚斯巴塞罗那-埃尔普拉特机场",
+      "zh-TW": "何塞普·塔拉德利亞斯巴塞隆納-埃爾普拉特機場",
+      "ja": "ジョセップ・タラデリャス・バルセロナ＝エル・プラット空港",
+      "ko": "조셉 타라델라스 바르셀로나 엘프라트 공항"
+    },
+    "sourceMunicipality": "Barcelona",
+    "municipality": {
+      "es": "Barcelona",
+      "ru": "Барселона",
+      "zh-CN": "巴塞罗那",
+      "zh-TW": "巴塞隆納",
+      "ja": "バルセロナ",
+      "ko": "바르셀로나"
+    },
+    "sourceRegion": "Catalonia",
+    "region": {
+      "es": "Cataluña",
+      "ru": "Каталония",
+      "zh-CN": "加泰罗尼亚自治区",
+      "zh-TW": "加泰隆尼亞自治區",
+      "ja": "カタルーニャ州",
+      "ko": "카탈루냐 자치지방"
+    }
+  },
+  {
+    "ident": "LIRF",
+    "sourceName": "Rome–Fiumicino Leonardo da Vinci International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Roma-Fiumicino Leonardo da Vinci",
+      "ru": "Международный аэропорт Рим Фьюмичино имени Леонардо да Винчи",
+      "zh-CN": "罗马菲乌米奇诺列奥纳多·达·芬奇国际机场",
+      "zh-TW": "羅馬菲烏米奇諾李奧納多·達文西國際機場",
+      "ja": "ローマ・フィウミチーノ・レオナルド・ダ・ヴィンチ国際空港",
+      "ko": "로마 피우미치노 레오나르도 다빈치 국제공항"
+    },
+    "sourceMunicipality": "Rome",
+    "municipality": {
+      "es": "Roma",
+      "ru": "Рим",
+      "zh-CN": "罗马",
+      "zh-TW": "羅馬",
+      "ja": "ローマ",
+      "ko": "로마"
+    },
+    "sourceRegion": "Lazio",
+    "region": {
+      "es": "Lacio",
+      "ru": "Лацио",
+      "zh-CN": "拉齐奥大区",
+      "zh-TW": "拉吉歐大區",
+      "ja": "ラツィオ州",
+      "ko": "라치오주"
+    }
+  },
+  {
+    "ident": "LIMC",
+    "sourceName": "Milan Malpensa International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Milán-Malpensa",
+      "ru": "Международный аэропорт Милан Мальпенса",
+      "zh-CN": "米兰马尔彭萨国际机场",
+      "zh-TW": "米蘭馬爾彭薩國際機場",
+      "ja": "ミラノ・マルペンサ国際空港",
+      "ko": "밀라노 말펜사 국제공항"
+    },
+    "sourceMunicipality": "Ferno (VA)",
+    "municipality": {
+      "es": "Ferno (Varese)",
+      "ru": "Ферно (Варесе)",
+      "zh-CN": "费尔诺（瓦雷泽省）",
+      "zh-TW": "費爾諾（瓦雷澤省）",
+      "ja": "フェルノ（ヴァレーゼ県）",
+      "ko": "페르노(바레세현)"
+    },
+    "sourceRegion": "Lombardy",
+    "region": {
+      "es": "Lombardía",
+      "ru": "Ломбардия",
+      "zh-CN": "伦巴第大区",
+      "zh-TW": "倫巴底大區",
+      "ja": "ロンバルディア州",
+      "ko": "롬바르디아주"
+    }
+  },
+  {
+    "ident": "LSZH",
+    "sourceName": "Zürich Airport",
+    "name": {
+      "es": "Aeropuerto de Zúrich",
+      "ru": "Аэропорт Цюрих",
+      "zh-CN": "苏黎世机场",
+      "zh-TW": "蘇黎世機場",
+      "ja": "チューリッヒ空港",
+      "ko": "취리히 공항"
+    },
+    "sourceMunicipality": "Zurich",
+    "municipality": {
+      "es": "Zúrich",
+      "ru": "Цюрих",
+      "zh-CN": "苏黎世",
+      "zh-TW": "蘇黎世",
+      "ja": "チューリッヒ",
+      "ko": "취리히"
+    },
+    "sourceRegion": "Zürich",
+    "region": {
+      "es": "Zúrich",
+      "ru": "Цюрих",
+      "zh-CN": "苏黎世州",
+      "zh-TW": "蘇黎世州",
+      "ja": "チューリッヒ州",
+      "ko": "취리히주"
+    }
+  },
+  {
+    "ident": "LOWW",
+    "sourceName": "Vienna International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Viena",
+      "ru": "Международный аэропорт Вена",
+      "zh-CN": "维也纳国际机场",
+      "zh-TW": "維也納國際機場",
+      "ja": "ウィーン国際空港",
+      "ko": "빈 국제공항"
+    },
+    "sourceMunicipality": "Vienna",
+    "municipality": {
+      "es": "Viena",
+      "ru": "Вена",
+      "zh-CN": "维也纳",
+      "zh-TW": "維也納",
+      "ja": "ウィーン",
+      "ko": "빈"
+    },
+    "sourceRegion": "Vienna",
+    "region": {
+      "es": "Viena",
+      "ru": "Вена",
+      "zh-CN": "维也纳",
+      "zh-TW": "維也納",
+      "ja": "ウィーン",
+      "ko": "빈"
+    }
+  },
+  {
+    "ident": "EBBR",
+    "sourceName": "Brussels Airport",
+    "name": {
+      "es": "Aeropuerto de Bruselas",
+      "ru": "Аэропорт Брюссель",
+      "zh-CN": "布鲁塞尔机场",
+      "zh-TW": "布魯塞爾機場",
+      "ja": "ブリュッセル空港",
+      "ko": "브뤼셀 공항"
+    },
+    "sourceMunicipality": "Zaventem",
+    "municipality": {
+      "es": "Zaventem",
+      "ru": "Завентем",
+      "zh-CN": "扎芬特姆",
+      "zh-TW": "扎芬特姆",
+      "ja": "ザベンテム",
+      "ko": "자벤템"
+    },
+    "sourceRegion": "Flemish Brabant Province",
+    "region": {
+      "es": "Provincia del Brabante Flamenco",
+      "ru": "Провинция Фламандский Брабант",
+      "zh-CN": "弗拉芒布拉班特省",
+      "zh-TW": "佛拉蒙布拉班特省",
+      "ja": "フラームス＝ブラバント州",
+      "ko": "플람스브라반트주"
+    }
+  },
+  {
+    "ident": "EKCH",
+    "sourceName": "Copenhagen Kastrup Airport",
+    "name": {
+      "es": "Aeropuerto de Copenhague-Kastrup",
+      "ru": "Аэропорт Копенгаген Каструп",
+      "zh-CN": "哥本哈根凯斯楚普机场",
+      "zh-TW": "哥本哈根凱斯楚普機場",
+      "ja": "コペンハーゲン・カストラップ空港",
+      "ko": "코펜하겐 카스트루프 공항"
+    },
+    "sourceMunicipality": "Copenhagen",
+    "municipality": {
+      "es": "Copenhague",
+      "ru": "Копенгаген",
+      "zh-CN": "哥本哈根",
+      "zh-TW": "哥本哈根",
+      "ja": "コペンハーゲン",
+      "ko": "코펜하겐"
+    },
+    "sourceRegion": "Capital Region",
+    "region": {
+      "es": "Región Capital",
+      "ru": "Столичный регион",
+      "zh-CN": "首都大区",
+      "zh-TW": "首都大區",
+      "ja": "デンマーク首都地域",
+      "ko": "덴마크 수도 지역"
+    }
+  },
+  {
+    "ident": "ENGM",
+    "sourceName": "Oslo-Gardermoen International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Oslo-Gardermoen",
+      "ru": "Международный аэропорт Осло Гардермуэн",
+      "zh-CN": "奥斯陆加勒穆恩国际机场",
+      "zh-TW": "奧斯陸加勒穆恩國際機場",
+      "ja": "オスロ・ガーデモエン国際空港",
+      "ko": "오슬로 가르데르모엔 국제공항"
+    },
+    "sourceMunicipality": "Oslo (Gardermoen)",
+    "municipality": {
+      "es": "Oslo (Gardermoen)",
+      "ru": "Осло (Гардермуэн)",
+      "zh-CN": "奥斯陆（加勒穆恩）",
+      "zh-TW": "奧斯陸（加勒穆恩）",
+      "ja": "オスロ（ガーデモエン）",
+      "ko": "오슬로(가르데르모엔)"
+    },
+    "sourceRegion": "Akershus",
+    "region": {
+      "es": "Akershus",
+      "ru": "Акерсхус",
+      "zh-CN": "阿克什胡斯郡",
+      "zh-TW": "阿克什胡斯郡",
+      "ja": "アーケシュフース県",
+      "ko": "아케르스후스주"
+    }
+  },
+  {
+    "ident": "ESSA",
+    "sourceName": "Stockholm-Arlanda Airport",
+    "name": {
+      "es": "Aeropuerto de Estocolmo-Arlanda",
+      "ru": "Аэропорт Стокгольм Арланда",
+      "zh-CN": "斯德哥尔摩阿兰达机场",
+      "zh-TW": "斯德哥爾摩阿蘭達機場",
+      "ja": "ストックホルム・アーランダ空港",
+      "ko": "스톡홀름 알란다 공항"
+    },
+    "sourceMunicipality": "Stockholm",
+    "municipality": {
+      "es": "Estocolmo",
+      "ru": "Стокгольм",
+      "zh-CN": "斯德哥尔摩",
+      "zh-TW": "斯德哥爾摩",
+      "ja": "ストックホルム",
+      "ko": "스톡홀름"
+    },
+    "sourceRegion": "Stockholms län",
+    "region": {
+      "es": "Provincia de Estocolmo",
+      "ru": "Лен Стокгольм",
+      "zh-CN": "斯德哥尔摩省",
+      "zh-TW": "斯德哥爾摩省",
+      "ja": "ストックホルム県",
+      "ko": "스톡홀름주"
+    }
+  },
+  {
+    "ident": "EFHK",
+    "sourceName": "Helsinki Vantaa Airport",
+    "name": {
+      "es": "Aeropuerto de Helsinki-Vantaa",
+      "ru": "Аэропорт Хельсинки Вантаа",
+      "zh-CN": "赫尔辛基万塔机场",
+      "zh-TW": "赫爾辛基萬塔機場",
+      "ja": "ヘルシンキ・ヴァンター空港",
+      "ko": "헬싱키 반타 공항"
+    },
+    "sourceMunicipality": "Helsinki (Vantaa)",
+    "municipality": {
+      "es": "Helsinki (Vantaa)",
+      "ru": "Хельсинки (Вантаа)",
+      "zh-CN": "赫尔辛基（万塔）",
+      "zh-TW": "赫爾辛基（萬塔）",
+      "ja": "ヘルシンキ（ヴァンター）",
+      "ko": "헬싱키(반타)"
+    },
+    "sourceRegion": "Uusimaa Region",
+    "region": {
+      "es": "Región de Uusimaa",
+      "ru": "Уусимаа",
+      "zh-CN": "新地区",
+      "zh-TW": "新地區",
+      "ja": "ウーシマー県",
+      "ko": "우시마 지역"
+    }
+  },
+  {
+    "ident": "LPPT",
+    "sourceName": "Lisbon Humberto Delgado Airport",
+    "name": {
+      "es": "Aeropuerto Humberto Delgado de Lisboa",
+      "ru": "Аэропорт Лиссабон имени Умберту Делгаду",
+      "zh-CN": "里斯本温贝托·德尔加多机场",
+      "zh-TW": "里斯本溫貝托·德爾加多機場",
+      "ja": "リスボン・ウンベルト・デルガード空港",
+      "ko": "리스본 움베르투 델가두 공항"
+    },
+    "sourceMunicipality": "Lisbon",
+    "municipality": {
+      "es": "Lisboa",
+      "ru": "Лиссабон",
+      "zh-CN": "里斯本",
+      "zh-TW": "里斯本",
+      "ja": "リスボン",
+      "ko": "리스본"
+    },
+    "sourceRegion": "Lisbon District",
+    "region": {
+      "es": "Distrito de Lisboa",
+      "ru": "Округ Лиссабон",
+      "zh-CN": "里斯本区",
+      "zh-TW": "里斯本區",
+      "ja": "リスボン県",
+      "ko": "리스본현"
+    }
+  },
+  {
+    "ident": "EIDW",
+    "sourceName": "Dublin Airport",
+    "name": {
+      "es": "Aeropuerto de Dublín",
+      "ru": "Аэропорт Дублин",
+      "zh-CN": "都柏林机场",
+      "zh-TW": "都柏林機場",
+      "ja": "ダブリン空港",
+      "ko": "더블린 공항"
+    },
+    "sourceMunicipality": "Dublin",
+    "municipality": {
+      "es": "Dublín",
+      "ru": "Дублин",
+      "zh-CN": "都柏林",
+      "zh-TW": "都柏林",
+      "ja": "ダブリン",
+      "ko": "더블린"
+    },
+    "sourceRegion": "County Dublin",
+    "region": {
+      "es": "Condado de Dublín",
+      "ru": "Графство Дублин",
+      "zh-CN": "都柏林郡",
+      "zh-TW": "都柏林郡",
+      "ja": "ダブリン県",
+      "ko": "더블린주"
+    }
+  },
+  {
+    "ident": "LGAV",
+    "sourceName": "Athens Eleftherios Venizelos International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Eleftherios Venizelos de Atenas",
+      "ru": "Международный аэропорт Афины имени Элефтериоса Венизелоса",
+      "zh-CN": "雅典埃莱夫塞里奥斯·韦尼泽洛斯国际机场",
+      "zh-TW": "雅典埃萊夫塞里奧斯·韋尼澤洛斯國際機場",
+      "ja": "アテネ・エレフテリオス・ヴェニゼロス国際空港",
+      "ko": "아테네 엘레프테리오스 베니젤로스 국제공항"
+    },
+    "sourceMunicipality": "Spata-Artemida",
+    "municipality": {
+      "es": "Spata-Artemida",
+      "ru": "Спата-Артемида",
+      "zh-CN": "斯帕塔-阿尔泰米达",
+      "zh-TW": "斯帕塔-阿爾泰米達",
+      "ja": "スパタ＝アルテミダ",
+      "ko": "스파타아르테미다"
+    },
+    "sourceRegion": "Attica",
+    "region": {
+      "es": "Ática",
+      "ru": "Аттика",
+      "zh-CN": "阿提卡大区",
+      "zh-TW": "阿提卡大區",
+      "ja": "アッティカ地方",
+      "ko": "아티키주"
+    }
+  },
+  {
+    "ident": "LTFM",
+    "sourceName": "İstanbul Airport",
+    "name": {
+      "es": "Aeropuerto de Estambul",
+      "ru": "Аэропорт Стамбул",
+      "zh-CN": "伊斯坦布尔机场",
+      "zh-TW": "伊斯坦堡機場",
+      "ja": "イスタンブール空港",
+      "ko": "이스탄불 공항"
+    },
+    "sourceMunicipality": "Istanbul",
+    "municipality": {
+      "es": "Estambul",
+      "ru": "Стамбул",
+      "zh-CN": "伊斯坦布尔",
+      "zh-TW": "伊斯坦堡",
+      "ja": "イスタンブール",
+      "ko": "이스탄불"
+    },
+    "sourceRegion": "İstanbul Province",
+    "region": {
+      "es": "Provincia de Estambul",
+      "ru": "Провинция Стамбул",
+      "zh-CN": "伊斯坦布尔省",
+      "zh-TW": "伊斯坦堡省",
+      "ja": "イスタンブール県",
+      "ko": "이스탄불주"
+    }
+  },
+  {
+    "ident": "LTFJ",
+    "sourceName": "Istanbul Sabiha Gökçen International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Sabiha Gökçen de Estambul",
+      "ru": "Международный аэропорт Стамбул имени Сабихи Гёкчен",
+      "zh-CN": "伊斯坦布尔萨比哈·格克琴国际机场",
+      "zh-TW": "伊斯坦堡薩比哈·格克琴國際機場",
+      "ja": "イスタンブール・サビハ・ギョクチェン国際空港",
+      "ko": "이스탄불 사비하 괵첸 국제공항"
+    },
+    "sourceMunicipality": "Pendik, Istanbul",
+    "municipality": {
+      "es": "Pendik, Estambul",
+      "ru": "Пендик, Стамбул",
+      "zh-CN": "伊斯坦布尔彭迪克",
+      "zh-TW": "伊斯坦堡彭迪克",
+      "ja": "イスタンブール・ペンディク",
+      "ko": "이스탄불 펜디크"
+    },
+    "sourceRegion": "İstanbul Province",
+    "region": {
+      "es": "Provincia de Estambul",
+      "ru": "Провинция Стамбул",
+      "zh-CN": "伊斯坦布尔省",
+      "zh-TW": "伊斯坦堡省",
+      "ja": "イスタンブール県",
+      "ko": "이스탄불주"
+    }
+  },
+  {
+    "ident": "EPWA",
+    "sourceName": "Warsaw Chopin Airport",
+    "name": {
+      "es": "Aeropuerto Chopin de Varsovia",
+      "ru": "Аэропорт Варшава имени Фредерика Шопена",
+      "zh-CN": "华沙肖邦机场",
+      "zh-TW": "華沙蕭邦機場",
+      "ja": "ワルシャワ・ショパン空港",
+      "ko": "바르샤바 쇼팽 공항"
+    },
+    "sourceMunicipality": "Warsaw",
+    "municipality": {
+      "es": "Varsovia",
+      "ru": "Варшава",
+      "zh-CN": "华沙",
+      "zh-TW": "華沙",
+      "ja": "ワルシャワ",
+      "ko": "바르샤바"
+    },
+    "sourceRegion": "Masovian Voivodeship",
+    "region": {
+      "es": "Voivodato de Mazovia",
+      "ru": "Мазовецкое воеводство",
+      "zh-CN": "马佐夫舍省",
+      "zh-TW": "馬佐夫舍省",
+      "ja": "マゾフシェ県",
+      "ko": "마조프셰주"
+    }
+  },
+  {
+    "ident": "LKPR",
+    "sourceName": "Václav Havel Airport Prague",
+    "name": {
+      "es": "Aeropuerto Václav Havel de Praga",
+      "ru": "Аэропорт Прага имени Вацлава Гавела",
+      "zh-CN": "布拉格瓦茨拉夫·哈维尔机场",
+      "zh-TW": "布拉格瓦茨拉夫·哈維爾機場",
+      "ja": "ヴァーツラフ・ハヴェル・プラハ空港",
+      "ko": "프라하 바츨라프 하벨 공항"
+    },
+    "sourceMunicipality": "Prague",
+    "municipality": {
+      "es": "Praga",
+      "ru": "Прага",
+      "zh-CN": "布拉格",
+      "zh-TW": "布拉格",
+      "ja": "プラハ",
+      "ko": "프라하"
+    },
+    "sourceRegion": "Praha (Prague) (capital city)",
+    "region": {
+      "es": "Praga (ciudad capital)",
+      "ru": "Прага (столица)",
+      "zh-CN": "布拉格（首都）",
+      "zh-TW": "布拉格（首都）",
+      "ja": "プラハ（首都）",
+      "ko": "프라하(수도)"
+    }
+  },
+  {
+    "ident": "LHBP",
+    "sourceName": "Budapest Liszt Ferenc International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Ferenc Liszt de Budapest",
+      "ru": "Международный аэропорт Будапешт имени Ференца Листа",
+      "zh-CN": "布达佩斯李斯特·费伦茨国际机场",
+      "zh-TW": "布達佩斯李斯特·費倫茨國際機場",
+      "ja": "ブダペスト・リスト・フェレンツ国際空港",
+      "ko": "부다페스트 리스트 페렌츠 국제공항"
+    },
+    "sourceMunicipality": "Budapest",
+    "municipality": {
+      "es": "Budapest",
+      "ru": "Будапешт",
+      "zh-CN": "布达佩斯",
+      "zh-TW": "布達佩斯",
+      "ja": "ブダペスト",
+      "ko": "부다페스트"
+    },
+    "sourceRegion": "Budapest (capital city)",
+    "region": {
+      "es": "Budapest (ciudad capital)",
+      "ru": "Будапешт (столица)",
+      "zh-CN": "布达佩斯（首都）",
+      "zh-TW": "布達佩斯（首都）",
+      "ja": "ブダペスト（首都）",
+      "ko": "부다페스트(수도)"
+    }
+  },
+  {
+    "ident": "LROP",
+    "sourceName": "Bucharest Henri Coandă International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Henri Coandă de Bucarest",
+      "ru": "Международный аэропорт Бухарест имени Анри Коанды",
+      "zh-CN": "布加勒斯特亨利·科安德国际机场",
+      "zh-TW": "布加勒斯特亨利·科安德國際機場",
+      "ja": "ブカレスト・アンリ・コアンダ国際空港",
+      "ko": "부쿠레슈티 헨리 코안더 국제공항"
+    },
+    "sourceMunicipality": "Otopeni",
+    "municipality": {
+      "es": "Otopeni",
+      "ru": "Отопень",
+      "zh-CN": "奥托佩尼",
+      "zh-TW": "奧托佩尼",
+      "ja": "オトペニ",
+      "ko": "오토페니"
+    },
+    "sourceRegion": "Ilfov County",
+    "region": {
+      "es": "Distrito de Ilfov",
+      "ru": "Жудец Илфов",
+      "zh-CN": "伊尔福夫县",
+      "zh-TW": "伊爾福夫縣",
+      "ja": "イルフォヴ県",
+      "ko": "일포브주"
+    }
+  },
+  {
+    "ident": "UUEE",
+    "sourceName": "Sheremetyevo International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Sheremétievo",
+      "ru": "Международный аэропорт Шереметьево",
+      "zh-CN": "谢列梅捷沃国际机场",
+      "zh-TW": "謝列梅捷沃國際機場",
+      "ja": "シェレメーチエヴォ国際空港",
+      "ko": "셰레메티예보 국제공항"
+    },
+    "sourceMunicipality": "Moscow",
+    "municipality": {
+      "es": "Moscú",
+      "ru": "Москва",
+      "zh-CN": "莫斯科",
+      "zh-TW": "莫斯科",
+      "ja": "モスクワ",
+      "ko": "모스크바"
+    },
+    "sourceRegion": "Moscow Oblast",
+    "region": {
+      "es": "Óblast de Moscú",
+      "ru": "Московская область",
+      "zh-CN": "莫斯科州",
+      "zh-TW": "莫斯科州",
+      "ja": "モスクワ州",
+      "ko": "모스크바주"
+    }
+  },
+  {
+    "ident": "UUDD",
+    "sourceName": "Domodedovo International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Domodédovo",
+      "ru": "Международный аэропорт Домодедово",
+      "zh-CN": "多莫杰多沃国际机场",
+      "zh-TW": "多莫傑多沃國際機場",
+      "ja": "ドモジェドヴォ国際空港",
+      "ko": "도모데도보 국제공항"
+    },
+    "sourceMunicipality": "Moscow",
+    "municipality": {
+      "es": "Moscú",
+      "ru": "Москва",
+      "zh-CN": "莫斯科",
+      "zh-TW": "莫斯科",
+      "ja": "モスクワ",
+      "ko": "모스크바"
+    },
+    "sourceRegion": "Moscow Oblast",
+    "region": {
+      "es": "Óblast de Moscú",
+      "ru": "Московская область",
+      "zh-CN": "莫斯科州",
+      "zh-TW": "莫斯科州",
+      "ja": "モスクワ州",
+      "ko": "모스크바주"
+    }
+  },
+  {
+    "ident": "ULLI",
+    "sourceName": "Pulkovo Airport",
+    "name": {
+      "es": "Aeropuerto de Púlkovo",
+      "ru": "Аэропорт Пулково",
+      "zh-CN": "普尔科沃机场",
+      "zh-TW": "普爾科沃機場",
+      "ja": "プルコヴォ空港",
+      "ko": "풀코보 공항"
+    },
+    "sourceMunicipality": "St. Petersburg",
+    "municipality": {
+      "es": "San Petersburgo",
+      "ru": "Санкт-Петербург",
+      "zh-CN": "圣彼得堡",
+      "zh-TW": "聖彼得堡",
+      "ja": "サンクトペテルブルク",
+      "ko": "상트페테르부르크"
+    },
+    "sourceRegion": "Saint Petersburg (city)",
+    "region": {
+      "es": "Ciudad de San Petersburgo",
+      "ru": "Санкт-Петербург",
+      "zh-CN": "圣彼得堡市",
+      "zh-TW": "聖彼得堡市",
+      "ja": "サンクトペテルブルク市",
+      "ko": "상트페테르부르크시"
+    }
+  },
+  {
+    "ident": "OMDB",
+    "sourceName": "Dubai International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Dubái",
+      "ru": "Международный аэропорт Дубай",
+      "zh-CN": "迪拜国际机场",
+      "zh-TW": "杜拜國際機場",
+      "ja": "ドバイ国際空港",
+      "ko": "두바이 국제공항"
+    },
+    "sourceMunicipality": "Dubai",
+    "municipality": {
+      "es": "Dubái",
+      "ru": "Дубай",
+      "zh-CN": "迪拜",
+      "zh-TW": "杜拜",
+      "ja": "ドバイ",
+      "ko": "두바이"
+    },
+    "sourceRegion": "Dubai Emirate",
+    "region": {
+      "es": "Emirato de Dubái",
+      "ru": "Эмират Дубай",
+      "zh-CN": "迪拜酋长国",
+      "zh-TW": "杜拜酋長國",
+      "ja": "ドバイ首長国",
+      "ko": "두바이 토후국"
+    }
+  },
+  {
+    "ident": "OMDW",
+    "sourceName": "Al Maktoum International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Al Maktoum",
+      "ru": "Международный аэропорт Аль-Мактум",
+      "zh-CN": "阿勒马克图姆国际机场",
+      "zh-TW": "阿勒馬克圖姆國際機場",
+      "ja": "アール・マクトゥーム国際空港",
+      "ko": "알막툼 국제공항"
+    },
+    "sourceMunicipality": "Dubai(Jebel Ali)",
+    "municipality": {
+      "es": "Dubái (Jebel Ali)",
+      "ru": "Дубай (Джебель-Али)",
+      "zh-CN": "迪拜（杰贝阿里）",
+      "zh-TW": "杜拜（傑貝阿里）",
+      "ja": "ドバイ（ジュベル・アリ）",
+      "ko": "두바이(제벨알리)"
+    },
+    "sourceRegion": "Dubai Emirate",
+    "region": {
+      "es": "Emirato de Dubái",
+      "ru": "Эмират Дубай",
+      "zh-CN": "迪拜酋长国",
+      "zh-TW": "杜拜酋長國",
+      "ja": "ドバイ首長国",
+      "ko": "두바이 토후국"
+    }
+  },
+  {
+    "ident": "OMAA",
+    "sourceName": "Zayed International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Zayed",
+      "ru": "Международный аэропорт имени Заида",
+      "zh-CN": "扎耶德国际机场",
+      "zh-TW": "札耶德國際機場",
+      "ja": "ザイード国際空港",
+      "ko": "자이드 국제공항"
+    },
+    "sourceMunicipality": "Abu Dhabi",
+    "municipality": {
+      "es": "Abu Dabi",
+      "ru": "Абу-Даби",
+      "zh-CN": "阿布扎比",
+      "zh-TW": "阿布達比",
+      "ja": "アブダビ",
+      "ko": "아부다비"
+    },
+    "sourceRegion": "Abu Dhabi Emirate",
+    "region": {
+      "es": "Emirato de Abu Dabi",
+      "ru": "Эмират Абу-Даби",
+      "zh-CN": "阿布扎比酋长国",
+      "zh-TW": "阿布達比酋長國",
+      "ja": "アブダビ首長国",
+      "ko": "아부다비 토후국"
+    }
+  },
+  {
+    "ident": "OTHH",
+    "sourceName": "Hamad International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Hamad",
+      "ru": "Международный аэропорт Хамад",
+      "zh-CN": "哈马德国际机场",
+      "zh-TW": "哈馬德國際機場",
+      "ja": "ハマド国際空港",
+      "ko": "하마드 국제공항"
+    },
+    "sourceMunicipality": "Doha",
+    "municipality": {
+      "es": "Doha",
+      "ru": "Доха",
+      "zh-CN": "多哈",
+      "zh-TW": "杜哈",
+      "ja": "ドーハ",
+      "ko": "도하"
+    },
+    "sourceRegion": "Ad-Dawhah Municipality",
+    "region": {
+      "es": "Municipio de Doha",
+      "ru": "Муниципалитет Эд-Доха",
+      "zh-CN": "多哈市",
+      "zh-TW": "杜哈市",
+      "ja": "ドーハ基礎自治体",
+      "ko": "도하 자치시"
+    }
+  },
+  {
+    "ident": "OERK",
+    "sourceName": "King Khalid International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Rey Khalid",
+      "ru": "Международный аэропорт имени короля Халида",
+      "zh-CN": "哈立德国王国际机场",
+      "zh-TW": "哈立德國王國際機場",
+      "ja": "キング・ハーリド国際空港",
+      "ko": "킹 칼리드 국제공항"
+    },
+    "sourceMunicipality": "Riyadh",
+    "municipality": {
+      "es": "Riad",
+      "ru": "Эр-Рияд",
+      "zh-CN": "利雅得",
+      "zh-TW": "利雅德",
+      "ja": "リヤド",
+      "ko": "리야드"
+    },
+    "sourceRegion": "Riyadh Region",
+    "region": {
+      "es": "Región de Riad",
+      "ru": "Эр-Рияд",
+      "zh-CN": "利雅得省",
+      "zh-TW": "利雅德省",
+      "ja": "リヤド州",
+      "ko": "리야드주"
+    }
+  },
+  {
+    "ident": "OEJN",
+    "sourceName": "King Abdulaziz International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Rey Abdulaziz",
+      "ru": "Международный аэропорт имени короля Абдул-Азиза",
+      "zh-CN": "阿卜杜勒阿齐兹国王国际机场",
+      "zh-TW": "阿卜杜勒阿齊茲國王國際機場",
+      "ja": "キング・アブドゥルアズィーズ国際空港",
+      "ko": "킹 압둘아지즈 국제공항"
+    },
+    "sourceMunicipality": "Jeddah",
+    "municipality": {
+      "es": "Yeda",
+      "ru": "Джидда",
+      "zh-CN": "吉达",
+      "zh-TW": "吉達",
+      "ja": "ジッダ",
+      "ko": "제다"
+    },
+    "sourceRegion": "Makkah Region",
+    "region": {
+      "es": "Región de La Meca",
+      "ru": "Мекка",
+      "zh-CN": "麦加省",
+      "zh-TW": "麥加省",
+      "ja": "マッカ州",
+      "ko": "메카주"
+    }
+  },
+  {
+    "ident": "OKKK",
+    "sourceName": "Kuwait International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Kuwait",
+      "ru": "Международный аэропорт Кувейт",
+      "zh-CN": "科威特国际机场",
+      "zh-TW": "科威特國際機場",
+      "ja": "クウェート国際空港",
+      "ko": "쿠웨이트 국제공항"
+    },
+    "sourceMunicipality": "Kuwait City",
+    "municipality": {
+      "es": "Ciudad de Kuwait",
+      "ru": "Эль-Кувейт",
+      "zh-CN": "科威特城",
+      "zh-TW": "科威特城",
+      "ja": "クウェート市",
+      "ko": "쿠웨이트시티"
+    },
+    "sourceRegion": "Al Farwaniyah Governorate",
+    "region": {
+      "es": "Gobernación de Al Farwaniya",
+      "ru": "Мухафаза Эль-Фарвания",
+      "zh-CN": "费尔瓦尼耶省",
+      "zh-TW": "費爾瓦尼耶省",
+      "ja": "ファルワーニーヤ県",
+      "ko": "파르와니야주"
+    }
+  },
+  {
+    "ident": "OBBI",
+    "sourceName": "Bahrain International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Baréin",
+      "ru": "Международный аэропорт Бахрейн",
+      "zh-CN": "巴林国际机场",
+      "zh-TW": "巴林國際機場",
+      "ja": "バーレーン国際空港",
+      "ko": "바레인 국제공항"
+    },
+    "sourceMunicipality": "Manama",
+    "municipality": {
+      "es": "Manama",
+      "ru": "Манама",
+      "zh-CN": "麦纳麦",
+      "zh-TW": "麥納瑪",
+      "ja": "マナーマ",
+      "ko": "마나마"
+    },
+    "sourceRegion": "Muharraq Governorate",
+    "region": {
+      "es": "Gobernación de Muharraq",
+      "ru": "Мухафаза Мухаррак",
+      "zh-CN": "穆哈拉格省",
+      "zh-TW": "穆哈拉格省",
+      "ja": "ムハッラク県",
+      "ko": "무하라크주"
+    }
+  },
+  {
+    "ident": "OOMS",
+    "sourceName": "Muscat International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Mascate",
+      "ru": "Международный аэропорт Маскат",
+      "zh-CN": "马斯喀特国际机场",
+      "zh-TW": "馬斯喀特國際機場",
+      "ja": "マスカット国際空港",
+      "ko": "무스카트 국제공항"
+    },
+    "sourceMunicipality": "Muscat/Seeb",
+    "municipality": {
+      "es": "Mascate/Seeb",
+      "ru": "Маскат/Сиб",
+      "zh-CN": "马斯喀特／锡卜",
+      "zh-TW": "馬斯喀特／錫卜",
+      "ja": "マスカット／シーブ",
+      "ko": "무스카트/시브"
+    },
+    "sourceRegion": "Masqat Governorate",
+    "region": {
+      "es": "Gobernación de Mascate",
+      "ru": "Мухафаза Маскат",
+      "zh-CN": "马斯喀特省",
+      "zh-TW": "馬斯喀特省",
+      "ja": "マスカット県",
+      "ko": "무스카트주"
+    }
+  },
+  {
+    "ident": "LLBG",
+    "sourceName": "Ben Gurion International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Ben Gurión",
+      "ru": "Международный аэропорт имени Бен-Гуриона",
+      "zh-CN": "本-古里安国际机场",
+      "zh-TW": "本-古里安國際機場",
+      "ja": "ベン・グリオン国際空港",
+      "ko": "벤구리온 국제공항"
+    },
+    "sourceMunicipality": "Tel Aviv",
+    "municipality": {
+      "es": "Tel Aviv",
+      "ru": "Тель-Авив",
+      "zh-CN": "特拉维夫",
+      "zh-TW": "特拉維夫",
+      "ja": "テルアビブ",
+      "ko": "텔아비브"
+    },
+    "sourceRegion": "Central District",
+    "region": {
+      "es": "Distrito Central",
+      "ru": "Центральный округ",
+      "zh-CN": "中央区",
+      "zh-TW": "中央區",
+      "ja": "中央地区",
+      "ko": "중부구"
+    }
+  },
+  {
+    "ident": "HECA",
+    "sourceName": "Cairo International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de El Cairo",
+      "ru": "Международный аэропорт Каир",
+      "zh-CN": "开罗国际机场",
+      "zh-TW": "開羅國際機場",
+      "ja": "カイロ国際空港",
+      "ko": "카이로 국제공항"
+    },
+    "sourceMunicipality": "Cairo",
+    "municipality": {
+      "es": "El Cairo",
+      "ru": "Каир",
+      "zh-CN": "开罗",
+      "zh-TW": "開羅",
+      "ja": "カイロ",
+      "ko": "카이로"
+    },
+    "sourceRegion": "Cairo Governorate",
+    "region": {
+      "es": "Gobernación de El Cairo",
+      "ru": "Мухафаза Каир",
+      "zh-CN": "开罗省",
+      "zh-TW": "開羅省",
+      "ja": "カイロ県",
+      "ko": "카이로주"
+    }
+  },
+  {
+    "ident": "HAAB",
+    "sourceName": "Addis Ababa Bole International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Adís Abeba-Bole",
+      "ru": "Международный аэропорт Аддис-Абеба Боле",
+      "zh-CN": "亚的斯亚贝巴博莱国际机场",
+      "zh-TW": "阿迪斯阿貝巴博萊國際機場",
+      "ja": "アディスアベバ・ボレ国際空港",
+      "ko": "아디스아바바 볼레 국제공항"
+    },
+    "sourceMunicipality": "Addis Ababa",
+    "municipality": {
+      "es": "Adís Abeba",
+      "ru": "Аддис-Абеба",
+      "zh-CN": "亚的斯亚贝巴",
+      "zh-TW": "阿迪斯阿貝巴",
+      "ja": "アディスアベバ",
+      "ko": "아디스아바바"
+    },
+    "sourceRegion": "Addis Ababa",
+    "region": {
+      "es": "Adís Abeba",
+      "ru": "Аддис-Абеба",
+      "zh-CN": "亚的斯亚贝巴",
+      "zh-TW": "阿迪斯阿貝巴",
+      "ja": "アディスアベバ",
+      "ko": "아디스아바바"
+    }
+  },
+  {
+    "ident": "HKJK",
+    "sourceName": "Jomo Kenyatta International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Jomo Kenyatta",
+      "ru": "Международный аэропорт имени Джомо Кениаты",
+      "zh-CN": "乔莫·肯雅塔国际机场",
+      "zh-TW": "喬莫·肯亞塔國際機場",
+      "ja": "ジョモ・ケニヤッタ国際空港",
+      "ko": "조모 케냐타 국제공항"
+    },
+    "sourceMunicipality": "Nairobi",
+    "municipality": {
+      "es": "Nairobi",
+      "ru": "Найроби",
+      "zh-CN": "内罗毕",
+      "zh-TW": "奈洛比",
+      "ja": "ナイロビ",
+      "ko": "나이로비"
+    },
+    "sourceRegion": "Nairobi City County",
+    "region": {
+      "es": "Condado de Nairobi",
+      "ru": "Городской округ Найроби",
+      "zh-CN": "内罗毕县",
+      "zh-TW": "奈洛比郡",
+      "ja": "ナイロビ郡",
+      "ko": "나이로비현"
+    }
+  },
+  {
+    "ident": "FAOR",
+    "sourceName": "O.R. Tambo International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional O. R. Tambo",
+      "ru": "Международный аэропорт имени О. Р. Тамбо",
+      "zh-CN": "奥利弗·雷金纳德·坦博国际机场",
+      "zh-TW": "奧利佛·雷金納德·坦博國際機場",
+      "ja": "O・R・タンボ国際空港",
+      "ko": "O. R. 탐보 국제공항"
+    },
+    "sourceMunicipality": "Johannesburg",
+    "municipality": {
+      "es": "Johannesburgo",
+      "ru": "Йоханнесбург",
+      "zh-CN": "约翰内斯堡",
+      "zh-TW": "約翰尼斯堡",
+      "ja": "ヨハネスブルグ",
+      "ko": "요하네스버그"
+    },
+    "sourceRegion": "Gauteng",
+    "region": {
+      "es": "Gauteng",
+      "ru": "Гаутенг",
+      "zh-CN": "豪登省",
+      "zh-TW": "豪登省",
+      "ja": "ハウテン州",
+      "ko": "하우텡주"
+    }
+  },
+  {
+    "ident": "FACT",
+    "sourceName": "Cape Town International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Ciudad del Cabo",
+      "ru": "Международный аэропорт Кейптаун",
+      "zh-CN": "开普敦国际机场",
+      "zh-TW": "開普敦國際機場",
+      "ja": "ケープタウン国際空港",
+      "ko": "케이프타운 국제공항"
+    },
+    "sourceMunicipality": "Cape Town",
+    "municipality": {
+      "es": "Ciudad del Cabo",
+      "ru": "Кейптаун",
+      "zh-CN": "开普敦",
+      "zh-TW": "開普敦",
+      "ja": "ケープタウン",
+      "ko": "케이프타운"
+    },
+    "sourceRegion": "Western Cape",
+    "region": {
+      "es": "Cabo Occidental",
+      "ru": "Западно-Капская провинция",
+      "zh-CN": "西开普省",
+      "zh-TW": "西開普省",
+      "ja": "西ケープ州",
+      "ko": "웨스턴케이프주"
+    }
+  },
+  {
+    "ident": "GMMN",
+    "sourceName": "Mohammed V International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Mohammed V",
+      "ru": "Международный аэропорт имени Мухаммеда V",
+      "zh-CN": "穆罕默德五世国际机场",
+      "zh-TW": "穆罕默德五世國際機場",
+      "ja": "ムハンマド5世国際空港",
+      "ko": "무함마드 5세 국제공항"
+    },
+    "sourceMunicipality": "Casablanca",
+    "municipality": {
+      "es": "Casablanca",
+      "ru": "Касабланка",
+      "zh-CN": "卡萨布兰卡",
+      "zh-TW": "卡薩布蘭卡",
+      "ja": "カサブランカ",
+      "ko": "카사블랑카"
+    },
+    "sourceRegion": "Casablanca-Settat Region",
+    "region": {
+      "es": "Región de Casablanca-Settat",
+      "ru": "Регион Касабланка-Сеттат",
+      "zh-CN": "卡萨布兰卡-塞塔特大区",
+      "zh-TW": "卡薩布蘭卡-塞塔特大區",
+      "ja": "カサブランカ＝セタット地方",
+      "ko": "카사블랑카세타트 지방"
+    }
+  },
+  {
+    "ident": "DNMM",
+    "sourceName": "Murtala Muhammed International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Murtala Muhammed",
+      "ru": "Международный аэропорт имени Мурталы Мухаммеда",
+      "zh-CN": "穆尔塔拉·穆罕默德国际机场",
+      "zh-TW": "穆爾塔拉·穆罕默德國際機場",
+      "ja": "ムルタラ・モハンマド国際空港",
+      "ko": "무르탈라 무함마드 국제공항"
+    },
+    "sourceMunicipality": "Lagos",
+    "municipality": {
+      "es": "Lagos",
+      "ru": "Лагос",
+      "zh-CN": "拉各斯",
+      "zh-TW": "拉哥斯",
+      "ja": "ラゴス",
+      "ko": "라고스"
+    },
+    "sourceRegion": "Lagos State",
+    "region": {
+      "es": "Estado de Lagos",
+      "ru": "Штат Лагос",
+      "zh-CN": "拉各斯州",
+      "zh-TW": "拉哥斯州",
+      "ja": "ラゴス州",
+      "ko": "라고스주"
+    }
+  },
+  {
+    "ident": "DAAG",
+    "sourceName": "Houari Boumediene Airport",
+    "name": {
+      "es": "Aeropuerto Houari Boumedienne",
+      "ru": "Аэропорт имени Хуари Бумедьена",
+      "zh-CN": "胡阿里·布迈丁机场",
+      "zh-TW": "胡阿里·布邁丁機場",
+      "ja": "ウアリ・ブーメディアン空港",
+      "ko": "우아리 부메디엔 공항"
+    },
+    "sourceMunicipality": "Algiers",
+    "municipality": {
+      "es": "Argel",
+      "ru": "Алжир",
+      "zh-CN": "阿尔及尔",
+      "zh-TW": "阿爾及爾",
+      "ja": "アルジェ",
+      "ko": "알제"
+    },
+    "sourceRegion": "Algiers Province",
+    "region": {
+      "es": "Provincia de Argel",
+      "ru": "Вилайет Алжир",
+      "zh-CN": "阿尔及尔省",
+      "zh-TW": "阿爾及爾省",
+      "ja": "アルジェ県",
+      "ko": "알제주"
+    }
+  },
+  {
+    "ident": "DTTA",
+    "sourceName": "Tunis Carthage International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Túnez-Cartago",
+      "ru": "Международный аэропорт Тунис Карфаген",
+      "zh-CN": "突尼斯迦太基国际机场",
+      "zh-TW": "突尼斯迦太基國際機場",
+      "ja": "チュニス・カルタゴ国際空港",
+      "ko": "튀니스 카르타고 국제공항"
+    },
+    "sourceMunicipality": "Tunis",
+    "municipality": {
+      "es": "Túnez",
+      "ru": "Тунис",
+      "zh-CN": "突尼斯",
+      "zh-TW": "突尼斯",
+      "ja": "チュニス",
+      "ko": "튀니스"
+    },
+    "sourceRegion": "Tunis Governorate",
+    "region": {
+      "es": "Gobernación de Túnez",
+      "ru": "Вилайет Тунис",
+      "zh-CN": "突尼斯省",
+      "zh-TW": "突尼斯省",
+      "ja": "チュニス県",
+      "ko": "튀니스주"
+    }
+  },
+  {
+    "ident": "GOBD",
+    "sourceName": "Blaise Diagne International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Blaise Diagne",
+      "ru": "Международный аэропорт имени Блеза Дианя",
+      "zh-CN": "布莱兹·迪亚涅国际机场",
+      "zh-TW": "布萊茲·迪亞涅國際機場",
+      "ja": "ブレーズ・ジャーニュ国際空港",
+      "ko": "블레즈 디아뉴 국제공항"
+    },
+    "sourceMunicipality": "Dakar",
+    "municipality": {
+      "es": "Dakar",
+      "ru": "Дакар",
+      "zh-CN": "达喀尔",
+      "zh-TW": "達卡",
+      "ja": "ダカール",
+      "ko": "다카르"
+    },
+    "sourceRegion": "Dakar Region",
+    "region": {
+      "es": "Región de Dakar",
+      "ru": "Область Дакар",
+      "zh-CN": "达喀尔区",
+      "zh-TW": "達卡區",
+      "ja": "ダカール州",
+      "ko": "다카르주"
+    }
+  },
+  {
+    "ident": "WSSS",
+    "sourceName": "Singapore Changi Airport",
+    "name": {
+      "es": "Aeropuerto de Singapur-Changi",
+      "ru": "Аэропорт Сингапур Чанги",
+      "zh-CN": "新加坡樟宜机场",
+      "zh-TW": "新加坡樟宜機場",
+      "ja": "シンガポール・チャンギ空港",
+      "ko": "싱가포르 창이 공항"
+    },
+    "sourceMunicipality": "Singapore",
+    "municipality": {
+      "es": "Singapur",
+      "ru": "Сингапур",
+      "zh-CN": "新加坡",
+      "zh-TW": "新加坡",
+      "ja": "シンガポール",
+      "ko": "싱가포르"
+    },
+    "sourceRegion": "South East",
+    "region": {
+      "es": "Sudeste",
+      "ru": "Юго-Восток",
+      "zh-CN": "东南区",
+      "zh-TW": "東南區",
+      "ja": "南東地区",
+      "ko": "남동구"
+    }
+  },
+  {
+    "ident": "VTBS",
+    "sourceName": "Suvarnabhumi Airport",
+    "name": {
+      "es": "Aeropuerto de Suvarnabhumi",
+      "ru": "Аэропорт Суварнабхуми",
+      "zh-CN": "素万那普机场",
+      "zh-TW": "蘇凡納布機場",
+      "ja": "スワンナプーム空港",
+      "ko": "수완나품 공항"
+    },
+    "sourceMunicipality": "Bangkok",
+    "municipality": {
+      "es": "Bangkok",
+      "ru": "Бангкок",
+      "zh-CN": "曼谷",
+      "zh-TW": "曼谷",
+      "ja": "バンコク",
+      "ko": "방콕"
+    },
+    "sourceRegion": "Bangkok (special administrative area)",
+    "region": {
+      "es": "Bangkok (zona administrativa especial)",
+      "ru": "Бангкок (специальная административная территория)",
+      "zh-CN": "曼谷（特别行政区）",
+      "zh-TW": "曼谷（特別行政區）",
+      "ja": "バンコク（特別行政区）",
+      "ko": "방콕(특별행정구역)"
+    }
+  },
+  {
+    "ident": "VTBD",
+    "sourceName": "Don Mueang International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Don Mueang",
+      "ru": "Международный аэропорт Донмыанг",
+      "zh-CN": "廊曼国际机场",
+      "zh-TW": "廊曼國際機場",
+      "ja": "ドンムアン国際空港",
+      "ko": "돈므앙 국제공항"
+    },
+    "sourceMunicipality": "Bangkok",
+    "municipality": {
+      "es": "Bangkok",
+      "ru": "Бангкок",
+      "zh-CN": "曼谷",
+      "zh-TW": "曼谷",
+      "ja": "バンコク",
+      "ko": "방콕"
+    },
+    "sourceRegion": "Bangkok (special administrative area)",
+    "region": {
+      "es": "Bangkok (zona administrativa especial)",
+      "ru": "Бангкок (специальная административная территория)",
+      "zh-CN": "曼谷（特别行政区）",
+      "zh-TW": "曼谷（特別行政區）",
+      "ja": "バンコク（特別行政区）",
+      "ko": "방콕(특별행정구역)"
+    }
+  },
+  {
+    "ident": "WMKK",
+    "sourceName": "Kuala Lumpur International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Kuala Lumpur",
+      "ru": "Международный аэропорт Куала-Лумпур",
+      "zh-CN": "吉隆坡国际机场",
+      "zh-TW": "吉隆坡國際機場",
+      "ja": "クアラルンプール国際空港",
+      "ko": "쿠알라룸푸르 국제공항"
+    },
+    "sourceMunicipality": "Sepang",
+    "municipality": {
+      "es": "Sepang",
+      "ru": "Сепанг",
+      "zh-CN": "雪邦",
+      "zh-TW": "雪邦",
+      "ja": "セパン",
+      "ko": "세팡"
+    },
+    "sourceRegion": "Selangor",
+    "region": {
+      "es": "Selangor",
+      "ru": "Селангор",
+      "zh-CN": "雪兰莪州",
+      "zh-TW": "雪蘭莪州",
+      "ja": "セランゴール州",
+      "ko": "슬랑오르주"
+    }
+  },
+  {
+    "ident": "WIII",
+    "sourceName": "Soekarno-Hatta International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Soekarno-Hatta",
+      "ru": "Международный аэропорт Сукарно-Хатта",
+      "zh-CN": "苏加诺-哈达国际机场",
+      "zh-TW": "蘇卡諾-哈達國際機場",
+      "ja": "スカルノ・ハッタ国際空港",
+      "ko": "수카르노 하타 국제공항"
+    },
+    "sourceMunicipality": "Jakarta",
+    "municipality": {
+      "es": "Yakarta",
+      "ru": "Джакарта",
+      "zh-CN": "雅加达",
+      "zh-TW": "雅加達",
+      "ja": "ジャカルタ",
+      "ko": "자카르타"
+    },
+    "sourceRegion": "Banten",
+    "region": {
+      "es": "Bantén",
+      "ru": "Бантен",
+      "zh-CN": "万丹省",
+      "zh-TW": "萬丹省",
+      "ja": "バンテン州",
+      "ko": "반텐주"
+    }
+  },
+  {
+    "ident": "WADD",
+    "sourceName": "Denpasar I Gusti Ngurah Rai International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional I Gusti Ngurah Rai de Denpasar",
+      "ru": "Международный аэропорт Денпасар имени И Густи Нгурах-Рая",
+      "zh-CN": "登巴萨伍拉·赖国际机场",
+      "zh-TW": "登巴薩伍拉·賴國際機場",
+      "ja": "デンパサール・イ・グスティ・ングラ・ライ国際空港",
+      "ko": "덴파사르 이 구스티 응우라라이 국제공항"
+    },
+    "sourceMunicipality": "Kuta, Badung",
+    "municipality": {
+      "es": "Kuta, Badung",
+      "ru": "Кута, Бадунг",
+      "zh-CN": "巴东县库塔",
+      "zh-TW": "巴東縣庫塔",
+      "ja": "バドゥン県クタ",
+      "ko": "바둥군 쿠타"
+    },
+    "sourceRegion": "Bali",
+    "region": {
+      "es": "Bali",
+      "ru": "Бали",
+      "zh-CN": "巴厘省",
+      "zh-TW": "峇里省",
+      "ja": "バリ州",
+      "ko": "발리주"
+    }
+  },
+  {
+    "ident": "RPLL",
+    "sourceName": "Ninoy Aquino International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Ninoy Aquino",
+      "ru": "Международный аэропорт имени Ниноя Акино",
+      "zh-CN": "尼诺伊·阿基诺国际机场",
+      "zh-TW": "尼諾伊·艾奎諾國際機場",
+      "ja": "ニノイ・アキノ国際空港",
+      "ko": "니노이 아키노 국제공항"
+    },
+    "sourceMunicipality": "Manila (Pasay)",
+    "municipality": {
+      "es": "Manila (Pasay)",
+      "ru": "Манила (Пасай)",
+      "zh-CN": "马尼拉（帕赛）",
+      "zh-TW": "馬尼拉（帕賽）",
+      "ja": "マニラ（パサイ）",
+      "ko": "마닐라(파사이)"
+    },
+    "sourceRegion": "National Capital Region (Metropolitan Manila)",
+    "region": {
+      "es": "Región de la Capital Nacional (Gran Manila)",
+      "ru": "Национальный столичный регион (Метро Манила)",
+      "zh-CN": "国家首都区（马尼拉大都会）",
+      "zh-TW": "國家首都區（馬尼拉大都會）",
+      "ja": "マニラ首都圏",
+      "ko": "국가수도권(메트로 마닐라)"
+    }
+  },
+  {
+    "ident": "VVTS",
+    "sourceName": "Tan Son Nhat International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Tan Son Nhat",
+      "ru": "Международный аэропорт Таншоннят",
+      "zh-CN": "新山一国际机场",
+      "zh-TW": "新山一國際機場",
+      "ja": "タンソンニャット国際空港",
+      "ko": "떤선녓 국제공항"
+    },
+    "sourceMunicipality": "Ho Chi Minh City",
+    "municipality": {
+      "es": "Ciudad Ho Chi Minh",
+      "ru": "Хошимин",
+      "zh-CN": "胡志明市",
+      "zh-TW": "胡志明市",
+      "ja": "ホーチミン市",
+      "ko": "호찌민시"
+    },
+    "sourceRegion": "Southeast Region",
+    "region": {
+      "es": "Región del Sudeste",
+      "ru": "Юго-Восточный регион",
+      "zh-CN": "东南部地区",
+      "zh-TW": "東南部地區",
+      "ja": "東南部地方",
+      "ko": "동남부 지방"
+    }
+  },
+  {
+    "ident": "VVNB",
+    "sourceName": "Noi Bai International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Noi Bai",
+      "ru": "Международный аэропорт Нойбай",
+      "zh-CN": "内排国际机场",
+      "zh-TW": "內排國際機場",
+      "ja": "ノイバイ国際空港",
+      "ko": "노이바이 국제공항"
+    },
+    "sourceMunicipality": "Hanoi (Soc Son)",
+    "municipality": {
+      "es": "Hanói (Soc Son)",
+      "ru": "Ханой (Шокшон)",
+      "zh-CN": "河内（朔山）",
+      "zh-TW": "河內（朔山）",
+      "ja": "ハノイ（ソクソン）",
+      "ko": "하노이(속선)"
+    },
+    "sourceRegion": "Red River Delta Region",
+    "region": {
+      "es": "Región del Delta del Río Rojo",
+      "ru": "Регион дельты Красной реки",
+      "zh-CN": "红河三角洲地区",
+      "zh-TW": "紅河三角洲地區",
+      "ja": "紅河デルタ地方",
+      "ko": "홍강 삼각주 지방"
+    }
+  },
+  {
+    "ident": "VIDP",
+    "sourceName": "Indira Gandhi International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Indira Gandhi",
+      "ru": "Международный аэропорт имени Индиры Ганди",
+      "zh-CN": "英迪拉·甘地国际机场",
+      "zh-TW": "英迪拉·甘地國際機場",
+      "ja": "インディラ・ガンディー国際空港",
+      "ko": "인디라 간디 국제공항"
+    },
+    "sourceMunicipality": "New Delhi",
+    "municipality": {
+      "es": "Nueva Delhi",
+      "ru": "Нью-Дели",
+      "zh-CN": "新德里",
+      "zh-TW": "新德里",
+      "ja": "ニューデリー",
+      "ko": "뉴델리"
+    },
+    "sourceRegion": "Delhi (National Capital Territory)",
+    "region": {
+      "es": "Delhi (Territorio de la Capital Nacional)",
+      "ru": "Дели (Национальная столичная территория)",
+      "zh-CN": "德里国家首都辖区",
+      "zh-TW": "德里國家首都轄區",
+      "ja": "デリー首都直轄領",
+      "ko": "델리 수도직할지"
+    }
+  },
+  {
+    "ident": "VABB",
+    "sourceName": "Chhatrapati Shivaji Maharaj International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Chhatrapati Shivaji Maharaj",
+      "ru": "Международный аэропорт имени Чатрапати Шиваджи Махараджа",
+      "zh-CN": "贾特拉帕蒂·希瓦吉·马哈拉杰国际机场",
+      "zh-TW": "賈特拉帕蒂·希瓦吉·馬哈拉傑國際機場",
+      "ja": "チャトラパティ・シヴァージー・マハーラージ国際空港",
+      "ko": "차트라파티 시바지 마하라지 국제공항"
+    },
+    "sourceMunicipality": "Mumbai",
+    "municipality": {
+      "es": "Bombay",
+      "ru": "Мумбаи",
+      "zh-CN": "孟买",
+      "zh-TW": "孟買",
+      "ja": "ムンバイ",
+      "ko": "뭄바이"
+    },
+    "sourceRegion": "Maharashtra",
+    "region": {
+      "es": "Maharashtra",
+      "ru": "Махараштра",
+      "zh-CN": "马哈拉施特拉邦",
+      "zh-TW": "馬哈拉施特拉邦",
+      "ja": "マハーラーシュトラ州",
+      "ko": "마하라슈트라주"
+    }
+  },
+  {
+    "ident": "VOBL",
+    "sourceName": "Kempegowda International Airport Bengaluru",
+    "name": {
+      "es": "Aeropuerto Internacional Kempegowda de Bangalore",
+      "ru": "Международный аэропорт Бангалор имени Кемпегоуды",
+      "zh-CN": "班加罗尔肯佩高达国际机场",
+      "zh-TW": "班加羅爾肯佩高達國際機場",
+      "ja": "ベンガルール・ケンペゴウダ国際空港",
+      "ko": "벵갈루루 켐페고우다 국제공항"
+    },
+    "sourceMunicipality": "Bengaluru",
+    "municipality": {
+      "es": "Bangalore",
+      "ru": "Бангалор",
+      "zh-CN": "班加罗尔",
+      "zh-TW": "班加羅爾",
+      "ja": "ベンガルール",
+      "ko": "벵갈루루"
+    },
+    "sourceRegion": "Karnataka",
+    "region": {
+      "es": "Karnataka",
+      "ru": "Карнатака",
+      "zh-CN": "卡纳塔克邦",
+      "zh-TW": "卡納塔克邦",
+      "ja": "カルナータカ州",
+      "ko": "카르나타카주"
+    }
+  },
+  {
+    "ident": "VOHS",
+    "sourceName": "Rajiv Gandhi International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Rajiv Gandhi",
+      "ru": "Международный аэропорт имени Раджива Ганди",
+      "zh-CN": "拉吉夫·甘地国际机场",
+      "zh-TW": "拉吉夫·甘地國際機場",
+      "ja": "ラジーヴ・ガンディー国際空港",
+      "ko": "라지브 간디 국제공항"
+    },
+    "sourceMunicipality": "Hyderabad",
+    "municipality": {
+      "es": "Hyderabad",
+      "ru": "Хайдарабад",
+      "zh-CN": "海得拉巴",
+      "zh-TW": "海德拉巴",
+      "ja": "ハイデラバード",
+      "ko": "하이데라바드"
+    },
+    "sourceRegion": "Telangana",
+    "region": {
+      "es": "Telangana",
+      "ru": "Телангана",
+      "zh-CN": "特伦甘纳邦",
+      "zh-TW": "特倫甘納邦",
+      "ja": "テランガーナ州",
+      "ko": "텔랑가나주"
+    }
+  },
+  {
+    "ident": "VOMM",
+    "sourceName": "Chennai International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Chennai",
+      "ru": "Международный аэропорт Ченнаи",
+      "zh-CN": "金奈国际机场",
+      "zh-TW": "清奈國際機場",
+      "ja": "チェンナイ国際空港",
+      "ko": "첸나이 국제공항"
+    },
+    "sourceMunicipality": "Chennai",
+    "municipality": {
+      "es": "Chennai",
+      "ru": "Ченнаи",
+      "zh-CN": "金奈",
+      "zh-TW": "清奈",
+      "ja": "チェンナイ",
+      "ko": "첸나이"
+    },
+    "sourceRegion": "Tamil Nadu",
+    "region": {
+      "es": "Tamil Nadu",
+      "ru": "Тамилнад",
+      "zh-CN": "泰米尔纳德邦",
+      "zh-TW": "坦米爾納杜邦",
+      "ja": "タミル・ナードゥ州",
+      "ko": "타밀나두주"
+    }
+  },
+  {
+    "ident": "VGHS",
+    "sourceName": "Hazrat Shahjalal International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Hazrat Shahjalal",
+      "ru": "Международный аэропорт имени Хазрата Шахджалала",
+      "zh-CN": "沙阿贾拉勒国际机场",
+      "zh-TW": "沙阿賈拉勒國際機場",
+      "ja": "ハズラット・シャージャラル国際空港",
+      "ko": "하즈라트 샤잘랄 국제공항"
+    },
+    "sourceMunicipality": "Dhaka",
+    "municipality": {
+      "es": "Daca",
+      "ru": "Дакка",
+      "zh-CN": "达卡",
+      "zh-TW": "達卡",
+      "ja": "ダッカ",
+      "ko": "다카"
+    },
+    "sourceRegion": "Dhaka Division",
+    "region": {
+      "es": "División de Daca",
+      "ru": "Область Дакка",
+      "zh-CN": "达卡专区",
+      "zh-TW": "達卡專區",
+      "ja": "ダッカ管区",
+      "ko": "다카구"
+    }
+  },
+  {
+    "ident": "VCBI",
+    "sourceName": "Bandaranaike International Colombo Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Bandaranaike de Colombo",
+      "ru": "Международный аэропорт Коломбо имени Бандаранаике",
+      "zh-CN": "科伦坡班达拉奈克国际机场",
+      "zh-TW": "可倫坡班達拉奈克國際機場",
+      "ja": "コロンボ・バンダラナイケ国際空港",
+      "ko": "콜롬보 반다라나이케 국제공항"
+    },
+    "sourceMunicipality": "Colombo",
+    "municipality": {
+      "es": "Colombo",
+      "ru": "Коломбо",
+      "zh-CN": "科伦坡",
+      "zh-TW": "可倫坡",
+      "ja": "コロンボ",
+      "ko": "콜롬보"
+    },
+    "sourceRegion": "Western Province",
+    "region": {
+      "es": "Provincia Occidental",
+      "ru": "Западная провинция",
+      "zh-CN": "西部省",
+      "zh-TW": "西部省",
+      "ja": "西部州",
+      "ko": "서부주"
+    }
+  },
+  {
+    "ident": "VNKT",
+    "sourceName": "Tribhuvan International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Tribhuvan",
+      "ru": "Международный аэропорт Трибхуван",
+      "zh-CN": "特里布万国际机场",
+      "zh-TW": "特里布萬國際機場",
+      "ja": "トリブバン国際空港",
+      "ko": "트리부반 국제공항"
+    },
+    "sourceMunicipality": "Kathmandu",
+    "municipality": {
+      "es": "Katmandú",
+      "ru": "Катманду",
+      "zh-CN": "加德满都",
+      "zh-TW": "加德滿都",
+      "ja": "カトマンズ",
+      "ko": "카트만두"
+    },
+    "sourceRegion": "Bagmati Province",
+    "region": {
+      "es": "Provincia de Bagmati",
+      "ru": "Провинция Багмати",
+      "zh-CN": "巴格马蒂省",
+      "zh-TW": "巴格馬蒂省",
+      "ja": "バグマティ州",
+      "ko": "바그마티주"
+    }
+  },
+  {
+    "ident": "ZBAA",
+    "sourceName": "Beijing Capital International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Pekín-Capital",
+      "ru": "Международный аэропорт Пекин Столичный",
+      "zh-CN": "北京首都国际机场",
+      "zh-TW": "北京首都國際機場",
+      "ja": "北京首都国際空港",
+      "ko": "베이징 서우두 국제공항"
+    },
+    "sourceMunicipality": "Beijing",
+    "municipality": {
+      "es": "Pekín",
+      "ru": "Пекин",
+      "zh-CN": "北京",
+      "zh-TW": "北京",
+      "ja": "北京",
+      "ko": "베이징"
+    },
+    "sourceRegion": "Beijing Municipality",
+    "region": {
+      "es": "Municipalidad de Pekín",
+      "ru": "Пекин",
+      "zh-CN": "北京市",
+      "zh-TW": "北京市",
+      "ja": "北京市",
+      "ko": "베이징시"
+    }
+  },
+  {
+    "ident": "ZBAD",
+    "sourceName": "Beijing Daxing International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Pekín-Daxing",
+      "ru": "Международный аэропорт Пекин Дасин",
+      "zh-CN": "北京大兴国际机场",
+      "zh-TW": "北京大興國際機場",
+      "ja": "北京大興国際空港",
+      "ko": "베이징 다싱 국제공항"
+    },
+    "sourceMunicipality": "Beijing",
+    "municipality": {
+      "es": "Pekín",
+      "ru": "Пекин",
+      "zh-CN": "北京",
+      "zh-TW": "北京",
+      "ja": "北京",
+      "ko": "베이징"
+    },
+    "sourceRegion": "Beijing Municipality",
+    "region": {
+      "es": "Municipalidad de Pekín",
+      "ru": "Пекин",
+      "zh-CN": "北京市",
+      "zh-TW": "北京市",
+      "ja": "北京市",
+      "ko": "베이징시"
+    }
+  },
+  {
+    "ident": "ZSPD",
+    "sourceName": "Shanghai Pudong International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Shanghái-Pudong",
+      "ru": "Международный аэропорт Шанхай Пудун",
+      "zh-CN": "上海浦东国际机场",
+      "zh-TW": "上海浦東國際機場",
+      "ja": "上海浦東国際空港",
+      "ko": "상하이 푸둥 국제공항"
+    },
+    "sourceMunicipality": "Shanghai (Pudong)",
+    "municipality": {
+      "es": "Shanghái (Pudong)",
+      "ru": "Шанхай (Пудун)",
+      "zh-CN": "上海（浦东）",
+      "zh-TW": "上海（浦東）",
+      "ja": "上海（浦東）",
+      "ko": "상하이(푸둥)"
+    },
+    "sourceRegion": "Shanghai Municipality",
+    "region": {
+      "es": "Municipalidad de Shanghái",
+      "ru": "Шанхай",
+      "zh-CN": "上海市",
+      "zh-TW": "上海市",
+      "ja": "上海市",
+      "ko": "상하이시"
+    }
+  },
+  {
+    "ident": "ZSSS",
+    "sourceName": "Shanghai Hongqiao International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Shanghái-Hongqiao",
+      "ru": "Международный аэропорт Шанхай Хунцяо",
+      "zh-CN": "上海虹桥国际机场",
+      "zh-TW": "上海虹橋國際機場",
+      "ja": "上海虹橋国際空港",
+      "ko": "상하이 훙차오 국제공항"
+    },
+    "sourceMunicipality": "Shanghai (Minhang)",
+    "municipality": {
+      "es": "Shanghái (Minhang)",
+      "ru": "Шанхай (Миньхан)",
+      "zh-CN": "上海（闵行）",
+      "zh-TW": "上海（閔行）",
+      "ja": "上海（閔行）",
+      "ko": "상하이(민항)"
+    },
+    "sourceRegion": "Shanghai Municipality",
+    "region": {
+      "es": "Municipalidad de Shanghái",
+      "ru": "Шанхай",
+      "zh-CN": "上海市",
+      "zh-TW": "上海市",
+      "ja": "上海市",
+      "ko": "상하이시"
+    }
+  },
+  {
+    "ident": "ZGGG",
+    "sourceName": "Guangzhou Baiyun International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Cantón-Baiyun",
+      "ru": "Международный аэропорт Гуанчжоу Байюнь",
+      "zh-CN": "广州白云国际机场",
+      "zh-TW": "廣州白雲國際機場",
+      "ja": "広州白雲国際空港",
+      "ko": "광저우 바이윈 국제공항"
+    },
+    "sourceMunicipality": "Guangzhou (Huadu)",
+    "municipality": {
+      "es": "Cantón (Huadu)",
+      "ru": "Гуанчжоу (Хуаду)",
+      "zh-CN": "广州（花都）",
+      "zh-TW": "廣州（花都）",
+      "ja": "広州（花都）",
+      "ko": "광저우(화두)"
+    },
+    "sourceRegion": "Guangdong Province",
+    "region": {
+      "es": "Provincia de Guangdong",
+      "ru": "Провинция Гуандун",
+      "zh-CN": "广东省",
+      "zh-TW": "廣東省",
+      "ja": "広東省",
+      "ko": "광둥성"
+    }
+  },
+  {
+    "ident": "ZGSZ",
+    "sourceName": "Shenzhen Bao'an International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Shenzhen-Bao'an",
+      "ru": "Международный аэропорт Шэньчжэнь Баоань",
+      "zh-CN": "深圳宝安国际机场",
+      "zh-TW": "深圳寶安國際機場",
+      "ja": "深圳宝安国際空港",
+      "ko": "선전 바오안 국제공항"
+    },
+    "sourceMunicipality": "Shenzhen",
+    "municipality": {
+      "es": "Shenzhen",
+      "ru": "Шэньчжэнь",
+      "zh-CN": "深圳",
+      "zh-TW": "深圳",
+      "ja": "深圳",
+      "ko": "선전"
+    },
+    "sourceRegion": "Guangdong Province",
+    "region": {
+      "es": "Provincia de Guangdong",
+      "ru": "Провинция Гуандун",
+      "zh-CN": "广东省",
+      "zh-TW": "廣東省",
+      "ja": "広東省",
+      "ko": "광둥성"
+    }
+  },
+  {
+    "ident": "ZUUU",
+    "sourceName": "Chengdu Shuangliu International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Chengdu-Shuangliu",
+      "ru": "Международный аэропорт Чэнду Шуанлю",
+      "zh-CN": "成都双流国际机场",
+      "zh-TW": "成都雙流國際機場",
+      "ja": "成都双流国際空港",
+      "ko": "청두 솽류 국제공항"
+    },
+    "sourceMunicipality": "Chengdu (Shuangliu)",
+    "municipality": {
+      "es": "Chengdu (Shuangliu)",
+      "ru": "Чэнду (Шуанлю)",
+      "zh-CN": "成都（双流）",
+      "zh-TW": "成都（雙流）",
+      "ja": "成都（双流）",
+      "ko": "청두(솽류)"
+    },
+    "sourceRegion": "Sichuan Province",
+    "region": {
+      "es": "Provincia de Sichuan",
+      "ru": "Провинция Сычуань",
+      "zh-CN": "四川省",
+      "zh-TW": "四川省",
+      "ja": "四川省",
+      "ko": "쓰촨성"
+    }
+  },
+  {
+    "ident": "ZUTF",
+    "sourceName": "Chengdu Tianfu International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Chengdu-Tianfu",
+      "ru": "Международный аэропорт Чэнду Тяньфу",
+      "zh-CN": "成都天府国际机场",
+      "zh-TW": "成都天府國際機場",
+      "ja": "成都天府国際空港",
+      "ko": "청두 톈푸 국제공항"
+    },
+    "sourceMunicipality": "Chengdu (Jianyang)",
+    "municipality": {
+      "es": "Chengdu (Jianyang)",
+      "ru": "Чэнду (Цзяньян)",
+      "zh-CN": "成都（简阳）",
+      "zh-TW": "成都（簡陽）",
+      "ja": "成都（簡陽）",
+      "ko": "청두(젠양)"
+    },
+    "sourceRegion": "Sichuan Province",
+    "region": {
+      "es": "Provincia de Sichuan",
+      "ru": "Провинция Сычуань",
+      "zh-CN": "四川省",
+      "zh-TW": "四川省",
+      "ja": "四川省",
+      "ko": "쓰촨성"
+    }
+  },
+  {
+    "ident": "ZPPP",
+    "sourceName": "Kunming Changshui International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Kunming-Changshui",
+      "ru": "Международный аэропорт Куньмин Чаншуй",
+      "zh-CN": "昆明长水国际机场",
+      "zh-TW": "昆明長水國際機場",
+      "ja": "昆明長水国際空港",
+      "ko": "쿤밍 창수이 국제공항"
+    },
+    "sourceMunicipality": "Kunming",
+    "municipality": {
+      "es": "Kunming",
+      "ru": "Куньмин",
+      "zh-CN": "昆明",
+      "zh-TW": "昆明",
+      "ja": "昆明",
+      "ko": "쿤밍"
+    },
+    "sourceRegion": "Yunnan Province",
+    "region": {
+      "es": "Provincia de Yunnan",
+      "ru": "Провинция Юньнань",
+      "zh-CN": "云南省",
+      "zh-TW": "雲南省",
+      "ja": "雲南省",
+      "ko": "윈난성"
+    }
+  },
+  {
+    "ident": "ZLXY",
+    "sourceName": "Xi'an Xianyang International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Xi'an-Xianyang",
+      "ru": "Международный аэропорт Сиань Сяньян",
+      "zh-CN": "西安咸阳国际机场",
+      "zh-TW": "西安咸陽國際機場",
+      "ja": "西安咸陽国際空港",
+      "ko": "시안 셴양 국제공항"
+    },
+    "sourceMunicipality": "Xi'an",
+    "municipality": {
+      "es": "Xi'an",
+      "ru": "Сиань",
+      "zh-CN": "西安",
+      "zh-TW": "西安",
+      "ja": "西安",
+      "ko": "시안"
+    },
+    "sourceRegion": "Shaanxi Province",
+    "region": {
+      "es": "Provincia de Shaanxi",
+      "ru": "Провинция Шэньси",
+      "zh-CN": "陕西省",
+      "zh-TW": "陝西省",
+      "ja": "陝西省",
+      "ko": "산시성"
+    }
+  },
+  {
+    "ident": "ZSHC",
+    "sourceName": "Hangzhou Xiaoshan International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Hangzhou-Xiaoshan",
+      "ru": "Международный аэропорт Ханчжоу Сяошань",
+      "zh-CN": "杭州萧山国际机场",
+      "zh-TW": "杭州蕭山國際機場",
+      "ja": "杭州蕭山国際空港",
+      "ko": "항저우 샤오산 국제공항"
+    },
+    "sourceMunicipality": "Hangzhou",
+    "municipality": {
+      "es": "Hangzhou",
+      "ru": "Ханчжоу",
+      "zh-CN": "杭州",
+      "zh-TW": "杭州",
+      "ja": "杭州",
+      "ko": "항저우"
+    },
+    "sourceRegion": "Zhejiang Province",
+    "region": {
+      "es": "Provincia de Zhejiang",
+      "ru": "Провинция Чжэцзян",
+      "zh-CN": "浙江省",
+      "zh-TW": "浙江省",
+      "ja": "浙江省",
+      "ko": "저장성"
+    }
+  },
+  {
+    "ident": "ZUCK",
+    "sourceName": "Chongqing Jiangbei International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Chongqing-Jiangbei",
+      "ru": "Международный аэропорт Чунцин Цзянбэй",
+      "zh-CN": "重庆江北国际机场",
+      "zh-TW": "重慶江北國際機場",
+      "ja": "重慶江北国際空港",
+      "ko": "충칭 장베이 국제공항"
+    },
+    "sourceMunicipality": "Chongqing",
+    "municipality": {
+      "es": "Chongqing",
+      "ru": "Чунцин",
+      "zh-CN": "重庆",
+      "zh-TW": "重慶",
+      "ja": "重慶",
+      "ko": "충칭"
+    },
+    "sourceRegion": "Chongqing Municipality",
+    "region": {
+      "es": "Municipalidad de Chongqing",
+      "ru": "Чунцин",
+      "zh-CN": "重庆市",
+      "zh-TW": "重慶市",
+      "ja": "重慶市",
+      "ko": "충칭시"
+    }
+  },
+  {
+    "ident": "VHHH",
+    "sourceName": "Hong Kong International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Hong Kong",
+      "ru": "Международный аэропорт Гонконг",
+      "zh-CN": "香港国际机场",
+      "zh-TW": "香港國際機場",
+      "ja": "香港国際空港",
+      "ko": "홍콩 국제공항"
+    },
+    "sourceMunicipality": "Hong Kong",
+    "municipality": {
+      "es": "Hong Kong",
+      "ru": "Гонконг",
+      "zh-CN": "香港",
+      "zh-TW": "香港",
+      "ja": "香港",
+      "ko": "홍콩"
+    },
+    "sourceRegion": "New Territories",
+    "region": {
+      "es": "Nuevos Territorios",
+      "ru": "Новые Территории",
+      "zh-CN": "新界",
+      "zh-TW": "新界",
+      "ja": "新界",
+      "ko": "신계"
+    }
+  },
+  {
+    "ident": "VMMC",
+    "sourceName": "Macau International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Macao",
+      "ru": "Международный аэропорт Макао",
+      "zh-CN": "澳门国际机场",
+      "zh-TW": "澳門國際機場",
+      "ja": "マカオ国際空港",
+      "ko": "마카오 국제공항"
+    },
+    "sourceMunicipality": "Nossa Senhora do Carmo",
+    "municipality": {
+      "es": "Nossa Senhora do Carmo",
+      "ru": "Носа-Сеньора-ду-Карму",
+      "zh-CN": "嘉模堂区",
+      "zh-TW": "嘉模堂區",
+      "ja": "カルモ堂区",
+      "ko": "카르무 당구"
+    },
+    "sourceRegion": "Nossa Senhora do Carmo (Taipa)",
+    "region": {
+      "es": "Nossa Senhora do Carmo (Taipa)",
+      "ru": "Носа-Сеньора-ду-Карму (Тайпа)",
+      "zh-CN": "嘉模堂区（氹仔）",
+      "zh-TW": "嘉模堂區（氹仔）",
+      "ja": "カルモ堂区（タイパ）",
+      "ko": "카르무 당구(타이파)"
+    }
+  },
+  {
+    "ident": "RCTP",
+    "sourceName": "Taiwan Taoyuan International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Taiwán-Taoyuan",
+      "ru": "Международный аэропорт Тайвань Таоюань",
+      "zh-CN": "台湾桃园国际机场",
+      "zh-TW": "臺灣桃園國際機場",
+      "ja": "台湾桃園国際空港",
+      "ko": "타이완 타오위안 국제공항"
+    },
+    "sourceMunicipality": "Taoyuan",
+    "municipality": {
+      "es": "Taoyuan",
+      "ru": "Таоюань",
+      "zh-CN": "桃园",
+      "zh-TW": "桃園",
+      "ja": "桃園",
+      "ko": "타오위안"
+    },
+    "sourceRegion": "Taoyuan City",
+    "region": {
+      "es": "Ciudad de Taoyuan",
+      "ru": "Город Таоюань",
+      "zh-CN": "桃园市",
+      "zh-TW": "桃園市",
+      "ja": "桃園市",
+      "ko": "타오위안시"
+    }
+  },
+  {
+    "ident": "RCKH",
+    "sourceName": "Kaohsiung International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Kaohsiung",
+      "ru": "Международный аэропорт Гаосюн",
+      "zh-CN": "高雄国际机场",
+      "zh-TW": "高雄國際機場",
+      "ja": "高雄国際空港",
+      "ko": "가오슝 국제공항"
+    },
+    "sourceMunicipality": "Kaohsiung (Xiaogang)",
+    "municipality": {
+      "es": "Kaohsiung (Xiaogang)",
+      "ru": "Гаосюн (Сяоган)",
+      "zh-CN": "高雄（小港）",
+      "zh-TW": "高雄（小港）",
+      "ja": "高雄（小港）",
+      "ko": "가오슝(샤오강)"
+    },
+    "sourceRegion": "Kaohsiung City",
+    "region": {
+      "es": "Ciudad de Kaohsiung",
+      "ru": "Город Гаосюн",
+      "zh-CN": "高雄市",
+      "zh-TW": "高雄市",
+      "ja": "高雄市",
+      "ko": "가오슝시"
+    }
+  },
+  {
+    "ident": "RKSI",
+    "sourceName": "Incheon International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Incheon",
+      "ru": "Международный аэропорт Инчхон",
+      "zh-CN": "仁川国际机场",
+      "zh-TW": "仁川國際機場",
+      "ja": "仁川国際空港",
+      "ko": "인천국제공항"
+    },
+    "sourceMunicipality": "Seoul",
+    "municipality": {
+      "es": "Seúl",
+      "ru": "Сеул",
+      "zh-CN": "首尔",
+      "zh-TW": "首爾",
+      "ja": "ソウル",
+      "ko": "서울"
+    },
+    "sourceRegion": "Incheon-Gwangyeoksi (Incheon Metropolitan City)",
+    "region": {
+      "es": "Ciudad Metropolitana de Incheon",
+      "ru": "Город-метрополия Инчхон",
+      "zh-CN": "仁川广域市",
+      "zh-TW": "仁川廣域市",
+      "ja": "仁川広域市",
+      "ko": "인천광역시"
+    }
+  },
+  {
+    "ident": "RKSS",
+    "sourceName": "Seoul Gimpo International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Seúl-Gimpo",
+      "ru": "Международный аэропорт Сеул Кимпхо",
+      "zh-CN": "首尔金浦国际机场",
+      "zh-TW": "首爾金浦國際機場",
+      "ja": "ソウル・金浦国際空港",
+      "ko": "서울 김포국제공항"
+    },
+    "sourceMunicipality": "Seoul",
+    "municipality": {
+      "es": "Seúl",
+      "ru": "Сеул",
+      "zh-CN": "首尔",
+      "zh-TW": "首爾",
+      "ja": "ソウル",
+      "ko": "서울"
+    },
+    "sourceRegion": "Seoul-teukbyeolsi (Seoul Special City)",
+    "region": {
+      "es": "Ciudad Especial de Seúl",
+      "ru": "Город особого статуса Сеул",
+      "zh-CN": "首尔特别市",
+      "zh-TW": "首爾特別市",
+      "ja": "ソウル特別市",
+      "ko": "서울특별시"
+    }
+  },
+  {
+    "ident": "RJAA",
+    "sourceName": "Narita International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Narita",
+      "ru": "Международный аэропорт Нарита",
+      "zh-CN": "成田国际机场",
+      "zh-TW": "成田國際機場",
+      "ja": "成田国際空港",
+      "ko": "나리타 국제공항"
+    },
+    "sourceMunicipality": "Narita",
+    "municipality": {
+      "es": "Narita",
+      "ru": "Нарита",
+      "zh-CN": "成田",
+      "zh-TW": "成田",
+      "ja": "成田",
+      "ko": "나리타"
+    },
+    "sourceRegion": "Chiba Prefecture",
+    "region": {
+      "es": "Prefectura de Chiba",
+      "ru": "Префектура Тиба",
+      "zh-CN": "千叶县",
+      "zh-TW": "千葉縣",
+      "ja": "千葉県",
+      "ko": "지바현"
+    }
+  },
+  {
+    "ident": "RJTT",
+    "sourceName": "Tokyo Haneda International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Tokio-Haneda",
+      "ru": "Международный аэропорт Токио Ханэда",
+      "zh-CN": "东京羽田国际机场",
+      "zh-TW": "東京羽田國際機場",
+      "ja": "東京羽田国際空港",
+      "ko": "도쿄 하네다 국제공항"
+    },
+    "sourceMunicipality": "Tokyo",
+    "municipality": {
+      "es": "Tokio",
+      "ru": "Токио",
+      "zh-CN": "东京",
+      "zh-TW": "東京",
+      "ja": "東京",
+      "ko": "도쿄"
+    },
+    "sourceRegion": "Tōkyō Prefecture",
+    "region": {
+      "es": "Prefectura de Tokio",
+      "ru": "Префектура Токио",
+      "zh-CN": "东京都",
+      "zh-TW": "東京都",
+      "ja": "東京都",
+      "ko": "도쿄도"
+    }
+  },
+  {
+    "ident": "RJBB",
+    "sourceName": "Kansai International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Kansai",
+      "ru": "Международный аэропорт Кансай",
+      "zh-CN": "关西国际机场",
+      "zh-TW": "關西國際機場",
+      "ja": "関西国際空港",
+      "ko": "간사이 국제공항"
+    },
+    "sourceMunicipality": "Osaka",
+    "municipality": {
+      "es": "Osaka",
+      "ru": "Осака",
+      "zh-CN": "大阪",
+      "zh-TW": "大阪",
+      "ja": "大阪",
+      "ko": "오사카"
+    },
+    "sourceRegion": "Ōsaka Prefecture",
+    "region": {
+      "es": "Prefectura de Osaka",
+      "ru": "Префектура Осака",
+      "zh-CN": "大阪府",
+      "zh-TW": "大阪府",
+      "ja": "大阪府",
+      "ko": "오사카부"
+    }
+  },
+  {
+    "ident": "RJGG",
+    "sourceName": "Chubu Centrair International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Chubu Centrair",
+      "ru": "Международный аэропорт Тюбу Сентрэйр",
+      "zh-CN": "中部国际机场",
+      "zh-TW": "中部國際機場",
+      "ja": "中部国際空港 セントレア",
+      "ko": "주부 센트레아 국제공항"
+    },
+    "sourceMunicipality": "Tokoname",
+    "municipality": {
+      "es": "Tokoname",
+      "ru": "Токонамэ",
+      "zh-CN": "常滑",
+      "zh-TW": "常滑",
+      "ja": "常滑",
+      "ko": "도코나메"
+    },
+    "sourceRegion": "Aichi Prefecture",
+    "region": {
+      "es": "Prefectura de Aichi",
+      "ru": "Префектура Айти",
+      "zh-CN": "爱知县",
+      "zh-TW": "愛知縣",
+      "ja": "愛知県",
+      "ko": "아이치현"
+    }
+  },
+  {
+    "ident": "RJFF",
+    "sourceName": "Fukuoka Airport",
+    "name": {
+      "es": "Aeropuerto de Fukuoka",
+      "ru": "Аэропорт Фукуока",
+      "zh-CN": "福冈机场",
+      "zh-TW": "福岡機場",
+      "ja": "福岡空港",
+      "ko": "후쿠오카 공항"
+    },
+    "sourceMunicipality": "Fukuoka",
+    "municipality": {
+      "es": "Fukuoka",
+      "ru": "Фукуока",
+      "zh-CN": "福冈",
+      "zh-TW": "福岡",
+      "ja": "福岡",
+      "ko": "후쿠오카"
+    },
+    "sourceRegion": "Fukuoka Prefecture",
+    "region": {
+      "es": "Prefectura de Fukuoka",
+      "ru": "Префектура Фукуока",
+      "zh-CN": "福冈县",
+      "zh-TW": "福岡縣",
+      "ja": "福岡県",
+      "ko": "후쿠오카현"
+    }
+  },
+  {
+    "ident": "RJCC",
+    "sourceName": "New Chitose Airport",
+    "name": {
+      "es": "Aeropuerto de Nuevo Chitose",
+      "ru": "Аэропорт Новый Титосэ",
+      "zh-CN": "新千岁机场",
+      "zh-TW": "新千歲機場",
+      "ja": "新千歳空港",
+      "ko": "신치토세 공항"
+    },
+    "sourceMunicipality": "Sapporo",
+    "municipality": {
+      "es": "Sapporo",
+      "ru": "Саппоро",
+      "zh-CN": "札幌",
+      "zh-TW": "札幌",
+      "ja": "札幌",
+      "ko": "삿포로"
+    },
+    "sourceRegion": "Hokkaidō Prefecture",
+    "region": {
+      "es": "Prefectura de Hokkaido",
+      "ru": "Префектура Хоккайдо",
+      "zh-CN": "北海道",
+      "zh-TW": "北海道",
+      "ja": "北海道",
+      "ko": "홋카이도"
+    }
+  },
+  {
+    "ident": "YSSY",
+    "sourceName": "Sydney Kingsford Smith International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Kingsford Smith de Sídney",
+      "ru": "Международный аэропорт Сидней имени Кингсфорда Смита",
+      "zh-CN": "悉尼金斯福德·史密斯国际机场",
+      "zh-TW": "雪梨金斯福德·史密斯國際機場",
+      "ja": "シドニー・キングスフォード・スミス国際空港",
+      "ko": "시드니 킹스퍼드 스미스 국제공항"
+    },
+    "sourceMunicipality": "Sydney (Mascot)",
+    "municipality": {
+      "es": "Sídney (Mascot)",
+      "ru": "Сидней (Маскот)",
+      "zh-CN": "悉尼（马斯科特）",
+      "zh-TW": "雪梨（馬斯科特）",
+      "ja": "シドニー（マスコット）",
+      "ko": "시드니(마스콧)"
+    },
+    "sourceRegion": "New South Wales",
+    "region": {
+      "es": "Nueva Gales del Sur",
+      "ru": "Новый Южный Уэльс",
+      "zh-CN": "新南威尔士州",
+      "zh-TW": "新南威爾斯州",
+      "ja": "ニューサウスウェールズ州",
+      "ko": "뉴사우스웨일스주"
+    }
+  },
+  {
+    "ident": "YMML",
+    "sourceName": "Melbourne Airport",
+    "name": {
+      "es": "Aeropuerto de Melbourne",
+      "ru": "Аэропорт Мельбурн",
+      "zh-CN": "墨尔本机场",
+      "zh-TW": "墨爾本機場",
+      "ja": "メルボルン空港",
+      "ko": "멜버른 공항"
+    },
+    "sourceMunicipality": "Melbourne",
+    "municipality": {
+      "es": "Melbourne",
+      "ru": "Мельбурн",
+      "zh-CN": "墨尔本",
+      "zh-TW": "墨爾本",
+      "ja": "メルボルン",
+      "ko": "멜버른"
+    },
+    "sourceRegion": "Victoria",
+    "region": {
+      "es": "Victoria",
+      "ru": "Виктория",
+      "zh-CN": "维多利亚州",
+      "zh-TW": "維多利亞州",
+      "ja": "ビクトリア州",
+      "ko": "빅토리아주"
+    }
+  },
+  {
+    "ident": "YBBN",
+    "sourceName": "Brisbane International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Brisbane",
+      "ru": "Международный аэропорт Брисбен",
+      "zh-CN": "布里斯班国际机场",
+      "zh-TW": "布里斯本國際機場",
+      "ja": "ブリスベン国際空港",
+      "ko": "브리즈번 국제공항"
+    },
+    "sourceMunicipality": "Brisbane",
+    "municipality": {
+      "es": "Brisbane",
+      "ru": "Брисбен",
+      "zh-CN": "布里斯班",
+      "zh-TW": "布里斯本",
+      "ja": "ブリスベン",
+      "ko": "브리즈번"
+    },
+    "sourceRegion": "Queensland",
+    "region": {
+      "es": "Queensland",
+      "ru": "Квинсленд",
+      "zh-CN": "昆士兰州",
+      "zh-TW": "昆士蘭州",
+      "ja": "クイーンズランド州",
+      "ko": "퀸즐랜드주"
+    }
+  },
+  {
+    "ident": "YPPH",
+    "sourceName": "Perth International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Perth",
+      "ru": "Международный аэропорт Перт",
+      "zh-CN": "珀斯国际机场",
+      "zh-TW": "伯斯國際機場",
+      "ja": "パース国際空港",
+      "ko": "퍼스 국제공항"
+    },
+    "sourceMunicipality": "Perth",
+    "municipality": {
+      "es": "Perth",
+      "ru": "Перт",
+      "zh-CN": "珀斯",
+      "zh-TW": "伯斯",
+      "ja": "パース",
+      "ko": "퍼스"
+    },
+    "sourceRegion": "Western Australia",
+    "region": {
+      "es": "Australia Occidental",
+      "ru": "Западная Австралия",
+      "zh-CN": "西澳大利亚州",
+      "zh-TW": "西澳大利亞州",
+      "ja": "西オーストラリア州",
+      "ko": "웨스턴오스트레일리아주"
+    }
+  },
+  {
+    "ident": "NZAA",
+    "sourceName": "Auckland International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Auckland",
+      "ru": "Международный аэропорт Окленд",
+      "zh-CN": "奥克兰国际机场",
+      "zh-TW": "奧克蘭國際機場",
+      "ja": "オークランド国際空港",
+      "ko": "오클랜드 국제공항"
+    },
+    "sourceMunicipality": "Auckland",
+    "municipality": {
+      "es": "Auckland",
+      "ru": "Окленд",
+      "zh-CN": "奥克兰",
+      "zh-TW": "奧克蘭",
+      "ja": "オークランド",
+      "ko": "오클랜드"
+    },
+    "sourceRegion": "Auckland Region",
+    "region": {
+      "es": "Región de Auckland",
+      "ru": "Регион Окленд",
+      "zh-CN": "奥克兰大区",
+      "zh-TW": "奧克蘭大區",
+      "ja": "オークランド地方",
+      "ko": "오클랜드 지방"
+    }
+  },
+  {
+    "ident": "NZCH",
+    "sourceName": "Christchurch International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Christchurch",
+      "ru": "Международный аэропорт Крайстчерч",
+      "zh-CN": "基督城国际机场",
+      "zh-TW": "基督城國際機場",
+      "ja": "クライストチャーチ国際空港",
+      "ko": "크라이스트처치 국제공항"
+    },
+    "sourceMunicipality": "Christchurch",
+    "municipality": {
+      "es": "Christchurch",
+      "ru": "Крайстчерч",
+      "zh-CN": "基督城",
+      "zh-TW": "基督城",
+      "ja": "クライストチャーチ",
+      "ko": "크라이스트처치"
+    },
+    "sourceRegion": "Canterbury Region",
+    "region": {
+      "es": "Región de Canterbury",
+      "ru": "Регион Кентербери",
+      "zh-CN": "坎特伯雷大区",
+      "zh-TW": "坎特伯雷大區",
+      "ja": "カンタベリー地方",
+      "ko": "캔터베리 지방"
+    }
+  },
+  {
+    "ident": "NFFN",
+    "sourceName": "Nadi International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Nadi",
+      "ru": "Международный аэропорт Нанди",
+      "zh-CN": "楠迪国际机场",
+      "zh-TW": "楠迪國際機場",
+      "ja": "ナンディ国際空港",
+      "ko": "난디 국제공항"
+    },
+    "sourceMunicipality": "Nadi",
+    "municipality": {
+      "es": "Nadi",
+      "ru": "Нанди",
+      "zh-CN": "楠迪",
+      "zh-TW": "楠迪",
+      "ja": "ナンディ",
+      "ko": "난디"
+    },
+    "sourceRegion": "Western Division",
+    "region": {
+      "es": "División Occidental",
+      "ru": "Западный округ",
+      "zh-CN": "西部大区",
+      "zh-TW": "西部大區",
+      "ja": "西部地域",
+      "ko": "서부구"
+    }
+  },
+  {
+    "ident": "ZHHH",
+    "sourceName": "Wuhan Tianhe International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Wuhan-Tianhe",
+      "ru": "Международный аэропорт Ухань Тяньхэ",
+      "zh-CN": "武汉天河国际机场",
+      "zh-TW": "武漢天河國際機場",
+      "ja": "武漢天河国際空港",
+      "ko": "우한 톈허 국제공항"
+    },
+    "sourceMunicipality": "Wuhan (Huangpi)",
+    "municipality": {
+      "es": "Wuhan (Huangpi)",
+      "ru": "Ухань (Хуанпи)",
+      "zh-CN": "武汉（黄陂）",
+      "zh-TW": "武漢（黃陂）",
+      "ja": "武漢（黄陂）",
+      "ko": "우한(황피)"
+    },
+    "sourceRegion": "Hubei Province",
+    "region": {
+      "es": "Provincia de Hubei",
+      "ru": "Провинция Хубэй",
+      "zh-CN": "湖北省",
+      "zh-TW": "湖北省",
+      "ja": "湖北省",
+      "ko": "후베이성"
+    }
+  },
+  {
+    "ident": "ZGHA",
+    "sourceName": "Changsha Huanghua International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Changsha-Huanghua",
+      "ru": "Международный аэропорт Чанша Хуанхуа",
+      "zh-CN": "长沙黄花国际机场",
+      "zh-TW": "長沙黃花國際機場",
+      "ja": "長沙黄花国際空港",
+      "ko": "창사 황화 국제공항"
+    },
+    "sourceMunicipality": "Changsha (Changsha)",
+    "municipality": {
+      "es": "Changsha (Changsha)",
+      "ru": "Чанша (уезд Чанша)",
+      "zh-CN": "长沙（长沙县）",
+      "zh-TW": "長沙（長沙縣）",
+      "ja": "長沙（長沙県）",
+      "ko": "창사(창사현)"
+    },
+    "sourceRegion": "Hunan Province",
+    "region": {
+      "es": "Provincia de Hunan",
+      "ru": "Провинция Хунань",
+      "zh-CN": "湖南省",
+      "zh-TW": "湖南省",
+      "ja": "湖南省",
+      "ko": "후난성"
+    }
+  },
+  {
+    "ident": "ZSNJ",
+    "sourceName": "Nanjing Lukou International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Nankín-Lukou",
+      "ru": "Международный аэропорт Нанкин Лукоу",
+      "zh-CN": "南京禄口国际机场",
+      "zh-TW": "南京祿口國際機場",
+      "ja": "南京禄口国際空港",
+      "ko": "난징 루커우 국제공항"
+    },
+    "sourceMunicipality": "Nanjing",
+    "municipality": {
+      "es": "Nankín",
+      "ru": "Нанкин",
+      "zh-CN": "南京",
+      "zh-TW": "南京",
+      "ja": "南京",
+      "ko": "난징"
+    },
+    "sourceRegion": "Jiangsu Province",
+    "region": {
+      "es": "Provincia de Jiangsu",
+      "ru": "Провинция Цзянсу",
+      "zh-CN": "江苏省",
+      "zh-TW": "江蘇省",
+      "ja": "江蘇省",
+      "ko": "장쑤성"
+    }
+  },
+  {
+    "ident": "ZBTJ",
+    "sourceName": "Tianjin Binhai International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Tianjin-Binhai",
+      "ru": "Международный аэропорт Тяньцзинь Биньхай",
+      "zh-CN": "天津滨海国际机场",
+      "zh-TW": "天津濱海國際機場",
+      "ja": "天津浜海国際空港",
+      "ko": "톈진 빈하이 국제공항"
+    },
+    "sourceMunicipality": "Tianjin",
+    "municipality": {
+      "es": "Tianjin",
+      "ru": "Тяньцзинь",
+      "zh-CN": "天津",
+      "zh-TW": "天津",
+      "ja": "天津",
+      "ko": "톈진"
+    },
+    "sourceRegion": "Tianjin Municipality",
+    "region": {
+      "es": "Municipalidad de Tianjin",
+      "ru": "Тяньцзинь",
+      "zh-CN": "天津市",
+      "zh-TW": "天津市",
+      "ja": "天津市",
+      "ko": "톈진시"
+    }
+  },
+  {
+    "ident": "ZSQD",
+    "sourceName": "Qingdao Jiaodong International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Qingdao-Jiaodong",
+      "ru": "Международный аэропорт Циндао Цзяодун",
+      "zh-CN": "青岛胶东国际机场",
+      "zh-TW": "青島膠東國際機場",
+      "ja": "青島膠東国際空港",
+      "ko": "칭다오 자오둥 국제공항"
+    },
+    "sourceMunicipality": "Qingdao (Jiaozhou)",
+    "municipality": {
+      "es": "Qingdao (Jiaozhou)",
+      "ru": "Циндао (Цзяочжоу)",
+      "zh-CN": "青岛（胶州）",
+      "zh-TW": "青島（膠州）",
+      "ja": "青島（膠州）",
+      "ko": "칭다오(자오저우)"
+    },
+    "sourceRegion": "Shandong Province",
+    "region": {
+      "es": "Provincia de Shandong",
+      "ru": "Провинция Шаньдун",
+      "zh-CN": "山东省",
+      "zh-TW": "山東省",
+      "ja": "山東省",
+      "ko": "산둥성"
+    }
+  },
+  {
+    "ident": "ZYTL",
+    "sourceName": "Dalian Zhoushuizi International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Dalian-Zhoushuizi",
+      "ru": "Международный аэропорт Далянь Чжоушуйцзы",
+      "zh-CN": "大连周水子国际机场",
+      "zh-TW": "大連周水子國際機場",
+      "ja": "大連周水子国際空港",
+      "ko": "다롄 저우수이쯔 국제공항"
+    },
+    "sourceMunicipality": "Dalian (Ganjingzi)",
+    "municipality": {
+      "es": "Dalian (Ganjingzi)",
+      "ru": "Далянь (Ганьцзинцзы)",
+      "zh-CN": "大连（甘井子）",
+      "zh-TW": "大連（甘井子）",
+      "ja": "大連（甘井子）",
+      "ko": "다롄(간징쯔)"
+    },
+    "sourceRegion": "Liaoning Province",
+    "region": {
+      "es": "Provincia de Liaoning",
+      "ru": "Провинция Ляонин",
+      "zh-CN": "辽宁省",
+      "zh-TW": "遼寧省",
+      "ja": "遼寧省",
+      "ko": "랴오닝성"
+    }
+  },
+  {
+    "ident": "ZYTX",
+    "sourceName": "Shenyang Taoxian International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Shenyang-Taoxian",
+      "ru": "Международный аэропорт Шэньян Таосянь",
+      "zh-CN": "沈阳桃仙国际机场",
+      "zh-TW": "瀋陽桃仙國際機場",
+      "ja": "瀋陽桃仙国際空港",
+      "ko": "선양 타오셴 국제공항"
+    },
+    "sourceMunicipality": "Shenyang",
+    "municipality": {
+      "es": "Shenyang",
+      "ru": "Шэньян",
+      "zh-CN": "沈阳",
+      "zh-TW": "瀋陽",
+      "ja": "瀋陽",
+      "ko": "선양"
+    },
+    "sourceRegion": "Liaoning Province",
+    "region": {
+      "es": "Provincia de Liaoning",
+      "ru": "Провинция Ляонин",
+      "zh-CN": "辽宁省",
+      "zh-TW": "遼寧省",
+      "ja": "遼寧省",
+      "ko": "랴오닝성"
+    }
+  },
+  {
+    "ident": "ZYHB",
+    "sourceName": "Harbin Taiping International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Harbin-Taiping",
+      "ru": "Международный аэропорт Харбин Тайпин",
+      "zh-CN": "哈尔滨太平国际机场",
+      "zh-TW": "哈爾濱太平國際機場",
+      "ja": "ハルビン太平国際空港",
+      "ko": "하얼빈 타이핑 국제공항"
+    },
+    "sourceMunicipality": "Harbin",
+    "municipality": {
+      "es": "Harbin",
+      "ru": "Харбин",
+      "zh-CN": "哈尔滨",
+      "zh-TW": "哈爾濱",
+      "ja": "ハルビン",
+      "ko": "하얼빈"
+    },
+    "sourceRegion": "Heilongjiang Province",
+    "region": {
+      "es": "Provincia de Heilongjiang",
+      "ru": "Провинция Хэйлунцзян",
+      "zh-CN": "黑龙江省",
+      "zh-TW": "黑龍江省",
+      "ja": "黒竜江省",
+      "ko": "헤이룽장성"
+    }
+  },
+  {
+    "ident": "ZHCC",
+    "sourceName": "Zhengzhou Xinzheng International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Zhengzhou-Xinzheng",
+      "ru": "Международный аэропорт Чжэнчжоу Синьчжэн",
+      "zh-CN": "郑州新郑国际机场",
+      "zh-TW": "鄭州新鄭國際機場",
+      "ja": "鄭州新鄭国際空港",
+      "ko": "정저우 신정 국제공항"
+    },
+    "sourceMunicipality": "Zhengzhou",
+    "municipality": {
+      "es": "Zhengzhou",
+      "ru": "Чжэнчжоу",
+      "zh-CN": "郑州",
+      "zh-TW": "鄭州",
+      "ja": "鄭州",
+      "ko": "정저우"
+    },
+    "sourceRegion": "Henan Province",
+    "region": {
+      "es": "Provincia de Henan",
+      "ru": "Провинция Хэнань",
+      "zh-CN": "河南省",
+      "zh-TW": "河南省",
+      "ja": "河南省",
+      "ko": "허난성"
+    }
+  },
+  {
+    "ident": "ZSJN",
+    "sourceName": "Jinan Yaoqiang International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Jinan-Yaoqiang",
+      "ru": "Международный аэропорт Цзинань Яоцян",
+      "zh-CN": "济南遥墙国际机场",
+      "zh-TW": "濟南遙牆國際機場",
+      "ja": "済南遥墻国際空港",
+      "ko": "지난 야오창 국제공항"
+    },
+    "sourceMunicipality": "Jinan (Licheng)",
+    "municipality": {
+      "es": "Jinan (Licheng)",
+      "ru": "Цзинань (Личэн)",
+      "zh-CN": "济南（历城）",
+      "zh-TW": "濟南（歷城）",
+      "ja": "済南（歴城）",
+      "ko": "지난(리청)"
+    },
+    "sourceRegion": "Shandong Province",
+    "region": {
+      "es": "Provincia de Shandong",
+      "ru": "Провинция Шаньдун",
+      "zh-CN": "山东省",
+      "zh-TW": "山東省",
+      "ja": "山東省",
+      "ko": "산둥성"
+    }
+  },
+  {
+    "ident": "ZSFZ",
+    "sourceName": "Fuzhou Changle International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Fuzhou-Changle",
+      "ru": "Международный аэропорт Фучжоу Чанлэ",
+      "zh-CN": "福州长乐国际机场",
+      "zh-TW": "福州長樂國際機場",
+      "ja": "福州長楽国際空港",
+      "ko": "푸저우 창러 국제공항"
+    },
+    "sourceMunicipality": "Fuzhou (Changle)",
+    "municipality": {
+      "es": "Fuzhou (Changle)",
+      "ru": "Фучжоу (Чанлэ)",
+      "zh-CN": "福州（长乐）",
+      "zh-TW": "福州（長樂）",
+      "ja": "福州（長楽）",
+      "ko": "푸저우(창러)"
+    },
+    "sourceRegion": "Fujian Province",
+    "region": {
+      "es": "Provincia de Fujian",
+      "ru": "Провинция Фуцзянь",
+      "zh-CN": "福建省",
+      "zh-TW": "福建省",
+      "ja": "福建省",
+      "ko": "푸젠성"
+    }
+  },
+  {
+    "ident": "ZSAM",
+    "sourceName": "Xiamen Gaoqi International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Xiamen-Gaoqi",
+      "ru": "Международный аэропорт Сямынь Гаоци",
+      "zh-CN": "厦门高崎国际机场",
+      "zh-TW": "廈門高崎國際機場",
+      "ja": "厦門高崎国際空港",
+      "ko": "샤먼 가오치 국제공항"
+    },
+    "sourceMunicipality": "Xiamen",
+    "municipality": {
+      "es": "Xiamen",
+      "ru": "Сямынь",
+      "zh-CN": "厦门",
+      "zh-TW": "廈門",
+      "ja": "厦門",
+      "ko": "샤먼"
+    },
+    "sourceRegion": "Fujian Province",
+    "region": {
+      "es": "Provincia de Fujian",
+      "ru": "Провинция Фуцзянь",
+      "zh-CN": "福建省",
+      "zh-TW": "福建省",
+      "ja": "福建省",
+      "ko": "푸젠성"
+    }
+  },
+  {
+    "ident": "ZGNN",
+    "sourceName": "Nanning Wuxu International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Nanning-Wuxu",
+      "ru": "Международный аэропорт Наньнин Усюй",
+      "zh-CN": "南宁吴圩国际机场",
+      "zh-TW": "南寧吳圩國際機場",
+      "ja": "南寧呉圩国際空港",
+      "ko": "난닝 우쉬 국제공항"
+    },
+    "sourceMunicipality": "Nanning (Jiangnan)",
+    "municipality": {
+      "es": "Nanning (Jiangnan)",
+      "ru": "Наньнин (Цзяннань)",
+      "zh-CN": "南宁（江南）",
+      "zh-TW": "南寧（江南）",
+      "ja": "南寧（江南）",
+      "ko": "난닝(장난)"
+    },
+    "sourceRegion": "Guangxi Autonomous Region",
+    "region": {
+      "es": "Región Autónoma de Guangxi",
+      "ru": "Гуанси-Чжуанский автономный район",
+      "zh-CN": "广西壮族自治区",
+      "zh-TW": "廣西壯族自治區",
+      "ja": "広西チワン族自治区",
+      "ko": "광시 좡족 자치구"
+    }
+  },
+  {
+    "ident": "ZJHK",
+    "sourceName": "Haikou Meilan International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Haikou-Meilan",
+      "ru": "Международный аэропорт Хайкоу Мэйлань",
+      "zh-CN": "海口美兰国际机场",
+      "zh-TW": "海口美蘭國際機場",
+      "ja": "海口美蘭国際空港",
+      "ko": "하이커우 메이란 국제공항"
+    },
+    "sourceMunicipality": "Haikou (Meilan)",
+    "municipality": {
+      "es": "Haikou (Meilan)",
+      "ru": "Хайкоу (Мэйлань)",
+      "zh-CN": "海口（美兰）",
+      "zh-TW": "海口（美蘭）",
+      "ja": "海口（美蘭）",
+      "ko": "하이커우(메이란)"
+    },
+    "sourceRegion": "Hainan Province",
+    "region": {
+      "es": "Provincia de Hainan",
+      "ru": "Провинция Хайнань",
+      "zh-CN": "海南省",
+      "zh-TW": "海南省",
+      "ja": "海南省",
+      "ko": "하이난성"
+    }
+  },
+  {
+    "ident": "ZJSY",
+    "sourceName": "Sanya Phoenix International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Sanya-Phoenix",
+      "ru": "Международный аэропорт Санья Фэнхуан",
+      "zh-CN": "三亚凤凰国际机场",
+      "zh-TW": "三亞鳳凰國際機場",
+      "ja": "三亜鳳凰国際空港",
+      "ko": "싼야 펑황 국제공항"
+    },
+    "sourceMunicipality": "Sanya (Tianya)",
+    "municipality": {
+      "es": "Sanya (Tianya)",
+      "ru": "Санья (Тянья)",
+      "zh-CN": "三亚（天涯）",
+      "zh-TW": "三亞（天涯）",
+      "ja": "三亜（天涯）",
+      "ko": "싼야(톈야)"
+    },
+    "sourceRegion": "Hainan Province",
+    "region": {
+      "es": "Provincia de Hainan",
+      "ru": "Провинция Хайнань",
+      "zh-CN": "海南省",
+      "zh-TW": "海南省",
+      "ja": "海南省",
+      "ko": "하이난성"
+    }
+  },
+  {
+    "ident": "ZSWZ",
+    "sourceName": "Wenzhou Longwan International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Wenzhou-Longwan",
+      "ru": "Международный аэропорт Вэньчжоу Лунвань",
+      "zh-CN": "温州龙湾国际机场",
+      "zh-TW": "溫州龍灣國際機場",
+      "ja": "温州龍湾国際空港",
+      "ko": "원저우 룽완 국제공항"
+    },
+    "sourceMunicipality": "Wenzhou (Longwan)",
+    "municipality": {
+      "es": "Wenzhou (Longwan)",
+      "ru": "Вэньчжоу (Лунвань)",
+      "zh-CN": "温州（龙湾）",
+      "zh-TW": "溫州（龍灣）",
+      "ja": "温州（龍湾）",
+      "ko": "원저우(룽완)"
+    },
+    "sourceRegion": "Zhejiang Province",
+    "region": {
+      "es": "Provincia de Zhejiang",
+      "ru": "Провинция Чжэцзян",
+      "zh-CN": "浙江省",
+      "zh-TW": "浙江省",
+      "ja": "浙江省",
+      "ko": "저장성"
+    }
+  },
+  {
+    "ident": "ZSNB",
+    "sourceName": "Ningbo Lishe International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Ningbo-Lishe",
+      "ru": "Международный аэропорт Нинбо Лишэ",
+      "zh-CN": "宁波栎社国际机场",
+      "zh-TW": "寧波櫟社國際機場",
+      "ja": "寧波櫟社国際空港",
+      "ko": "닝보 리서 국제공항"
+    },
+    "sourceMunicipality": "Ningbo",
+    "municipality": {
+      "es": "Ningbo",
+      "ru": "Нинбо",
+      "zh-CN": "宁波",
+      "zh-TW": "寧波",
+      "ja": "寧波",
+      "ko": "닝보"
+    },
+    "sourceRegion": "Zhejiang Province",
+    "region": {
+      "es": "Provincia de Zhejiang",
+      "ru": "Провинция Чжэцзян",
+      "zh-CN": "浙江省",
+      "zh-TW": "浙江省",
+      "ja": "浙江省",
+      "ko": "저장성"
+    }
+  },
+  {
+    "ident": "ZSWX",
+    "sourceName": "Sunan Shuofang International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Sunan-Shuofang",
+      "ru": "Международный аэропорт Сунань Шофан",
+      "zh-CN": "苏南硕放国际机场",
+      "zh-TW": "蘇南碩放國際機場",
+      "ja": "蘇南碩放国際空港",
+      "ko": "쑤난 숴팡 국제공항"
+    },
+    "sourceMunicipality": "Wuxi",
+    "municipality": {
+      "es": "Wuxi",
+      "ru": "Уси",
+      "zh-CN": "无锡",
+      "zh-TW": "無錫",
+      "ja": "無錫",
+      "ko": "우시"
+    },
+    "sourceRegion": "Jiangsu Province",
+    "region": {
+      "es": "Provincia de Jiangsu",
+      "ru": "Провинция Цзянсу",
+      "zh-CN": "江苏省",
+      "zh-TW": "江蘇省",
+      "ja": "江蘇省",
+      "ko": "장쑤성"
+    }
+  },
+  {
+    "ident": "ZUGY",
+    "sourceName": "Guiyang Longdongbao International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Guiyang-Longdongbao",
+      "ru": "Международный аэропорт Гуйян Лундунбао",
+      "zh-CN": "贵阳龙洞堡国际机场",
+      "zh-TW": "貴陽龍洞堡國際機場",
+      "ja": "貴陽龍洞堡国際空港",
+      "ko": "구이양 룽둥바오 국제공항"
+    },
+    "sourceMunicipality": "Guiyang (Nanming)",
+    "municipality": {
+      "es": "Guiyang (Nanming)",
+      "ru": "Гуйян (Наньмин)",
+      "zh-CN": "贵阳（南明）",
+      "zh-TW": "貴陽（南明）",
+      "ja": "貴陽（南明）",
+      "ko": "구이양(난밍)"
+    },
+    "sourceRegion": "Guizhou Province",
+    "region": {
+      "es": "Provincia de Guizhou",
+      "ru": "Провинция Гуйчжоу",
+      "zh-CN": "贵州省",
+      "zh-TW": "貴州省",
+      "ja": "貴州省",
+      "ko": "구이저우성"
+    }
+  },
+  {
+    "ident": "ZBYN",
+    "sourceName": "Taiyuan Wusu International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Taiyuan-Wusu",
+      "ru": "Международный аэропорт Тайюань Усу",
+      "zh-CN": "太原武宿国际机场",
+      "zh-TW": "太原武宿國際機場",
+      "ja": "太原武宿国際空港",
+      "ko": "타이위안 우쑤 국제공항"
+    },
+    "sourceMunicipality": "Taiyuan",
+    "municipality": {
+      "es": "Taiyuan",
+      "ru": "Тайюань",
+      "zh-CN": "太原",
+      "zh-TW": "太原",
+      "ja": "太原",
+      "ko": "타이위안"
+    },
+    "sourceRegion": "Shanxi Province",
+    "region": {
+      "es": "Provincia de Shanxi",
+      "ru": "Провинция Шаньси",
+      "zh-CN": "山西省",
+      "zh-TW": "山西省",
+      "ja": "山西省",
+      "ko": "산시성"
+    }
+  },
+  {
+    "ident": "ZBSJ",
+    "sourceName": "Shijiazhuang Zhengding International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Shijiazhuang-Zhengding",
+      "ru": "Международный аэропорт Шицзячжуан Чжэндин",
+      "zh-CN": "石家庄正定国际机场",
+      "zh-TW": "石家莊正定國際機場",
+      "ja": "石家荘正定国際空港",
+      "ko": "스자좡 정딩 국제공항"
+    },
+    "sourceMunicipality": "Shijiazhuang",
+    "municipality": {
+      "es": "Shijiazhuang",
+      "ru": "Шицзячжуан",
+      "zh-CN": "石家庄",
+      "zh-TW": "石家莊",
+      "ja": "石家荘",
+      "ko": "스자좡"
+    },
+    "sourceRegion": "Hebei Province",
+    "region": {
+      "es": "Provincia de Hebei",
+      "ru": "Провинция Хэбэй",
+      "zh-CN": "河北省",
+      "zh-TW": "河北省",
+      "ja": "河北省",
+      "ko": "허베이성"
+    }
+  },
+  {
+    "ident": "ZSOF",
+    "sourceName": "Hefei Xinqiao International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Hefei-Xinqiao",
+      "ru": "Международный аэропорт Хэфэй Синьцяо",
+      "zh-CN": "合肥新桥国际机场",
+      "zh-TW": "合肥新橋國際機場",
+      "ja": "合肥新橋国際空港",
+      "ko": "허페이 신차오 국제공항"
+    },
+    "sourceMunicipality": "Hefei",
+    "municipality": {
+      "es": "Hefei",
+      "ru": "Хэфэй",
+      "zh-CN": "合肥",
+      "zh-TW": "合肥",
+      "ja": "合肥",
+      "ko": "허페이"
+    },
+    "sourceRegion": "Anhui Province",
+    "region": {
+      "es": "Provincia de Anhui",
+      "ru": "Провинция Аньхой",
+      "zh-CN": "安徽省",
+      "zh-TW": "安徽省",
+      "ja": "安徽省",
+      "ko": "안후이성"
+    }
+  },
+  {
+    "ident": "ZLLL",
+    "sourceName": "Lanzhou Zhongchuan International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Lanzhou-Zhongchuan",
+      "ru": "Международный аэропорт Ланьчжоу Чжунчуань",
+      "zh-CN": "兰州中川国际机场",
+      "zh-TW": "蘭州中川國際機場",
+      "ja": "蘭州中川国際空港",
+      "ko": "란저우 중촨 국제공항"
+    },
+    "sourceMunicipality": "Lanzhou (Yongdeng)",
+    "municipality": {
+      "es": "Lanzhou (Yongdeng)",
+      "ru": "Ланьчжоу (Юндэн)",
+      "zh-CN": "兰州（永登）",
+      "zh-TW": "蘭州（永登）",
+      "ja": "蘭州（永登）",
+      "ko": "란저우(융덩)"
+    },
+    "sourceRegion": "Gansu Province",
+    "region": {
+      "es": "Provincia de Gansu",
+      "ru": "Провинция Ганьсу",
+      "zh-CN": "甘肃省",
+      "zh-TW": "甘肅省",
+      "ja": "甘粛省",
+      "ko": "간쑤성"
+    }
+  },
+  {
+    "ident": "ZWWW",
+    "sourceName": "Ürümqi Tianshan International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Urumqi-Tianshan",
+      "ru": "Международный аэропорт Урумчи Тяньшань",
+      "zh-CN": "乌鲁木齐天山国际机场",
+      "zh-TW": "烏魯木齊天山國際機場",
+      "ja": "ウルムチ天山国際空港",
+      "ko": "우루무치 톈산 국제공항"
+    },
+    "sourceMunicipality": "Ürümqi",
+    "municipality": {
+      "es": "Urumqi",
+      "ru": "Урумчи",
+      "zh-CN": "乌鲁木齐",
+      "zh-TW": "烏魯木齊",
+      "ja": "ウルムチ",
+      "ko": "우루무치"
+    },
+    "sourceRegion": "Xinjiang Autonomous Region",
+    "region": {
+      "es": "Región Autónoma de Xinjiang",
+      "ru": "Синьцзян-Уйгурский автономный район",
+      "zh-CN": "新疆维吾尔自治区",
+      "zh-TW": "新疆維吾爾自治區",
+      "ja": "新疆ウイグル自治区",
+      "ko": "신장 위구르 자치구"
+    }
+  },
+  {
+    "ident": "ZBHH",
+    "sourceName": "Hohhot Baita International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Hohhot-Baita",
+      "ru": "Международный аэропорт Хух-Хото Байта",
+      "zh-CN": "呼和浩特白塔国际机场",
+      "zh-TW": "呼和浩特白塔國際機場",
+      "ja": "フフホト白塔国際空港",
+      "ko": "후허하오터 바이타 국제공항"
+    },
+    "sourceMunicipality": "Hohhot",
+    "municipality": {
+      "es": "Hohhot",
+      "ru": "Хух-Хото",
+      "zh-CN": "呼和浩特",
+      "zh-TW": "呼和浩特",
+      "ja": "フフホト",
+      "ko": "후허하오터"
+    },
+    "sourceRegion": "Inner Mongolia Autonomous Region",
+    "region": {
+      "es": "Región Autónoma de Mongolia Interior",
+      "ru": "Автономный район Внутренняя Монголия",
+      "zh-CN": "内蒙古自治区",
+      "zh-TW": "內蒙古自治區",
+      "ja": "内モンゴル自治区",
+      "ko": "내몽골 자치구"
+    }
+  },
+  {
+    "ident": "ZLIC",
+    "sourceName": "Yinchuan Hedong International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Yinchuan-Hedong",
+      "ru": "Международный аэропорт Иньчуань Хэдун",
+      "zh-CN": "银川河东国际机场",
+      "zh-TW": "銀川河東國際機場",
+      "ja": "銀川河東国際空港",
+      "ko": "인촨 허둥 국제공항"
+    },
+    "sourceMunicipality": "Yinchuan",
+    "municipality": {
+      "es": "Yinchuan",
+      "ru": "Иньчуань",
+      "zh-CN": "银川",
+      "zh-TW": "銀川",
+      "ja": "銀川",
+      "ko": "인촨"
+    },
+    "sourceRegion": "Ningxia Autonomous Region",
+    "region": {
+      "es": "Región Autónoma de Ningxia",
+      "ru": "Нинся-Хуэйский автономный район",
+      "zh-CN": "宁夏回族自治区",
+      "zh-TW": "寧夏回族自治區",
+      "ja": "寧夏回族自治区",
+      "ko": "닝샤 후이족 자치구"
+    }
+  },
+  {
+    "ident": "ZLXN",
+    "sourceName": "Xining Caojiabao International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Xining-Caojiabao",
+      "ru": "Международный аэропорт Синин Цаоцзябао",
+      "zh-CN": "西宁曹家堡国际机场",
+      "zh-TW": "西寧曹家堡國際機場",
+      "ja": "西寧曹家堡国際空港",
+      "ko": "시닝 차오자바오 국제공항"
+    },
+    "sourceMunicipality": "Haidong (Huzhu Tu Autonomous County)",
+    "municipality": {
+      "es": "Haidong (Condado Autónomo Tu de Huzhu)",
+      "ru": "Хайдун (Хучжу-Туский автономный уезд)",
+      "zh-CN": "海东（互助土族自治县）",
+      "zh-TW": "海東（互助土族自治縣）",
+      "ja": "海東（互助トゥ族自治県）",
+      "ko": "하이둥(후주 투족 자치현)"
+    },
+    "sourceRegion": "Qinghai Province",
+    "region": {
+      "es": "Provincia de Qinghai",
+      "ru": "Провинция Цинхай",
+      "zh-CN": "青海省",
+      "zh-TW": "青海省",
+      "ja": "青海省",
+      "ko": "칭하이성"
+    }
+  },
+  {
+    "ident": "ZULS",
+    "sourceName": "Lhasa Gonggar International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Lhasa-Gonggar",
+      "ru": "Международный аэропорт Лхаса Гонггар",
+      "zh-CN": "拉萨贡嘎国际机场",
+      "zh-TW": "拉薩貢嘎國際機場",
+      "ja": "ラサ・クンガ国際空港",
+      "ko": "라싸 궁가 국제공항"
+    },
+    "sourceMunicipality": "Shannan (Gonggar)",
+    "municipality": {
+      "es": "Shannan (Gonggar)",
+      "ru": "Шаньнань (Гонггар)",
+      "zh-CN": "山南（贡嘎）",
+      "zh-TW": "山南（貢嘎）",
+      "ja": "山南（クンガ）",
+      "ko": "산난(궁가)"
+    },
+    "sourceRegion": "Tibet Autonomous Region",
+    "region": {
+      "es": "Región Autónoma del Tíbet",
+      "ru": "Тибетский автономный район",
+      "zh-CN": "西藏自治区",
+      "zh-TW": "西藏自治區",
+      "ja": "チベット自治区",
+      "ko": "티베트 자치구"
+    }
+  },
+  {
+    "ident": "ZSCN",
+    "sourceName": "Nanchang Changbei International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Nanchang-Changbei",
+      "ru": "Международный аэропорт Наньчан Чанбэй",
+      "zh-CN": "南昌昌北国际机场",
+      "zh-TW": "南昌昌北國際機場",
+      "ja": "南昌昌北国際空港",
+      "ko": "난창 창베이 국제공항"
+    },
+    "sourceMunicipality": "Nanchang",
+    "municipality": {
+      "es": "Nanchang",
+      "ru": "Наньчан",
+      "zh-CN": "南昌",
+      "zh-TW": "南昌",
+      "ja": "南昌",
+      "ko": "난창"
+    },
+    "sourceRegion": "Jiangxi Province",
+    "region": {
+      "es": "Provincia de Jiangxi",
+      "ru": "Провинция Цзянси",
+      "zh-CN": "江西省",
+      "zh-TW": "江西省",
+      "ja": "江西省",
+      "ko": "장시성"
+    }
+  },
+  {
+    "ident": "ZYCC",
+    "sourceName": "Changchun Longjia International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Changchun-Longjia",
+      "ru": "Международный аэропорт Чанчунь Лунцзя",
+      "zh-CN": "长春龙嘉国际机场",
+      "zh-TW": "長春龍嘉國際機場",
+      "ja": "長春龍嘉国際空港",
+      "ko": "창춘 룽자 국제공항"
+    },
+    "sourceMunicipality": "Changchun",
+    "municipality": {
+      "es": "Changchun",
+      "ru": "Чанчунь",
+      "zh-CN": "长春",
+      "zh-TW": "長春",
+      "ja": "長春",
+      "ko": "창춘"
+    },
+    "sourceRegion": "Jilin Province",
+    "region": {
+      "es": "Provincia de Jilin",
+      "ru": "Провинция Цзилинь",
+      "zh-CN": "吉林省",
+      "zh-TW": "吉林省",
+      "ja": "吉林省",
+      "ko": "지린성"
+    }
+  },
+  {
+    "ident": "ZSYT",
+    "sourceName": "Yantai Penglai International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Yantai-Penglai",
+      "ru": "Международный аэропорт Яньтай Пэнлай",
+      "zh-CN": "烟台蓬莱国际机场",
+      "zh-TW": "煙臺蓬萊國際機場",
+      "ja": "煙台蓬莱国際空港",
+      "ko": "옌타이 펑라이 국제공항"
+    },
+    "sourceMunicipality": "Yantai",
+    "municipality": {
+      "es": "Yantai",
+      "ru": "Яньтай",
+      "zh-CN": "烟台",
+      "zh-TW": "煙臺",
+      "ja": "煙台",
+      "ko": "옌타이"
+    },
+    "sourceRegion": "Shandong Province",
+    "region": {
+      "es": "Provincia de Shandong",
+      "ru": "Провинция Шаньдун",
+      "zh-CN": "山东省",
+      "zh-TW": "山東省",
+      "ja": "山東省",
+      "ko": "산둥성"
+    }
+  },
+  {
+    "ident": "ZGSD",
+    "sourceName": "Zhuhai Jinwan Airport",
+    "name": {
+      "es": "Aeropuerto de Zhuhai-Jinwan",
+      "ru": "Аэропорт Чжухай Цзиньвань",
+      "zh-CN": "珠海金湾机场",
+      "zh-TW": "珠海金灣機場",
+      "ja": "珠海金湾空港",
+      "ko": "주하이 진완 공항"
+    },
+    "sourceMunicipality": "Zhuhai (Jinwan)",
+    "municipality": {
+      "es": "Zhuhai (Jinwan)",
+      "ru": "Чжухай (Цзиньвань)",
+      "zh-CN": "珠海（金湾）",
+      "zh-TW": "珠海（金灣）",
+      "ja": "珠海（金湾）",
+      "ko": "주하이(진완)"
+    },
+    "sourceRegion": "Guangdong Province",
+    "region": {
+      "es": "Provincia de Guangdong",
+      "ru": "Провинция Гуандун",
+      "zh-CN": "广东省",
+      "zh-TW": "廣東省",
+      "ja": "広東省",
+      "ko": "광둥성"
+    }
+  },
+  {
+    "ident": "ROAH",
+    "sourceName": "Naha International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Naha",
+      "ru": "Международный аэропорт Наха",
+      "zh-CN": "那霸国际机场",
+      "zh-TW": "那霸國際機場",
+      "ja": "那覇国際空港",
+      "ko": "나하 국제공항"
+    },
+    "sourceMunicipality": "Naha",
+    "municipality": {
+      "es": "Naha",
+      "ru": "Наха",
+      "zh-CN": "那霸",
+      "zh-TW": "那霸",
+      "ja": "那覇",
+      "ko": "나하"
+    },
+    "sourceRegion": "Okinawa Prefecture",
+    "region": {
+      "es": "Prefectura de Okinawa",
+      "ru": "Префектура Окинава",
+      "zh-CN": "冲绳县",
+      "zh-TW": "沖繩縣",
+      "ja": "沖縄県",
+      "ko": "오키나와현"
+    }
+  },
+  {
+    "ident": "RJFK",
+    "sourceName": "Kagoshima Airport",
+    "name": {
+      "es": "Aeropuerto de Kagoshima",
+      "ru": "Аэропорт Кагосима",
+      "zh-CN": "鹿儿岛机场",
+      "zh-TW": "鹿兒島機場",
+      "ja": "鹿児島空港",
+      "ko": "가고시마 공항"
+    },
+    "sourceMunicipality": "Kagoshima",
+    "municipality": {
+      "es": "Kagoshima",
+      "ru": "Кагосима",
+      "zh-CN": "鹿儿岛",
+      "zh-TW": "鹿兒島",
+      "ja": "鹿児島",
+      "ko": "가고시마"
+    },
+    "sourceRegion": "Kagoshima Prefecture",
+    "region": {
+      "es": "Prefectura de Kagoshima",
+      "ru": "Префектура Кагосима",
+      "zh-CN": "鹿儿岛县",
+      "zh-TW": "鹿兒島縣",
+      "ja": "鹿児島県",
+      "ko": "가고시마현"
+    }
+  },
+  {
+    "ident": "RJFT",
+    "sourceName": "Kumamoto Airport",
+    "name": {
+      "es": "Aeropuerto de Kumamoto",
+      "ru": "Аэропорт Кумамото",
+      "zh-CN": "熊本机场",
+      "zh-TW": "熊本機場",
+      "ja": "熊本空港",
+      "ko": "구마모토 공항"
+    },
+    "sourceMunicipality": "Kumamoto",
+    "municipality": {
+      "es": "Kumamoto",
+      "ru": "Кумамото",
+      "zh-CN": "熊本",
+      "zh-TW": "熊本",
+      "ja": "熊本",
+      "ko": "구마모토"
+    },
+    "sourceRegion": "Kumamoto Prefecture",
+    "region": {
+      "es": "Prefectura de Kumamoto",
+      "ru": "Префектура Кумамото",
+      "zh-CN": "熊本县",
+      "zh-TW": "熊本縣",
+      "ja": "熊本県",
+      "ko": "구마모토현"
+    }
+  },
+  {
+    "ident": "RJFU",
+    "sourceName": "Nagasaki Airport",
+    "name": {
+      "es": "Aeropuerto de Nagasaki",
+      "ru": "Аэропорт Нагасаки",
+      "zh-CN": "长崎机场",
+      "zh-TW": "長崎機場",
+      "ja": "長崎空港",
+      "ko": "나가사키 공항"
+    },
+    "sourceMunicipality": "Nagasaki",
+    "municipality": {
+      "es": "Nagasaki",
+      "ru": "Нагасаки",
+      "zh-CN": "长崎",
+      "zh-TW": "長崎",
+      "ja": "長崎",
+      "ko": "나가사키"
+    },
+    "sourceRegion": "Nagasaki Prefecture",
+    "region": {
+      "es": "Prefectura de Nagasaki",
+      "ru": "Префектура Нагасаки",
+      "zh-CN": "长崎县",
+      "zh-TW": "長崎縣",
+      "ja": "長崎県",
+      "ko": "나가사키현"
+    }
+  },
+  {
+    "ident": "RJFO",
+    "sourceName": "Oita Airport",
+    "name": {
+      "es": "Aeropuerto de Oita",
+      "ru": "Аэропорт Оита",
+      "zh-CN": "大分机场",
+      "zh-TW": "大分機場",
+      "ja": "大分空港",
+      "ko": "오이타 공항"
+    },
+    "sourceMunicipality": "Oita",
+    "municipality": {
+      "es": "Oita",
+      "ru": "Оита",
+      "zh-CN": "大分",
+      "zh-TW": "大分",
+      "ja": "大分",
+      "ko": "오이타"
+    },
+    "sourceRegion": "Ōita Prefecture",
+    "region": {
+      "es": "Prefectura de Oita",
+      "ru": "Префектура Оита",
+      "zh-CN": "大分县",
+      "zh-TW": "大分縣",
+      "ja": "大分県",
+      "ko": "오이타현"
+    }
+  },
+  {
+    "ident": "RJOM",
+    "sourceName": "Matsuyama Airport",
+    "name": {
+      "es": "Aeropuerto de Matsuyama",
+      "ru": "Аэропорт Мацуяма",
+      "zh-CN": "松山机场",
+      "zh-TW": "松山機場",
+      "ja": "松山空港",
+      "ko": "마쓰야마 공항"
+    },
+    "sourceMunicipality": "Matsuyama",
+    "municipality": {
+      "es": "Matsuyama",
+      "ru": "Мацуяма",
+      "zh-CN": "松山",
+      "zh-TW": "松山",
+      "ja": "松山",
+      "ko": "마쓰야마"
+    },
+    "sourceRegion": "Ehime Prefecture",
+    "region": {
+      "es": "Prefectura de Ehime",
+      "ru": "Префектура Эхимэ",
+      "zh-CN": "爱媛县",
+      "zh-TW": "愛媛縣",
+      "ja": "愛媛県",
+      "ko": "에히메현"
+    }
+  },
+  {
+    "ident": "RJOA",
+    "sourceName": "Hiroshima Airport",
+    "name": {
+      "es": "Aeropuerto de Hiroshima",
+      "ru": "Аэропорт Хиросима",
+      "zh-CN": "广岛机场",
+      "zh-TW": "廣島機場",
+      "ja": "広島空港",
+      "ko": "히로시마 공항"
+    },
+    "sourceMunicipality": "Hiroshima",
+    "municipality": {
+      "es": "Hiroshima",
+      "ru": "Хиросима",
+      "zh-CN": "广岛",
+      "zh-TW": "廣島",
+      "ja": "広島",
+      "ko": "히로시마"
+    },
+    "sourceRegion": "Hiroshima Prefecture",
+    "region": {
+      "es": "Prefectura de Hiroshima",
+      "ru": "Префектура Хиросима",
+      "zh-CN": "广岛县",
+      "zh-TW": "廣島縣",
+      "ja": "広島県",
+      "ko": "히로시마현"
+    }
+  },
+  {
+    "ident": "RJOB",
+    "sourceName": "Okayama Momotaro Airport",
+    "name": {
+      "es": "Aeropuerto de Okayama-Momotaro",
+      "ru": "Аэропорт Окаяма Момотаро",
+      "zh-CN": "冈山桃太郎机场",
+      "zh-TW": "岡山桃太郎機場",
+      "ja": "岡山桃太郎空港",
+      "ko": "오카야마 모모타로 공항"
+    },
+    "sourceMunicipality": "Okayama",
+    "municipality": {
+      "es": "Okayama",
+      "ru": "Окаяма",
+      "zh-CN": "冈山",
+      "zh-TW": "岡山",
+      "ja": "岡山",
+      "ko": "오카야마"
+    },
+    "sourceRegion": "Okayama Prefecture",
+    "region": {
+      "es": "Prefectura de Okayama",
+      "ru": "Префектура Окаяма",
+      "zh-CN": "冈山县",
+      "zh-TW": "岡山縣",
+      "ja": "岡山県",
+      "ko": "오카야마현"
+    }
+  },
+  {
+    "ident": "RJOT",
+    "sourceName": "Takamatsu Airport",
+    "name": {
+      "es": "Aeropuerto de Takamatsu",
+      "ru": "Аэропорт Такамацу",
+      "zh-CN": "高松机场",
+      "zh-TW": "高松機場",
+      "ja": "高松空港",
+      "ko": "다카마쓰 공항"
+    },
+    "sourceMunicipality": "Takamatsu",
+    "municipality": {
+      "es": "Takamatsu",
+      "ru": "Такамацу",
+      "zh-CN": "高松",
+      "zh-TW": "高松",
+      "ja": "高松",
+      "ko": "다카마쓰"
+    },
+    "sourceRegion": "Kagawa Prefecture",
+    "region": {
+      "es": "Prefectura de Kagawa",
+      "ru": "Префектура Кагава",
+      "zh-CN": "香川县",
+      "zh-TW": "香川縣",
+      "ja": "香川県",
+      "ko": "가가와현"
+    }
+  },
+  {
+    "ident": "RJSN",
+    "sourceName": "Niigata Airport",
+    "name": {
+      "es": "Aeropuerto de Niigata",
+      "ru": "Аэропорт Ниигата",
+      "zh-CN": "新潟机场",
+      "zh-TW": "新潟機場",
+      "ja": "新潟空港",
+      "ko": "니가타 공항"
+    },
+    "sourceMunicipality": "Niigata",
+    "municipality": {
+      "es": "Niigata",
+      "ru": "Ниигата",
+      "zh-CN": "新潟",
+      "zh-TW": "新潟",
+      "ja": "新潟",
+      "ko": "니가타"
+    },
+    "sourceRegion": "Niigata Prefecture",
+    "region": {
+      "es": "Prefectura de Niigata",
+      "ru": "Префектура Ниигата",
+      "zh-CN": "新潟县",
+      "zh-TW": "新潟縣",
+      "ja": "新潟県",
+      "ko": "니가타현"
+    }
+  },
+  {
+    "ident": "RJSS",
+    "sourceName": "Sendai Airport",
+    "name": {
+      "es": "Aeropuerto de Sendai",
+      "ru": "Аэропорт Сэндай",
+      "zh-CN": "仙台机场",
+      "zh-TW": "仙台機場",
+      "ja": "仙台空港",
+      "ko": "센다이 공항"
+    },
+    "sourceMunicipality": "Natori",
+    "municipality": {
+      "es": "Natori",
+      "ru": "Натори",
+      "zh-CN": "名取",
+      "zh-TW": "名取",
+      "ja": "名取",
+      "ko": "나토리"
+    },
+    "sourceRegion": "Miyagi Prefecture",
+    "region": {
+      "es": "Prefectura de Miyagi",
+      "ru": "Префектура Мияги",
+      "zh-CN": "宫城县",
+      "zh-TW": "宮城縣",
+      "ja": "宮城県",
+      "ko": "미야기현"
+    }
+  },
+  {
+    "ident": "RJSA",
+    "sourceName": "Aomori Airport",
+    "name": {
+      "es": "Aeropuerto de Aomori",
+      "ru": "Аэропорт Аомори",
+      "zh-CN": "青森机场",
+      "zh-TW": "青森機場",
+      "ja": "青森空港",
+      "ko": "아오모리 공항"
+    },
+    "sourceMunicipality": "Aomori",
+    "municipality": {
+      "es": "Aomori",
+      "ru": "Аомори",
+      "zh-CN": "青森",
+      "zh-TW": "青森",
+      "ja": "青森",
+      "ko": "아오모리"
+    },
+    "sourceRegion": "Aomori Prefecture",
+    "region": {
+      "es": "Prefectura de Aomori",
+      "ru": "Префектура Аомори",
+      "zh-CN": "青森县",
+      "zh-TW": "青森縣",
+      "ja": "青森県",
+      "ko": "아오모리현"
+    }
+  },
+  {
+    "ident": "RJEC",
+    "sourceName": "Asahikawa Airport",
+    "name": {
+      "es": "Aeropuerto de Asahikawa",
+      "ru": "Аэропорт Асахикава",
+      "zh-CN": "旭川机场",
+      "zh-TW": "旭川機場",
+      "ja": "旭川空港",
+      "ko": "아사히카와 공항"
+    },
+    "sourceMunicipality": "Higashikagura",
+    "municipality": {
+      "es": "Higashikagura",
+      "ru": "Хигасикагура",
+      "zh-CN": "东神乐",
+      "zh-TW": "東神樂",
+      "ja": "東神楽",
+      "ko": "히가시카구라"
+    },
+    "sourceRegion": "Hokkaidō Prefecture",
+    "region": {
+      "es": "Prefectura de Hokkaido",
+      "ru": "Префектура Хоккайдо",
+      "zh-CN": "北海道",
+      "zh-TW": "北海道",
+      "ja": "北海道",
+      "ko": "홋카이도"
+    }
+  },
+  {
+    "ident": "RJCH",
+    "sourceName": "Hakodate Airport",
+    "name": {
+      "es": "Aeropuerto de Hakodate",
+      "ru": "Аэропорт Хакодате",
+      "zh-CN": "函馆机场",
+      "zh-TW": "函館機場",
+      "ja": "函館空港",
+      "ko": "하코다테 공항"
+    },
+    "sourceMunicipality": "Hakodate",
+    "municipality": {
+      "es": "Hakodate",
+      "ru": "Хакодате",
+      "zh-CN": "函馆",
+      "zh-TW": "函館",
+      "ja": "函館",
+      "ko": "하코다테"
+    },
+    "sourceRegion": "Hokkaidō Prefecture",
+    "region": {
+      "es": "Prefectura de Hokkaido",
+      "ru": "Префектура Хоккайдо",
+      "zh-CN": "北海道",
+      "zh-TW": "北海道",
+      "ja": "北海道",
+      "ko": "홋카이도"
+    }
+  },
+  {
+    "ident": "RJOO",
+    "sourceName": "Osaka Itami International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Osaka-Itami",
+      "ru": "Международный аэропорт Осака Итами",
+      "zh-CN": "大阪伊丹国际机场",
+      "zh-TW": "大阪伊丹國際機場",
+      "ja": "大阪伊丹国際空港",
+      "ko": "오사카 이타미 국제공항"
+    },
+    "sourceMunicipality": "Osaka",
+    "municipality": {
+      "es": "Osaka",
+      "ru": "Осака",
+      "zh-CN": "大阪",
+      "zh-TW": "大阪",
+      "ja": "大阪",
+      "ko": "오사카"
+    },
+    "sourceRegion": "Ōsaka Prefecture",
+    "region": {
+      "es": "Prefectura de Osaka",
+      "ru": "Префектура Осака",
+      "zh-CN": "大阪府",
+      "zh-TW": "大阪府",
+      "ja": "大阪府",
+      "ko": "오사카부"
+    }
+  },
+  {
+    "ident": "RJBE",
+    "sourceName": "Kobe Airport",
+    "name": {
+      "es": "Aeropuerto de Kobe",
+      "ru": "Аэропорт Кобе",
+      "zh-CN": "神户机场",
+      "zh-TW": "神戶機場",
+      "ja": "神戸空港",
+      "ko": "고베 공항"
+    },
+    "sourceMunicipality": "Kobe",
+    "municipality": {
+      "es": "Kobe",
+      "ru": "Кобе",
+      "zh-CN": "神户",
+      "zh-TW": "神戶",
+      "ja": "神戸",
+      "ko": "고베"
+    },
+    "sourceRegion": "Hyōgo Prefecture",
+    "region": {
+      "es": "Prefectura de Hyogo",
+      "ru": "Префектура Хёго",
+      "zh-CN": "兵库县",
+      "zh-TW": "兵庫縣",
+      "ja": "兵庫県",
+      "ko": "효고현"
+    }
+  },
+  {
+    "ident": "RKPK",
+    "sourceName": "Gimhae International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Gimhae",
+      "ru": "Международный аэропорт Кимхэ",
+      "zh-CN": "金海国际机场",
+      "zh-TW": "金海國際機場",
+      "ja": "金海国際空港",
+      "ko": "김해국제공항"
+    },
+    "sourceMunicipality": "Busan",
+    "municipality": {
+      "es": "Busan",
+      "ru": "Пусан",
+      "zh-CN": "釜山",
+      "zh-TW": "釜山",
+      "ja": "釜山",
+      "ko": "부산"
+    },
+    "sourceRegion": "Busan-gwangyeoksi (Busan Metropolitan City)",
+    "region": {
+      "es": "Ciudad Metropolitana de Busan",
+      "ru": "Город-метрополия Пусан",
+      "zh-CN": "釜山广域市",
+      "zh-TW": "釜山廣域市",
+      "ja": "釜山広域市",
+      "ko": "부산광역시"
+    }
+  },
+  {
+    "ident": "RKPC",
+    "sourceName": "Jeju International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Jeju",
+      "ru": "Международный аэропорт Чеджу",
+      "zh-CN": "济州国际机场",
+      "zh-TW": "濟州國際機場",
+      "ja": "済州国際空港",
+      "ko": "제주국제공항"
+    },
+    "sourceMunicipality": "Jeju City",
+    "municipality": {
+      "es": "Ciudad de Jeju",
+      "ru": "Город Чеджу",
+      "zh-CN": "济州市",
+      "zh-TW": "濟州市",
+      "ja": "済州市",
+      "ko": "제주시"
+    },
+    "sourceRegion": "Jeju Teukbyeoljachi-do (Jeju Special Self-Governing Province)",
+    "region": {
+      "es": "Provincia Autónoma Especial de Jeju",
+      "ru": "Особая самоуправляемая провинция Чеджу",
+      "zh-CN": "济州特别自治道",
+      "zh-TW": "濟州特別自治道",
+      "ja": "済州特別自治道",
+      "ko": "제주특별자치도"
+    }
+  },
+  {
+    "ident": "RKTN",
+    "sourceName": "Daegu International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Daegu",
+      "ru": "Международный аэропорт Тэгу",
+      "zh-CN": "大邱国际机场",
+      "zh-TW": "大邱國際機場",
+      "ja": "大邱国際空港",
+      "ko": "대구국제공항"
+    },
+    "sourceMunicipality": "Daegu",
+    "municipality": {
+      "es": "Daegu",
+      "ru": "Тэгу",
+      "zh-CN": "大邱",
+      "zh-TW": "大邱",
+      "ja": "大邱",
+      "ko": "대구"
+    },
+    "sourceRegion": "Daegu-gwangyeoksi (Daegu Metropolitan City)",
+    "region": {
+      "es": "Ciudad Metropolitana de Daegu",
+      "ru": "Город-метрополия Тэгу",
+      "zh-CN": "大邱广域市",
+      "zh-TW": "大邱廣域市",
+      "ja": "大邱広域市",
+      "ko": "대구광역시"
+    }
+  },
+  {
+    "ident": "RKTU",
+    "sourceName": "Cheongju International Airport/Cheongju Air Base (K-59/G-513)",
+    "name": {
+      "es": "Aeropuerto Internacional de Cheongju / Base Aérea de Cheongju (K-59/G-513)",
+      "ru": "Международный аэропорт Чхонджу / Авиабаза Чхонджу (K-59/G-513)",
+      "zh-CN": "清州国际机场／清州空军基地（K-59/G-513）",
+      "zh-TW": "清州國際機場／清州空軍基地（K-59/G-513）",
+      "ja": "清州国際空港／清州空軍基地（K-59/G-513）",
+      "ko": "청주국제공항/청주공군기지(K-59/G-513)"
+    },
+    "sourceMunicipality": "Cheongju",
+    "municipality": {
+      "es": "Cheongju",
+      "ru": "Чхонджу",
+      "zh-CN": "清州",
+      "zh-TW": "清州",
+      "ja": "清州",
+      "ko": "청주"
+    },
+    "sourceRegion": "Chungcheongbuk-do (North Chungcheong Province)",
+    "region": {
+      "es": "Provincia de Chungcheong del Norte",
+      "ru": "Провинция Чхунчхон-Пукто",
+      "zh-CN": "忠清北道",
+      "zh-TW": "忠清北道",
+      "ja": "忠清北道",
+      "ko": "충청북도"
+    }
+  },
+  {
+    "ident": "RKJJ",
+    "sourceName": "Gwangju Airport",
+    "name": {
+      "es": "Aeropuerto de Gwangju",
+      "ru": "Аэропорт Кванджу",
+      "zh-CN": "光州机场",
+      "zh-TW": "光州機場",
+      "ja": "光州空港",
+      "ko": "광주공항"
+    },
+    "sourceMunicipality": "Gwangju",
+    "municipality": {
+      "es": "Gwangju",
+      "ru": "Кванджу",
+      "zh-CN": "光州",
+      "zh-TW": "光州",
+      "ja": "光州",
+      "ko": "광주"
+    },
+    "sourceRegion": "Gwangju-gwangyeoksi (Gwangju Metropolitan City)",
+    "region": {
+      "es": "Ciudad Metropolitana de Gwangju",
+      "ru": "Город-метрополия Кванджу",
+      "zh-CN": "光州广域市",
+      "zh-TW": "光州廣域市",
+      "ja": "光州広域市",
+      "ko": "광주광역시"
+    }
+  },
+  {
+    "ident": "EDDB",
+    "sourceName": "Berlin Brandenburg Airport",
+    "name": {
+      "es": "Aeropuerto de Berlín-Brandeburgo",
+      "ru": "Аэропорт Берлин Бранденбург",
+      "zh-CN": "柏林勃兰登堡机场",
+      "zh-TW": "柏林布蘭登堡機場",
+      "ja": "ベルリン・ブランデンブルク空港",
+      "ko": "베를린 브란덴부르크 공항"
+    },
+    "sourceMunicipality": "Berlin",
+    "municipality": {
+      "es": "Berlín",
+      "ru": "Берлин",
+      "zh-CN": "柏林",
+      "zh-TW": "柏林",
+      "ja": "ベルリン",
+      "ko": "베를린"
+    },
+    "sourceRegion": "Brandenburg",
+    "region": {
+      "es": "Brandeburgo",
+      "ru": "Бранденбург",
+      "zh-CN": "勃兰登堡州",
+      "zh-TW": "布蘭登堡州",
+      "ja": "ブランデンブルク州",
+      "ko": "브란덴부르크주"
+    }
+  },
+  {
+    "ident": "EDDH",
+    "sourceName": "Hamburg Helmut Schmidt Airport",
+    "name": {
+      "es": "Aeropuerto Helmut Schmidt de Hamburgo",
+      "ru": "Аэропорт Гамбург имени Гельмута Шмидта",
+      "zh-CN": "汉堡赫尔穆特·施密特机场",
+      "zh-TW": "漢堡赫爾穆特·施密特機場",
+      "ja": "ハンブルク・ヘルムート・シュミット空港",
+      "ko": "함부르크 헬무트 슈미트 공항"
+    },
+    "sourceMunicipality": "Hamburg",
+    "municipality": {
+      "es": "Hamburgo",
+      "ru": "Гамбург",
+      "zh-CN": "汉堡",
+      "zh-TW": "漢堡",
+      "ja": "ハンブルク",
+      "ko": "함부르크"
+    },
+    "sourceRegion": "Hamburg",
+    "region": {
+      "es": "Hamburgo",
+      "ru": "Гамбург",
+      "zh-CN": "汉堡",
+      "zh-TW": "漢堡",
+      "ja": "ハンブルク",
+      "ko": "함부르크"
+    }
+  },
+  {
+    "ident": "EDDL",
+    "sourceName": "Düsseldorf Airport",
+    "name": {
+      "es": "Aeropuerto de Düsseldorf",
+      "ru": "Аэропорт Дюссельдорф",
+      "zh-CN": "杜塞尔多夫机场",
+      "zh-TW": "杜塞道夫機場",
+      "ja": "デュッセルドルフ空港",
+      "ko": "뒤셀도르프 공항"
+    },
+    "sourceMunicipality": "Düsseldorf",
+    "municipality": {
+      "es": "Düsseldorf",
+      "ru": "Дюссельдорф",
+      "zh-CN": "杜塞尔多夫",
+      "zh-TW": "杜塞道夫",
+      "ja": "デュッセルドルフ",
+      "ko": "뒤셀도르프"
+    },
+    "sourceRegion": "North Rhine-Westphalia",
+    "region": {
+      "es": "Renania del Norte-Westfalia",
+      "ru": "Северный Рейн — Вестфалия",
+      "zh-CN": "北莱茵-威斯特法伦州",
+      "zh-TW": "北萊茵-西發利亞州",
+      "ja": "ノルトライン＝ヴェストファーレン州",
+      "ko": "노르트라인베스트팔렌주"
+    }
+  },
+  {
+    "ident": "EDDK",
+    "sourceName": "Cologne Bonn Airport",
+    "name": {
+      "es": "Aeropuerto de Colonia-Bonn",
+      "ru": "Аэропорт Кёльн/Бонн",
+      "zh-CN": "科隆波恩机场",
+      "zh-TW": "科隆波昂機場",
+      "ja": "ケルン・ボン空港",
+      "ko": "쾰른 본 공항"
+    },
+    "sourceMunicipality": "Köln (Cologne)",
+    "municipality": {
+      "es": "Colonia",
+      "ru": "Кёльн",
+      "zh-CN": "科隆",
+      "zh-TW": "科隆",
+      "ja": "ケルン",
+      "ko": "쾰른"
+    },
+    "sourceRegion": "North Rhine-Westphalia",
+    "region": {
+      "es": "Renania del Norte-Westfalia",
+      "ru": "Северный Рейн — Вестфалия",
+      "zh-CN": "北莱茵-威斯特法伦州",
+      "zh-TW": "北萊茵-西發利亞州",
+      "ja": "ノルトライン＝ヴェストファーレン州",
+      "ko": "노르트라인베스트팔렌주"
+    }
+  },
+  {
+    "ident": "EDDS",
+    "sourceName": "Stuttgart Airport",
+    "name": {
+      "es": "Aeropuerto de Stuttgart",
+      "ru": "Аэропорт Штутгарт",
+      "zh-CN": "斯图加特机场",
+      "zh-TW": "斯圖加特機場",
+      "ja": "シュトゥットガルト空港",
+      "ko": "슈투트가르트 공항"
+    },
+    "sourceMunicipality": "Stuttgart",
+    "municipality": {
+      "es": "Stuttgart",
+      "ru": "Штутгарт",
+      "zh-CN": "斯图加特",
+      "zh-TW": "斯圖加特",
+      "ja": "シュトゥットガルト",
+      "ko": "슈투트가르트"
+    },
+    "sourceRegion": "Baden-Württemberg",
+    "region": {
+      "es": "Baden-Wurtemberg",
+      "ru": "Баден-Вюртемберг",
+      "zh-CN": "巴登-符腾堡州",
+      "zh-TW": "巴登-符騰堡州",
+      "ja": "バーデン＝ヴュルテンベルク州",
+      "ko": "바덴뷔르템베르크주"
+    }
+  },
+  {
+    "ident": "EDDV",
+    "sourceName": "Hannover Airport",
+    "name": {
+      "es": "Aeropuerto de Hannover",
+      "ru": "Аэропорт Ганновер",
+      "zh-CN": "汉诺威机场",
+      "zh-TW": "漢諾威機場",
+      "ja": "ハノーファー空港",
+      "ko": "하노버 공항"
+    },
+    "sourceMunicipality": "Hannover",
+    "municipality": {
+      "es": "Hannover",
+      "ru": "Ганновер",
+      "zh-CN": "汉诺威",
+      "zh-TW": "漢諾威",
+      "ja": "ハノーファー",
+      "ko": "하노버"
+    },
+    "sourceRegion": "Lower Saxony",
+    "region": {
+      "es": "Baja Sajonia",
+      "ru": "Нижняя Саксония",
+      "zh-CN": "下萨克森州",
+      "zh-TW": "下薩克森州",
+      "ja": "ニーダーザクセン州",
+      "ko": "니더작센주"
+    }
+  },
+  {
+    "ident": "EDDN",
+    "sourceName": "Nuremberg Airport",
+    "name": {
+      "es": "Aeropuerto de Núremberg",
+      "ru": "Аэропорт Нюрнберг",
+      "zh-CN": "纽伦堡机场",
+      "zh-TW": "紐倫堡機場",
+      "ja": "ニュルンベルク空港",
+      "ko": "뉘른베르크 공항"
+    },
+    "sourceMunicipality": "Nuremberg",
+    "municipality": {
+      "es": "Núremberg",
+      "ru": "Нюрнберг",
+      "zh-CN": "纽伦堡",
+      "zh-TW": "紐倫堡",
+      "ja": "ニュルンベルク",
+      "ko": "뉘른베르크"
+    },
+    "sourceRegion": "Bavaria",
+    "region": {
+      "es": "Baviera",
+      "ru": "Бавария",
+      "zh-CN": "巴伐利亚州",
+      "zh-TW": "巴伐利亞州",
+      "ja": "バイエルン州",
+      "ko": "바이에른주"
+    }
+  },
+  {
+    "ident": "LSGG",
+    "sourceName": "Geneva International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Ginebra",
+      "ru": "Международный аэропорт Женева",
+      "zh-CN": "日内瓦国际机场",
+      "zh-TW": "日內瓦國際機場",
+      "ja": "ジュネーヴ国際空港",
+      "ko": "제네바 국제공항"
+    },
+    "sourceMunicipality": "Geneva",
+    "municipality": {
+      "es": "Ginebra",
+      "ru": "Женева",
+      "zh-CN": "日内瓦",
+      "zh-TW": "日內瓦",
+      "ja": "ジュネーヴ",
+      "ko": "제네바"
+    },
+    "sourceRegion": "Geneva",
+    "region": {
+      "es": "Ginebra",
+      "ru": "Женева",
+      "zh-CN": "日内瓦州",
+      "zh-TW": "日內瓦州",
+      "ja": "ジュネーヴ州",
+      "ko": "제네바주"
+    }
+  },
+  {
+    "ident": "EGPH",
+    "sourceName": "Edinburgh Airport",
+    "name": {
+      "es": "Aeropuerto de Edimburgo",
+      "ru": "Аэропорт Эдинбург",
+      "zh-CN": "爱丁堡机场",
+      "zh-TW": "愛丁堡機場",
+      "ja": "エディンバラ空港",
+      "ko": "에든버러 공항"
+    },
+    "sourceMunicipality": "Ingliston, Edinburgh",
+    "municipality": {
+      "es": "Ingliston, Edimburgo",
+      "ru": "Инглистон, Эдинбург",
+      "zh-CN": "爱丁堡英格利斯顿",
+      "zh-TW": "愛丁堡英格利斯頓",
+      "ja": "エディンバラ・イングリストン",
+      "ko": "에든버러 잉글리스턴"
+    },
+    "sourceRegion": "Scotland",
+    "region": {
+      "es": "Escocia",
+      "ru": "Шотландия",
+      "zh-CN": "苏格兰",
+      "zh-TW": "蘇格蘭",
+      "ja": "スコットランド",
+      "ko": "스코틀랜드"
+    }
+  },
+  {
+    "ident": "EGCC",
+    "sourceName": "Manchester Airport",
+    "name": {
+      "es": "Aeropuerto de Mánchester",
+      "ru": "Аэропорт Манчестер",
+      "zh-CN": "曼彻斯特机场",
+      "zh-TW": "曼徹斯特機場",
+      "ja": "マンチェスター空港",
+      "ko": "맨체스터 공항"
+    },
+    "sourceMunicipality": "Manchester, Greater Manchester",
+    "municipality": {
+      "es": "Mánchester, Gran Mánchester",
+      "ru": "Манчестер, Большой Манчестер",
+      "zh-CN": "大曼彻斯特郡曼彻斯特",
+      "zh-TW": "大曼徹斯特郡曼徹斯特",
+      "ja": "グレーター・マンチェスター州マンチェスター",
+      "ko": "그레이터맨체스터주 맨체스터"
+    },
+    "sourceRegion": "England",
+    "region": {
+      "es": "Inglaterra",
+      "ru": "Англия",
+      "zh-CN": "英格兰",
+      "zh-TW": "英格蘭",
+      "ja": "イングランド",
+      "ko": "잉글랜드"
+    }
+  },
+  {
+    "ident": "EGPF",
+    "sourceName": "Glasgow Airport",
+    "name": {
+      "es": "Aeropuerto de Glasgow",
+      "ru": "Аэропорт Глазго",
+      "zh-CN": "格拉斯哥机场",
+      "zh-TW": "格拉斯哥機場",
+      "ja": "グラスゴー空港",
+      "ko": "글래스고 공항"
+    },
+    "sourceMunicipality": "Glasgow",
+    "municipality": {
+      "es": "Glasgow",
+      "ru": "Глазго",
+      "zh-CN": "格拉斯哥",
+      "zh-TW": "格拉斯哥",
+      "ja": "グラスゴー",
+      "ko": "글래스고"
+    },
+    "sourceRegion": "Scotland",
+    "region": {
+      "es": "Escocia",
+      "ru": "Шотландия",
+      "zh-CN": "苏格兰",
+      "zh-TW": "蘇格蘭",
+      "ja": "スコットランド",
+      "ko": "스코틀랜드"
+    }
+  },
+  {
+    "ident": "EGSS",
+    "sourceName": "London Stansted Airport",
+    "name": {
+      "es": "Aeropuerto de Londres-Stansted",
+      "ru": "Аэропорт Лондон Станстед",
+      "zh-CN": "伦敦斯坦斯特德机场",
+      "zh-TW": "倫敦史坦斯特機場",
+      "ja": "ロンドン・スタンステッド空港",
+      "ko": "런던 스탠스테드 공항"
+    },
+    "sourceMunicipality": "London, Essex",
+    "municipality": {
+      "es": "Londres, Essex",
+      "ru": "Лондон, Эссекс",
+      "zh-CN": "伦敦，埃塞克斯",
+      "zh-TW": "倫敦，艾塞克斯",
+      "ja": "ロンドン、エセックス",
+      "ko": "런던, 에식스"
+    },
+    "sourceRegion": "England",
+    "region": {
+      "es": "Inglaterra",
+      "ru": "Англия",
+      "zh-CN": "英格兰",
+      "zh-TW": "英格蘭",
+      "ja": "イングランド",
+      "ko": "잉글랜드"
+    }
+  },
+  {
+    "ident": "LEMG",
+    "sourceName": "Málaga-Costa del Sol Airport",
+    "name": {
+      "es": "Aeropuerto de Málaga-Costa del Sol",
+      "ru": "Аэропорт Малага Коста-дель-Соль",
+      "zh-CN": "马拉加太阳海岸机场",
+      "zh-TW": "馬拉加太陽海岸機場",
+      "ja": "マラガ＝コスタ・デル・ソル空港",
+      "ko": "말라가 코스타델솔 공항"
+    },
+    "sourceMunicipality": "Málaga",
+    "municipality": {
+      "es": "Málaga",
+      "ru": "Малага",
+      "zh-CN": "马拉加",
+      "zh-TW": "馬拉加",
+      "ja": "マラガ",
+      "ko": "말라가"
+    },
+    "sourceRegion": "Andalucía",
+    "region": {
+      "es": "Andalucía",
+      "ru": "Андалусия",
+      "zh-CN": "安达卢西亚自治区",
+      "zh-TW": "安達魯西亞自治區",
+      "ja": "アンダルシア州",
+      "ko": "안달루시아 자치지방"
+    }
+  },
+  {
+    "ident": "LEPA",
+    "sourceName": "Palma de Mallorca Airport",
+    "name": {
+      "es": "Aeropuerto de Palma de Mallorca",
+      "ru": "Аэропорт Пальма-де-Мальорка",
+      "zh-CN": "马略卡岛帕尔马机场",
+      "zh-TW": "馬略卡島帕爾馬機場",
+      "ja": "パルマ・デ・マヨルカ空港",
+      "ko": "팔마데마요르카 공항"
+    },
+    "sourceMunicipality": "Palma de Mallorca",
+    "municipality": {
+      "es": "Palma de Mallorca",
+      "ru": "Пальма-де-Мальорка",
+      "zh-CN": "马略卡岛帕尔马",
+      "zh-TW": "馬略卡島帕爾馬",
+      "ja": "パルマ・デ・マヨルカ",
+      "ko": "팔마데마요르카"
+    },
+    "sourceRegion": "Islas Baleares",
+    "region": {
+      "es": "Islas Baleares",
+      "ru": "Балеарские острова",
+      "zh-CN": "巴利阿里群岛自治区",
+      "zh-TW": "巴利亞利群島自治區",
+      "ja": "バレアレス諸島州",
+      "ko": "발레아레스 제도 자치지방"
+    }
+  },
+  {
+    "ident": "LIRN",
+    "sourceName": "Naples International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Nápoles",
+      "ru": "Международный аэропорт Неаполь",
+      "zh-CN": "那不勒斯国际机场",
+      "zh-TW": "拿坡里國際機場",
+      "ja": "ナポリ国際空港",
+      "ko": "나폴리 국제공항"
+    },
+    "sourceMunicipality": "Napoli",
+    "municipality": {
+      "es": "Nápoles",
+      "ru": "Неаполь",
+      "zh-CN": "那不勒斯",
+      "zh-TW": "拿坡里",
+      "ja": "ナポリ",
+      "ko": "나폴리"
+    },
+    "sourceRegion": "Campania",
+    "region": {
+      "es": "Campania",
+      "ru": "Кампания",
+      "zh-CN": "坎帕尼亚大区",
+      "zh-TW": "坎帕尼亞大區",
+      "ja": "カンパニア州",
+      "ko": "캄파니아주"
+    }
+  },
+  {
+    "ident": "LIPZ",
+    "sourceName": "Venice Marco Polo Airport",
+    "name": {
+      "es": "Aeropuerto Marco Polo de Venecia",
+      "ru": "Аэропорт Венеция имени Марко Поло",
+      "zh-CN": "威尼斯马可·波罗机场",
+      "zh-TW": "威尼斯馬可·波羅機場",
+      "ja": "ヴェネツィア・マルコ・ポーロ空港",
+      "ko": "베네치아 마르코 폴로 공항"
+    },
+    "sourceMunicipality": "Venezia (VE)",
+    "municipality": {
+      "es": "Venecia (Venecia)",
+      "ru": "Венеция (Венеция)",
+      "zh-CN": "威尼斯（威尼斯省）",
+      "zh-TW": "威尼斯（威尼斯省）",
+      "ja": "ヴェネツィア（ヴェネツィア県）",
+      "ko": "베네치아(베네치아현)"
+    },
+    "sourceRegion": "Veneto",
+    "region": {
+      "es": "Véneto",
+      "ru": "Венето",
+      "zh-CN": "威尼托大区",
+      "zh-TW": "威尼托大區",
+      "ja": "ヴェネト州",
+      "ko": "베네토주"
+    }
+  },
+  {
+    "ident": "KPHX",
+    "sourceName": "Phoenix Sky Harbor International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Sky Harbor de Phoenix",
+      "ru": "Международный аэропорт Финикс Скай-Харбор",
+      "zh-CN": "凤凰城天港国际机场",
+      "zh-TW": "鳳凰城天港國際機場",
+      "ja": "フェニックス・スカイハーバー国際空港",
+      "ko": "피닉스 스카이하버 국제공항"
+    },
+    "sourceMunicipality": "Phoenix",
+    "municipality": {
+      "es": "Phoenix",
+      "ru": "Финикс",
+      "zh-CN": "凤凰城",
+      "zh-TW": "鳳凰城",
+      "ja": "フェニックス",
+      "ko": "피닉스"
+    },
+    "sourceRegion": "Arizona",
+    "region": {
+      "es": "Arizona",
+      "ru": "Аризона",
+      "zh-CN": "亚利桑那州",
+      "zh-TW": "亞利桑那州",
+      "ja": "アリゾナ州",
+      "ko": "애리조나주"
+    }
+  },
+  {
+    "ident": "KPHL",
+    "sourceName": "Philadelphia International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Filadelfia",
+      "ru": "Международный аэропорт Филадельфия",
+      "zh-CN": "费城国际机场",
+      "zh-TW": "費城國際機場",
+      "ja": "フィラデルフィア国際空港",
+      "ko": "필라델피아 국제공항"
+    },
+    "sourceMunicipality": "Philadelphia",
+    "municipality": {
+      "es": "Filadelfia",
+      "ru": "Филадельфия",
+      "zh-CN": "费城",
+      "zh-TW": "費城",
+      "ja": "フィラデルフィア",
+      "ko": "필라델피아"
+    },
+    "sourceRegion": "Pennsylvania",
+    "region": {
+      "es": "Pensilvania",
+      "ru": "Пенсильвания",
+      "zh-CN": "宾夕法尼亚州",
+      "zh-TW": "賓夕法尼亞州",
+      "ja": "ペンシルベニア州",
+      "ko": "펜실베이니아주"
+    }
+  },
+  {
+    "ident": "KDTW",
+    "sourceName": "Detroit Metropolitan Wayne County Airport",
+    "name": {
+      "es": "Aeropuerto Metropolitano de Detroit del Condado de Wayne",
+      "ru": "Аэропорт Детройт Метрополитен округа Уэйн",
+      "zh-CN": "底特律都会韦恩县机场",
+      "zh-TW": "底特律都會韋恩縣機場",
+      "ja": "デトロイト・メトロポリタン・ウェイン・カウンティ空港",
+      "ko": "디트로이트 메트로폴리탄 웨인 카운티 공항"
+    },
+    "sourceMunicipality": "Detroit",
+    "municipality": {
+      "es": "Detroit",
+      "ru": "Детройт",
+      "zh-CN": "底特律",
+      "zh-TW": "底特律",
+      "ja": "デトロイト",
+      "ko": "디트로이트"
+    },
+    "sourceRegion": "Michigan",
+    "region": {
+      "es": "Míchigan",
+      "ru": "Мичиган",
+      "zh-CN": "密歇根州",
+      "zh-TW": "密西根州",
+      "ja": "ミシガン州",
+      "ko": "미시간주"
+    }
+  },
+  {
+    "ident": "KMSP",
+    "sourceName": "Minneapolis–Saint Paul International Airport / Wold–Chamberlain Field",
+    "name": {
+      "es": "Aeropuerto Internacional de Minneapolis-Saint Paul / Campo Wold-Chamberlain",
+      "ru": "Международный аэропорт Миннеаполис/Сент-Пол / Аэродром Уолд-Чемберлен",
+      "zh-CN": "明尼阿波利斯-圣保罗国际机场／沃尔德-张伯伦机场",
+      "zh-TW": "明尼阿波利斯-聖保羅國際機場／沃爾德-張伯倫機場",
+      "ja": "ミネアポリス・セントポール国際空港／ウォルド・チェンバレン飛行場",
+      "ko": "미니애폴리스 세인트폴 국제공항/월드 체임벌린 비행장"
+    },
+    "sourceMunicipality": "Minneapolis",
+    "municipality": {
+      "es": "Minneapolis",
+      "ru": "Миннеаполис",
+      "zh-CN": "明尼阿波利斯",
+      "zh-TW": "明尼阿波利斯",
+      "ja": "ミネアポリス",
+      "ko": "미니애폴리스"
+    },
+    "sourceRegion": "Minnesota",
+    "region": {
+      "es": "Minnesota",
+      "ru": "Миннесота",
+      "zh-CN": "明尼苏达州",
+      "zh-TW": "明尼蘇達州",
+      "ja": "ミネソタ州",
+      "ko": "미네소타주"
+    }
+  },
+  {
+    "ident": "KSLC",
+    "sourceName": "Salt Lake City International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Salt Lake City",
+      "ru": "Международный аэропорт Солт-Лейк-Сити",
+      "zh-CN": "盐湖城国际机场",
+      "zh-TW": "鹽湖城國際機場",
+      "ja": "ソルトレイクシティ国際空港",
+      "ko": "솔트레이크시티 국제공항"
+    },
+    "sourceMunicipality": "Salt Lake City",
+    "municipality": {
+      "es": "Salt Lake City",
+      "ru": "Солт-Лейк-Сити",
+      "zh-CN": "盐湖城",
+      "zh-TW": "鹽湖城",
+      "ja": "ソルトレイクシティ",
+      "ko": "솔트레이크시티"
+    },
+    "sourceRegion": "Utah",
+    "region": {
+      "es": "Utah",
+      "ru": "Юта",
+      "zh-CN": "犹他州",
+      "zh-TW": "猶他州",
+      "ja": "ユタ州",
+      "ko": "유타주"
+    }
+  },
+  {
+    "ident": "KCLT",
+    "sourceName": "Charlotte Douglas International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Charlotte-Douglas",
+      "ru": "Международный аэропорт Шарлотт Дуглас",
+      "zh-CN": "夏洛特道格拉斯国际机场",
+      "zh-TW": "夏洛特道格拉斯國際機場",
+      "ja": "シャーロット・ダグラス国際空港",
+      "ko": "샬럿 더글러스 국제공항"
+    },
+    "sourceMunicipality": "Charlotte",
+    "municipality": {
+      "es": "Charlotte",
+      "ru": "Шарлотт",
+      "zh-CN": "夏洛特",
+      "zh-TW": "夏洛特",
+      "ja": "シャーロット",
+      "ko": "샬럿"
+    },
+    "sourceRegion": "North Carolina",
+    "region": {
+      "es": "Carolina del Norte",
+      "ru": "Северная Каролина",
+      "zh-CN": "北卡罗来纳州",
+      "zh-TW": "北卡羅來納州",
+      "ja": "ノースカロライナ州",
+      "ko": "노스캐롤라이나주"
+    }
+  },
+  {
+    "ident": "KSAN",
+    "sourceName": "San Diego International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de San Diego",
+      "ru": "Международный аэропорт Сан-Диего",
+      "zh-CN": "圣迭戈国际机场",
+      "zh-TW": "聖地牙哥國際機場",
+      "ja": "サンディエゴ国際空港",
+      "ko": "샌디에이고 국제공항"
+    },
+    "sourceMunicipality": "San Diego",
+    "municipality": {
+      "es": "San Diego",
+      "ru": "Сан-Диего",
+      "zh-CN": "圣迭戈",
+      "zh-TW": "聖地牙哥",
+      "ja": "サンディエゴ",
+      "ko": "샌디에이고"
+    },
+    "sourceRegion": "California",
+    "region": {
+      "es": "California",
+      "ru": "Калифорния",
+      "zh-CN": "加利福尼亚州",
+      "zh-TW": "加利福尼亞州",
+      "ja": "カリフォルニア州",
+      "ko": "캘리포니아주"
+    }
+  },
+  {
+    "ident": "KTPA",
+    "sourceName": "Tampa International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Tampa",
+      "ru": "Международный аэропорт Тампа",
+      "zh-CN": "坦帕国际机场",
+      "zh-TW": "坦帕國際機場",
+      "ja": "タンパ国際空港",
+      "ko": "탬파 국제공항"
+    },
+    "sourceMunicipality": "Tampa",
+    "municipality": {
+      "es": "Tampa",
+      "ru": "Тампа",
+      "zh-CN": "坦帕",
+      "zh-TW": "坦帕",
+      "ja": "タンパ",
+      "ko": "탬파"
+    },
+    "sourceRegion": "Florida",
+    "region": {
+      "es": "Florida",
+      "ru": "Флорида",
+      "zh-CN": "佛罗里达州",
+      "zh-TW": "佛羅里達州",
+      "ja": "フロリダ州",
+      "ko": "플로리다주"
+    }
+  },
+  {
+    "ident": "KBWI",
+    "sourceName": "Baltimore/Washington International Thurgood Marshall Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Thurgood Marshall de Baltimore-Washington",
+      "ru": "Международный аэропорт Балтимор/Вашингтон имени Тергуда Маршалла",
+      "zh-CN": "巴尔的摩／华盛顿瑟古德·马歇尔国际机场",
+      "zh-TW": "巴爾的摩／華盛頓瑟古德·馬歇爾國際機場",
+      "ja": "ボルチモア・ワシントン・サーグッド・マーシャル国際空港",
+      "ko": "볼티모어 워싱턴 서굿 마셜 국제공항"
+    },
+    "sourceMunicipality": "Baltimore",
+    "municipality": {
+      "es": "Baltimore",
+      "ru": "Балтимор",
+      "zh-CN": "巴尔的摩",
+      "zh-TW": "巴爾的摩",
+      "ja": "ボルチモア",
+      "ko": "볼티모어"
+    },
+    "sourceRegion": "Maryland",
+    "region": {
+      "es": "Maryland",
+      "ru": "Мэриленд",
+      "zh-CN": "马里兰州",
+      "zh-TW": "馬里蘭州",
+      "ja": "メリーランド州",
+      "ko": "메릴랜드주"
+    }
+  },
+  {
+    "ident": "KMDW",
+    "sourceName": "Chicago Midway International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Chicago-Midway",
+      "ru": "Международный аэропорт Чикаго Мидуэй",
+      "zh-CN": "芝加哥中途国际机场",
+      "zh-TW": "芝加哥中途國際機場",
+      "ja": "シカゴ・ミッドウェー国際空港",
+      "ko": "시카고 미드웨이 국제공항"
+    },
+    "sourceMunicipality": "Chicago",
+    "municipality": {
+      "es": "Chicago",
+      "ru": "Чикаго",
+      "zh-CN": "芝加哥",
+      "zh-TW": "芝加哥",
+      "ja": "シカゴ",
+      "ko": "시카고"
+    },
+    "sourceRegion": "Illinois",
+    "region": {
+      "es": "Illinois",
+      "ru": "Иллинойс",
+      "zh-CN": "伊利诺伊州",
+      "zh-TW": "伊利諾州",
+      "ja": "イリノイ州",
+      "ko": "일리노이주"
+    }
+  },
+  {
+    "ident": "KAUS",
+    "sourceName": "Austin Bergstrom International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Austin-Bergstrom",
+      "ru": "Международный аэропорт Остин Бергстром",
+      "zh-CN": "奥斯汀伯格斯特龙国际机场",
+      "zh-TW": "奧斯汀伯格斯特龍國際機場",
+      "ja": "オースティン・バーグストロム国際空港",
+      "ko": "오스틴 버그스트롬 국제공항"
+    },
+    "sourceMunicipality": "Austin",
+    "municipality": {
+      "es": "Austin",
+      "ru": "Остин",
+      "zh-CN": "奥斯汀",
+      "zh-TW": "奧斯汀",
+      "ja": "オースティン",
+      "ko": "오스틴"
+    },
+    "sourceRegion": "Texas",
+    "region": {
+      "es": "Texas",
+      "ru": "Техас",
+      "zh-CN": "得克萨斯州",
+      "zh-TW": "德克薩斯州",
+      "ja": "テキサス州",
+      "ko": "텍사스주"
+    }
+  },
+  {
+    "ident": "KBNA",
+    "sourceName": "Nashville International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Nashville",
+      "ru": "Международный аэропорт Нашвилл",
+      "zh-CN": "纳什维尔国际机场",
+      "zh-TW": "納許維爾國際機場",
+      "ja": "ナッシュビル国際空港",
+      "ko": "내슈빌 국제공항"
+    },
+    "sourceMunicipality": "Nashville",
+    "municipality": {
+      "es": "Nashville",
+      "ru": "Нашвилл",
+      "zh-CN": "纳什维尔",
+      "zh-TW": "納許維爾",
+      "ja": "ナッシュビル",
+      "ko": "내슈빌"
+    },
+    "sourceRegion": "Tennessee",
+    "region": {
+      "es": "Tennessee",
+      "ru": "Теннесси",
+      "zh-CN": "田纳西州",
+      "zh-TW": "田納西州",
+      "ja": "テネシー州",
+      "ko": "테네시주"
+    }
+  },
+  {
+    "ident": "KRDU",
+    "sourceName": "Raleigh-Durham International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Raleigh-Durham",
+      "ru": "Международный аэропорт Роли/Дарем",
+      "zh-CN": "罗利达勒姆国际机场",
+      "zh-TW": "羅利達勒姆國際機場",
+      "ja": "ローリー・ダーラム国際空港",
+      "ko": "롤리 더럼 국제공항"
+    },
+    "sourceMunicipality": "Raleigh/Durham",
+    "municipality": {
+      "es": "Raleigh/Durham",
+      "ru": "Роли/Дарем",
+      "zh-CN": "罗利／达勒姆",
+      "zh-TW": "羅利／達勒姆",
+      "ja": "ローリー／ダーラム",
+      "ko": "롤리/더럼"
+    },
+    "sourceRegion": "North Carolina",
+    "region": {
+      "es": "Carolina del Norte",
+      "ru": "Северная Каролина",
+      "zh-CN": "北卡罗来纳州",
+      "zh-TW": "北卡羅來納州",
+      "ja": "ノースカロライナ州",
+      "ko": "노스캐롤라이나주"
+    }
+  },
+  {
+    "ident": "KPDX",
+    "sourceName": "Portland International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Portland",
+      "ru": "Международный аэропорт Портленд",
+      "zh-CN": "波特兰国际机场",
+      "zh-TW": "波特蘭國際機場",
+      "ja": "ポートランド国際空港",
+      "ko": "포틀랜드 국제공항"
+    },
+    "sourceMunicipality": "Portland",
+    "municipality": {
+      "es": "Portland",
+      "ru": "Портленд",
+      "zh-CN": "波特兰",
+      "zh-TW": "波特蘭",
+      "ja": "ポートランド",
+      "ko": "포틀랜드"
+    },
+    "sourceRegion": "Oregon",
+    "region": {
+      "es": "Oregón",
+      "ru": "Орегон",
+      "zh-CN": "俄勒冈州",
+      "zh-TW": "奧勒岡州",
+      "ja": "オレゴン州",
+      "ko": "오리건주"
+    }
+  },
+  {
+    "ident": "PHNL",
+    "sourceName": "Daniel K. Inouye International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Daniel K. Inouye",
+      "ru": "Международный аэропорт имени Дэниела К. Иноуэ",
+      "zh-CN": "丹尼尔·K·井上国际机场",
+      "zh-TW": "丹尼爾·K·井上國際機場",
+      "ja": "ダニエル・K・イノウエ国際空港",
+      "ko": "대니얼 K. 이노우에 국제공항"
+    },
+    "sourceMunicipality": "Honolulu, Oahu",
+    "municipality": {
+      "es": "Honolulu, Oahu",
+      "ru": "Гонолулу, Оаху",
+      "zh-CN": "欧胡岛檀香山",
+      "zh-TW": "歐胡島檀香山",
+      "ja": "オアフ島ホノルル",
+      "ko": "오아후섬 호놀룰루"
+    },
+    "sourceRegion": "Hawaii",
+    "region": {
+      "es": "Hawái",
+      "ru": "Гавайи",
+      "zh-CN": "夏威夷州",
+      "zh-TW": "夏威夷州",
+      "ja": "ハワイ州",
+      "ko": "하와이주"
+    }
+  },
+  {
+    "ident": "PANC",
+    "sourceName": "Ted Stevens Anchorage International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Ted Stevens de Anchorage",
+      "ru": "Международный аэропорт Анкоридж имени Теда Стивенса",
+      "zh-CN": "安克雷奇泰德·史蒂文斯国际机场",
+      "zh-TW": "安克拉治泰德·史蒂文斯國際機場",
+      "ja": "テッド・スティーブンス・アンカレッジ国際空港",
+      "ko": "테드 스티븐스 앵커리지 국제공항"
+    },
+    "sourceMunicipality": "Anchorage",
+    "municipality": {
+      "es": "Anchorage",
+      "ru": "Анкоридж",
+      "zh-CN": "安克雷奇",
+      "zh-TW": "安克拉治",
+      "ja": "アンカレッジ",
+      "ko": "앵커리지"
+    },
+    "sourceRegion": "Alaska",
+    "region": {
+      "es": "Alaska",
+      "ru": "Аляска",
+      "zh-CN": "阿拉斯加州",
+      "zh-TW": "阿拉斯加州",
+      "ja": "アラスカ州",
+      "ko": "알래스카주"
+    }
+  },
+  {
+    "ident": "CYYC",
+    "sourceName": "Calgary International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Calgary",
+      "ru": "Международный аэропорт Калгари",
+      "zh-CN": "卡尔加里国际机场",
+      "zh-TW": "卡加利國際機場",
+      "ja": "カルガリー国際空港",
+      "ko": "캘거리 국제공항"
+    },
+    "sourceMunicipality": "Calgary",
+    "municipality": {
+      "es": "Calgary",
+      "ru": "Калгари",
+      "zh-CN": "卡尔加里",
+      "zh-TW": "卡加利",
+      "ja": "カルガリー",
+      "ko": "캘거리"
+    },
+    "sourceRegion": "Alberta",
+    "region": {
+      "es": "Alberta",
+      "ru": "Альберта",
+      "zh-CN": "艾伯塔省",
+      "zh-TW": "亞伯達省",
+      "ja": "アルバータ州",
+      "ko": "앨버타주"
+    }
+  },
+  {
+    "ident": "CYEG",
+    "sourceName": "Edmonton International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Edmonton",
+      "ru": "Международный аэропорт Эдмонтон",
+      "zh-CN": "埃德蒙顿国际机场",
+      "zh-TW": "艾德蒙頓國際機場",
+      "ja": "エドモントン国際空港",
+      "ko": "에드먼턴 국제공항"
+    },
+    "sourceMunicipality": "Edmonton",
+    "municipality": {
+      "es": "Edmonton",
+      "ru": "Эдмонтон",
+      "zh-CN": "埃德蒙顿",
+      "zh-TW": "艾德蒙頓",
+      "ja": "エドモントン",
+      "ko": "에드먼턴"
+    },
+    "sourceRegion": "Alberta",
+    "region": {
+      "es": "Alberta",
+      "ru": "Альберта",
+      "zh-CN": "艾伯塔省",
+      "zh-TW": "亞伯達省",
+      "ja": "アルバータ州",
+      "ko": "앨버타주"
+    }
+  },
+  {
+    "ident": "CYOW",
+    "sourceName": "Ottawa Macdonald-Cartier International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Macdonald-Cartier de Ottawa",
+      "ru": "Международный аэропорт Оттава имени Макдональда и Картье",
+      "zh-CN": "渥太华麦克唐纳-卡蒂埃国际机场",
+      "zh-TW": "渥太華麥克唐納-卡蒂埃國際機場",
+      "ja": "オタワ・マクドナルド・カルティエ国際空港",
+      "ko": "오타와 맥도널드 카르티에 국제공항"
+    },
+    "sourceMunicipality": "Ottawa",
+    "municipality": {
+      "es": "Ottawa",
+      "ru": "Оттава",
+      "zh-CN": "渥太华",
+      "zh-TW": "渥太華",
+      "ja": "オタワ",
+      "ko": "오타와"
+    },
+    "sourceRegion": "Ontario",
+    "region": {
+      "es": "Ontario",
+      "ru": "Онтарио",
+      "zh-CN": "安大略省",
+      "zh-TW": "安大略省",
+      "ja": "オンタリオ州",
+      "ko": "온타리오주"
+    }
+  },
+  {
+    "ident": "CYHZ",
+    "sourceName": "Halifax / Stanfield International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Stanfield de Halifax",
+      "ru": "Международный аэропорт Галифакс Стэнфилд",
+      "zh-CN": "哈利法克斯斯坦菲尔德国际机场",
+      "zh-TW": "哈利法克斯史坦菲爾德國際機場",
+      "ja": "ハリファックス・スタンフィールド国際空港",
+      "ko": "핼리팩스 스탠필드 국제공항"
+    },
+    "sourceMunicipality": "Halifax",
+    "municipality": {
+      "es": "Halifax",
+      "ru": "Галифакс",
+      "zh-CN": "哈利法克斯",
+      "zh-TW": "哈利法克斯",
+      "ja": "ハリファックス",
+      "ko": "핼리팩스"
+    },
+    "sourceRegion": "Nova Scotia",
+    "region": {
+      "es": "Nueva Escocia",
+      "ru": "Новая Шотландия",
+      "zh-CN": "新斯科舍省",
+      "zh-TW": "新斯科細亞省",
+      "ja": "ノバスコシア州",
+      "ko": "노바스코샤주"
+    }
+  },
+  {
+    "ident": "VECC",
+    "sourceName": "Netaji Subhash Chandra Bose International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Netaji Subhash Chandra Bose",
+      "ru": "Международный аэропорт имени Нетаджи Субхаса Чандры Боса",
+      "zh-CN": "内塔吉·苏巴斯·钱德拉·鲍斯国际机场",
+      "zh-TW": "內塔吉·蘇巴斯·錢德拉·鮑斯國際機場",
+      "ja": "ネタージー・スバース・チャンドラ・ボース国際空港",
+      "ko": "네타지 수바스 찬드라 보스 국제공항"
+    },
+    "sourceMunicipality": "Kolkata",
+    "municipality": {
+      "es": "Calcuta",
+      "ru": "Калькутта",
+      "zh-CN": "加尔各答",
+      "zh-TW": "加爾各答",
+      "ja": "コルカタ",
+      "ko": "콜카타"
+    },
+    "sourceRegion": "West Bengal",
+    "region": {
+      "es": "Bengala Occidental",
+      "ru": "Западная Бенгалия",
+      "zh-CN": "西孟加拉邦",
+      "zh-TW": "西孟加拉邦",
+      "ja": "西ベンガル州",
+      "ko": "서벵골주"
+    }
+  },
+  {
+    "ident": "VAAH",
+    "sourceName": "Sardar Vallabh Patel International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Sardar Vallabhbhai Patel",
+      "ru": "Международный аэропорт имени Сардара Валлаббхай Пателя",
+      "zh-CN": "萨达尔·瓦拉巴伊·帕特尔国际机场",
+      "zh-TW": "薩達爾·瓦拉巴伊·帕特爾國際機場",
+      "ja": "サルダール・ヴァッラブバーイー・パテール国際空港",
+      "ko": "사르다르 발라브바이 파텔 국제공항"
+    },
+    "sourceMunicipality": "Ahmedabad",
+    "municipality": {
+      "es": "Ahmedabad",
+      "ru": "Ахмадабад",
+      "zh-CN": "艾哈迈达巴德",
+      "zh-TW": "阿邁達巴德",
+      "ja": "アフマダーバード",
+      "ko": "아마다바드"
+    },
+    "sourceRegion": "Gujarat",
+    "region": {
+      "es": "Guyarat",
+      "ru": "Гуджарат",
+      "zh-CN": "古吉拉特邦",
+      "zh-TW": "古吉拉特邦",
+      "ja": "グジャラート州",
+      "ko": "구자라트주"
+    }
+  },
+  {
+    "ident": "VOCI",
+    "sourceName": "Cochin International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Cochín",
+      "ru": "Международный аэропорт Кочин",
+      "zh-CN": "科钦国际机场",
+      "zh-TW": "科欽國際機場",
+      "ja": "コーチン国際空港",
+      "ko": "코친 국제공항"
+    },
+    "sourceMunicipality": "Kochi",
+    "municipality": {
+      "es": "Kochi",
+      "ru": "Коччи",
+      "zh-CN": "科钦",
+      "zh-TW": "科欽",
+      "ja": "コーチ",
+      "ko": "코치"
+    },
+    "sourceRegion": "Kerala",
+    "region": {
+      "es": "Kerala",
+      "ru": "Керала",
+      "zh-CN": "喀拉拉邦",
+      "zh-TW": "喀拉拉邦",
+      "ja": "ケーララ州",
+      "ko": "케랄라주"
+    }
+  },
+  {
+    "ident": "VOGO",
+    "sourceName": "Goa Dabolim International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Goa-Dabolim",
+      "ru": "Международный аэропорт Гоа Даболим",
+      "zh-CN": "果阿达波里姆国际机场",
+      "zh-TW": "果阿達波里姆國際機場",
+      "ja": "ゴア・ダボリム国際空港",
+      "ko": "고아 다볼림 국제공항"
+    },
+    "sourceMunicipality": "Vasco da Gama",
+    "municipality": {
+      "es": "Vasco da Gama",
+      "ru": "Васко-да-Гама",
+      "zh-CN": "瓦斯科达伽马",
+      "zh-TW": "瓦斯科達伽馬",
+      "ja": "ヴァスコ・ダ・ガマ",
+      "ko": "바스쿠다가마"
+    },
+    "sourceRegion": "Goa",
+    "region": {
+      "es": "Goa",
+      "ru": "Гоа",
+      "zh-CN": "果阿邦",
+      "zh-TW": "果阿邦",
+      "ja": "ゴア州",
+      "ko": "고아주"
+    }
+  },
+  {
+    "ident": "VAPO",
+    "sourceName": "Pune International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Pune",
+      "ru": "Международный аэропорт Пуна",
+      "zh-CN": "浦那国际机场",
+      "zh-TW": "浦那國際機場",
+      "ja": "プネー国際空港",
+      "ko": "푸네 국제공항"
+    },
+    "sourceMunicipality": "Pune",
+    "municipality": {
+      "es": "Pune",
+      "ru": "Пуна",
+      "zh-CN": "浦那",
+      "zh-TW": "浦那",
+      "ja": "プネー",
+      "ko": "푸네"
+    },
+    "sourceRegion": "Maharashtra",
+    "region": {
+      "es": "Maharashtra",
+      "ru": "Махараштра",
+      "zh-CN": "马哈拉施特拉邦",
+      "zh-TW": "馬哈拉施特拉邦",
+      "ja": "マハーラーシュトラ州",
+      "ko": "마하라슈트라주"
+    }
+  },
+  {
+    "ident": "VIAR",
+    "sourceName": "Sri Guru Ram Das Ji International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Sri Guru Ram Das Ji",
+      "ru": "Международный аэропорт имени Шри Гуру Рам Дасса Джи",
+      "zh-CN": "斯里古鲁拉姆达斯吉国际机场",
+      "zh-TW": "斯里古魯拉姆達斯吉國際機場",
+      "ja": "シュリー・グル・ラーム・ダース・ジー国際空港",
+      "ko": "스리 구루 람 다스 지 국제공항"
+    },
+    "sourceMunicipality": "Amritsar",
+    "municipality": {
+      "es": "Amritsar",
+      "ru": "Амритсар",
+      "zh-CN": "阿姆利则",
+      "zh-TW": "阿姆利則",
+      "ja": "アムリトサル",
+      "ko": "암리차르"
+    },
+    "sourceRegion": "Punjab",
+    "region": {
+      "es": "Punyab",
+      "ru": "Пенджаб",
+      "zh-CN": "旁遮普邦",
+      "zh-TW": "旁遮普邦",
+      "ja": "パンジャーブ州",
+      "ko": "펀자브주"
+    }
+  },
+  {
+    "ident": "VIJP",
+    "sourceName": "Jaipur International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Jaipur",
+      "ru": "Международный аэропорт Джайпур",
+      "zh-CN": "斋浦尔国际机场",
+      "zh-TW": "齋浦爾國際機場",
+      "ja": "ジャイプル国際空港",
+      "ko": "자이푸르 국제공항"
+    },
+    "sourceMunicipality": "Jaipur",
+    "municipality": {
+      "es": "Jaipur",
+      "ru": "Джайпур",
+      "zh-CN": "斋浦尔",
+      "zh-TW": "齋浦爾",
+      "ja": "ジャイプル",
+      "ko": "자이푸르"
+    },
+    "sourceRegion": "Rajasthan",
+    "region": {
+      "es": "Rajastán",
+      "ru": "Раджастхан",
+      "zh-CN": "拉贾斯坦邦",
+      "zh-TW": "拉賈斯坦邦",
+      "ja": "ラージャスターン州",
+      "ko": "라자스탄주"
+    }
+  },
+  {
+    "ident": "VILK",
+    "sourceName": "Chaudhary Charan Singh International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Chaudhary Charan Singh",
+      "ru": "Международный аэропорт имени Чоудхари Чарана Сингха",
+      "zh-CN": "乔杜里·查兰·辛格国际机场",
+      "zh-TW": "喬杜里·查蘭·辛格國際機場",
+      "ja": "チャウダリー・チャラン・シン国際空港",
+      "ko": "차우다리 차란 싱 국제공항"
+    },
+    "sourceMunicipality": "Lucknow",
+    "municipality": {
+      "es": "Lucknow",
+      "ru": "Лакхнау",
+      "zh-CN": "勒克瑙",
+      "zh-TW": "勒克瑙",
+      "ja": "ラクナウ",
+      "ko": "러크나우"
+    },
+    "sourceRegion": "Uttar Pradesh",
+    "region": {
+      "es": "Uttar Pradesh",
+      "ru": "Уттар-Прадеш",
+      "zh-CN": "北方邦",
+      "zh-TW": "北方邦",
+      "ja": "ウッタル・プラデーシュ州",
+      "ko": "우타르프라데시주"
+    }
+  },
+  {
+    "ident": "GMMX",
+    "sourceName": "Marrakesh Menara Airport",
+    "name": {
+      "es": "Aeropuerto de Marrakech-Menara",
+      "ru": "Аэропорт Марракеш Менара",
+      "zh-CN": "马拉喀什梅纳拉机场",
+      "zh-TW": "馬拉喀什梅納拉機場",
+      "ja": "マラケシュ・メナラ空港",
+      "ko": "마라케시 메나라 공항"
+    },
+    "sourceMunicipality": "Marrakesh",
+    "municipality": {
+      "es": "Marrakech",
+      "ru": "Марракеш",
+      "zh-CN": "马拉喀什",
+      "zh-TW": "馬拉喀什",
+      "ja": "マラケシュ",
+      "ko": "마라케시"
+    },
+    "sourceRegion": "Marrakech-Safi Region",
+    "region": {
+      "es": "Región de Marrakech-Safí",
+      "ru": "Регион Марракеш-Сафи",
+      "zh-CN": "马拉喀什-萨菲大区",
+      "zh-TW": "馬拉喀什-薩菲大區",
+      "ja": "マラケシュ＝サフィ地方",
+      "ko": "마라케시사피 지방"
+    }
+  },
+  {
+    "ident": "HEGN",
+    "sourceName": "Hurghada International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Hurgada",
+      "ru": "Международный аэропорт Хургада",
+      "zh-CN": "赫尔格达国际机场",
+      "zh-TW": "赫爾格達國際機場",
+      "ja": "フルガダ国際空港",
+      "ko": "후르가다 국제공항"
+    },
+    "sourceMunicipality": "Hurghada",
+    "municipality": {
+      "es": "Hurgada",
+      "ru": "Хургада",
+      "zh-CN": "赫尔格达",
+      "zh-TW": "赫爾格達",
+      "ja": "フルガダ",
+      "ko": "후르가다"
+    },
+    "sourceRegion": "Red Sea Governorate",
+    "region": {
+      "es": "Gobernación del Mar Rojo",
+      "ru": "Мухафаза Красное Море",
+      "zh-CN": "红海省",
+      "zh-TW": "紅海省",
+      "ja": "紅海県",
+      "ko": "홍해주"
+    }
+  },
+  {
+    "ident": "HESH",
+    "sourceName": "Sharm El Sheikh International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Sharm el-Sheij",
+      "ru": "Международный аэропорт Шарм-эш-Шейх",
+      "zh-CN": "沙姆沙伊赫国际机场",
+      "zh-TW": "沙姆沙伊赫國際機場",
+      "ja": "シャルム・エル・シェイク国際空港",
+      "ko": "샤름엘셰이크 국제공항"
+    },
+    "sourceMunicipality": "Sharm El Sheikh",
+    "municipality": {
+      "es": "Sharm el-Sheij",
+      "ru": "Шарм-эш-Шейх",
+      "zh-CN": "沙姆沙伊赫",
+      "zh-TW": "沙姆沙伊赫",
+      "ja": "シャルム・エル・シェイク",
+      "ko": "샤름엘셰이크"
+    },
+    "sourceRegion": "South Sinai Governorate",
+    "region": {
+      "es": "Gobernación de Sinaí del Sur",
+      "ru": "Мухафаза Южный Синай",
+      "zh-CN": "南西奈省",
+      "zh-TW": "南西奈省",
+      "ja": "南シナイ県",
+      "ko": "남시나이주"
+    }
+  },
+  {
+    "ident": "DNAA",
+    "sourceName": "Nnamdi Azikiwe International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Nnamdi Azikiwe",
+      "ru": "Международный аэропорт имени Ннамди Азикиве",
+      "zh-CN": "纳姆迪·阿齐基韦国际机场",
+      "zh-TW": "納姆迪·阿齊基韋國際機場",
+      "ja": "ンナムディ・アジキウェ国際空港",
+      "ko": "은남디 아지키웨 국제공항"
+    },
+    "sourceMunicipality": "Abuja",
+    "municipality": {
+      "es": "Abuya",
+      "ru": "Абуджа",
+      "zh-CN": "阿布贾",
+      "zh-TW": "阿布賈",
+      "ja": "アブジャ",
+      "ko": "아부자"
+    },
+    "sourceRegion": "Abuja Capital Territory",
+    "region": {
+      "es": "Territorio de la Capital de Abuya",
+      "ru": "Федеральная столичная территория Абуджа",
+      "zh-CN": "阿布贾首都区",
+      "zh-TW": "阿布賈首都區",
+      "ja": "アブジャ首都地区",
+      "ko": "아부자 수도 준주"
+    }
+  },
+  {
+    "ident": "DGAA",
+    "sourceName": "Kotoka International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Kotoka",
+      "ru": "Международный аэропорт Котока",
+      "zh-CN": "科托卡国际机场",
+      "zh-TW": "科托卡國際機場",
+      "ja": "コトカ国際空港",
+      "ko": "코토카 국제공항"
+    },
+    "sourceMunicipality": "Accra",
+    "municipality": {
+      "es": "Acra",
+      "ru": "Аккра",
+      "zh-CN": "阿克拉",
+      "zh-TW": "阿克拉",
+      "ja": "アクラ",
+      "ko": "아크라"
+    },
+    "sourceRegion": "Greater Accra Region",
+    "region": {
+      "es": "Región del Gran Acra",
+      "ru": "Область Большая Аккра",
+      "zh-CN": "大阿克拉大区",
+      "zh-TW": "大阿克拉大區",
+      "ja": "グレーター・アクラ州",
+      "ko": "그레이터아크라주"
+    }
+  },
+  {
+    "ident": "HTDA",
+    "sourceName": "Julius Nyerere International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Julius Nyerere",
+      "ru": "Международный аэропорт имени Джулиуса Ньерере",
+      "zh-CN": "朱利叶斯·尼雷尔国际机场",
+      "zh-TW": "朱利葉斯·尼雷爾國際機場",
+      "ja": "ジュリウス・ニエレレ国際空港",
+      "ko": "줄리어스 니에레레 국제공항"
+    },
+    "sourceMunicipality": "Dar es Salaam",
+    "municipality": {
+      "es": "Dar es-Salam",
+      "ru": "Дар-эс-Салам",
+      "zh-CN": "达累斯萨拉姆",
+      "zh-TW": "三蘭港",
+      "ja": "ダルエスサラーム",
+      "ko": "다르에스살람"
+    },
+    "sourceRegion": "Dar-es-Salaam Region",
+    "region": {
+      "es": "Región de Dar es-Salam",
+      "ru": "Область Дар-эс-Салам",
+      "zh-CN": "达累斯萨拉姆区",
+      "zh-TW": "三蘭港區",
+      "ja": "ダルエスサラーム州",
+      "ko": "다르에스살람주"
+    }
+  },
+  {
+    "ident": "HUEN",
+    "sourceName": "Entebbe International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Entebbe",
+      "ru": "Международный аэропорт Энтеббе",
+      "zh-CN": "恩德培国际机场",
+      "zh-TW": "恩德培國際機場",
+      "ja": "エンテベ国際空港",
+      "ko": "엔테베 국제공항"
+    },
+    "sourceMunicipality": "Entebbe",
+    "municipality": {
+      "es": "Entebbe",
+      "ru": "Энтеббе",
+      "zh-CN": "恩德培",
+      "zh-TW": "恩德培",
+      "ja": "エンテベ",
+      "ko": "엔테베"
+    },
+    "sourceRegion": "Central Region",
+    "region": {
+      "es": "Región Central",
+      "ru": "Центральная область",
+      "zh-CN": "中部区",
+      "zh-TW": "中部區",
+      "ja": "中央地域",
+      "ko": "중부주"
+    }
+  },
+  {
+    "ident": "HRYR",
+    "sourceName": "Kigali International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Kigali",
+      "ru": "Международный аэропорт Кигали",
+      "zh-CN": "基加利国际机场",
+      "zh-TW": "吉佳利國際機場",
+      "ja": "キガリ国際空港",
+      "ko": "키갈리 국제공항"
+    },
+    "sourceMunicipality": "Kigali",
+    "municipality": {
+      "es": "Kigali",
+      "ru": "Кигали",
+      "zh-CN": "基加利",
+      "zh-TW": "吉佳利",
+      "ja": "キガリ",
+      "ko": "키갈리"
+    },
+    "sourceRegion": "City of Kigali",
+    "region": {
+      "es": "Ciudad de Kigali",
+      "ru": "Город Кигали",
+      "zh-CN": "基加利市",
+      "zh-TW": "吉佳利市",
+      "ja": "キガリ市",
+      "ko": "키갈리시"
+    }
+  },
+  {
+    "ident": "FIMP",
+    "sourceName": "Sir Seewoosagur Ramgoolam International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Sir Seewoosagur Ramgoolam",
+      "ru": "Международный аэропорт имени сэра Сивусагура Рамгулама",
+      "zh-CN": "西沃萨古尔·拉姆古兰爵士国际机场",
+      "zh-TW": "西沃薩古爾·拉姆古蘭爵士國際機場",
+      "ja": "サー・シウサガル・ラングーラム国際空港",
+      "ko": "시우사구르 람굴람 경 국제공항"
+    },
+    "sourceMunicipality": "Plaine Magnien",
+    "municipality": {
+      "es": "Plaine Magnien",
+      "ru": "Плен-Маньен",
+      "zh-CN": "普莱讷马尼安",
+      "zh-TW": "普萊訥馬尼安",
+      "ja": "プレーヌ・マニアン",
+      "ko": "플렌마냥"
+    },
+    "sourceRegion": "Grand Port",
+    "region": {
+      "es": "Grand Port",
+      "ru": "Гран-Порт",
+      "zh-CN": "大港区",
+      "zh-TW": "大港區",
+      "ja": "グラン・ポール県",
+      "ko": "그랑포르구"
+    }
+  },
+  {
+    "ident": "FALE",
+    "sourceName": "King Shaka International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Rey Shaka",
+      "ru": "Международный аэропорт имени короля Шаки",
+      "zh-CN": "沙卡国王国际机场",
+      "zh-TW": "沙卡國王國際機場",
+      "ja": "キング・シャカ国際空港",
+      "ko": "킹 샤카 국제공항"
+    },
+    "sourceMunicipality": "Durban",
+    "municipality": {
+      "es": "Durban",
+      "ru": "Дурбан",
+      "zh-CN": "德班",
+      "zh-TW": "德班",
+      "ja": "ダーバン",
+      "ko": "더반"
+    },
+    "sourceRegion": "Kwazulu-Natal",
+    "region": {
+      "es": "KwaZulu-Natal",
+      "ru": "Квазулу-Натал",
+      "zh-CN": "夸祖鲁-纳塔尔省",
+      "zh-TW": "夸祖魯-納塔爾省",
+      "ja": "クワズール・ナタール州",
+      "ko": "콰줄루나탈주"
+    }
+  },
+  {
+    "ident": "MMGL",
+    "sourceName": "Guadalajara International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Guadalajara",
+      "ru": "Международный аэропорт Гвадалахара",
+      "zh-CN": "瓜达拉哈拉国际机场",
+      "zh-TW": "瓜達拉哈拉國際機場",
+      "ja": "グアダラハラ国際空港",
+      "ko": "과달라하라 국제공항"
+    },
+    "sourceMunicipality": "Guadalajara",
+    "municipality": {
+      "es": "Guadalajara",
+      "ru": "Гвадалахара",
+      "zh-CN": "瓜达拉哈拉",
+      "zh-TW": "瓜達拉哈拉",
+      "ja": "グアダラハラ",
+      "ko": "과달라하라"
+    },
+    "sourceRegion": "Jalisco",
+    "region": {
+      "es": "Jalisco",
+      "ru": "Халиско",
+      "zh-CN": "哈利斯科州",
+      "zh-TW": "哈利斯科州",
+      "ja": "ハリスコ州",
+      "ko": "할리스코주"
+    }
+  },
+  {
+    "ident": "MMMY",
+    "sourceName": "Monterrey International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Monterrey",
+      "ru": "Международный аэропорт Монтеррей",
+      "zh-CN": "蒙特雷国际机场",
+      "zh-TW": "蒙特雷國際機場",
+      "ja": "モンテレイ国際空港",
+      "ko": "몬테레이 국제공항"
+    },
+    "sourceMunicipality": "Monterrey",
+    "municipality": {
+      "es": "Monterrey",
+      "ru": "Монтеррей",
+      "zh-CN": "蒙特雷",
+      "zh-TW": "蒙特雷",
+      "ja": "モンテレイ",
+      "ko": "몬테레이"
+    },
+    "sourceRegion": "Nuevo León",
+    "region": {
+      "es": "Nuevo León",
+      "ru": "Нуэво-Леон",
+      "zh-CN": "新莱昂州",
+      "zh-TW": "新萊昂州",
+      "ja": "ヌエボ・レオン州",
+      "ko": "누에보레온주"
+    }
+  },
+  {
+    "ident": "MMSD",
+    "sourceName": "Los Cabos International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Los Cabos",
+      "ru": "Международный аэропорт Лос-Кабос",
+      "zh-CN": "洛斯卡沃斯国际机场",
+      "zh-TW": "洛斯卡沃斯國際機場",
+      "ja": "ロス・カボス国際空港",
+      "ko": "로스카보스 국제공항"
+    },
+    "sourceMunicipality": "San José del Cabo",
+    "municipality": {
+      "es": "San José del Cabo",
+      "ru": "Сан-Хосе-дель-Кабо",
+      "zh-CN": "圣何塞德尔卡沃",
+      "zh-TW": "聖何塞德爾卡沃",
+      "ja": "サン・ホセ・デル・カボ",
+      "ko": "산호세델카보"
+    },
+    "sourceRegion": "Baja California Sur",
+    "region": {
+      "es": "Baja California Sur",
+      "ru": "Южная Нижняя Калифорния",
+      "zh-CN": "南下加利福尼亚州",
+      "zh-TW": "南下加利福尼亞州",
+      "ja": "バハ・カリフォルニア・スル州",
+      "ko": "바하칼리포르니아수르주"
+    }
+  },
+  {
+    "ident": "MMPR",
+    "sourceName": "Puerto Vallarta International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Puerto Vallarta",
+      "ru": "Международный аэропорт Пуэрто-Вальярта",
+      "zh-CN": "巴亚尔塔港国际机场",
+      "zh-TW": "巴亞爾塔港國際機場",
+      "ja": "プエルト・バジャルタ国際空港",
+      "ko": "푸에르토바야르타 국제공항"
+    },
+    "sourceMunicipality": "Puerto Vallarta",
+    "municipality": {
+      "es": "Puerto Vallarta",
+      "ru": "Пуэрто-Вальярта",
+      "zh-CN": "巴亚尔塔港",
+      "zh-TW": "巴亞爾塔港",
+      "ja": "プエルト・バジャルタ",
+      "ko": "푸에르토바야르타"
+    },
+    "sourceRegion": "Jalisco",
+    "region": {
+      "es": "Jalisco",
+      "ru": "Халиско",
+      "zh-CN": "哈利斯科州",
+      "zh-TW": "哈利斯科州",
+      "ja": "ハリスコ州",
+      "ko": "할리스코주"
+    }
+  },
+  {
+    "ident": "MMTJ",
+    "sourceName": "General Abelardo L. Rodriguez International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional General Abelardo L. Rodríguez",
+      "ru": "Международный аэропорт имени генерала Абелардо Л. Родригеса",
+      "zh-CN": "阿韦拉多·L·罗德里格斯将军国际机场",
+      "zh-TW": "阿韋拉多·L·羅德里格斯將軍國際機場",
+      "ja": "ヘネラル・アベラルド・L・ロドリゲス国際空港",
+      "ko": "아벨라르도 L. 로드리게스 장군 국제공항"
+    },
+    "sourceMunicipality": "Tijuana",
+    "municipality": {
+      "es": "Tijuana",
+      "ru": "Тихуана",
+      "zh-CN": "蒂华纳",
+      "zh-TW": "蒂華納",
+      "ja": "ティフアナ",
+      "ko": "티후아나"
+    },
+    "sourceRegion": "Baja California",
+    "region": {
+      "es": "Baja California",
+      "ru": "Нижняя Калифорния",
+      "zh-CN": "下加利福尼亚州",
+      "zh-TW": "下加利福尼亞州",
+      "ja": "バハ・カリフォルニア州",
+      "ko": "바하칼리포르니아주"
+    }
+  },
+  {
+    "ident": "SBBR",
+    "sourceName": "Presidente Juscelino Kubitschek International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Presidente Juscelino Kubitschek",
+      "ru": "Международный аэропорт имени президента Жуселину Кубичека",
+      "zh-CN": "儒塞利诺·库比契克总统国际机场",
+      "zh-TW": "儒塞利諾·庫比契克總統國際機場",
+      "ja": "プレジデント・ジュセリノ・クビシェッキ国際空港",
+      "ko": "프레지덴테 주셀리누 쿠비체크 국제공항"
+    },
+    "sourceMunicipality": "Brasília",
+    "municipality": {
+      "es": "Brasilia",
+      "ru": "Бразилиа",
+      "zh-CN": "巴西利亚",
+      "zh-TW": "巴西利亞",
+      "ja": "ブラジリア",
+      "ko": "브라질리아"
+    },
+    "sourceRegion": "Distrito Federal",
+    "region": {
+      "es": "Distrito Federal",
+      "ru": "Федеральный округ",
+      "zh-CN": "联邦区",
+      "zh-TW": "聯邦區",
+      "ja": "連邦直轄区",
+      "ko": "연방구"
+    }
+  },
+  {
+    "ident": "SBCF",
+    "sourceName": "Tancredo Neves International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Tancredo Neves",
+      "ru": "Международный аэропорт имени Танкреду Невиса",
+      "zh-CN": "坦克雷多·内维斯国际机场",
+      "zh-TW": "坦克雷多·內維斯國際機場",
+      "ja": "タンクレド・ネヴェス国際空港",
+      "ko": "탕크레두 네베스 국제공항"
+    },
+    "sourceMunicipality": "Belo Horizonte",
+    "municipality": {
+      "es": "Belo Horizonte",
+      "ru": "Белу-Оризонти",
+      "zh-CN": "贝洛奥里藏特",
+      "zh-TW": "貝洛奧里藏特",
+      "ja": "ベロオリゾンテ",
+      "ko": "벨루오리존치"
+    },
+    "sourceRegion": "Minas Gerais",
+    "region": {
+      "es": "Minas Gerais",
+      "ru": "Минас-Жерайс",
+      "zh-CN": "米纳斯吉拉斯州",
+      "zh-TW": "米納斯吉拉斯州",
+      "ja": "ミナスジェライス州",
+      "ko": "미나스제라이스주"
+    }
+  },
+  {
+    "ident": "SBSV",
+    "sourceName": "Deputado Luiz Eduardo Magalhães International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Diputado Luís Eduardo Magalhães",
+      "ru": "Международный аэропорт имени депутата Луиса Эдуарду Магальяйнса",
+      "zh-CN": "路易斯·爱德华多·马加良斯议员国际机场",
+      "zh-TW": "路易斯·愛德華多·馬加良斯議員國際機場",
+      "ja": "デプタード・ルイス・エドアルド・マガリャエス国際空港",
+      "ko": "데푸타두 루이스 에두아르두 마갈량이스 국제공항"
+    },
+    "sourceMunicipality": "Salvador",
+    "municipality": {
+      "es": "Salvador",
+      "ru": "Салвадор",
+      "zh-CN": "萨尔瓦多",
+      "zh-TW": "薩爾瓦多",
+      "ja": "サルヴァドール",
+      "ko": "사우바도르"
+    },
+    "sourceRegion": "Bahia",
+    "region": {
+      "es": "Bahía",
+      "ru": "Баия",
+      "zh-CN": "巴伊亚州",
+      "zh-TW": "巴伊亞州",
+      "ja": "バイーア州",
+      "ko": "바이아주"
+    }
+  },
+  {
+    "ident": "SBFZ",
+    "sourceName": "Pinto Martins International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Pinto Martins",
+      "ru": "Международный аэропорт имени Пинту Мартинса",
+      "zh-CN": "平托·马丁斯国际机场",
+      "zh-TW": "平托·馬丁斯國際機場",
+      "ja": "ピント・マルチンス国際空港",
+      "ko": "핀투 마르틴스 국제공항"
+    },
+    "sourceMunicipality": "Fortaleza",
+    "municipality": {
+      "es": "Fortaleza",
+      "ru": "Форталеза",
+      "zh-CN": "福塔莱萨",
+      "zh-TW": "福塔雷薩",
+      "ja": "フォルタレザ",
+      "ko": "포르탈레자"
+    },
+    "sourceRegion": "Ceará",
+    "region": {
+      "es": "Ceará",
+      "ru": "Сеара",
+      "zh-CN": "塞阿拉州",
+      "zh-TW": "塞阿拉州",
+      "ja": "セアラー州",
+      "ko": "세아라주"
+    }
+  },
+  {
+    "ident": "SBPA",
+    "sourceName": "Porto Alegre-Salgado Filho International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Porto Alegre-Salgado Filho",
+      "ru": "Международный аэропорт Порту-Алегри Салгаду-Филью",
+      "zh-CN": "阿雷格里港萨尔加多·菲略国际机场",
+      "zh-TW": "阿雷格里港薩爾加多·菲略國際機場",
+      "ja": "ポルトアレグレ・サルガド・フィーリョ国際空港",
+      "ko": "포르투알레그리 살가두 필류 국제공항"
+    },
+    "sourceMunicipality": "Porto Alegre",
+    "municipality": {
+      "es": "Porto Alegre",
+      "ru": "Порту-Алегри",
+      "zh-CN": "阿雷格里港",
+      "zh-TW": "阿雷格里港",
+      "ja": "ポルトアレグレ",
+      "ko": "포르투알레그리"
+    },
+    "sourceRegion": "Rio Grande do Sul",
+    "region": {
+      "es": "Río Grande del Sur",
+      "ru": "Риу-Гранди-ду-Сул",
+      "zh-CN": "南里奥格兰德州",
+      "zh-TW": "南里奧格蘭德州",
+      "ja": "リオグランデ・ド・スル州",
+      "ko": "히우그란지두술주"
+    }
+  },
+  {
+    "ident": "SEQM",
+    "sourceName": "Mariscal Sucre International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Mariscal Sucre",
+      "ru": "Международный аэропорт имени маршала Сукре",
+      "zh-CN": "苏克雷元帅国际机场",
+      "zh-TW": "蘇克雷元帥國際機場",
+      "ja": "マリスカル・スクレ国際空港",
+      "ko": "마리스칼 수크레 국제공항"
+    },
+    "sourceMunicipality": "Quito",
+    "municipality": {
+      "es": "Quito",
+      "ru": "Кито",
+      "zh-CN": "基多",
+      "zh-TW": "基多",
+      "ja": "キト",
+      "ko": "키토"
+    },
+    "sourceRegion": "Pichincha Province",
+    "region": {
+      "es": "Provincia de Pichincha",
+      "ru": "Провинция Пичинча",
+      "zh-CN": "皮钦查省",
+      "zh-TW": "皮欽查省",
+      "ja": "ピチンチャ県",
+      "ko": "피친차주"
+    }
+  },
+  {
+    "ident": "MUHA",
+    "sourceName": "José Martí International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional José Martí",
+      "ru": "Международный аэропорт имени Хосе Марти",
+      "zh-CN": "何塞·马蒂国际机场",
+      "zh-TW": "何塞·馬蒂國際機場",
+      "ja": "ホセ・マルティ国際空港",
+      "ko": "호세 마르티 국제공항"
+    },
+    "sourceMunicipality": "Havana",
+    "municipality": {
+      "es": "La Habana",
+      "ru": "Гавана",
+      "zh-CN": "哈瓦那",
+      "zh-TW": "哈瓦那",
+      "ja": "ハバナ",
+      "ko": "아바나"
+    },
+    "sourceRegion": "La Habana Province",
+    "region": {
+      "es": "Provincia de La Habana",
+      "ru": "Провинция Гавана",
+      "zh-CN": "哈瓦那省",
+      "zh-TW": "哈瓦那省",
+      "ja": "ハバナ州",
+      "ko": "아바나주"
+    }
+  },
+  {
+    "ident": "OPIS",
+    "sourceName": "Islamabad International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Islamabad",
+      "ru": "Международный аэропорт Исламабад",
+      "zh-CN": "伊斯兰堡国际机场",
+      "zh-TW": "伊斯蘭馬巴德國際機場",
+      "ja": "イスラマバード国際空港",
+      "ko": "이슬라마바드 국제공항"
+    },
+    "sourceMunicipality": "Attock",
+    "municipality": {
+      "es": "Attock",
+      "ru": "Атток",
+      "zh-CN": "阿托克",
+      "zh-TW": "阿托克",
+      "ja": "アトック",
+      "ko": "아토크"
+    },
+    "sourceRegion": "Punjab",
+    "region": {
+      "es": "Punyab",
+      "ru": "Пенджаб",
+      "zh-CN": "旁遮普省",
+      "zh-TW": "旁遮普省",
+      "ja": "パンジャーブ州",
+      "ko": "펀자브주"
+    }
+  },
+  {
+    "ident": "OPLA",
+    "sourceName": "Allama Iqbal International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Allama Iqbal",
+      "ru": "Международный аэропорт имени Алламы Икбала",
+      "zh-CN": "阿拉马·伊克巴勒国际机场",
+      "zh-TW": "阿拉馬·伊克巴勒國際機場",
+      "ja": "アッラーマ・イクバール国際空港",
+      "ko": "알라마 이크발 국제공항"
+    },
+    "sourceMunicipality": "Lahore",
+    "municipality": {
+      "es": "Lahore",
+      "ru": "Лахор",
+      "zh-CN": "拉合尔",
+      "zh-TW": "拉合爾",
+      "ja": "ラホール",
+      "ko": "라호르"
+    },
+    "sourceRegion": "Punjab",
+    "region": {
+      "es": "Punyab",
+      "ru": "Пенджаб",
+      "zh-CN": "旁遮普省",
+      "zh-TW": "旁遮普省",
+      "ja": "パンジャーブ州",
+      "ko": "펀자브주"
+    }
+  },
+  {
+    "ident": "OPKC",
+    "sourceName": "Jinnah International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Jinnah",
+      "ru": "Международный аэропорт имени Джинны",
+      "zh-CN": "真纳国际机场",
+      "zh-TW": "真納國際機場",
+      "ja": "ジンナー国際空港",
+      "ko": "진나 국제공항"
+    },
+    "sourceMunicipality": "Karachi",
+    "municipality": {
+      "es": "Karachi",
+      "ru": "Карачи",
+      "zh-CN": "卡拉奇",
+      "zh-TW": "喀拉蚩",
+      "ja": "カラチ",
+      "ko": "카라치"
+    },
+    "sourceRegion": "Sindh",
+    "region": {
+      "es": "Sindh",
+      "ru": "Синд",
+      "zh-CN": "信德省",
+      "zh-TW": "信德省",
+      "ja": "シンド州",
+      "ko": "신드주"
+    }
+  },
+  {
+    "ident": "UTTT",
+    "sourceName": "Tashkent International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Taskent",
+      "ru": "Международный аэропорт Ташкент",
+      "zh-CN": "塔什干国际机场",
+      "zh-TW": "塔什干國際機場",
+      "ja": "タシュケント国際空港",
+      "ko": "타슈켄트 국제공항"
+    },
+    "sourceMunicipality": "Tashkent",
+    "municipality": {
+      "es": "Taskent",
+      "ru": "Ташкент",
+      "zh-CN": "塔什干",
+      "zh-TW": "塔什干",
+      "ja": "タシュケント",
+      "ko": "타슈켄트"
+    },
+    "sourceRegion": "Tashkent Region",
+    "region": {
+      "es": "Región de Taskent",
+      "ru": "Ташкентская область",
+      "zh-CN": "塔什干州",
+      "zh-TW": "塔什干州",
+      "ja": "タシュケント州",
+      "ko": "타슈켄트주"
+    }
+  },
+  {
+    "ident": "UAAA",
+    "sourceName": "Almaty International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Almaty",
+      "ru": "Международный аэропорт Алматы",
+      "zh-CN": "阿拉木图国际机场",
+      "zh-TW": "阿拉木圖國際機場",
+      "ja": "アルマトイ国際空港",
+      "ko": "알마티 국제공항"
+    },
+    "sourceMunicipality": "Almaty",
+    "municipality": {
+      "es": "Almaty",
+      "ru": "Алматы",
+      "zh-CN": "阿拉木图",
+      "zh-TW": "阿拉木圖",
+      "ja": "アルマトイ",
+      "ko": "알마티"
+    },
+    "sourceRegion": "Almaty City",
+    "region": {
+      "es": "Ciudad de Almaty",
+      "ru": "Город Алматы",
+      "zh-CN": "阿拉木图市",
+      "zh-TW": "阿拉木圖市",
+      "ja": "アルマトイ市",
+      "ko": "알마티시"
+    }
+  },
+  {
+    "ident": "VTSP",
+    "sourceName": "Phuket International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Phuket",
+      "ru": "Международный аэропорт Пхукет",
+      "zh-CN": "普吉国际机场",
+      "zh-TW": "普吉國際機場",
+      "ja": "プーケット国際空港",
+      "ko": "푸껫 국제공항"
+    },
+    "sourceMunicipality": "Phuket",
+    "municipality": {
+      "es": "Phuket",
+      "ru": "Пхукет",
+      "zh-CN": "普吉",
+      "zh-TW": "普吉",
+      "ja": "プーケット",
+      "ko": "푸껫"
+    },
+    "sourceRegion": "Phuket Province",
+    "region": {
+      "es": "Provincia de Phuket",
+      "ru": "Провинция Пхукет",
+      "zh-CN": "普吉府",
+      "zh-TW": "普吉府",
+      "ja": "プーケット県",
+      "ko": "푸껫주"
+    }
+  },
+  {
+    "ident": "VTCC",
+    "sourceName": "Chiang Mai International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Chiang Mai",
+      "ru": "Международный аэропорт Чиангмай",
+      "zh-CN": "清迈国际机场",
+      "zh-TW": "清邁國際機場",
+      "ja": "チェンマイ国際空港",
+      "ko": "치앙마이 국제공항"
+    },
+    "sourceMunicipality": "Chiang Mai",
+    "municipality": {
+      "es": "Chiang Mai",
+      "ru": "Чиангмай",
+      "zh-CN": "清迈",
+      "zh-TW": "清邁",
+      "ja": "チェンマイ",
+      "ko": "치앙마이"
+    },
+    "sourceRegion": "Chiang Mai Province",
+    "region": {
+      "es": "Provincia de Chiang Mai",
+      "ru": "Провинция Чиангмай",
+      "zh-CN": "清迈府",
+      "zh-TW": "清邁府",
+      "ja": "チェンマイ県",
+      "ko": "치앙마이주"
+    }
+  },
+  {
+    "ident": "VVDN",
+    "sourceName": "Da Nang International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Da Nang",
+      "ru": "Международный аэропорт Дананг",
+      "zh-CN": "岘港国际机场",
+      "zh-TW": "峴港國際機場",
+      "ja": "ダナン国際空港",
+      "ko": "다낭 국제공항"
+    },
+    "sourceMunicipality": "Da Nang",
+    "municipality": {
+      "es": "Da Nang",
+      "ru": "Дананг",
+      "zh-CN": "岘港",
+      "zh-TW": "峴港",
+      "ja": "ダナン",
+      "ko": "다낭"
+    },
+    "sourceRegion": "South Central Coast Region",
+    "region": {
+      "es": "Región de la Costa Central del Sur",
+      "ru": "Южно-Центральное побережье",
+      "zh-CN": "南中部沿海地区",
+      "zh-TW": "南中部沿海地區",
+      "ja": "南中部沿海地方",
+      "ko": "남중부 해안 지방"
+    }
+  },
+  {
+    "ident": "WMKP",
+    "sourceName": "Penang International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Penang",
+      "ru": "Международный аэропорт Пинанг",
+      "zh-CN": "槟城国际机场",
+      "zh-TW": "檳城國際機場",
+      "ja": "ペナン国際空港",
+      "ko": "페낭 국제공항"
+    },
+    "sourceMunicipality": "Penang",
+    "municipality": {
+      "es": "Penang",
+      "ru": "Пинанг",
+      "zh-CN": "槟城",
+      "zh-TW": "檳城",
+      "ja": "ペナン",
+      "ko": "페낭"
+    },
+    "sourceRegion": "Penang",
+    "region": {
+      "es": "Penang",
+      "ru": "Пинанг",
+      "zh-CN": "槟城州",
+      "zh-TW": "檳城州",
+      "ja": "ペナン州",
+      "ko": "페낭주"
+    }
+  },
+  {
+    "ident": "WBKK",
+    "sourceName": "Kota Kinabalu International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional de Kota Kinabalu",
+      "ru": "Международный аэропорт Кота-Кинабалу",
+      "zh-CN": "哥打基纳巴卢国际机场",
+      "zh-TW": "亞庇國際機場",
+      "ja": "コタキナバル国際空港",
+      "ko": "코타키나발루 국제공항"
+    },
+    "sourceMunicipality": "Kota Kinabalu",
+    "municipality": {
+      "es": "Kota Kinabalu",
+      "ru": "Кота-Кинабалу",
+      "zh-CN": "哥打基纳巴卢",
+      "zh-TW": "亞庇",
+      "ja": "コタキナバル",
+      "ko": "코타키나발루"
+    },
+    "sourceRegion": "Sabah",
+    "region": {
+      "es": "Sabah",
+      "ru": "Сабах",
+      "zh-CN": "沙巴州",
+      "zh-TW": "沙巴州",
+      "ja": "サバ州",
+      "ko": "사바주"
+    }
+  },
+  {
+    "ident": "WARR",
+    "sourceName": "Juanda International Airport",
+    "name": {
+      "es": "Aeropuerto Internacional Juanda",
+      "ru": "Международный аэропорт Джуанда",
+      "zh-CN": "朱安达国际机场",
+      "zh-TW": "朱安達國際機場",
+      "ja": "ジュアンダ国際空港",
+      "ko": "주안다 국제공항"
+    },
+    "sourceMunicipality": "Surabaya",
+    "municipality": {
+      "es": "Surabaya",
+      "ru": "Сурабая",
+      "zh-CN": "泗水",
+      "zh-TW": "泗水",
+      "ja": "スラバヤ",
+      "ko": "수라바야"
+    },
+    "sourceRegion": "Jawa Timur (East Java)",
+    "region": {
+      "es": "Java Oriental",
+      "ru": "Восточная Ява",
+      "zh-CN": "东爪哇省",
+      "zh-TW": "東爪哇省",
+      "ja": "東ジャワ州",
+      "ko": "동자와주"
+    }
+  }
+]

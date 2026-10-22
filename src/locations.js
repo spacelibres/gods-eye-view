@@ -322,7 +322,22 @@ export async function searchAndFlyTo(viewer, query, options = {}) {
       return { choices: outcome.choices, ambiguous: true };
     result = await options.chooseAirport(outcome.choices, { signal });
     signal?.throwIfAborted();
-    if (!result || !outcome.choices.includes(result)) return CANCELLED_SEARCH;
+    if (!result) return CANCELLED_SEARCH;
+    const offered = outcome.choices.find(
+      (choice) =>
+        choice === result ||
+        (typeof result.airportId === 'string' &&
+          result.airportId &&
+          choice.airportId === result.airportId),
+    );
+    if (!offered) return CANCELLED_SEARCH;
+    // Choice refreshes may return new localized text. Navigation authority stays
+    // with the original offered identity and coordinates; cached choices remain intact.
+    result = {
+      ...offered,
+      ...(typeof result.name === 'string' ? { name: result.name } : {}),
+      ...(typeof result.label === 'string' ? { label: result.label } : {}),
+    };
   }
   if (outcome.terminal && !result) return null;
   let lat = result?.lat;

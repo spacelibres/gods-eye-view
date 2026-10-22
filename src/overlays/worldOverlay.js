@@ -1770,6 +1770,7 @@ function getProjectionRecord(entry) {
       screen: { x: 0, y: 0 },
       layout: entry._overlayLayout,
       placements: [],
+      placementPool: [],
       candidate: null,
       distanceAlpha: 1,
       paintScale: 1,
@@ -2050,7 +2051,14 @@ function snapshotAndProject(entry, source, viewProjection, keyhole) {
   // out. Ambient labels default to a few rows; a card or a selected entry is
   // worth more room because it carries the reason it is on screen.
   record.placementInput.stackSteps = entry.stackSteps;
-  placementVariants(record.placementInput, record.placements);
+  // Filtering below compacts and truncates the visible variant list. Retain a
+  // separate pool so rejected variants neither lose their objects nor alias
+  // surviving slots when every compass position is regenerated next frame.
+  placementVariants(record.placementInput, record.placementPool);
+  record.placements.length = record.placementPool.length;
+  for (let i = 0; i < record.placementPool.length; i++) {
+    record.placements[i] = record.placementPool[i];
+  }
   // UI exclusion is a PREFERENCE for chrome that composites ABOVE the host, and
   // a HARD VETO for chrome that composites below it.
   //

@@ -38,6 +38,60 @@ test('the complete Realtime tool payload pins the manifest-generated layer relea
     // requested radius and center authority in descriptions only.
     // Street Level and GNSS extend the manifest; tracked and analyst aircraft describe broadcasts.
     // Air quality (ECCC AQHI) extends the manifest.
+    '09440cd13df996449211c8d543e8d60b2bbe8ca725a20703dff1db87d9ac8725',
+  );
+});
+
+test('airport voice additions preserve every pre-airport tool contract', () => {
+  const previous = structuredClone(GEV_REALTIME_TOOLS).filter(
+    (tool) => tool.name !== 'set_cyber_sonar',
+  );
+  let enumAdditions = 0;
+  let aliasAdditions = 0;
+  const removeAirportAddition = (value) => {
+    if (!value || typeof value !== 'object') return;
+    for (const [key, child] of Object.entries(value)) {
+      if (
+        key === 'enum' &&
+        Array.isArray(child) &&
+        child.includes('airports')
+      ) {
+        enumAdditions += 1;
+        value[key] = child.filter((id) => id !== 'airports');
+      } else if (
+        typeof child === 'string' &&
+        child.includes('airport/airfields→airports; ')
+      ) {
+        aliasAdditions += 1;
+        value[key] = child.replace('airport/airfields→airports; ', '');
+      } else removeAirportAddition(child);
+    }
+  };
+  for (const name of [
+    'set_layer_visibility',
+    'show_data_layers_menu',
+    'get_entity_context',
+  ]) {
+    assert.ok(
+      previous
+        .find((tool) => tool.name === name)
+        .parameters.properties.layerId.enum.includes('airports'),
+    );
+  }
+  assert.ok(
+    !previous
+      .find((tool) => tool.name === 'analyst_query')
+      .parameters.properties.layers.items.enum.includes('airports'),
+  );
+  removeAirportAddition(previous);
+  assert.equal(enumAdditions, 3);
+  assert.equal(aliasAdditions, 1);
+  // Exactly 33 enum bytes and 28 alias bytes were added by the airport manifest.
+  // Removing them must recover the entire previous schema, including wording.
+  assert.equal(
+    createHash('sha256')
+      .update(JSON.stringify(stable(previous)))
+      .digest('hex'),
     '775ba323384b4c1b62fb8415bac52aecc3fc668e20bedcfa57e426dcd1da3969',
   );
 });

@@ -1,5 +1,7 @@
 import * as Cesium from 'cesium';
-import { t } from '../i18n/index.js';
+import { t, getLocale } from '../i18n/index.js';
+import { createAirportSource } from '../sources/airports/source.js';
+import { airportPlace } from '../search/airports.js';
 import { createStateChannel } from '../app/stateChannel.js';
 import { LocationControls } from './location.js';
 
@@ -21,6 +23,8 @@ export class LocationNavigation {
       operations,
     );
     this._disposed = false;
+    this._airportChoiceSource =
+      services.airportSource || createAirportSource({ getLocale });
     this._activeLocationId = null;
     this._expandedCityId = null;
     this._activePoiIndex = null;
@@ -74,6 +78,10 @@ export class LocationNavigation {
     return { ok: true, orbiting: !!this.orbitController?.active };
   }
 
+  refreshLocale() {
+    return this._refreshAirportChoices?.();
+  }
+
   subscribeLocationSearch(listener, options) {
     return this._locationState.subscribe(listener, options);
   }
@@ -124,6 +132,15 @@ export class LocationNavigation {
               this._locationSearch,
               choices,
               {
+                source: this._airportChoiceSource,
+                getLocale,
+                registerLocaleRefresh: (refresh) => {
+                  this._refreshAirportChoices = refresh;
+                  return () => {
+                    if (this._refreshAirportChoices === refresh)
+                      this._refreshAirportChoices = null;
+                  };
+                },
                 signal: AbortSignal.any(
                   [controller.signal, signal].filter(Boolean),
                 ),
@@ -441,6 +458,7 @@ export class LocationNavigation {
   destroy() {
     if (this._disposed) return;
     this._disposed = true;
+    this._airportChoiceController?.abort();
     this._locationState.destroy();
     this._locationLookupUnsubscribe?.();
     this._locationLookupUnsubscribe = null;
@@ -456,11 +474,24 @@ export class LocationNavigation {
 }
 
 /** Reuse the existing destination row; plain text and native buttons remain keyboard accessible. */
-export function chooseAirportDestination(row, input, choices, { signal } = {}) {
+export function chooseAirportDestination(
+  row,
+  input,
+  choices,
+  { signal, source, getLocale = () => 'en', registerLocaleRefresh } = {},
+) {
   if (signal?.aborted) return Promise.resolve(null);
   return new Promise((resolve) => {
     const removers = [];
+    const buttons = [];
+    let settled = false,
+      generation = 0,
+      removeLocale;
     const finish = (choice) => {
+      if (settled) return;
+      settled = true;
+      ++generation;
+      removeLocale?.();
       for (const remove of removers) remove();
       signal?.removeEventListener('abort', abort);
       row.replaceChildren();
@@ -484,13 +515,38 @@ export function chooseAirportDestination(row, input, choices, { signal } = {}) {
       button.type = 'button';
       button.className = 'poi-pill';
       button.textContent = choice.label;
-      bind(button, 'click', () => finish(choice));
+      const item = { button, choice };
+      buttons.push(item);
+      bind(button, 'click', () => finish(item.choice));
       row.appendChild(button);
     }
     const cancel = row.ownerDocument.createElement('button');
     cancel.type = 'button';
     cancel.className = 'poi-pill';
     cancel.textContent = t('Cancel airport selection');
+    removeLocale = registerLocaleRefresh?.(async () => {
+      const own = ++generation,
+        locale = getLocale();
+      row.setAttribute('aria-label', t('Choose an airport'));
+      cancel.textContent = t('Cancel airport selection');
+      await Promise.allSettled(
+        buttons.map(async (item) => {
+          if (!item.choice.airportId || !source?.getAirport) return;
+          const { airport } = await source.getAirport(item.choice.airportId, {
+            signal,
+          });
+          if (
+            settled ||
+            own !== generation ||
+            getLocale() !== locale ||
+            airport.id !== item.choice.airportId
+          )
+            return;
+          item.choice = airportPlace(airport);
+          item.button.textContent = item.choice.label;
+        }),
+      );
+    });
     bind(cancel, 'click', abort);
     row.appendChild(cancel);
     bind(row, 'keydown', (event) => {

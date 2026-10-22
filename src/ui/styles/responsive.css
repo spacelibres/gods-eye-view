@@ -72,7 +72,7 @@
     right: 16px;
     transform: none;
     max-width: none;
-    bottom: 120px;
+    bottom: calc(2vh + 7.5rem);
   }
 
   #gev-voice-control {
@@ -358,7 +358,7 @@
     display: none;
   }
 
-  /* Cesium's credit block is hidden for every viewport in foundation.css. */
+  /* Provider attribution keeps its own bottom-left clearance band. */
 
   /* The first-run card covers the phone, so everything that would compete
      with it waits behind: the panel rows, the palette, the voice card and
@@ -432,7 +432,7 @@
     position: fixed;
     top: 120px;
     right: 12px;
-    bottom: 120px;
+    bottom: calc(2vh + 7.5rem);
     left: 12px;
     width: auto;
     max-height: none;

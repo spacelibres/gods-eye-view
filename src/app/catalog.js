@@ -1,6 +1,7 @@
 const CONTROL_LAYER_IDS = Object.freeze({
   trafficLayer: 'traffic',
   flightsLayer: 'flights',
+  airportsLayer: 'airports',
   militaryFlightsLayer: 'military',
   satellitesLayer: 'satellites',
   cctvLayer: 'cctv',

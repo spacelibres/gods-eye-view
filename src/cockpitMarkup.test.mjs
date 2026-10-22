@@ -392,7 +392,11 @@ test('Cockpit owns a focused shared Display portal and compact Radio controls', 
   );
   assert.match(
     css,
-    /@media \(max-width: 520px\)\s*\{[\s\S]*?#title-bar h1 > span:last-child,[\s\S]*?#title-bar \.subtitle\s*\{\s*display:\s*none;/,
+    /@media \(max-width: 520px\)\s*\{[\s\S]*?#title-bar \.subtitle\s*\{\s*display:\s*none;/,
+  );
+  assert.doesNotMatch(
+    css,
+    /#title-bar h1 > span:last-child[^}]*display:\s*none/,
   );
   assert.match(css, /body\.ui-clean-view #top-center-actions/);
   assert.match(css, /body\.recording-mode #top-center-actions/);
@@ -870,7 +874,10 @@ test('Location navigation releases immediate routes before flight and deferred r
     ui,
     /beforeFly: \(generation\) => this\._reassertNavigationHandoff\(generation\)/,
   );
-  assert.match(ui.slice(search, ui.indexOf('onResult:', search)), /\.\.\.options/);
+  assert.match(
+    ui.slice(search, ui.indexOf('onResult:', search)),
+    /\.\.\.options/,
+  );
   const lookup = fs.readFileSync(
     path.join(ROOT, 'src', 'ui', 'locationSearch.js'),
     'utf8',

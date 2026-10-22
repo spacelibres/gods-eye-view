@@ -44,6 +44,7 @@ function startBlackHoleServer() {
     socket.on('close', () => {
       liveConnections -= 1;
       accepted.delete(socket);
+      server.emit('peerClosed');
     });
     socket.on('error', () => {});
   });
@@ -88,6 +89,7 @@ test('ws.terminate() hard-aborts a black-holed socket and frees the connection s
   assert.equal(blackHole.liveConnections, 1);
 
   const closed = firedWithin((done) => socket.once('close', done), 1_000);
+  const released = firedWithin((done) => blackHole.server.once('peerClosed', done), 1_000);
   const startedAt = Date.now();
   socket.terminate();
 
@@ -97,7 +99,7 @@ test('ws.terminate() hard-aborts a black-holed socket and frees the connection s
 
   // The TCP connection is genuinely gone — this is what protects AISStream's
   // one-connection-per-key limit when the watchdog recycles.
-  await new Promise((resolve) => setTimeout(resolve, 100));
+  assert.equal(await released, true, 'the peer must observe the TCP disconnect');
   assert.equal(blackHole.liveConnections, 0, 'the socket slot must actually be released');
 });
 

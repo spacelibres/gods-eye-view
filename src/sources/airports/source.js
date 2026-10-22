@@ -65,14 +65,17 @@ function validate(data, detail) {
 export function createAirportSource({
   fetchImpl = (...args) => fetch(...args),
   baseUrl = '/api/airports',
+  getLocale = () => 'en',
   now = Date.now,
   timeoutMs = 12_000,
 } = {}) {
   const cache = new Map(),
-    pending = new Map();
+    pending = new Map(),
+    translationVersions = new Map();
   let revision;
   function read(path, params, signal, detail = false) {
     signal?.throwIfAborted();
+    params.set('lang', getLocale() || 'en');
     const url = `${baseUrl}${path}?${params}`;
     const hit = cache.get(url);
     if (hit && hit.expires > now()) return Promise.resolve(hit.data);
@@ -119,8 +122,25 @@ export function createAirportSource({
             throw new Error('Mismatched airport detail');
           if (revision !== data.revision) {
             cache.clear();
+            translationVersions.clear();
             revision = data.revision;
           }
+          const locale = params.get('lang') || 'en';
+          const translationVersion = data.translationRevision || '';
+          if (
+            translationVersions.has(locale) &&
+            translationVersions.get(locale) !== translationVersion
+          ) {
+            for (const cachedUrl of cache.keys()) {
+              if (
+                new URL(cachedUrl, 'http://localhost').searchParams.get(
+                  'lang',
+                ) === locale
+              )
+                cache.delete(cachedUrl);
+            }
+          }
+          translationVersions.set(locale, translationVersion);
           cache.set(url, { data, expires: now() + 30_000 });
           while (cache.size > 64) cache.delete(cache.keys().next().value);
           return data;

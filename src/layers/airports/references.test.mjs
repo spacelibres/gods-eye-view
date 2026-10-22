@@ -190,3 +190,33 @@ test('navaid cap metadata and last good metadata survive source failure', async 
   assert.equal(f.layer.getStats().referenceError, 'offline');
   f.layer.destroy();
 });
+test('locale changing during a navaid response prevents stale names publishing', async () => {
+  let locale = 'en',
+    release;
+  const f = fixture(
+    {
+      getNavaids: () =>
+        new Promise((resolve) => {
+          release = resolve;
+        }),
+    },
+    { getLocale: () => locale },
+  );
+  const old = f.layer.update({ height: 10000 });
+  locale = 'zh-CN';
+  release({
+    navaids: [
+      {
+        id: '42',
+        name: 'Old station',
+        type: 'VOR',
+        ident: 'ABC',
+        lat: 1,
+        lon: 2,
+      },
+    ],
+  });
+  assert.equal(await old, false);
+  assert.equal(f.contexts.size, 0);
+  f.layer.destroy();
+});
