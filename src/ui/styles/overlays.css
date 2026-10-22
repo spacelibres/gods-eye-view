@@ -505,6 +505,15 @@
   font: 13px/1.5 var(--font-sans);
   overflow-wrap: anywhere;
 }
+.country-flag {
+  width: 1.25em;
+  height: 0.9375em;
+  object-fit: cover;
+  border-radius: 2px;
+  vertical-align: -0.125em;
+  margin-right: 6px;
+  box-shadow: 0 0 0 1px var(--glass-border);
+}
 @media (max-width: 600px) {
   .airport-detail-card[data-panel-popup] {
     bottom: 136px;

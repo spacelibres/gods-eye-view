@@ -68,7 +68,13 @@ export function navaidDetailRows(a, p, t = (v) => v) {
   ].map(([k, v]) => [t(k), v]);
 }
 /** Compact station facts for the shared airport dialog; provenance stays in context. */
-export function navaidReadout(a, p, t = (v) => v, locale = 'en') {
+export function navaidReadout(
+  a,
+  p,
+  t = (v) => v,
+  locale = 'en',
+  countryFlagUrl = () => null,
+) {
   const excluded = new Set([
     'Navaid',
     'OurAirports ID',
@@ -92,6 +98,10 @@ export function navaidReadout(a, p, t = (v) => v, locale = 'en') {
     title: a.name || a.ident || t('Navaid'),
     symbol: navaidSymbol(a.type),
     codes: a.ident ? [{ label: t('Ident'), value: a.ident }] : [],
+    countryFlag: countryFlagUrl({
+      countryCode: a.countryCode,
+      countryName: a.country,
+    }),
     rows: navaidDetailRows(a, p)
       .filter(
         ([label, value]) =>
@@ -184,6 +194,7 @@ export function createAviationReferences({
       ),
       { signal },
     ),
+  countryFlagUrl = () => null,
 } = {}) {
   let viewer,
     data,
@@ -306,7 +317,11 @@ export function createAviationReferences({
                   revision: result.revision,
                   updatedAt: result.updatedAt,
                 },
-                rows = navaidDetailRows(a, p, t);
+                rows = navaidDetailRows(a, p),
+                navaidFlag = countryFlagUrl({
+                  countryCode: a.countryCode,
+                  countryName: a.country,
+                });
               let h = getGroundHeight(a.lat, a.lon);
               if (!Number.isFinite(h))
                 h = viewer.scene?.globe?.getHeight?.(
@@ -323,7 +338,12 @@ export function createAviationReferences({
               Object.assign(entity, {
                 name: a.name,
                 position,
-                description: `<table>${rows.map(([k, v]) => `<tr><th>${escape(k)}</th><td>${escape(v ?? t('Unknown'))}</td></tr>`).join('')}</table>`,
+                description: `<table>${rows
+                  .map(
+                    ([k, v]) =>
+                      `<tr><th>${escape(t(k))}</th><td>${k === 'Country' && navaidFlag ? `<img class="country-flag" src="${escape(navaidFlag)}" alt="" aria-hidden="true">` : ''}${escape(v ?? t('Unknown'))}</td></tr>`,
+                  )
+                  .join('')}</table>`,
                 billboard: {
                   image: navaidSymbol(a.type),
                   width: 12,
@@ -336,7 +356,7 @@ export function createAviationReferences({
               });
               entity.gevTrackedId = id;
               entity.getAirportReadout = () =>
-                navaidReadout(a, p, t, getLocale());
+                navaidReadout(a, p, t, getLocale(), countryFlagUrl);
               entity.gevDisplayPosition = () => position;
               entity.gevLabelModel = {
                 title: a.name,

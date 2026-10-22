@@ -34,6 +34,7 @@ export function createAirportsLayer({
   governorRequestRender = () => {},
   getLocale = () => 'en',
   loadCountries,
+  countryFlagUrl = () => null,
 } = {}) {
   if (typeof source?.getSnapshot !== 'function')
     throw new TypeError('Airports require a snapshot source');
@@ -69,6 +70,7 @@ export function createAirportsLayer({
     governorRequestRender,
     getLocale,
     loadCountries,
+    countryFlagUrl,
   });
   const accentColor = () => {
     const palette = getPalette();
@@ -246,7 +248,12 @@ export function createAirportsLayer({
             Object.assign(entity, {
               name: a.name,
               position,
-              description: airportDescription(a, context.properties, t),
+              description: airportDescription(
+                a,
+                context.properties,
+                t,
+                countryFlagUrl,
+              ),
               billboard: {
                 image: symbol.image,
                 width:
@@ -274,7 +281,13 @@ export function createAirportsLayer({
               },
             });
             entity.getAirportReadout = () =>
-              airportReadout(a, context.properties, t, getLocale());
+              airportReadout(
+                a,
+                context.properties,
+                t,
+                getLocale(),
+                countryFlagUrl,
+              );
             entity.gevTrackedId = context.id;
             entity.gevDisplayPosition = () => position;
             entity.gevLabelModel = {

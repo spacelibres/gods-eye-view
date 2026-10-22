@@ -100,8 +100,17 @@ export function createAirportReadout({
       const field = make('div', 'airport-detail-field', fields);
       make('dt', '', field).textContent = t(label);
       const detail = make('dd', '', field);
-      detail.textContent = value;
       detail.setAttribute('translate', 'no');
+      if (label === 'Country' && model.countryFlag) {
+        const flag = make('img', 'country-flag', detail);
+        flag.src = model.countryFlag;
+        flag.alt = '';
+        flag.setAttribute('aria-hidden', 'true');
+        const text = make('span', 'country-flag-label', detail);
+        text.textContent = value;
+      } else {
+        detail.textContent = value;
+      }
     }
   };
   const observer =

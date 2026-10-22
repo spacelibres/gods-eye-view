@@ -323,6 +323,16 @@ the retrieval date (2026-07-30), exact download URL, license evidence, and the
 deterministic transform (`scripts/build-sf-neighborhoods.mjs`: `nhood` → `name`, ~2 m
 Douglas-Peucker simplification, 6-decimal rounding).
 
+### Country flags (`flag-icons`)
+
+`src/assets/flags/*.svg` bundles the `flag-icons` flag set
+(https://github.com/lipis/flag-icons, v7.6.0): 249 ISO 3166-1 alpha-2 flags in the
+4:3 variant. They render a country flag beside the country name in airport and
+navigation-aid cards and their Cesium description tables. The package is MIT
+("Copyright (c) 2013 Panayiotis Lipiridis"); the full text is in
+[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). Non-ISO and sub-national flags
+(`eu`, `un`, `xk`, `arab`, `gb-eng`, …) are excluded.
+
 ---
 
 ## Weather sources

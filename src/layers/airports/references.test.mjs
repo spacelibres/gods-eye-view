@@ -299,3 +299,32 @@ test('locale changing during a navaid response prevents stale names publishing',
   assert.equal(f.contexts.size, 0);
   f.layer.destroy();
 });
+
+test('navaid readout resolves a country flag URL when a resolver is supplied', async () => {
+  const { navaidReadout } = await import('./references.js');
+  const model = navaidReadout(
+    {
+      id: '1',
+      name: 'Beacon',
+      ident: 'ABC',
+      type: 'VOR',
+      countryCode: 'GB',
+      country: 'United Kingdom',
+    },
+    { source: 'OurAirports' },
+    (v) => v,
+    'en',
+    () => '/assets/gb.svg',
+  );
+  assert.equal(model.countryFlag, '/assets/gb.svg');
+});
+
+test('navaid readout leaves countryFlag null without a resolver', async () => {
+  const { navaidReadout } = await import('./references.js');
+  const model = navaidReadout(
+    { id: '1', name: 'Beacon', ident: 'ABC', type: 'VOR', countryCode: 'GB' },
+    { source: 'OurAirports' },
+    (v) => v,
+  );
+  assert.equal(model.countryFlag, null);
+});

@@ -10,6 +10,7 @@ import { getActivePalette } from '../../ui/colorSystemRuntime.js';
 import { governorRequestRender } from '../../renderGovernor.js';
 import { t, getLocale } from '../../i18n/index.js';
 import { refreshTrackedReadout } from '../../data/trackedReadout.js';
+import { countryFlagUrl } from '../../data/countryFlag.js';
 /** Bind the portable airport layer to existing application presentation services. */
 export function createApplicationAirports({ surface, ...options }) {
   return createAirportsLayer({
@@ -32,6 +33,7 @@ export function createApplicationAirports({ surface, ...options }) {
     governorRequestRender,
     getLocale,
     t,
+    countryFlagUrl,
     ...options,
   });
 }

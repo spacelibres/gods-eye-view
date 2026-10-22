@@ -206,3 +206,35 @@ test('navaids reuse the airport dialog with their own category and facts', () =>
   assert.ok(f.all().some((n) => n.textContent === '113.6 MHz'));
   f.card.destroy();
 });
+
+test('country rows render a flag image when the model carries one', () => {
+  const f = fixture();
+  f.entity.getAirportReadout = () => ({
+    title: 'Airport',
+    codes: [],
+    rows: [['Country', 'China']],
+    countryFlag: '/assets/cn.svg',
+  });
+  f.card.show(f.entity);
+  const img = f
+    .all()
+    .find((n) => n.tagName === 'IMG' && n.className === 'country-flag');
+  assert.ok(img, 'flag image is rendered');
+  assert.equal(img.src, '/assets/cn.svg');
+  assert.equal(img.getAttribute('aria-hidden'), 'true');
+});
+
+test('country rows without a flag fall back to plain text', () => {
+  const f = fixture();
+  f.entity.getAirportReadout = () => ({
+    title: 'Airport',
+    codes: [],
+    rows: [['Country', 'China']],
+  });
+  f.card.show(f.entity);
+  assert.ok(
+    !f.all().some((n) => n.tagName === 'IMG' && n.className === 'country-flag'),
+    'no flag image is rendered',
+  );
+  assert.ok(f.all().some((n) => n.textContent === 'China'));
+});

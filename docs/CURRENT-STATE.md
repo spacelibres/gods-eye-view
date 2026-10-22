@@ -42,6 +42,9 @@ so later source refreshes cannot reopen it. The two-column card shows codes,
 facility/use, city/country, coordinates and MSL elevation without source links;
 full provenance remains in the context data. Card labels and region names follow
 live language changes, and its mobile position clears the floating controls.
+Airport and navigation-aid cards, and their Cesium description tables, show the
+country's flag beside the country name — resolved from the directory ISO country
+code through vendored `flag-icons` (MIT) SVGs in `public/flags/`.
 
 The language picker updates static and runtime-created controls in place across
 all seven shipped locales. Dynamic text nodes, hints and accessibility labels

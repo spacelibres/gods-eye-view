@@ -162,13 +162,40 @@ export function airportDetailRows(a, p, t = (value) => value) {
     ],
   ];
 }
-export function airportDescription(a, p, t = (value) => value) {
+export function airportDescription(
+  a,
+  p,
+  t = (value) => value,
+  countryFlagUrl = () => null,
+) {
   const rows = airportDetailRows(a, p, t);
-  return `<table>${rows.map(([label, value]) => `<tr><th>${escape(t(label))}</th><td>${escape(value === null || value === undefined || value === '' ? t('Unknown') : value)}</td></tr>`).join('')}</table>`;
+  const flag = countryFlagUrl({
+    countryCode: a.countryCode,
+    countryName: a.country,
+  });
+  return `<table>${rows
+    .map(([label, value]) => {
+      const cell =
+        value === null || value === undefined || value === ''
+          ? t('Unknown')
+          : value;
+      const flagImg =
+        label === 'Country' && flag
+          ? `<img class="country-flag" src="${escape(flag)}" alt="" aria-hidden="true">`
+          : '';
+      return `<tr><th>${escape(t(label))}</th><td>${flagImg}${escape(cell)}</td></tr>`;
+    })
+    .join('')}</table>`;
 }
 
 /** Primary facts for the on-map card; detailed evidence stays in context. */
-export function airportReadout(a, p, t = (value) => value, locale = 'en') {
+export function airportReadout(
+  a,
+  p,
+  t = (value) => value,
+  locale = 'en',
+  countryFlagUrl = () => null,
+) {
   const facts = new Set([
     'Type',
     'Airport use',
@@ -199,6 +226,10 @@ export function airportReadout(a, p, t = (value) => value, locale = 'en') {
     title: a.name,
     symbol: airportSymbol(a, resolveAirportUsage(a).kind).image,
     codes,
+    countryFlag: countryFlagUrl({
+      countryCode: a.countryCode,
+      countryName: a.country,
+    }),
     rows: airportDetailRows(a, p, t)
       .filter(([label]) => facts.has(label))
       .map(([label, rawValue]) => {

@@ -652,6 +652,22 @@ test('airport country display follows locale while source context stays intact',
   );
   assert.equal(airportContext(a, {}).properties.country, 'Namibia');
 });
+
+test('airport readout leaves countryFlag null without a resolver', () => {
+  const model = airportReadout(airport(), {}, (v) => v);
+  assert.equal(model.countryFlag, null);
+});
+
+test('airport readout resolves a country flag URL when a resolver is supplied', () => {
+  const model = airportReadout(
+    airport(),
+    {},
+    (v) => v,
+    'en',
+    () => '/assets/na.svg',
+  );
+  assert.equal(model.countryFlag, '/assets/na.svg');
+});
 test('locale refresh retains selected carrier and rejects late prior locale response', async () => {
   let locale = 'en',
     resolveOld;
