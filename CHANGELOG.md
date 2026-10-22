@@ -4,6 +4,51 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.78] — 2026-10-22 — Validation repairs and overlay object reuse
+
+- Restore visible map-provider attribution and keep the mobile context panel
+  clear of it. Verify attribution in normal, clean-view and recording modes,
+  including open mobile panels at 390x844 and 390x1600 (#2).
+- Reuse overlay placements and rectangles across moving frames, retaining
+  pooled variants when UI exclusions filter them. Remove temporary stack arrays
+  and boxed numeric writes without changing placement geometry, HUD selection
+  brackets or density controls. All 14 original allocation workloads pass their
+  unchanged budgets (#2).
+- Preserve unrelated Caddy configuration bytes, CRLF line endings and trailing
+  whitespace. Use native Windows fixture paths and isolate terrain tests from
+  persistent application caches (#2).
+- Correct stale logo, first-run and airport voice-schema checks. Drive tracking
+  sampling with an independent render-request pump, reseed the taxiing fixture
+  at its current position, and synchronize AIS/CCTV tests on lifecycle events
+  instead of fixed sleeps (#2).
+- Validation: 8,686 unit and allocation tests passed, zero failures, 11 existing
+  platform skips; tracking browser regression 109/109 and fallback-imagery
+  attribution regression 26/26 passed. Build, formatting and module boundaries
+  passed. Airport translation coverage remains partial as described below.
+
+## [0.2.77] — 2026-10-22 — Initial local airport translations (historical snapshot)
+
+- Add project-hosted airport language catalogs for Simplified Chinese,
+  Traditional Chinese, Spanish, Japanese, Korean and Russian; English retains
+  source names. Switch map labels, airport details and open search choices with
+  the interface language while preserving selected IDs and camera state (#2).
+- Search translated names alongside original names and ICAO/IATA codes,
+  including names without spaces. Keep airport and navigation data available
+  through the project's own backend rather than fetching GitHub from clients.
+- Add an offline translation import/export workflow with per-field source
+  fingerprints, manual-correction preservation and atomic catalog manifests.
+  Source updates queue changed fields without paid translation calls; imports
+  rewrite only affected language files, not the entire set of languages.
+- Initial coverage per target language: 255 airport names across 76 countries,
+  3,535 municipality fields and 38,646 region fields. Another 86,003 airport names
+  and 11,008 navigation names per language still fall back to source text.
+  Worldwide translation content, finer per-ID file shards and VPS persistent
+  catalog initialization remain incomplete.
+- The implementation was committed on 2026-10-21. Its version tag was backfilled
+  on 2026-10-22 at `ef089c6d`, the last 0.2.77 snapshot before the repairs. That
+  snapshot had 13 unit-test and 5 tracking-regression failures; use 0.2.78 for
+  the verified fixes. It was not deployed as a separate production release.
+
 ## [0.2.76] — 2026-10-21 — Upstream synchronization and original HUD density controls
 
 - Reload an already-running VPS standby before promoting it, so both backend
