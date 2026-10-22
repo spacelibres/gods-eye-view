@@ -4,6 +4,14 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.84] — 2026-10-22 — Dependency hash ignores the app version
+
+- Hash the dependency tree, not the lockfile's own `version` fields, so a patch
+  bump no longer looks like a dependency change. Without this the "reuse
+  node_modules" path added in v0.2.83 would never trigger.
+- Verify the stripped hash is identical across v0.2.82 and v0.2.83; `bash -n
+  scripts/install-vps.sh` passes.
+
 ## [0.2.83] — 2026-10-22 — Leaner VPS builds
 
 - Skip `npm ci` when `package-lock.json` is unchanged since the last install,

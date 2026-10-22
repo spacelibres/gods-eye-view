@@ -180,7 +180,14 @@ run_as_service() {
 # changed lockfile or a missing tree needs that again. The hash file is
 # untracked, so `git reset --hard` leaves it in place.
 DEPS_HASH_FILE="$GEV_HOME/.deps-lock-hash"
-LOCK_HASH="$(sha256sum "$GEV_HOME/package-lock.json" | cut -d' ' -f1)"
+# Hash the dependency tree, not the app version: `npm version` rewrites the
+# lockfile's own `version` fields on every bump, which would otherwise make
+# every deploy look like a dependency change.
+if command -v jq >/dev/null 2>&1; then
+  LOCK_HASH="$(jq -S 'del(.version, .packages[""].version)' "$GEV_HOME/package-lock.json" | sha256sum | cut -d' ' -f1)"
+else
+  LOCK_HASH="$(sha256sum "$GEV_HOME/package-lock.json" | cut -d' ' -f1)"
+fi
 if [ -d "$GEV_HOME/node_modules" ] && [ -f "$DEPS_HASH_FILE" ] &&
   [ "$(cat "$DEPS_HASH_FILE")" = "$LOCK_HASH" ]; then
   log "Dependencies unchanged; reusing node_modules"
