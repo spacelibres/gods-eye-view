@@ -1017,7 +1017,7 @@
   "Panoramax is busy": "Panoramax が混雑しています",
   "Panoramax sent an unreadable answer": "Panoramax が読み取れない応答を返しました",
   "No street-level imagery providers configured": "街路画像のプロバイダーが設定されていません",
-  "{names}: by upload date": "{names}: アップロード日順",
+  "(by upload date)": "（アップロード日順）",
   "Open the Street Level panel to view imagery": "ストリートレベルパネルを開いて画像を表示",
   "Image could not be opened": "画像を開けませんでした",
   "TeleGeography load failed": "TeleGeography の読み込みに失敗しました",

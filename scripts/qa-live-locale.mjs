@@ -10,6 +10,34 @@ await page.setViewport({ width: 1440, height: 1000 });
 const errors = [];
 page.on('pageerror', (e) => errors.push(e.message));
 try {
+  if (process.env.QA_OFFLINE_IMAGERY === '1') {
+    const tile = fs.readFileSync(
+      new URL(
+        '../node_modules/cesium/Build/Cesium/Assets/Textures/NaturalEarthII/0/0/0.jpg',
+        import.meta.url,
+      ),
+    );
+    await page.setRequestInterception(true);
+    page.on('request', (request) => {
+      const url = new URL(request.url());
+      const imagery =
+        request.method() === 'GET' &&
+        ((url.origin === 'https://services.arcgisonline.com' &&
+          /^\/ArcGIS\/rest\/services\/World_Imagery\/MapServer\/tile\/\d+\/\d+\/\d+$/.test(
+            url.pathname,
+          )) ||
+          (url.origin === 'https://tile.openstreetmap.org' &&
+            /^\/\d+\/\d+\/\d+\.png$/.test(url.pathname)));
+      if (imagery)
+        request.respond({
+          status: 200,
+          contentType: 'image/jpeg',
+          headers: { 'Access-Control-Allow-Origin': '*' },
+          body: tile,
+        });
+      else request.continue();
+    });
+  }
   await page.goto(
     process.env.QA_BASE_URL || 'http://127.0.0.1:4198/?lang=en&welcome=0',
     {

@@ -22,7 +22,14 @@
   },
   "viewer": {
     "exports": ["./application/viewer"],
-    "modules": ["src/app/viewer.js", "src/app/atmosphereCompat.js"],
+    "modules": [
+      "src/app/viewer.js",
+      "src/app/atmosphereCompat.js",
+      "src/sky/starrySky.js",
+      "src/sky/stars.js",
+      "src/data/bundledJson.js",
+      "src/renderGovernor.js"
+    ],
     "external": ["cesium"]
   },
   "vite-build": {
@@ -199,6 +206,8 @@
     "exports": ["./server/providers/cctv"],
     "modules": [
       "server/providers/cctv.js",
+      "server/providers/common/same-site.js",
+      "src/localRequestGate.mjs",
       "server/providers/cctv/cap.js",
       "server/providers/cctv/groundHeights.js",
       "server/providers/cctv/catalog.js",
@@ -264,6 +273,7 @@
       "server/providers/common/http.js",
       "server/providers/common/rate-limit.js",
       "server/providers/common/request.js",
+      "server/providers/common/same-site.js",
       "server/providers/overpass.js",
       "server/providers/overpass/cache.js",
       "server/providers/overpass/constants.js",
@@ -273,6 +283,7 @@
       "server/providers/places/routes.js",
       "src/data/placeProviderPayloads.js",
       "src/data/routeSteps.js",
+      "src/localRequestGate.mjs",
       "src/sources/httpBody.js",
       "src/i18n/marker.js",
       "src/sources/overpass.js",
@@ -437,6 +448,7 @@
       "src/ui/visualInput.js",
       "src/ui/applicationShortcuts.js",
       "src/ui/styleParameters.js",
+      "src/ui/slider.js",
       "src/i18n/index.js",
       "src/i18n/locale.js",
       "src/i18n/locales/es.json",
@@ -453,7 +465,7 @@
   },
   "display-controls": {
     "exports": ["./ui/display"],
-    "modules": ["src/ui/displayControls.js"],
+    "modules": ["src/ui/displayControls.js", "src/ui/segmentedControl.js"],
     "external": []
   },
   "visual-effects": {
@@ -516,6 +528,7 @@
       "src/ui/weatherPanel.js",
       "src/ui/railCards.js",
       "src/ui/railCardBlocks.js",
+      "src/ui/slider.js",
       "src/ui/chipGroup.js",
       "src/ui/rowList.js",
       "src/ui/railTimeline.js",
@@ -539,7 +552,8 @@
       "src/i18n/locales/ja.json",
       "src/i18n/locales/ko.json",
       "src/i18n/liveDocument.js",
-      "src/i18n/renderedMessages.js"
+      "src/i18n/renderedMessages.js",
+      "src/ui/statusBadge.js"
     ],
     "external": []
   },
@@ -594,6 +608,7 @@
       "src/ui/cctv.js",
       "src/ui/cctvBindings.js",
       "src/ui/cctvCalibration.js",
+      "src/ui/formField.js",
       "src/ui/cctvControls.js",
       "src/ui/cctvFrames.js",
       "src/ui/cctvVideo.js",
@@ -609,7 +624,8 @@
       "src/i18n/locales/ja.json",
       "src/i18n/locales/ko.json",
       "src/i18n/liveDocument.js",
-      "src/i18n/renderedMessages.js"
+      "src/i18n/renderedMessages.js",
+      "src/ui/statusBadge.js"
     ],
     "external": []
   },
@@ -690,6 +706,7 @@
       "src/ui/scenes.js",
       "src/ui/sceneControls.js",
       "src/ui/scenePresentation.js",
+      "src/ui/actionButton.js",
       "src/i18n/index.js",
       "src/i18n/locale.js",
       "src/i18n/locales/es.json",
@@ -762,6 +779,7 @@
       "src/ui/cctv.js",
       "src/ui/cctvBindings.js",
       "src/ui/cctvCalibration.js",
+      "src/ui/formField.js",
       "src/ui/cctvControls.js",
       "src/ui/cctvFrames.js",
       "src/ui/cctvVideo.js",
@@ -790,6 +808,7 @@
       "src/ui/contextSubscriptions.js",
       "src/ui/contextTransactions.js",
       "src/ui/displayControls.js",
+      "src/ui/segmentedControl.js",
       "src/ui/effects.js",
       "src/ui/frameRateMonitor.js",
       "src/ui/layerPanel.js",
@@ -823,11 +842,13 @@
       "src/ui/rightPanelRail.js",
       "src/ui/sceneControls.js",
       "src/ui/scenePresentation.js",
+      "src/ui/actionButton.js",
       "src/ui/scenes.js",
       "src/ui/shareRestoration.js",
       "src/ui/shellElements.js",
       "src/ui/shellFeedback.js",
       "src/ui/styleParameters.js",
+      "src/ui/slider.js",
       "src/ui/surfaceKeyboard.js",
       "src/ui/uiLifetime.js",
       "src/ui/visualEffects.js",
@@ -869,7 +890,8 @@
       "src/i18n/locales/ja.json",
       "src/i18n/locales/ko.json",
       "src/i18n/liveDocument.js",
-      "src/i18n/renderedMessages.js"
+      "src/i18n/renderedMessages.js",
+      "src/ui/statusBadge.js"
     ],
     "external": ["cesium"]
   },
@@ -947,6 +969,7 @@
       "src/ui/scenes.js",
       "src/ui/sceneControls.js",
       "src/ui/scenePresentation.js",
+      "src/ui/actionButton.js",
       "src/contextModePolicy.js",
       "src/director/clock.js",
       "src/director/timeline.js",
@@ -1968,6 +1991,8 @@
       "src/app/surfaceServices.js",
       "src/app/tools.js",
       "src/app/viewer.js",
+      "src/sky/starrySky.js",
+      "src/sky/stars.js",
       "src/app/atmosphereCompat.js",
       "src/bloom.js",
       "src/camera.js",
@@ -2398,6 +2423,7 @@
       "src/ui/cctv.js",
       "src/ui/cctvBindings.js",
       "src/ui/cctvCalibration.js",
+      "src/ui/formField.js",
       "src/ui/cctvControls.js",
       "src/ui/cctvFrames.js",
       "src/ui/cctvVideo.js",
@@ -2427,6 +2453,7 @@
       "src/ui/contextSubscriptions.js",
       "src/ui/contextTransactions.js",
       "src/ui/displayControls.js",
+      "src/ui/segmentedControl.js",
       "src/ui/effects.js",
       "src/ui/frameRateMonitor.js",
       "src/ui/layerPanel.js",
@@ -2460,11 +2487,13 @@
       "src/ui/rightPanelRail.js",
       "src/ui/sceneControls.js",
       "src/ui/scenePresentation.js",
+      "src/ui/actionButton.js",
       "src/ui/scenes.js",
       "src/ui/shareRestoration.js",
       "src/ui/shellElements.js",
       "src/ui/shellFeedback.js",
       "src/ui/styleParameters.js",
+      "src/ui/slider.js",
       "src/ui/surfaceKeyboard.js",
       "src/ui/uiLifetime.js",
       "src/ui/visualEffects.js",
@@ -2786,7 +2815,8 @@
       "src/sources/airports/usage-data.json",
       "src/i18n/liveDocument.js",
       "src/i18n/renderedMessages.js",
-      "src/overlays/airportReadout.js"
+      "src/overlays/airportReadout.js",
+      "src/ui/statusBadge.js"
     ],
     "external": [
       "hls.js",
@@ -3531,11 +3561,13 @@
       "src/ui/applicationShortcuts.js",
       "src/ui/effects.js",
       "src/ui/styleParameters.js",
+      "src/ui/slider.js",
       "src/ui/uiLifetime.js",
       "src/ui/visualEffects.js",
       "src/ui/visualInput.js",
       "src/ui/visualPresets.js",
       "src/ui/visualSettings.js",
+      "src/ui/segmentedControl.js",
       "src/i18n/index.js",
       "src/i18n/locale.js",
       "src/i18n/locales/es.json",

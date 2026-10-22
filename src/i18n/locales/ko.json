@@ -1018,7 +1018,7 @@
   "Panoramax is busy": "Panoramax가 혼잡합니다",
   "Panoramax sent an unreadable answer": "Panoramax가 읽을 수 없는 응답을 보냈습니다",
   "No street-level imagery providers configured": "거리 영상 제공업체가 구성되지 않았습니다",
-  "{names}: by upload date": "{names}: 업로드 날짜순",
+  "(by upload date)": "(업로드 날짜 기준)",
   "Open the Street Level panel to view imagery": "스트리트 레벨 패널을 열어 영상을 보세요",
   "Image could not be opened": "이미지를 열 수 없습니다",
   "TeleGeography load failed": "TeleGeography 불러오기 실패",

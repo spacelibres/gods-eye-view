@@ -4,6 +4,72 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.79] — 2026-10-22 — Official upstream synchronization
+
+- Validate provider response formats, strengthen camera source checks, and apply consistent API response protections (samehkhamis, #1317).
+
+- Clarify shared field CSS ownership: CCTV owns calibration editor sizing,
+  while Radio and Cyber supply explicit field palettes without changing the
+  current appearance or native control behavior (mazy1998, #1309).
+
+- Share read-only status badge presentation across CCTV source/frame labels,
+  calibration provenance and Weather coverage, preserving status meanings,
+  palettes, translations and announcements while preparing the view contract
+  for a future Vue migration (mazy1998, #1306).
+
+- Share native dropdown and numeric-field styling across Scene, CCTV, Display
+  and Radio controls, with a shared CCTV number-input builder that preserves
+  existing precision, validation and commit behavior (mazy1998, #1305).
+
+- Give ordinary Scene and CCTV actions shared native buttons with consistent
+  default, destructive and compact styling while preserving their existing
+  behavior and specialized controls (mazy1998, #1302).
+
+- Unify segmented selectors for model coverage, detection allocation, drawing
+  shape, Street View and imagery comparison while preserving their existing
+  behavior. Keep compact labels such as FILL and FLAT on one line, and let
+  collapsed Weather release space to the open rail panel. Reserve the full mode
+  button height in Recent Imagery so keyboard focus is not clipped (mazy1998, #1301).
+
+- Give ordinary sliders a shared native control and consistent track, thumb,
+  value, focus and disabled styling while preserving feature behavior and
+  specialized controls (mazy1998, #1287).
+
+- The Street Level SINCE note sits on the value's line, in its type and a
+  size smaller: with KartaView lit it reads ANY DATE (by upload date). It
+  had lost its size variable in the Street Level slim-down and rendered
+  larger than the value, on a line of its own (asturksever, #1286).
+
+- Prevent malformed Overpass filters from blocking the local server, and reject
+  cross-site or excessive query requests before reading their bodies
+  (asturksever, #1264; fixes #1248).
+- Release unread responses from the optional Google-token probe so keyless
+  browser validation can settle; the Overpass gate recognizes only that probe's
+  expected 404 as an unavailable capability (asturksever, #1264).
+- Make tracking arrival checks respect the aircraft update cadence while checking
+  orientation on the first reveal, avoiding false failures at faster render
+  rates (asturksever, #1264).
+
+- Replace the blocky JPEG sky around the globe with the 9,096 stars of the
+  Yale Bright Star Catalogue, drawn as sharp points where they are at the
+  scene time, over a soft Milky Way from ESO/S. Brunier (CC BY 4.0). The Sun
+  and Moon stay; the anime style hides the Milky Way. Assets: 296 kB (gekh,
+  #1243).
+
+- Integrate 57 official upstream commits through `7be5937f`, including the
+  catalogue starfield and Milky Way, shared form/action/status/slider controls,
+  Overpass request admission and provider-response security hardening.
+- Preserve project-hosted airport catalogs and translations, VPS OpenSky/ADS-B
+  collection budgets, Qwen/Doubao control, approved branding and original HUD
+  density controls. Airport translation coverage remains partial.
+- Preserve explicit trusted-proxy support for the key-bearing CCTV fallback
+  while retaining cross-site rejection. Update four local language catalogs for
+  the new street-level upload-date hint and fix Windows sky-test file paths.
+- Verify 8,757 unit/allocation tests with zero failures and 11 existing platform
+  skips, all 109 tracking checks, 40 airport checks, seven language switches,
+  both sky browser gates and all shared-control browser checks. Build, formatting
+  and module boundaries pass.
+
 ## [0.2.78] — 2026-10-22 — Validation repairs and overlay object reuse
 
 - Restore visible map-provider attribution and keep the mobile context panel

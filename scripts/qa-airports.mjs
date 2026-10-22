@@ -151,6 +151,15 @@ const browser = await puppeteer.launch({
   ],
 });
 const page = await browser.newPage();
+const offlineTile =
+  process.env.QA_OFFLINE_IMAGERY === '1'
+    ? fs.readFileSync(
+        new URL(
+          '../node_modules/cesium/Build/Cesium/Assets/Textures/NaturalEarthII/0/0/0.jpg',
+          import.meta.url,
+        ),
+      )
+    : null;
 let viewReads = 0,
   searchReads = 0,
   failViews = false;
@@ -160,6 +169,22 @@ page.on('pageerror', (error) => pageErrors.push(error.message));
 await page.setRequestInterception(true);
 page.on('request', (request) => {
   const url = new URL(request.url());
+  if (
+    offlineTile &&
+    request.method() === 'GET' &&
+    ((url.origin === 'https://services.arcgisonline.com' &&
+      /^\/ArcGIS\/rest\/services\/World_Imagery\/MapServer\/tile\/\d+\/\d+\/\d+$/.test(
+        url.pathname,
+      )) ||
+      (url.origin === 'https://tile.openstreetmap.org' &&
+        /^\/\d+\/\d+\/\d+\.png$/.test(url.pathname)))
+  )
+    return void request.respond({
+      status: 200,
+      contentType: 'image/jpeg',
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: offlineTile,
+    });
   if (
     url.hostname === 'github.com' ||
     url.hostname.endsWith('.github.com') ||
