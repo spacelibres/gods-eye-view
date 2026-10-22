@@ -253,11 +253,17 @@ export function initTrackedReadout(
       const entity =
         displayedEntity || _selectedContext?.entity || _viewer?.trackedEntity;
       if (typeof entity?.getAirportReadout !== 'function') return;
+      const layerId =
+        _selectedContext?.entity === entity
+          ? _selectedContext.layerId
+          : entity.gevTrackedId?.startsWith('navaid:')
+            ? 'aviation-navaids'
+            : 'airports';
       if (_selectedContext?.entity === entity) _selectedContext = null;
       if (_viewer?.selectedEntity === entity)
         _viewer.selectedEntity = undefined;
       if (_viewer?.trackedEntity === entity) _viewer.trackedEntity = undefined;
-      clearSelectedEntityContextForLayer('airports');
+      clearSelectedEntityContextForLayer(layerId);
       syncActiveEntity();
       _viewer?.scene?.requestRender?.();
     },

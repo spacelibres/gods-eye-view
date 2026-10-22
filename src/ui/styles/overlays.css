@@ -377,10 +377,10 @@
   max-width: 280px;
 }
 
-/* Selected-airport detail card uses the same surface and theme roles as rails. */
+/* Aviation facility detail cards share the surface and theme roles of rails. */
 .airport-detail-card[data-panel-popup] {
   position: fixed;
-  z-index: 140;
+  z-index: 150;
   left: 50%;
   bottom: 96px;
   transform: translateX(-50%);
@@ -505,24 +505,6 @@
   font: 13px/1.5 var(--font-sans);
   overflow-wrap: anywhere;
 }
-.airport-detail-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--glass-border);
-  color: var(--text-secondary);
-  font: 10px/1.4 var(--font-sans);
-}
-.airport-detail-source {
-  color: var(--accent);
-  text-decoration: none;
-}
-.airport-detail-source:hover,
-.airport-detail-source:focus-visible {
-  text-decoration: underline;
-}
 @media (max-width: 600px) {
   .airport-detail-card[data-panel-popup] {
     bottom: 136px;
@@ -567,9 +549,6 @@
   .airport-detail-field dd {
     font-size: 12px;
     line-height: 1.4;
-  }
-  .airport-detail-footer {
-    padding-top: 8px;
   }
 }
 @media (min-width: 601px) and (max-height: 700px) {

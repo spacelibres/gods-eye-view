@@ -90,8 +90,38 @@ Requests are accepted only with a valid `X-Hub-Signature-256` over the raw
 body. With no secret configured the service refuses everything, because it can
 run a shell command.
 
-Deployments never overlap: a push during a build queues one follow-up, so a
-burst of commits costs two builds at most.
+Deployments never overlap: pushes arriving during a build coalesce into one
+follow-up for the latest accepted push. Further pushes during that follow-up
+can queue another run.
+
+Before returning `202 deploy queued`, the receiver writes and syncs a private
+checkpoint outside the checkout at
+`/var/lib/gods-eye-view-webhook/pending.json`. The directory is owned by the
+service user (root for the installed unit), mode `700`, and the file is mode
+`600`. `GEV_WEBHOOK_STATE_FILE` in `/etc/gods-eye-view.env` can override the
+path; its parent must have the same private ownership and permissions. The
+checkpoint contains deployment metadata, never the webhook secret or full
+payload. Only requests that passed signature, event, branch and repository
+checks can create it. Startup validates it against the configured branch and
+repository before resuming work.
+
+The checkpoint survives receiver termination. A successful matching deployment
+consumes it; a newer accepted push keeps its own checkpoint until its build
+finishes. Failed builds retain the checkpoint without an automatic retry loop.
+After correcting the build failure, restart `gev-webhook` to retry, or send a
+new push. Invalid or inaccessible state makes health report `ok: false` and
+refuses deployment requests with `503`; inspect ownership, permissions and
+the service journal before restarting. Do not delete pending state unless you
+intend to discard accepted work.
+
+Webhook-owned installers receive `GEV_WEBHOOK_MANAGED=1` and leave their own
+systemd service running. Once all accepted work finishes, the receiver closes
+its listener and exits successfully; systemd's `Restart=always` then loads the
+updated receiver code. Manual installer runs still restart the webhook unit.
+This avoids killing an active installer or losing a queued push when refreshing
+the receiver. A checkpoint accepted during the close handoff is replayed by
+the next receiver. Idle health after a refresh has `lastRun: null`; inspect the
+journal for completed deployment history, and `pending` for outstanding work.
 
 Health and the last run:
 

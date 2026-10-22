@@ -251,16 +251,16 @@ export function createAirportsLayer({
                 image: symbol.image,
                 width:
                   a.type === 'large_airport'
-                    ? 28
+                    ? 16
                     : a.type === 'medium_airport'
-                      ? 24
-                      : 20,
+                      ? 14
+                      : 12,
                 height:
                   a.type === 'large_airport'
-                    ? 28
+                    ? 16
                     : a.type === 'medium_airport'
-                      ? 24
-                      : 20,
+                      ? 14
+                      : 12,
                 color,
                 horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                 verticalOrigin: Cesium.VerticalOrigin.CENTER,

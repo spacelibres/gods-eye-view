@@ -440,7 +440,13 @@ UNIT
 
 systemctl daemon-reload
 systemctl enable gev-webhook.service >/dev/null
-systemctl restart gev-webhook.service
+if [ "${GEV_WEBHOOK_MANAGED:-}" != "1" ]; then
+  systemctl restart gev-webhook.service
+fi
+# A webhook-owned installer shares the receiver's systemd cgroup. Restarting
+# it here would kill this installer and discard pushes queued during the
+# build. The receiver checkpoints every accepted push and refreshes itself
+# only after the installer and its follow-up deployments have completed.
 sleep 1
 systemctl is-active --quiet gev-webhook.service ||
   die "webhook did not start; check: journalctl -u gev-webhook -n 50"

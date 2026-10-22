@@ -1,6 +1,6 @@
 import { t } from '../i18n/index.js';
 
-/** Accessible DOM treatment for the selected airport; no canvas or frame loop. */
+/** Accessible DOM treatment for selected aviation facilities; no frame loop. */
 export function createAirportReadout({
   viewer,
   document: doc = globalThis.document,
@@ -35,12 +35,6 @@ export function createAirportReadout({
   close.setAttribute('translate', 'no');
   const codes = make('div', 'airport-detail-codes', root);
   const fields = make('dl', 'airport-detail-fields', root);
-  const footer = make('div', 'airport-detail-footer', root);
-  const sourceLabel = make('span', '', footer);
-  const sourceLink = make('a', 'airport-detail-source', footer);
-  sourceLink.setAttribute('translate', 'no');
-  sourceLink.target = '_blank';
-  sourceLink.rel = 'noopener noreferrer';
   let active = null;
   let previousFocus = null;
   let destroyed = false;
@@ -84,7 +78,7 @@ export function createAirportReadout({
   const refresh = () => {
     if (destroyed || !active) return;
     const model = active.getAirportReadout();
-    kicker.textContent = t('Airport');
+    kicker.textContent = t(model.category || 'Airport');
     title.textContent = model.title;
     close.setAttribute('aria-label', t('Close'));
     close.title = t('Close');
@@ -109,9 +103,6 @@ export function createAirportReadout({
       detail.textContent = value;
       detail.setAttribute('translate', 'no');
     }
-    sourceLabel.textContent = t('Source');
-    sourceLink.textContent = model.source || 'OurAirports'; // i18n-ignore: provider name
-    sourceLink.href = '/api/airports/provenance';
   };
   const observer =
     typeof Observer === 'function' ? new Observer(refresh) : null;

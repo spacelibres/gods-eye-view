@@ -32,7 +32,7 @@ export function navaidSymbol(type) {
   const image =
     'data:image/svg+xml;charset=utf-8,' +
     encodeURIComponent(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><g fill="none" stroke="black" stroke-width="4">${type === 'DME' ? dme : String(type).startsWith('NDB') ? ndb : vor}</g><g fill="none" stroke="white" stroke-width="2">${type === 'DME' ? dme : String(type).startsWith('NDB') ? ndb : vor}${String(type).includes('DME') && type !== 'DME' ? '<path d="M3 3h26v26H3Z"/>' : ''}</g></svg>`,
+      `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><g fill="none" stroke="white" stroke-width="2">${type === 'DME' ? dme : String(type).startsWith('NDB') ? ndb : vor}${String(type).includes('DME') && type !== 'DME' ? '<path d="M3 3h26v26H3Z"/>' : ''}</g></svg>`,
     );
   symbolCache.set(type, image);
   return image;
@@ -66,6 +66,42 @@ export function navaidDetailRows(a, p, t = (v) => v) {
     [msg('Revision'), p.revision],
     [msg('Updated'), p.updatedAt],
   ].map(([k, v]) => [t(k), v]);
+}
+/** Compact station facts for the shared airport dialog; provenance stays in context. */
+export function navaidReadout(a, p, t = (v) => v, locale = 'en') {
+  const excluded = new Set([
+    'Navaid',
+    'OurAirports ID',
+    'Ident',
+    'Source',
+    'Source URL',
+    'Revision',
+    'Updated',
+  ]);
+  let country = a.country || a.countryCode;
+  try {
+    if (/^[A-Z]{2}$/.test(a.countryCode))
+      country =
+        new Intl.DisplayNames([locale], { type: 'region' }).of(a.countryCode) ||
+        country;
+  } catch {
+    /* Keep the directory value when region names are unavailable. */
+  }
+  return {
+    category: msg('Navaid'),
+    title: a.name || a.ident || t('Navaid'),
+    symbol: navaidSymbol(a.type),
+    codes: a.ident ? [{ label: t('Ident'), value: a.ident }] : [],
+    rows: navaidDetailRows(a, p)
+      .filter(
+        ([label, value]) =>
+          !excluded.has(label) &&
+          value !== null &&
+          value !== undefined &&
+          value !== '',
+      )
+      .map(([label, value]) => [label, label === 'Country' ? country : value]),
+  };
 }
 const escape = (v) =>
   String(v).replace(
@@ -290,8 +326,8 @@ export function createAviationReferences({
                 description: `<table>${rows.map(([k, v]) => `<tr><th>${escape(k)}</th><td>${escape(v ?? t('Unknown'))}</td></tr>`).join('')}</table>`,
                 billboard: {
                   image: navaidSymbol(a.type),
-                  width: 24,
-                  height: 24,
+                  width: 12,
+                  height: 12,
                   color: Cesium.Color.fromCssColorString(accent()),
                   heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
                   disableDepthTestDistance: 50000,
@@ -299,12 +335,14 @@ export function createAviationReferences({
                 properties: { navaidId: a.id },
               });
               entity.gevTrackedId = id;
+              entity.getAirportReadout = () =>
+                navaidReadout(a, p, t, getLocale());
               entity.gevDisplayPosition = () => position;
               entity.gevLabelModel = {
                 title: a.name,
-                details: rows
-                  .slice(1)
-                  .map(([k, v]) => `${k}: ${v ?? t('Unknown')}`),
+                details: entity
+                  .getAirportReadout()
+                  .rows.map(([k, v]) => `${t(k)}: ${v}`),
                 accent: accent(),
                 anchorRadiusScale: null,
                 placement: 'right',

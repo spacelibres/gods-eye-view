@@ -165,8 +165,8 @@ test('airports use shared aircraft silhouettes rather than point dots and tint w
     image,
     'all airport markers share one aircraft image',
   );
-  assert.ok(major.billboard.width.getValue() >= 24);
-  assert.ok(minor.billboard.width.getValue() >= 18);
+  assert.equal(major.billboard.width.getValue(), 16);
+  assert.equal(minor.billboard.width.getValue(), 12);
   assert.equal(
     major.billboard.color.getValue().toCssColorString(),
     'rgb(51,204,255)',
@@ -177,6 +177,34 @@ test('airports use shared aircraft silhouettes rather than point dots and tint w
     major.billboard.color.getValue().toCssColorString(),
     'rgb(255,204,51)',
   );
+  h.layer.destroy();
+});
+
+test('airport symbols stay compact across globe, regional and local zoom without thinning the cohort', async () => {
+  const records = [
+    airport('large'),
+    airport('medium', 'medium_airport'),
+    airport('small', 'small_airport'),
+  ];
+  const h = harness({ getSnapshot: async () => ({ airports: records }) });
+  h.layer.enable();
+  for (const height of [9000000, 500000, 10000]) {
+    h.viewer.camera.positionCartographic.height = height;
+    await h.layer.update();
+    const entities = h.sources[0].entities.values;
+    assert.equal(entities.length, height === 9000000 ? 2 : 3);
+    for (const entity of entities) {
+      const size =
+        entity.id === 'airport:large'
+          ? 16
+          : entity.id === 'airport:medium'
+            ? 14
+            : 12;
+      assert.equal(entity.billboard.width.getValue(), size);
+      assert.equal(entity.billboard.height.getValue(), size);
+      assert.equal(entity.billboard.scaleByDistance, undefined);
+    }
+  }
   h.layer.destroy();
 });
 test('layer distinguishes heliports, civil service, military, joint use and unknown with a matching legend', async () => {

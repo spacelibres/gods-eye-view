@@ -4,6 +4,25 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.80] — 2026-10-22 — Reliable webhook handoff and clean aviation details
+
+- Persist accepted deployment intent outside the checkout before acknowledging
+  a GitHub push. Recover pending work after receiver termination, serialize
+  coalesced pushes and retain failed work without a retry loop. Managed
+  installers no longer restart their own service group; the receiver refreshes
+  its code after the accepted queue drains. Invalid/private-state failures and
+  signature, repository and branch checks fail closed.
+- Reduce airport map symbols to 16/14/12px and navigation-aid symbols to 12px.
+  Remove black outline layers while preserving airport, helicopter, seaplane,
+  military and joint-use distinctions and the existing HUD density controls.
+- Use one themed, naturally sized airport/navigation detail card. VOR-DME and
+  NDB details retain identifiers, frequencies, channels and location facts;
+  close and Escape clear the matching selection. Remove card source links and
+  provenance rows while retaining backend/context provenance and map credits.
+- Verify 8,770 passing unit/allocation checks (11 existing platform skips),
+  109 tracking checks, 50 aviation browser checks and seven isolated Linux
+  webhook recovery checks; build, formatting and dependency boundaries pass.
+
 ## [0.2.79] — 2026-10-22 — Official upstream synchronization
 
 - Validate provider response formats, strengthen camera source checks, and apply consistent API response protections (samehkhamis, #1317).

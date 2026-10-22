@@ -2,27 +2,27 @@
 const msg = (value) => value;
 const cache = new Map();
 const legendCache = new Map();
-const outlinedLines = (path, width = 2) =>
-  `<path d="${path}" fill="none" stroke="black" stroke-width="${width + 2}"/><path d="${path}" fill="none" stroke="white" stroke-width="${width}"/>`;
+const symbolLines = (path, width = 2) =>
+  `<path d="${path}" fill="none" stroke="white" stroke-width="${width}"/>`;
 const airliner =
   '<path d="M16 2c-1 0-2 1-2 3v7L3 20v3l11-4v6l-4 3v2l6-2 6 2v-2l-4-3v-6l11 4v-3l-11-8V5c0-2-1-3-2-3Z"/><path d="M8 17v5m16-5v5" stroke-width="3"/>';
 const fighter =
   '<path d="m16 1-3 11-2 3-9 8v3l10-3-1 5-4 2v1l9-2 9 2v-1l-4-2-1-5 10 3v-3l-9-8-2-3Z"/><path d="M16 9v17" fill="none"/>';
 // Draw the landing pad first so the helicopter overlaps its upper rim.
 const helicopter =
-  '<g data-symbol="helipad"><circle cx="20" cy="27" r="11" fill="black" stroke="black" stroke-width="4"/><circle cx="20" cy="27" r="11" fill="none" stroke="white" stroke-width="2"/>' +
+  '<g data-symbol="helipad"><circle cx="20" cy="27" r="11" fill="none" stroke="white" stroke-width="2"/>' +
   '<path data-symbol="helipad-h" d="M16.5 24v9m7-9v9m-7-4.5h7" fill="none" stroke="white" stroke-width="2.2"/></g>' +
   '<g data-symbol="helicopter" transform="translate(0 3)"><path d="M17 8h8a5 5 0 0 1 0 10h-8l-4-4H5L2 9h4l2 2h7Z"/>' +
-  outlinedLines('M19 3v5M10 3h23M15 20h15M18 18v2m9-2v2', 1.8) +
+  symbolLines('M19 3v5M10 3h23M15 20h15M18 18v2m9-2v2', 1.8) +
   '<path d="M24 9v5h5" fill="black" stroke="none"/></g>';
 // Keep the existing seaplane silhouette independent of land-airport symbols.
 const departingAirliner =
   '<path d="m3 23 7 1 9-5-8-9 4-2 11 7 7-4c5-3 8 1 3 4L14 28 4 27Z"/>';
 const departingFighter = `<g transform="translate(2 -2) scale(.85) rotate(45 16 16)">${fighter}</g>`;
-const runway = `<g data-symbol="runway">${outlinedLines('M4 35h32', 2.5)}</g>`;
+const runway = `<g data-symbol="runway">${symbolLines('M4 35h32', 2.5)}</g>`;
 const balloon =
   '<path d="M20 3C5 3 5 18 13 25l3 5h8l3-5C35 18 35 3 20 3Z"/><path d="M20 4c-7 7-7 15 0 25 7-10 7-18 0-25Z" fill="none"/>' +
-  outlinedLines('M16 30v5h8v-5');
+  symbolLines('M16 30v5h8v-5');
 const militaryBadge =
   '<path d="m32 2 6 2v6l-6 5-6-5V4Z"/><path d="m32 5 1 2h2l-2 2 1 2-2-1-2 1 1-2-2-2h2Z" fill="black" stroke="none"/>';
 const jointBadge =
@@ -52,7 +52,7 @@ export function airportSymbol(airport, usage = 'unknown') {
   if (facility === 'helicopter') shape = helicopter;
   else if (facility === 'balloon') shape = balloon;
   else if (facility === 'seaplane')
-    shape = `<g transform="translate(6 0) scale(.85)">${airliner}</g>${outlinedLines('M3 34q4-4 8 0t8 0 8 0 10 0')}`;
+    shape = `<g transform="translate(6 0) scale(.85)">${airliner}</g>${symbolLines('M3 34q4-4 8 0t8 0 8 0 10 0')}`;
   else {
     const aircraft =
       facility === 'fighter'
@@ -87,7 +87,7 @@ export function airportSymbol(airport, usage = 'unknown') {
   const image =
     'data:image/svg+xml;charset=utf-8,' +
     encodeURIComponent(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 40 40"><g fill="white" stroke="black" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round">${shape}</g></svg>`,
+      `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 40 40"><g fill="white" stroke="white" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round">${shape}</g></svg>`,
     );
   const symbol = Object.freeze({ kind, facility, label, image });
   cache.set(kind, symbol);

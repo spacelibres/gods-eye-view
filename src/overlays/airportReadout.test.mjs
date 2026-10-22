@@ -161,7 +161,7 @@ test('refresh updates the active card without reopening a dismissed one', () => 
   f.card.destroy();
 });
 
-test('airport source link uses the project backend even when metadata points at GitHub', () => {
+test('aviation cards omit source text and links even when their model has provenance', () => {
   const f = fixture();
   f.entity.getAirportReadout = () => ({
     title: 'Airport',
@@ -172,8 +172,37 @@ test('airport source link uses the project backend even when metadata points at 
   });
   f.card.show(f.entity);
   assert.equal(
-    f.all().find((n) => n.tagName === 'A').href,
-    '/api/airports/provenance',
+    f.all().some((n) => n.tagName === 'A'),
+    false,
   );
+  assert.equal(
+    f.all().some((n) => n.textContent === 'Source'),
+    false,
+  );
+  assert.equal(
+    f.all().some((n) => n.textContent === 'OurAirports'),
+    false,
+  );
+  f.card.destroy();
+});
+
+test('navaids reuse the airport dialog with their own category and facts', () => {
+  const f = fixture();
+  f.entity.getAirportReadout = () => ({
+    category: 'Navaid',
+    title: 'ABC VOR-DME',
+    codes: [{ label: 'Ident', value: 'ABC' }],
+    rows: [['Frequency', '113.6 MHz']],
+  });
+  assert.equal(f.card.show(f.entity), true);
+  assert.ok(
+    f
+      .all()
+      .some(
+        (n) =>
+          n.className === 'airport-detail-kicker' && n.textContent === 'Navaid',
+      ),
+  );
+  assert.ok(f.all().some((n) => n.textContent === '113.6 MHz'));
   f.card.destroy();
 });

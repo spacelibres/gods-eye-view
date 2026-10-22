@@ -11,6 +11,23 @@ test('frequency preserves NDB kHz and converts VOR source kHz to MHz', () => {
   assert.equal(formatNavaidFrequency(113600, 'VOR-DME'), '113.6 MHz');
   assert.equal(formatNavaidFrequency(null, 'VOR'), null);
 });
+
+test('all navaid textures use clean light strokes without a black underlayer', () => {
+  for (const type of [
+    'DME',
+    'NDB',
+    'NDB-DME',
+    'VOR',
+    'VOR-DME',
+    'VORTAC',
+    'TACAN',
+  ]) {
+    const svg = decodeURIComponent(navaidSymbol(type));
+    assert.doesNotMatch(svg, /stroke="black"/);
+    assert.equal((svg.match(/<g /g) || []).length, 1);
+    assert.match(svg, /stroke="white"/);
+  }
+});
 test('country representative point unwraps dateline', () => {
   const p = countryLabelPoint({ polygons: [[[179, 0, 2, 0, 0, 2, -2, 0]]] }, 0);
   assert.ok(Math.abs(p.lon) > 170);
@@ -39,9 +56,15 @@ import * as Cesium from 'cesium';
 import { createAviationReferences } from './references.js';
 function fixture(source, extra = {}) {
   const entries = new Map(),
-    contexts = new Map();
+    contexts = new Map(),
+    sources = [];
   const viewer = {
-    dataSources: { add() {}, remove() {} },
+    dataSources: {
+      add(source) {
+        sources.push(source);
+      },
+      remove() {},
+    },
     scene: {
       requestRender() {},
       globe: {
@@ -73,8 +96,61 @@ function fixture(source, extra = {}) {
   });
   layer.init(viewer);
   layer.enable();
-  return { layer, viewer, entries, contexts };
+  return { layer, viewer, entries, contexts, sources };
 }
+test('navaid selections expose compact airport-style cards while context keeps provenance', async () => {
+  const f = fixture(
+    {
+      async getNavaids() {
+        return {
+          navaids: [
+            {
+              id: 7,
+              ident: 'ABC',
+              name: '<Beacon>',
+              type: 'VOR-DME',
+              countryCode: 'CN',
+              lat: 1,
+              lon: 2,
+              frequencyKhz: 113600,
+              dmeFrequencyKhz: 110300,
+              dmeChannel: '40X',
+            },
+          ],
+          source: 'OurAirports',
+          sourceUrl: 'https://example.test/data',
+          revision: 'source-revision',
+        };
+      },
+    },
+    { getLocale: () => 'zh-CN' },
+  );
+  await f.layer.update({ height: 10000 });
+  const entity = f.sources[0].entities.getById('navaid:7');
+  assert.equal(typeof entity.getAirportReadout, 'function');
+  const model = entity.getAirportReadout();
+  assert.equal(model.category, 'Navaid');
+  assert.equal(model.title, '<Beacon>');
+  assert.deepEqual(model.codes, [{ label: 'Ident', value: 'ABC' }]);
+  assert.ok(
+    model.rows.some(([k, v]) => k === 'Frequency' && v === '113.6 MHz'),
+  );
+  assert.ok(
+    model.rows.some(([k, v]) => k === 'DME frequency' && v === '110.3 MHz'),
+  );
+  assert.ok(model.rows.some(([k, v]) => k === 'DME channel' && v === '40X'));
+  assert.ok(model.rows.some(([k, v]) => k === 'Country' && v === '中国'));
+  assert.ok(model.rows.some(([k, v]) => k === 'Coordinates' && v === '1, 2'));
+  assert.ok(!JSON.stringify(model).includes('OurAirports'));
+  assert.ok(!JSON.stringify(model).includes('source-revision'));
+  assert.ok(!entity.gevLabelModel.details.join().includes('source-revision'));
+  assert.equal(
+    f.contexts.get('navaid:7').properties.revision,
+    'source-revision',
+  );
+  f.layer.destroy();
+});
+
 test('navaids are bounded station billboards, MSL metadata and safe detail HTML; failure preserves good state', async () => {
   let fail = false;
   const a = {
@@ -95,6 +171,9 @@ test('navaids are bounded station billboards, MSL metadata and safe detail HTML;
   });
   await f.layer.update({ height: 10000 });
   assert.equal(f.layer.getStats().navaidCount, 1);
+  const billboard = f.sources[0].entities.values[0].billboard;
+  assert.equal(billboard.width.getValue(), 12);
+  assert.equal(billboard.height.getValue(), 12);
   assert.equal(f.contexts.get('navaid:42').properties.elevationM, 900);
   fail = true;
   await f.layer.update({ height: 10000 });

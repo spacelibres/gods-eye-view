@@ -523,74 +523,75 @@ for (const contextLayer of ['airports', 'aviation-navaids'])
     }
   });
 
-test('closing an airport card clears both viewer and shared selection and cannot reopen on refresh', async () => {
-  const { getContextStore, getSelectedEntityContext } =
-    await import('./contextStore.js');
-  const previous = globalThis.window;
-  const win = new EventTarget();
-  globalThis.window = win;
-  let dismiss,
-    open = false,
-    destroyed = false;
-  const airport = {
-    id: 'airport:close',
-    gevTrackedId: 'airport:close',
-    gevLabelModel: { title: 'Airport' },
-    getAirportReadout: () => ({ title: 'Airport' }),
-  };
-  const viewer = {
-    trackedEntity: null,
-    selectedEntity: airport,
-    trackedEntityChanged: makeCesiumEvent(),
-    scene: { requestRender() {} },
-  };
-  const recorder = makeHostRecorder();
-  _setTrackedOverlayHostForTest(recorder.host);
-  try {
-    initTrackedReadout(viewer, {
-      createAirportCard: ({ onClose }) => {
-        dismiss = onClose;
-        return {
-          show(entity) {
-            open = entity === airport;
-            return open;
-          },
-          hide() {
-            open = false;
-          },
-          destroy() {
-            destroyed = true;
-          },
-        };
-      },
-    });
-    const record = { id: airport.id, layerId: 'airports', entity: airport };
-    const store = getContextStore();
-    store.entities.set(airport.id, record);
-    store.selectedEntityId = airport.id;
-    win.dispatchEvent(
-      new CustomEvent('gev:entity-selected', { detail: record }),
-    );
-    assert.equal(open, true);
-    assert.equal(
-      recorder.calls.filter((c) => c.op === 'set').length,
-      0,
-      'airport has one DOM readout, no duplicate canvas card',
-    );
-    dismiss();
-    assert.equal(open, false);
-    assert.equal(viewer.selectedEntity, undefined);
-    assert.equal(getSelectedEntityContext(), null);
-    refreshTrackedReadout(airport);
-    assert.equal(open, false);
-    destroyTrackedReadout();
-    assert.equal(destroyed, true);
-  } finally {
-    destroyTrackedReadout();
-    _setTrackedOverlayHostForTest();
-    globalThis.window = previous;
-  }
-});
+for (const contextLayer of ['airports', 'aviation-navaids'])
+  test(`closing a ${contextLayer} card clears both viewer and shared selection and cannot reopen on refresh`, async () => {
+    const { getContextStore, getSelectedEntityContext } =
+      await import('./contextStore.js');
+    const previous = globalThis.window;
+    const win = new EventTarget();
+    globalThis.window = win;
+    let dismiss,
+      open = false,
+      destroyed = false;
+    const airport = {
+      id: 'airport:close',
+      gevTrackedId: 'airport:close',
+      gevLabelModel: { title: 'Airport' },
+      getAirportReadout: () => ({ title: 'Airport' }),
+    };
+    const viewer = {
+      trackedEntity: null,
+      selectedEntity: airport,
+      trackedEntityChanged: makeCesiumEvent(),
+      scene: { requestRender() {} },
+    };
+    const recorder = makeHostRecorder();
+    _setTrackedOverlayHostForTest(recorder.host);
+    try {
+      initTrackedReadout(viewer, {
+        createAirportCard: ({ onClose }) => {
+          dismiss = onClose;
+          return {
+            show(entity) {
+              open = entity === airport;
+              return open;
+            },
+            hide() {
+              open = false;
+            },
+            destroy() {
+              destroyed = true;
+            },
+          };
+        },
+      });
+      const record = { id: airport.id, layerId: contextLayer, entity: airport };
+      const store = getContextStore();
+      store.entities.set(airport.id, record);
+      store.selectedEntityId = airport.id;
+      win.dispatchEvent(
+        new CustomEvent('gev:entity-selected', { detail: record }),
+      );
+      assert.equal(open, true);
+      assert.equal(
+        recorder.calls.filter((c) => c.op === 'set').length,
+        0,
+        'airport has one DOM readout, no duplicate canvas card',
+      );
+      dismiss();
+      assert.equal(open, false);
+      assert.equal(viewer.selectedEntity, undefined);
+      assert.equal(getSelectedEntityContext(), null);
+      refreshTrackedReadout(airport);
+      assert.equal(open, false);
+      destroyTrackedReadout();
+      assert.equal(destroyed, true);
+    } finally {
+      destroyTrackedReadout();
+      _setTrackedOverlayHostForTest();
+      globalThis.window = previous;
+    }
+  });
 
 test('closing a tracked airport clears tracking even after the context pointer was released', () => {
   const previous = globalThis.window;

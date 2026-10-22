@@ -26,7 +26,7 @@ test('civil, military, joint-use and unconfirmed airfields have different silhou
   assert.match(symbols[2].label, /Joint/);
   assert.match(symbols[3].label, /unconfirmed/i);
 });
-test('seaplanes and balloons keep physical facility symbols, SVGs are cached and outlined', () => {
+test('seaplanes and balloons keep cached physical symbols without black outlines', () => {
   for (const type of [
     'heliport',
     'seaplane_base',
@@ -38,7 +38,7 @@ test('seaplanes and balloons keep physical facility symbols, SVGs are cached and
     assert.equal(a, b);
     const svg = decodeURIComponent(a.image);
     assert.match(svg, /viewBox="0 0 40 40"/);
-    assert.match(svg, /stroke="black"/);
+    assert.doesNotMatch(svg, /stroke="black"/);
     assert.match(svg, /fill="white"/);
     assert.doesNotMatch(svg, /<script|https?:\/\/(?!www\.w3\.org)/);
   }
@@ -46,6 +46,25 @@ test('seaplanes and balloons keep physical facility symbols, SVGs are cached and
     airportSymbol({ type: 'seaplane_base' }).image,
     airportSymbol({ type: 'balloonport' }).image,
   );
+});
+
+test('every facility and usage keeps clean strokes in map and themed legend textures', () => {
+  for (const type of [
+    'large_airport',
+    'heliport',
+    'seaplane_base',
+    'balloonport',
+  ]) {
+    for (const usage of ['civil', 'military', 'joint', 'unknown']) {
+      const symbol = airportSymbol({ type }, usage);
+      for (const image of [
+        symbol.image,
+        airportLegendImage(symbol, '#33b8ff'),
+      ]) {
+        assert.doesNotMatch(decodeURIComponent(image), /stroke="black"/);
+      }
+    }
+  }
 });
 
 test('rotors, skids and water lines retain a light inner stroke on dark imagery and follow legend tint', () => {

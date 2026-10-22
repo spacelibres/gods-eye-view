@@ -626,7 +626,7 @@ try {
     };
   });
   check(
-    'real map click opens one compact airport card with codes, MSL and source',
+    'real map click opens one compact airport card with codes and MSL, with provenance retained in context',
     /EGLL/.test(selected.details) &&
       /LHR/.test(selected.details) &&
       /25.3/.test(selected.details) &&
@@ -634,14 +634,16 @@ try {
       selected.visible &&
       !selected.active &&
       /EGLL/.test(selected.card) &&
-      !/Revision|Usage evidence|Source URL/.test(selected.card),
+      !/Source|Revision|OurAirports|Usage evidence/.test(selected.card),
   );
   await page.screenshot({ path: `${shots}/desktop-details.png` });
   check(
-    'airport source link remains on our backend',
+    'airport card omits source links and provenance footer',
     await page.$eval(
-      '#airport-detail-card a',
-      (el) => new URL(el.href).origin === location.origin,
+      '#airport-detail-card',
+      (el) =>
+        !el.querySelector('a, .airport-detail-footer') &&
+        !/Source|Revision|OurAirports/.test(el.textContent),
     ),
   );
   await page.evaluate(async () => {
@@ -773,24 +775,46 @@ try {
   await reopen();
   await page.click('#airport-detail-card .airport-detail-close');
 
-  const navClick = await page.evaluate(() => {
-    const v = window.__godsEyeView.viewer;
-    const e = window.__gevContextStore.entities.get('navaid:501').entity;
-    const p = window.__qaTargetPoint(e);
-    const rect = v.scene.canvas.getBoundingClientRect();
-    for (let x = -8; x <= 8; x += 2)
-      for (let y = -8; y <= 8; y += 2) {
-        const q = { x: p.x + x, y: p.y + y };
-        if (v.scene.pick(q)?.id === e)
-          return { x: q.x + rect.left, y: q.y + rect.top };
-      }
-    return null;
-  });
-  assert.ok(navClick, 'navigation station billboard is pickable');
-  await page.mouse.click(navClick.x, navClick.y);
-  await page.waitForFunction(
-    () => window.__gevContextStore.selectedEntityId === 'navaid:501',
-  );
+  const clickNavaid = async (id) => {
+    await page.waitForFunction(
+      (id) => {
+        const v = window.__godsEyeView.viewer;
+        const e = window.__gevContextStore.entities.get(`navaid:${id}`)?.entity;
+        const p = e && window.__qaTargetPoint(e);
+        v.scene.requestRender();
+        if (!p) return false;
+        for (let x = -8; x <= 8; x += 2)
+          for (let y = -8; y <= 8; y += 2)
+            if (v.scene.pick({ x: p.x + x, y: p.y + y })?.id === e) return true;
+        return false;
+      },
+      { timeout: 30000 },
+      id,
+    );
+    const navClick = await page.evaluate((id) => {
+      const v = window.__godsEyeView.viewer;
+      const e = window.__gevContextStore.entities.get(`navaid:${id}`).entity;
+      const p = window.__qaTargetPoint(e);
+      const rect = v.scene.canvas.getBoundingClientRect();
+      for (let x = -8; x <= 8; x += 2)
+        for (let y = -8; y <= 8; y += 2) {
+          const q = { x: p.x + x, y: p.y + y };
+          if (v.scene.pick(q)?.id === e)
+            return { x: q.x + rect.left, y: q.y + rect.top };
+        }
+      return null;
+    }, id);
+    assert.ok(navClick, 'navigation station billboard is pickable');
+    await page.mouse.click(navClick.x, navClick.y);
+    await page.waitForFunction(
+      (id) =>
+        window.__gevContextStore.selectedEntityId === `navaid:${id}` &&
+        document.querySelector('#airport-detail-card')?.hidden === false,
+      {},
+      id,
+    );
+  };
+  await clickNavaid('501');
   check(
     'selected navaid remains active through the Airports lifecycle',
     await page.evaluate(async () => {
@@ -804,29 +828,86 @@ try {
     }),
   );
   check(
-    'navaid click opens frequency, DME channel, country and source details',
-    await page.evaluate(() => {
-      const details = window.__gevContextStore.entities
-        .get('navaid:501')
-        .entity.gevLabelModel.details.join('\n');
-      return [
-        '113.6 MHz',
-        '083X',
-        'United Kingdom',
-        'OurAirports',
-        'EGLL',
-      ].every((v) => details.includes(v));
+    'VOR-DME click uses the same dialog with category, ident, type, frequency and coordinates',
+    await page.$eval('#airport-detail-card', (card) => {
+      const text = card.textContent;
+      return (
+        card.getAttribute('role') === 'dialog' &&
+        card.querySelector('.airport-detail-kicker')?.textContent ===
+          'Navaid' &&
+        [
+          'LON',
+          'VOR-DME',
+          '113.6 MHz',
+          '083X',
+          'United Kingdom',
+          '51.45, -0.49',
+          'EGLL',
+        ].every((v) => text.includes(v)) &&
+        !/Source|Revision|OurAirports/.test(text) &&
+        !card.querySelector('a, .airport-detail-footer') &&
+        document.querySelectorAll('#airport-detail-card').length === 1
+      );
     }),
   );
-  await page.waitForFunction(async () => {
-    window.__godsEyeView.viewer.scene.requestRender();
-    const { getOverlayPaintRect } =
-      await import('/src/overlays/worldOverlay.js');
-    const r = getOverlayPaintRect('tracked', 'navaid:501');
-    return r && r.y >= 0 && r.y + r.h < innerHeight - 100;
-  });
-  check('full navigation detail card stays clear of bottom controls', true);
+  check(
+    'navigation detail card stays clear of bottom controls without a duplicate canvas card',
+    await page.$eval('#airport-detail-card', async (card) => {
+      const { getActiveTrackedReadoutId } =
+        await import('/src/data/trackedReadout.js');
+      const r = card.getBoundingClientRect();
+      return (
+        r.top >= 0 &&
+        r.bottom <= innerHeight - 90 &&
+        getComputedStyle(card).overflowY === 'visible' &&
+        !getActiveTrackedReadoutId()
+      );
+    }),
+  );
   await page.screenshot({ path: `${shots}/navigation-details.png` });
+  await page.click('#airport-detail-card .airport-detail-close');
+  check(
+    'close button clears navigation context and viewer selection',
+    await page.evaluate(
+      () =>
+        !window.__gevContextStore.selectedEntityId &&
+        !window.__godsEyeView.viewer.selectedEntity &&
+        document.querySelector('#airport-detail-card').hidden,
+    ),
+  );
+  await clickNavaid('502');
+  check(
+    'NDB click reuses the same compact card with kHz frequency and no provenance',
+    await page.$eval(
+      '#airport-detail-card',
+      (card) =>
+        card.querySelector('.airport-detail-kicker')?.textContent ===
+          'Navaid' &&
+        ['QA NDB', 'NDB', '375 kHz', '51.49, -0.43'].every((v) =>
+          card.textContent.includes(v),
+        ) &&
+        !/Source|Revision|OurAirports/.test(card.textContent) &&
+        !card.querySelector('a'),
+    ),
+  );
+  await page.keyboard.press('Escape');
+  check(
+    'Escape clears navigation context and viewer selection',
+    await page.evaluate(
+      () =>
+        !window.__gevContextStore.selectedEntityId &&
+        !window.__godsEyeView.viewer.selectedEntity &&
+        document.querySelector('#airport-detail-card').hidden,
+    ),
+  );
+  await page.evaluate(() =>
+    window.__godsEyeView.dataManager.layers.get('airports').module.update(),
+  );
+  check(
+    'source refresh cannot reopen a dismissed navigation card',
+    await page.$eval('#airport-detail-card', (card) => card.hidden),
+  );
+  await clickNavaid('501');
   const readsBeforeTheme = viewReads;
   const colors = await page.evaluate(async () => {
     const runtime = await import('/src/ui/colorSystemRuntime.js');
@@ -849,6 +930,47 @@ try {
   await page.screenshot({ path: `${shots}/alternate-theme.png` });
   await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 1 });
   await page.screenshot({ path: `${shots}/mobile.png` });
+  for (const [width, height] of [
+    [390, 844],
+    [320, 568],
+    [667, 375],
+  ]) {
+    await page.setViewport({ width, height, deviceScaleFactor: 1 });
+    const visibility = await page.$eval('#airport-detail-card', (card) => {
+      const fields = [
+        ...card.querySelectorAll('dt, dd, .airport-detail-close'),
+      ];
+      return fields.map((field) => {
+        const r = field.getBoundingClientRect();
+        const hit = document.elementFromPoint(r.left + 4, r.top + 4);
+        return {
+          text: field.textContent,
+          visible:
+            r.left >= 0 &&
+            r.top >= 0 &&
+            r.right <= innerWidth &&
+            r.bottom <= innerHeight &&
+            (hit === field || field.contains(hit)),
+        };
+      });
+    });
+    check(
+      `navigation facts and close button remain unobscured at ${width}x${height}`,
+      visibility.every((field) => field.visible),
+      JSON.stringify(visibility.filter((field) => !field.visible)),
+    );
+    check(
+      `navigation card grows naturally without scrollbars at ${width}x${height}`,
+      await page.$eval(
+        '#airport-detail-card',
+        (card) =>
+          getComputedStyle(card).overflowY === 'visible' &&
+          card.scrollHeight <= card.clientHeight + 1 &&
+          card.scrollWidth <= card.clientWidth + 1,
+      ),
+    );
+  }
+  await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 1 });
   check(
     'mobile page has no horizontal overflow',
     await page.evaluate(

@@ -1,5 +1,16 @@
 # God's Eye View Current State
 
+Airport symbols use compact 16/14/12px map sizes and navigation aids use12px,
+without black SVG outline layers. Navigation facilities reuse the same themed
+DOM card as airports, including close/Escape selection cleanup. Cards show
+station facts without source/provenance rows or links; full context and backend
+records retain provenance. Global provider attribution remains visible.
+
+Webhook acknowledgments now follow an atomic private deployment checkpoint.
+Pending pushes survive receiver termination, failed work remains available for
+operator retry, and a managed installer leaves its receiver running until the
+accepted queue drains and systemd refreshes it. See DEPLOY.md for recovery.
+
 Official upstream is integrated through `7be5937f` (57 additional commits).
 The catalogue starfield, shared controls, provider response hardening and bounded
 Overpass admission retain our local airport catalogs, voice providers and VPS
@@ -28,7 +39,7 @@ collections without stopping Cesium rendering. Selecting an airport opens one
 compact DOM card styled with the shared panel surface and palette. Its close
 button and Escape clear the matching selected/tracked entity and shared context,
 so later source refreshes cannot reopen it. The two-column card shows codes,
-facility/use, city/country, coordinates and MSL elevation with a short source link;
+facility/use, city/country, coordinates and MSL elevation without source links;
 full provenance remains in the context data. Card labels and region names follow
 live language changes, and its mobile position clears the floating controls.
 
