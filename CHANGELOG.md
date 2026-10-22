@@ -4,6 +4,22 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.81] — 2026-10-22 — Country flag icons and a complete install icon
+
+- Show a country's flag beside its name in airport and navigation-aid cards and
+  their Cesium description tables. 249 ISO 3166-1 alpha-2 flag SVGs
+  (`flag-icons`, MIT) ship under `public/flags/`; the ISO code is resolved from
+  the directory code or a country name, and no icon appears when the country is
+  unknown. Radio, flight and vessel surfaces are unchanged because they do not
+  display a country.
+- Stop clipping the install icon's bottom. The PNG icons were rendered from
+  `public/logo.svg`, whose 2.5:1 viewBox cut off the ring's base; they now render
+  from `public/icons/logo-square.svg` with the mark centred, so the raster and
+  vector install icons match.
+- Verify 8,767 passing unit/allocation checks (11 existing platform skips) with
+  zero failures; build, formatting, dependency boundaries and all six locales
+  pass.
+
 ## [0.2.80] — 2026-10-22 — Reliable webhook handoff and clean aviation details
 
 - Persist accepted deployment intent outside the checkout before acknowledging
