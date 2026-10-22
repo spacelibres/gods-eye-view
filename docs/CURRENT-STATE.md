@@ -1627,11 +1627,12 @@ Manifest `start_url`, `scope` and icon paths are relative to the manifest, and
 Vite rewrites the `index.html` links under `base`, so a build served from a path
 prefix installs and launches inside that prefix.
 
-`node scripts/generate-icons.mjs` renders every raster from `public/logo.svg` and
-writes `public/icons/`. Output is committed, so building needs no image
-toolchain; re-run the script after changing the logo. Ordinary icons inset the
-mark to 78% of the canvas and the maskable variant to 54%, keeping it inside the
-circle Android may crop to. `src/tooling/webAppIcons.test.mjs` checks the links,
+`node scripts/generate-icons.mjs` renders every raster from
+`public/icons/logo-square.svg` (not `public/logo.svg`, whose 2.5:1 viewBox
+clipped the ring's bottom) and writes `public/icons/`. Output is committed, so
+building needs no image toolchain; re-run the script after changing the logo.
+Ordinary icons inset the mark to 78% of the canvas and the maskable variant to
+54%, keeping it inside the circle Android may crop to. `src/tooling/webAppIcons.test.mjs` checks the links,
 the manifest fields and that each committed PNG is square at its declared size.
 It also builds the install links under `base: '/example/'` and asserts every
 emitted link and manifest URL stays inside that base.

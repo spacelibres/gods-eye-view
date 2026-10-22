@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Renders the home-screen and favicon rasters from `public/logo.svg`.
+// Renders the home-screen and favicon rasters from `public/icons/logo-square.svg`.
 //
 // Re-run after changing the logo: `node scripts/generate-icons.mjs`. The output
 // is committed, because the install icons have to exist in a plain `vite build`
@@ -13,7 +13,7 @@ const REPO_ROOT = path.resolve(
   fileURLToPath(new URL('.', import.meta.url)),
   '..',
 );
-const LOGO = path.join(REPO_ROOT, 'public', 'logo.svg');
+const LOGO = path.join(REPO_ROOT, 'public', 'icons', 'logo-square.svg');
 const OUT_DIR = path.join(REPO_ROOT, 'public', 'icons');
 
 /**
@@ -42,9 +42,8 @@ const TARGETS = [
 /** Fit the logo inside `size * inset` and centre it on an opaque square. */
 async function render(svg, { size, inset }) {
   const box = Math.round(size * inset);
-  // The logo's viewBox is wider than it is tall, so `contain` bounds it by
-  // width and leaves the vertical padding uneven — centring is done by the
-  // composite below rather than by the resize.
+  // The square logo fills the box 1:1, so `contain` is an exact scale; the
+  // composite below centres it on the opaque canvas.
   const mark = await sharp(svg, { density: 384 })
     .resize(box, box, {
       fit: 'contain',
