@@ -12,6 +12,33 @@ export const TRANSLATION_LOCALES = Object.freeze([
 const projections = new WeakMap();
 const catalogIndexes = new WeakMap();
 const revisions = new WeakMap();
+const localeViews = new WeakMap();
+/**
+ * How many localized projections stay resident per translation catalog. Each
+ * projection duplicates the record index of the whole airport directory
+ * (measured at roughly 58 MB for the 86,258-record snapshot), so caching all
+ * six languages kept about 350 MB per server process. The least recently used
+ * locale is dropped and rebuilt on demand instead.
+ */
+const PROJECTION_CACHE_LOCALES = 2;
+/**
+ * A stable per-locale view of the catalog entries, so `translationRevision`
+ * hashes each locale once per catalog rather than on every projection build.
+ */
+function localeEntries(catalog, locale) {
+  let views = localeViews.get(catalog);
+  if (!views) localeViews.set(catalog, (views = new Map()));
+  let view = views.get(locale);
+  if (!view) {
+    view = {
+      entries: (catalog.entries || []).filter(
+        (entry) => entry.locale === locale,
+      ),
+    };
+    views.set(locale, view);
+  }
+  return view;
+}
 function translationRevision(catalog) {
   let revision = revisions.get(catalog);
   if (!revision) {
@@ -227,7 +254,14 @@ export function localizeSnapshot(snapshot, catalog, locale) {
   if (!catalogs) projections.set(snapshot, (catalogs = new WeakMap()));
   let locales = catalogs.get(catalog);
   if (!locales) catalogs.set(catalog, (locales = new Map()));
-  if (locales.has(locale)) return locales.get(locale);
+  if (locales.has(locale)) {
+    const cached = locales.get(locale);
+    // Refresh recency: a Map iterates in insertion order, which is the order
+    // the bound below evicts in.
+    locales.delete(locale);
+    locales.set(locale, cached);
+    return cached;
+  }
   const translations = index(catalog);
   const project = (record, kind) => {
     let copy;
@@ -263,9 +297,7 @@ export function localizeSnapshot(snapshot, catalog, locale) {
   const projected = Object.freeze({
     ...snapshot,
     locale,
-    translationRevision: translationRevision({
-      entries: catalog.entries.filter((entry) => entry.locale === locale),
-    }),
+    translationRevision: translationRevision(localeEntries(catalog, locale)),
     records: Object.freeze(
       (snapshot.records || []).map((r) => project(r, 'airport')),
     ),
@@ -274,6 +306,8 @@ export function localizeSnapshot(snapshot, catalog, locale) {
     ),
   });
   locales.set(locale, projected);
+  while (locales.size > PROJECTION_CACHE_LOCALES)
+    locales.delete(locales.keys().next().value);
   return projected;
 }
 export async function loadTranslationCatalog(directory) {

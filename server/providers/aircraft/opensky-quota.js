@@ -140,19 +140,27 @@ export function createOpenSkyQuota({
       until = Math.max(until, state.attempts[0].at + OPENSKY_DAY_MS);
     return Math.max(0, until - at);
   }
-  async function finalize(action) {
-    // Peer ledger reads/writes hold a short lock. Do not turn ordinary
-    // contention into a permanent uncertainty marker, or reissue the request.
-    const deadline = performance.now() + 1000;
+  /**
+   * A peer process holds the ledger lock for the length of one short
+   * transaction, so meeting a held lock is ordinary contention — not a reason
+   * to answer as if OpenSky were unavailable. Retries are bounded, and a lock
+   * that stays wedged still fails closed at the caller.
+   */
+  async function transactWithRetry(action, persist = true) {
+    const until = performance.now() + 1000;
     for (;;) {
       try {
-        return transaction(action);
+        return transaction(action, persist);
       } catch (error) {
-        if (error.code !== 'EEXIST' || performance.now() >= deadline)
-          throw error;
+        if (error.code !== 'EEXIST' || performance.now() >= until) throw error;
         await sleep(10);
       }
     }
+  }
+  async function finalize(action) {
+    // Peer ledger reads/writes hold a short lock. Do not turn ordinary
+    // contention into a permanent uncertainty marker, or reissue the request.
+    return transactWithRetry(action);
   }
   const denied = (status, ms) =>
     Response.json(
@@ -186,7 +194,10 @@ export function createOpenSkyQuota({
       let reservation;
       let delay;
       try {
-        delay = transaction((state, at) => {
+        // The reservation is the first write of a request, so it is the lock
+        // this process is most likely to find held by a peer. Waiting for it
+        // keeps a busy ledger from turning into a 503 that never happened.
+        delay = await transactWithRetry((state, at) => {
           const ms = wait(state, at);
           if (!ms) {
             reservation = at;

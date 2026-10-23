@@ -4,6 +4,24 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.86] — 2026-10-23 — Bounded translation memory and a patient OpenSky ledger
+
+- Cache at most two localized airport projections per process, least recently
+  used evicted first. Each projection duplicates the record index of the whole
+  86,258-record directory — measured at about 58 MB of heap and three index
+  maps on the deployed host — so six resident languages cost roughly 350 MB per
+  server process. A projection is rebuilt on demand, and its per-locale
+  translation revision is now hashed once per catalog instead of on every
+  build.
+- Wait for a peer's short ledger lock before reserving OpenSky credits instead
+  of answering 503. The reservation is the first write of a request, so it is
+  the write most likely to meet a lock held by another process; a lock that is
+  never released still fails closed after the one-second budget.
+- Verify 8,781 unit tests pass (11 existing platform skips, zero failures),
+  including new coverage for projection eviction, lock contention and the
+  fail-closed lock case, plus formatting, dependency boundaries, all six
+  locales and the production build.
+
 ## [0.2.85] — 2026-10-23 — AIS cache pruning stops burning a core
 
 - Run the stale-vessel sweep at most once a minute instead of on every ingested

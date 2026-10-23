@@ -249,6 +249,24 @@ test('storage failure does not await stalled response cancellation', async (t) =
   assert.equal(response.status, 503);
 });
 
+test('a ledger lock held for a short transaction is waited for, not reported as unavailable', async (t) => {
+  const f = setup(t);
+  const lock = join(f.options.directory, 'states-quota.json.lock');
+  writeFileSync(lock, '');
+  setTimeout(() => rmSync(lock, { force: true }), 150);
+  const response = await f.gate.fetch('/api/states/all');
+  assert.equal(response.status, 200);
+  assert.equal(f.calls, 1);
+});
+
+test('a ledger lock that is never released still fails closed', async (t) => {
+  const f = setup(t);
+  writeFileSync(join(f.options.directory, 'states-quota.json.lock'), '');
+  const response = await f.gate.fetch('/api/states/all');
+  assert.equal(response.status, 503);
+  assert.equal(f.calls, 0);
+});
+
 for (const networkFailure of [false, true]) {
   test(`temporary peer lock does not poison ${networkFailure ? 'failed' : 'successful'} response finalization`, async (t) => {
     let worker;

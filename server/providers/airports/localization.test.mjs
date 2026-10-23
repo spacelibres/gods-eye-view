@@ -88,6 +88,27 @@ test('untranslated records retain identity without allocating projections', () =
   assert.equal(translated.records[0], record);
 });
 
+test('projection cache keeps the most recently used locales only', () => {
+  const catalog = mergeTranslations(snapshot, { entries: [] }, [
+    entry(),
+    { ...entry(), locale: 'ja', text: 'テスト空港' },
+    { ...entry(), locale: 'ko', text: '테스트 공항' },
+  ]);
+  const zh = localizeSnapshot(snapshot, catalog, 'zh-CN');
+  const ja = localizeSnapshot(snapshot, catalog, 'ja');
+  assert.equal(zh.records[0].name, '测试机场');
+  assert.equal(ja.records[0].name, 'テスト空港');
+
+  // Touch zh-CN so ja-CN drops to least recently used, then add a third locale.
+  assert.equal(localizeSnapshot(snapshot, catalog, 'zh-CN'), zh);
+  localizeSnapshot(snapshot, catalog, 'ko');
+  assert.equal(localizeSnapshot(snapshot, catalog, 'zh-CN'), zh);
+  // The evicted projection is rebuilt, so it is a new but equivalent object.
+  const rebuilt = localizeSnapshot(snapshot, catalog, 'ja');
+  assert.notEqual(rebuilt, ja);
+  assert.equal(rebuilt.records[0].name, 'テスト空港');
+});
+
 test('changing another language does not change this language revision', () => {
   const c = mergeTranslations(snapshot, { entries: [] }, [entry()]);
   const before = localizeSnapshot(snapshot, c, 'zh-CN').translationRevision;

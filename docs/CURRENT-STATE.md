@@ -25,7 +25,11 @@ manifest; daily collection writes only the outstanding translation worklist.
 This initial content covers 255 airport names, 3,535 city fields and 38,646 region
 fields per target language. Worldwide airport-name and navigation-name
 translation is still incomplete; missing or renamed text uses its original.
-No runtime translation provider is called.
+No runtime translation provider is called. Localized reads cache at most two
+languages per process: one projection duplicates the record index of the whole
+directory (about 58 MB for 86,258 records), so the least recently used language
+is dropped and rebuilt on demand instead of every supported language staying
+resident.
 
 All six OurAirports source CSVs ship with the project and are seeded into the
 VPS persistent archive without network access. Airport map/search/detail reads,
@@ -1060,7 +1064,10 @@ OpenSky acquisition runs on the VPS every 120 seconds for one worldwide snapshot
 clients cannot trigger upstream requests or regional ADS-B fallbacks. Each global
 attempt reserves four credits in a durable state ledger; track backfill has an
 independent ledger and a bounded shared per-aircraft cache. Actual remaining
-credits and full upstream cooldowns may extend the collection interval. Frontend
+credits and full upstream cooldowns may extend the collection interval. The
+ledger is a file with a short-lived lock, so a peer process holding it makes a
+reservation wait up to one second instead of answering 503; a lock that stays
+held still fails closed. Frontend
 adapters coalesce reads and honor the server refresh deadline while preserving
 original observation epochs and stale ages. See
 [`OPENSKY-CACHE-OPERATIONS.md`](OPENSKY-CACHE-OPERATIONS.md) for deployment,
