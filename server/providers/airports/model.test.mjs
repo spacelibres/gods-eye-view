@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  airportIndexes,
   parseAirportCsv,
   queryAirports,
   searchAirports,
@@ -22,6 +23,33 @@ const snapshot = () => ({
   sourceUrl: 'https://ourairports.com/data/',
   records: records(),
 });
+test('index tables are built only when a read needs them', () => {
+  let iterations = 0;
+  const list = [
+    {
+      id: '1',
+      ident: 'TEST',
+      name: 'Test',
+      keywords: 'alias',
+      lat: 1,
+      lon: 2,
+    },
+  ];
+  list[Symbol.iterator] = function* () {
+    iterations += 1;
+    yield* Array.prototype.slice.call(this);
+  };
+  const index = airportIndexes({ records: list });
+
+  assert.equal(iterations, 0, 'nothing is built before a table is read');
+  assert.equal(index.cells.size, 1);
+  assert.equal(iterations, 1, 'a map read only builds the cell table');
+  assert.equal(index.cells.size, 1);
+  assert.equal(iterations, 1, 'a built table is reused');
+  assert.equal(index.names.get('1').name, 'test');
+  assert.equal(iterations, 2, 'search builds its own table on demand');
+});
+
 test('CSV preserves Unicode, quoting, Namibia and distinct code identity', () => {
   const r = records();
   assert.equal(r.length, 3);

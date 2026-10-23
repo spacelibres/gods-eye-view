@@ -9,38 +9,77 @@ import {
   normalizeAirportName,
 } from '../../../src/sources/airports/records.js';
 const indexes = new WeakMap();
+/**
+ * Per-snapshot lookup tables, built on first use.
+ *
+ * A map read needs `cells`; search needs `codes` and `names`; a detail read
+ * needs `ids`. Building all four eagerly cost about 44 MB per localized
+ * snapshot, and a visitor trying several languages paid it for each one even
+ * though the map only ever touched one of them.
+ */
 export function airportIndexes(snapshot) {
   let index = indexes.get(snapshot);
   if (index) return index;
-  index = {
-    ids: new Map(),
-    codes: new Map(),
-    cells: new Map(),
-    names: new Map(),
+  const records = snapshot.records || [];
+  const builders = {
+    ids: () => {
+      const map = new Map();
+      for (const record of records) map.set(record.id, record);
+      return map;
+    },
+    codes: () => {
+      const map = new Map();
+      for (const record of records) {
+        for (const code of new Set([
+          record.icaoCode,
+          record.iataCode,
+          record.gpsCode,
+          record.localCode,
+          record.ident,
+        ])) {
+          if (!code) continue;
+          const key = code.toLocaleLowerCase();
+          const entries = map.get(key) || [];
+          entries.push(record);
+          map.set(key, entries);
+        }
+      }
+      return map;
+    },
+    cells: () => {
+      const map = new Map();
+      for (const record of records) {
+        const key = `${Math.floor(record.lon / 5)},${Math.floor(record.lat / 5)}`;
+        const entries = map.get(key) || [];
+        entries.push(record);
+        map.set(key, entries);
+      }
+      return map;
+    },
+    names: () => {
+      const map = new Map();
+      for (const record of records) {
+        map.set(record.id, {
+          name: normalizeAirportName(record.name),
+          keywords: normalizeAirportName(record.keywords),
+        });
+      }
+      return map;
+    },
   };
-  for (const record of snapshot.records) {
-    index.ids.set(record.id, record);
-    index.names.set(record.id, {
-      name: normalizeAirportName(record.name),
-      keywords: normalizeAirportName(record.keywords),
+  index = {};
+  for (const [name, build] of Object.entries(builders)) {
+    let value;
+    Object.defineProperty(index, name, {
+      configurable: true,
+      enumerable: true,
+      get() {
+        value ??= build();
+        // Replace the accessor so later reads are a plain property lookup.
+        Object.defineProperty(index, name, { value, enumerable: true });
+        return value;
+      },
     });
-    for (const code of new Set([
-      record.icaoCode,
-      record.iataCode,
-      record.gpsCode,
-      record.localCode,
-      record.ident,
-    ])) {
-      if (!code) continue;
-      const key = code.toLocaleLowerCase();
-      const entries = index.codes.get(key) || [];
-      entries.push(record);
-      index.codes.set(key, entries);
-    }
-    const key = `${Math.floor(record.lon / 5)},${Math.floor(record.lat / 5)}`;
-    const entries = index.cells.get(key) || [];
-    entries.push(record);
-    index.cells.set(key, entries);
   }
   indexes.set(snapshot, index);
   return index;

@@ -4,6 +4,21 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.88] — 2026-10-23 — Airport lookup tables built on demand
+
+- Build the `ids`, `codes`, `cells` and `names` tables of an airport snapshot
+  when a read first needs one, instead of all four up front. Switching language
+  materializes a localized snapshot, and those tables were 44 MB of the 58 MB
+  it held even though a map read only needs `cells` (about 1 MB). A language
+  switch now allocates roughly 15 MB instead of 58 MB; search and detail still
+  build their own table the first time they are used.
+- This is not a leak fix: retained heap measured flat at 372-377 MB across two
+  rounds of six language switches, while RSS climbed because each rebuild
+  allocated a whole projection. Fewer megabytes per rebuild lowers that
+  high-water mark.
+- Verify the airport model, index and localization suites, plus the full unit
+  suite, formatting, boundaries, locales and the production build.
+
 ## [0.2.87] — 2026-10-23 — One serving slot between deploys
 
 - Stop the retired slot instead of keeping it resident as a standby. A deploy
