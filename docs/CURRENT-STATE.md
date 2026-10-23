@@ -1,10 +1,15 @@
 # God's Eye View Current State
 
+Owner override (2026-10-23): the bottom-left Cesium logo and provider credit
+container are hidden on desktop and mobile, including clean-view and recording.
+The credit inventory remains registered with Cesium. This supersedes historical
+requirements below that kept the global attribution control visible.
+
 Airport symbols use compact 16/14/12px map sizes and navigation aids use12px,
 without black SVG outline layers. Navigation facilities reuse the same themed
 DOM card as airports, including close/Escape selection cleanup. Cards show
 station facts without source/provenance rows or links; full context and backend
-records retain provenance. Global provider attribution remains visible.
+records retain provenance. Global provider attribution follows the override above.
 
 Webhook acknowledgments now follow an atomic private deployment checkpoint.
 Pending pushes survive receiver termination, failed work remains available for

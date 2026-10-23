@@ -4,6 +4,14 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.91] — 2026-10-23 — Hide the bottom-left Cesium credits in every mode
+
+- Hide the Cesium logo and provider credit container on desktop and mobile,
+  including clean-view and recording, following the owner's explicit override.
+  Retain the registered credit inventory and existing teardown ownership.
+- Extend the application browser gate to verify zero credit layout rectangles
+  at desktop and mobile sizes in all three modes.
+
 ## [0.2.90] — 2026-10-23 — A transient ledger error no longer parks the quota
 
 - Retry a lock or an atomic rename that fails with EEXIST, EPERM, EACCES or

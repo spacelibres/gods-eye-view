@@ -48,9 +48,10 @@ export async function createApplicationScene({
     });
   }
   loaderStatus.textContent = t('Configuring viewer...');
-  // Provider attribution stays visible, including clean-view and recording.
+  // Owner override: keep the credit inventory mounted but hidden in every mode.
   const creditContainer = document.createElement('div');
   creditContainer.id = 'cesium-credits';
+  creditContainer.style.setProperty('display', 'none', 'important');
   document.body.appendChild(creditContainer);
   defer(() => creditContainer.remove());
   const viewer = createApplicationViewer({

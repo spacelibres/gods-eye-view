@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-/** Prove standalone startup and terminal resource ownership in a real browser. */
+/** Prove startup, hidden credits in all layouts/modes, and terminal teardown.
+ * Run against npm run dev: node scripts/qa-application.mjs --url http://localhost:4173
+ */
 import assert from 'node:assert/strict';
 import puppeteer from 'puppeteer';
 
@@ -63,8 +65,48 @@ try {
   assert.equal(before.viewerAlive, true);
   assert.equal(before.credits, true);
   console.log(
-    'PASS: startup, data registration, annotations and visible attribution',
+    'PASS: startup, data registration, annotations and retained credit inventory',
   );
+
+  for (const viewport of [
+    { width: 1440, height: 900 },
+    { width: 390, height: 844 },
+  ]) {
+    await page.setViewport(viewport);
+    for (const mode of ['', 'ui-clean-view', 'recording-mode']) {
+      const creditState = await page.evaluate((mode) => {
+        document.body.classList.toggle(
+          'ui-clean-view',
+          mode === 'ui-clean-view',
+        );
+        document.body.classList.toggle(
+          'recording-mode',
+          mode === 'recording-mode',
+        );
+        const credits = document.getElementById('cesium-credits');
+        return {
+          mounted: Boolean(credits),
+          display: getComputedStyle(credits).display,
+          rectangles: credits.getClientRects().length,
+          visibleChildren: [...credits.querySelectorAll('a, img')].filter(
+            (node) => node.getClientRects().length > 0,
+          ).length,
+        };
+      }, mode);
+      assert.deepEqual(creditState, {
+        mounted: true,
+        display: 'none',
+        rectangles: 0,
+        visibleChildren: 0,
+      });
+      console.log(
+        `PASS: hidden credits ${viewport.width}px ${mode || 'normal'}`,
+      );
+    }
+  }
+  await page.evaluate(() => {
+    document.body.classList.remove('ui-clean-view', 'recording-mode');
+  });
 
   const after = await page.evaluate(async () => {
     const application = window.__qaApplication;
