@@ -231,7 +231,9 @@ export function createLocalePickerModel({
   };
 
   return {
-    current,
+    get current() {
+      return current;
+    },
     options,
     searchable,
     get open() {
@@ -264,6 +266,19 @@ export function createLocalePickerModel({
       query = String(text ?? '');
       visible = filterLocaleOptions(options, query);
       // The current language stays active while it matches; else the first.
+      activateSelected();
+    },
+    /**
+     * Reflect a language applied elsewhere. The selected row moves back to the
+     * top, which is where a picker built for that language would have it.
+     * @param {string} locale
+     */
+    applyLocale(locale) {
+      current = locale;
+      for (const option of options) option.selected = option.code === locale;
+      const index = options.findIndex((option) => option.selected);
+      if (index > 0) options.unshift(...options.splice(index, 1));
+      if (!query) visible = options;
       activateSelected();
     },
     setActive(index) {
@@ -459,6 +474,10 @@ export function mountLocalePicker({
   root.append(button, popup);
 
   const optionNodes = new Map();
+  // One check node, moved to whichever row is the active language. Creating it
+  // per row and never moving it left the mark on the language the page loaded
+  // with while the ARIA flag followed the switch.
+  const checkNode = icon(documentRef, 'check', 'locale-picker-check');
   for (const option of model.options) {
     const item = element(documentRef, 'li', 'locale-picker-option');
     item.id = ids.option(option.code);
@@ -478,8 +497,7 @@ export function mountLocalePicker({
     const text = element(documentRef, 'span', 'locale-picker-text');
     text.append(name, meta);
     item.append(text);
-    if (option.selected)
-      item.append(icon(documentRef, 'check', 'locale-picker-check'));
+    if (option.selected) item.append(checkNode);
     optionNodes.set(option.code, item);
   }
 
@@ -639,11 +657,17 @@ export function mountLocalePicker({
         }),
       );
       button.title = t('Change the interface language');
+      model.applyLocale(locale);
+      // The checkmark is the visible selection, so it has to move with the
+      // language; `aria-selected` alone leaves sighted users on the old row.
+      const row = optionNodes.get(locale);
+      if (row) row.append(checkNode);
       for (const option of model.options) {
         const item = optionNodes.get(option.code);
         if (item)
           item.setAttribute('aria-selected', String(option.code === locale));
       }
+      if (model.open) render();
     },
     destroy() {
       close();

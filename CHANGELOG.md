@@ -4,6 +4,17 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.89] — 2026-10-23 — The language checkmark follows the switch
+
+- Move one check icon to the row that now holds the active language. The icon
+  was appended once at mount, so a live switch left the mark on the language the
+  page loaded with while `aria-selected` moved: the list disagreed with its own
+  bottom chip. The selected row also returns to the top, as it is on mount.
+- Verify the new DOM test and the browser gate `scripts/qa-live-locale.mjs`
+  across all seven shipped locales: the checkmark, `aria-selected`, the row
+  order and the layer names follow each switch, with the viewer and camera
+  preserved and no page errors.
+
 ## [0.2.88] — 2026-10-23 — Airport lookup tables built on demand
 
 - Build the `ids`, `codes`, `cells` and `names` tables of an airport snapshot

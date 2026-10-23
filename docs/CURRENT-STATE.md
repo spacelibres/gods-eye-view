@@ -62,7 +62,9 @@ retain message sources; layer names and composite SDR/import readouts repaint
 from their owners. Explicit context bindings distinguish identical words such
 as weather CLEAR and the CLEAR action. Native names, user scene titles, file
 names, transcripts and editable values remain data. Switching preserves the
-viewer, camera and enabled layers without reloading or refetching sources.
+viewer, camera and enabled layers without reloading or refetching sources. The
+picker's own checkmark, its `aria-selected` row and the row order follow a live
+switch, not only the language the page loaded with.
 
 The original HUD sparse/balanced/dense controls own screen decluttering.
 Native icons retain authored positions; no extra global thinning or leader layer runs.

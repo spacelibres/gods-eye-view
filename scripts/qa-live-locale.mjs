@@ -99,9 +99,20 @@ try {
       const { t, getLocale } = await import('/src/i18n/index.js');
       const p = window.__localeProof;
       const names = [...document.querySelectorAll('.data-name')];
+      const rows = [
+        ...document.querySelectorAll('#locale-picker [data-locale]'),
+      ];
       return {
         locale: getLocale(),
         names: names.length,
+        // The visible mark and the ARIA flag must both follow the switch; the
+        // icon is one node moved between rows, so a stale copy shows here.
+        checked: rows
+          .filter((row) => row.querySelector('.locale-picker-check'))
+          .map((row) => row.dataset.locale),
+        selected: rows
+          .filter((row) => row.getAttribute('aria-selected') === 'true')
+          .map((row) => row.dataset.locale),
         nameFailures: names
           .map((el, i) => ({ actual: el.textContent, expected: t(p.names[i]) }))
           .filter((x) => x.actual !== x.expected),
@@ -125,6 +136,8 @@ try {
     }, locale);
     console.log(JSON.stringify(result));
     assert.equal(result.locale, locale);
+    assert.deepEqual(result.checked, [locale], `${locale} checkmark`);
+    assert.deepEqual(result.selected, [locale], `${locale} aria-selected`);
     assert.deepEqual(result.nameFailures, []);
     for (const key of [
       'heading',
