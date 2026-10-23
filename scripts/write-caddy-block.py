@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 """Write the managed Caddy site block for a God's Eye View deployment.
 
-    write-caddy-block.py CADDYFILE BEGIN END DOMAIN PORT_A PORT_B HOOK_PORT HOOK_PATH
+    write-caddy-block.py CADDYFILE BEGIN END DOMAIN PORTS HOOK_PORT HOOK_PATH
+
+`PORTS` is a comma-separated list of deploy-slot ports: `4174` for the steady
+state, `4173,4174` while both slots are meant to answer.
 
 Everything outside the two marker comments is preserved byte for byte, so a
-host with other sites keeps them untouched. The app handler upstreams BOTH
-deploy slots: Caddy health-checks each one and retries the other while one is
-restarting, which is what lets a deploy swap slots without an outage.
+host with other sites keeps them untouched. Only one slot runs between deploys,
+so the app handler normally upstreams one port; `lb_try_duration` still rides
+out the short restart of that single process.
 """
 
 import re
@@ -26,13 +29,8 @@ TEMPLATE = """{begin}
 \t}}
 
 \thandle {{
-\t\t# Both deploy slots, health-checked. A deploy starts the new release on
-\t\t# the idle slot; Caddy begins sending to it as soon as it answers and keeps
-\t\t# the old one in rotation until then, so the switch never leaves zero
-\t\t# upstreams. `lb_try_duration` retries the other slot when one is
-\t\t# mid-restart, which is what makes a single missed probe invisible to a
-\t\t# visitor.
-\t\treverse_proxy 127.0.0.1:{port} 127.0.0.1:{port_b} {{
+{comment}
+\t\treverse_proxy {upstreams} {{
 \t\t\tlb_try_duration 5s
 \t\t\thealth_uri /
 \t\t\thealth_interval 2s
@@ -43,12 +41,24 @@ TEMPLATE = """{begin}
 {end}
 """
 
+SINGLE_COMMENT = """\t\t# One serving slot: a deploy starts the new release on the idle port,
+\t\t# switches this block to it, and only then stops the old one, so the
+\t\t# switch never leaves zero upstreams."""
+
+MULTI_COMMENT = """\t\t# Both deploy slots, health-checked while a deploy hands traffic over
+\t\t# from one to the other."""
+
 
 def main(argv):
-    if len(argv) != 9:
+    if len(argv) != 8:
         sys.stderr.write(__doc__)
         return 2
-    path, begin, end, domain, port, port_b, hook_port, hook_path = argv[1:9]
+    path, begin, end, domain, ports, hook_port, hook_path = argv[1:8]
+
+    upstreams = [part.strip() for part in ports.split(",") if part.strip()]
+    if not upstreams or any(not re.fullmatch(r"\d{1,5}", port) for port in upstreams):
+        sys.stderr.write("PORTS must be one port or a comma-separated list of ports\n")
+        return 2
 
     with open(path, encoding="utf-8", newline="") as handle:
         text = handle.read()
@@ -63,8 +73,8 @@ def main(argv):
         begin=begin,
         end=end,
         domain=domain,
-        port=port,
-        port_b=port_b,
+        upstreams=" ".join(f"127.0.0.1:{port}" for port in upstreams),
+        comment=SINGLE_COMMENT if len(upstreams) == 1 else MULTI_COMMENT,
         hook_port=hook_port,
         hook_path=hook_path,
     )

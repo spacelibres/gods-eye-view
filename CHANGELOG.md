@@ -4,6 +4,23 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.87] — 2026-10-23 — One serving slot between deploys
+
+- Stop the retired slot instead of keeping it resident as a standby. A deploy
+  still builds into the idle slot, starts it beside the live one, switches
+  Caddy only after that port answers, and then stops and disables the old
+  slot; only the serving slot is enabled, so a reboot starts one process.
+  The idle second copy held about 650 MB of the 2 GB host: the airport
+  directory, the translation catalog and their indexes existed twice.
+- Let the Caddy block generator take a port list, so the steady-state block
+  upstreams one port and the hand-over can still name both. A malformed port
+  list is refused rather than written, and a failed Caddy reload now stops the
+  installer before it retires the slot that configuration still points at.
+- Verify the deploy tests (15), `bash -n scripts/install-vps.sh`, the Python
+  source, the full unit suite, formatting, boundaries, locales and the build,
+  plus a dry run of the generated block against the live Caddyfile with
+  `caddy validate`.
+
 ## [0.2.86] — 2026-10-23 — Bounded translation memory and a patient OpenSky ledger
 
 - Cache at most two localized airport projections per process, least recently

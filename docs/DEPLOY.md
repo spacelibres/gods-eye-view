@@ -24,7 +24,7 @@ which is exactly what the webhook does on every push.
 | --- | --- |
 | Node 24 | `/opt/node24` — the system Node.js is left untouched |
 | Checkout | `/opt/gods-eye-view`, branch `main` |
-| App service | `gev.service` on `127.0.0.1:4173` |
+| App service | `gev@<port>.service` on `127.0.0.1:<port>` — slots 4173 and 4174; one serves at a time |
 | Webhook service | `gev-webhook.service` on `127.0.0.1:4180` |
 | Configuration | `/etc/gods-eye-view.env` (mode 600) |
 | Caddy block | between the `gods-eye-view` markers in `/etc/caddy/Caddyfile` |
@@ -32,6 +32,13 @@ which is exactly what the webhook does on every push.
 The Caddy step only rewrites the block between its own markers. Other sites in
 the same file are preserved byte for byte, and `caddy validate` runs before
 the reload — a bad block leaves the running configuration alone.
+
+Two slots exist, but only one runs between deploys. A deploy builds into the
+idle slot, starts it beside the live one, switches Caddy to the new port once it
+answers, then stops and disables the old slot. The hand-over still never leaves
+zero upstreams; the difference is that an idle copy of the app no longer holds a
+second copy of the airport directory in RAM between deploys. `.slot` records
+which port serves, so a rerun resumes from the right one.
 
 Overrides, all optional: `GEV_HOME`, `GEV_REPO`, `GEV_BRANCH`, `GEV_DOMAIN`,
 `GEV_PORT`, `GEV_NODE`, `GEV_USER`, `GEV_WEBHOOK_PORT`, `GEV_WEBHOOK_PATH`.

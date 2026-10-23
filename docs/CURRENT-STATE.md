@@ -11,6 +11,12 @@ Pending pushes survive receiver termination, failed work remains available for
 operator retry, and a managed installer leaves its receiver running until the
 accepted queue drains and systemd refreshes it. See DEPLOY.md for recovery.
 
+A host runs one serving slot between deploys, not two. The installer still
+builds into the idle slot and starts it beside the live one, but Caddy is
+switched to the new slot and the old one is stopped and disabled afterwards.
+A redeploy therefore costs one extra process only for the seconds of the
+hand-over; a reboot restarts only the slot recorded in `.slot`.
+
 Official upstream is integrated through `7be5937f` (57 additional commits).
 The catalogue starfield, shared controls, provider response hardening and bounded
 Overpass admission retain our local airport catalogs, voice providers and VPS

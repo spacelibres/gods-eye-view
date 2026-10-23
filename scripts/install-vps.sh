@@ -9,7 +9,9 @@
 #   2. Clones or updates the repository in $GEV_HOME.
 #   3. Installs the locked dependencies and builds the app.
 #   4. Runs it under systemd in two slots (127.0.0.1:$GEV_PORT and
-#      $GEV_PORT_B) behind Caddy, so a deploy swaps slots without an outage.
+#      $GEV_PORT_B) behind Caddy. One slot serves between deploys; a deploy
+#      starts the new release on the idle slot, switches Caddy to it, and only
+#      then stops the old one, so the hand-over never leaves zero upstreams.
 #   5. Installs the GitHub webhook service on 127.0.0.1:$GEV_WEBHOOK_PORT.
 #   6. Adds a Caddy site block for $GEV_DOMAIN and reloads Caddy.
 #
@@ -46,10 +48,11 @@ GEV_REPO="${GEV_REPO:-https://github.com/spacelibres/gods-eye-view.git}"
 GEV_BRANCH="${GEV_BRANCH:-main}"
 GEV_DOMAIN="${GEV_DOMAIN:-godseye.spacelibre.cn}"
 GEV_PORT="${GEV_PORT:-4173}"
-# Blue/green: two slots serve alternate releases. Caddy proxies to both and
-# health-checks them, so a deploy starts the new build on the idle slot, waits
-# until Caddy sees it healthy, then stops the old one. At no point is there
-# zero upstreams, so no request meets a closed port.
+# Blue/green with one resident process: both slots exist, but only the serving
+# one runs between deploys. A deploy starts the new build on the idle slot,
+# waits until it answers, points Caddy at it and only then stops the old one,
+# so no request meets a closed port while a second copy of the app no longer
+# holds a second copy of the airport directory in memory.
 GEV_PORT_B="${GEV_PORT_B:-${GEV_PORT_SLOT_B:-$((GEV_PORT + 1))}}"
 GEV_NODE="${GEV_NODE:-24}"
 GEV_USER="${GEV_USER:-gev}"
@@ -93,16 +96,20 @@ die() { printf '\033[1;31mERROR: %s\033[0m\n' "$*" >&2; exit 1; }
 [ -f "$CADDYFILE" ] || die "$CADDYFILE not found; this script expects Caddy to be installed"
 
 install_caddy_site() {
-  log "Caddy site for $GEV_DOMAIN"
+  local upstreams="$1"
+  log "Caddy site for $GEV_DOMAIN (upstream $upstreams)"
   # Strip the previous managed block, then append the current one. Everything
   # outside the markers — the existing sites — is kept byte for byte.
   python3 "$GEV_HOME/scripts/write-caddy-block.py" \
     "$CADDYFILE" "$BEGIN_MARK" "$END_MARK" "$GEV_DOMAIN" \
-    "$GEV_PORT" "$GEV_PORT_B" "$GEV_WEBHOOK_PORT" "$GEV_WEBHOOK_PATH"
+    "$upstreams" "$GEV_WEBHOOK_PORT" "$GEV_WEBHOOK_PATH"
 
   caddy validate --config "$CADDYFILE" --adapter caddyfile >/dev/null ||
     die "Caddy rejected the new configuration; nothing was reloaded"
-  systemctl reload caddy
+  # A failed reload leaves the previous configuration serving, so dying here is
+  # safer than continuing to a step that retires the slot that config points at.
+  systemctl reload caddy ||
+    die "Caddy failed to reload; the previous configuration is still serving"
   log "Caddy reloaded"
 }
 
@@ -215,10 +222,11 @@ else
 fi
 
 # ------------------------------------------------------- memory headroom ---
-# A build beside both blue/green slots exceeds a small host's RAM and thrashes
-# swap (an 8-12 minute build). Stop the standby slot for the build only: the
-# live slot keeps serving, and the switch below restarts the standby with the
-# new release. Read `.slot` early so we stop the slot that is genuinely idle.
+# A build beside two resident slots exceeds a small host's RAM and thrashes
+# swap (an 8-12 minute build). Only the serving slot runs between deploys, so
+# this now clears a leftover standby from a host that still had one: the
+# serving slot keeps answering and the switch below starts the idle one with
+# the new release. Read `.slot` early so the idle slot is the right one.
 SLOT_FILE="$GEV_HOME/.slot"
 LIVE_PORT="$GEV_PORT"
 if [ -f "$SLOT_FILE" ]; then
@@ -228,7 +236,7 @@ fi
 if [ "$LIVE_PORT" = "$GEV_PORT" ]; then IDLE_PORT="$GEV_PORT_B"; else IDLE_PORT="$GEV_PORT"; fi
 if [ "$IDLE_PORT" != "$LIVE_PORT" ] &&
   systemctl is-active --quiet "gev@$LIVE_PORT.service" 2>/dev/null; then
-  log "Stopping standby slot gev@$IDLE_PORT to free memory for the build"
+  log "Clearing the idle slot gev@$IDLE_PORT for the build"
   systemctl stop "gev@$IDLE_PORT.service" 2>/dev/null || true
 fi
 
@@ -348,13 +356,21 @@ fi
 
 if [ "$LIVE_PORT" = "$GEV_PORT" ]; then IDLE_PORT="$GEV_PORT_B"; else IDLE_PORT="$GEV_PORT"; fi
 
-# Teach Caddy about both slots before touching either one. It keeps using
-# the live slot until the new one passes its health probe.
-install_caddy_site
+# Whether a release is already answering decides the order below: a redeploy
+# keeps Caddy on the live slot until the new one passes its health probe, while
+# a first install has nothing to protect and points Caddy at the slot that is
+# about to start.
+live_serving=0
+if [ "$LIVE_PORT" != "$IDLE_PORT" ] &&
+  systemctl is-active --quiet "gev@$LIVE_PORT.service" 2>/dev/null; then
+  live_serving=1
+else
+  install_caddy_site "$IDLE_PORT"
+fi
 
 log "Bringing the new release up on the idle slot ($IDLE_PORT)"
-# The standby slot was stopped for the build; restart it now with the new
-# release while the live slot still serves, so traffic never moves to a cold slot.
+# The idle slot was stopped for the build; restart it now with the new release
+# while the live slot still serves, so traffic never moves to a cold slot.
 systemctl restart "gev@$IDLE_PORT.service"
 idle_healthy=""
 for _ in $(seq 1 40); do
@@ -381,23 +397,21 @@ GEV_RELEASE_DIR=$RELEASE_DIR
 SLOT
 chown "$GEV_USER:$GEV_USER" "$SLOT_FILE" 2>/dev/null || true
 
-# Caddy already upstreams both slots with active health checks, so it starts
-# sending to $IDLE_PORT the moment it sees that instance answer, and keeps
-# using the old one until then. Retire the old slot only after that.
+# The new release answered, so point the single upstream at it. The probe above
+# ran against the port directly, which is exactly what Caddy will now use.
+install_caddy_site "$IDLE_PORT"
+
+# Retire the old slot once in-flight requests on the reloaded upstream have
+# drained. Only the serving slot is enabled, so a reboot does not bring back the
+# second process this deploy just stopped.
 sleep 2
-# Keep BOTH slots running, on the same release. The slot that just stopped
-# serving becomes the standby: it answers the same build, so a failed health
-# check on the live slot has somewhere to retry instead of returning 502.
-# Restarting it (rather than leaving the previous release loaded) keeps a
-# visitor who lands on either slot on one version — a standby serving stale
-# code would answer half the requests with the old bundle.
+if [ "$live_serving" = "1" ] && [ "$LIVE_PORT" != "$IDLE_PORT" ]; then
+  systemctl stop "gev@$LIVE_PORT.service" 2>/dev/null || true
+  log "Stopped slot $LIVE_PORT; $IDLE_PORT is the only serving slot"
+fi
+systemctl enable "gev@$IDLE_PORT.service" >/dev/null
 if [ "$LIVE_PORT" != "$IDLE_PORT" ]; then
-  systemctl restart "gev@$LIVE_PORT.service" 2>/dev/null || true
-  for _ in $(seq 1 20); do
-    curl -fsS --max-time 2 "http://127.0.0.1:$LIVE_PORT/" >/dev/null 2>&1 && break
-    sleep 1
-  done
-  log "Slot $LIVE_PORT refreshed as standby on $RELEASE_ID"
+  systemctl disable "gev@$LIVE_PORT.service" >/dev/null 2>&1 || true
 fi
 if [ "$LEGACY_UNIT" = "1" ]; then
   # Only now, with a checked slot serving, is the old single instance safe to

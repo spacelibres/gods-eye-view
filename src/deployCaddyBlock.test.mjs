@@ -7,9 +7,10 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 /**
- * The managed Caddy block must upstream BOTH deploy slots, and must leave every
- * site it does not own byte for byte. Getting either wrong either removes the
- * no-outage switch or breaks someone else's site on the same host.
+ * The managed Caddy block must upstream the serving slot (one port between
+ * deploys), accept both ports for the hand-over, and leave every site it does
+ * not own byte for byte. Getting either wrong either breaks the no-outage
+ * switch or someone else's site on the same host.
  */
 
 const SCRIPT = fileURLToPath(
@@ -18,30 +19,45 @@ const SCRIPT = fileURLToPath(
 const BEGIN = '# >>> gods-eye-view (managed) >>>';
 const END = '# <<< gods-eye-view <<<';
 
-function run(contents, { portA = '4173', portB = '4174' } = {}) {
+function withFile(contents, callback) {
   const dir = mkdtempSync(join(tmpdir(), 'caddy-'));
   const file = join(dir, 'Caddyfile');
   try {
     writeFileSync(file, contents);
-    execFileSync('python3', [
-      SCRIPT,
-      file,
-      BEGIN,
-      END,
-      'godseye.example',
-      portA,
-      portB,
-      '4180',
-      '/webhook',
-    ]);
-    return readFileSync(file, 'utf8');
+    return callback(file);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
 }
 
-test('both slots are upstreams of the app handler', () => {
+function write(file, ports) {
+  execFileSync('python3', [
+    SCRIPT,
+    file,
+    BEGIN,
+    END,
+    'godseye.example',
+    ports,
+    '4180',
+    '/webhook',
+  ]);
+}
+
+function run(contents, { ports = '4174' } = {}) {
+  return withFile(contents, (file) => {
+    write(file, ports);
+    return readFileSync(file, 'utf8');
+  });
+}
+
+test('one serving slot is the only app upstream between deploys', () => {
   const out = run('{\n}\n');
+  assert.match(out, /reverse_proxy 127\.0\.0\.1:4174 \{/);
+  assert.doesNotMatch(out, /127\.0\.0\.1:4173/);
+});
+
+test('both ports can upstream the block during a hand-over', () => {
+  const out = run('{\n}\n', { ports: '4173,4174' });
   assert.match(out, /reverse_proxy 127\.0\.0\.1:4173 127\.0\.0\.1:4174 \{/);
 });
 
@@ -78,6 +94,13 @@ test('re-running replaces the block instead of appending a second one', () => {
 });
 
 test('custom slot ports are written verbatim', () => {
-  const out = run('{\n}\n', { portA: '5000', portB: '5001' });
+  const out = run('{\n}\n', { ports: '5000,5001' });
   assert.match(out, /reverse_proxy 127\.0\.0\.1:5000 127\.0\.0\.1:5001 \{/);
+});
+
+test('a malformed port list is refused instead of written', () => {
+  assert.throws(() =>
+    withFile('{\n}\n', (file) => write(file, '5000,not-a-port')),
+  );
+  assert.throws(() => withFile('{\n}\n', (file) => write(file, '')));
 });

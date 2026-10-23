@@ -4,13 +4,13 @@ import { readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 
 /**
- * A deploy must never leave the site with zero upstreams. The old flow ran
- * `systemctl restart` on the single instance, so for the length of a process
- * start every request met a closed port.
+ * A deploy must never leave the site with zero upstreams, and the host must not
+ * keep a second copy of the app resident between deploys.
  *
- * The installer now runs two slots behind Caddy: the new release starts on the
- * idle one, is health-checked, and only then is the old one retired. These
- * tests pin the parts of that contract a future edit could quietly undo.
+ * The installer runs two slots: the new release starts on the idle one, is
+ * health-checked, then Caddy is pointed at it and only after that is the old
+ * one stopped. Steady state is a single serving slot. These tests pin the parts
+ * of that contract a future edit could quietly undo.
  */
 
 const script = readFileSync(
@@ -27,47 +27,52 @@ test('two slots are configured, one above the other', () => {
   );
 });
 
-test('Caddy learns both slots before anything is started or stopped', () => {
-  // The template lives in its own script (pinned by deployCaddyBlock.test), so
-  // the installer only has to hand it both ports and reload Caddy — but it has
-  // to do so first.
+test('the old slot keeps answering until the new one passes its probe', () => {
+  // A redeploy must not point Caddy at a cold port: the only pre-start Caddy
+  // write belongs to the first-install branch, where nothing is serving yet.
   assert.match(script, /write-caddy-block\.py/);
-  assert.match(script, /"\$GEV_PORT" "\$GEV_PORT_B"/);
-  assert.match(script, /systemctl reload caddy/);
+  assert.match(script, /install_caddy_site "\$IDLE_PORT"/);
 
-  const caddy = script.indexOf('install_caddy_site\n');
-  const startIdle = script.indexOf(
-    'systemctl restart "gev@$IDLE_PORT.service"',
-  );
-  assert.ok(caddy > 0, 'the Caddy block is written');
+  const firstInstall = script.indexOf('live_serving=0');
+  const firstWrite = script.indexOf('install_caddy_site "$IDLE_PORT"');
+  const healthCheck = script.indexOf('http://127.0.0.1:$IDLE_PORT/');
+  const switched = script.lastIndexOf('install_caddy_site "$IDLE_PORT"');
+  const stopOld = script.indexOf('systemctl stop "gev@$LIVE_PORT.service"');
+
+  assert.ok(firstInstall > 0, 'the deploy records whether a release serves');
   assert.ok(
-    caddy < startIdle,
-    'Caddy must know both slots before the new one starts',
+    firstWrite > firstInstall,
+    'the pre-start Caddy write happens only when nothing serves',
+  );
+  assert.ok(
+    healthCheck < switched,
+    'Caddy is pointed at the new slot only after it answered',
+  );
+  assert.ok(
+    switched < stopOld,
+    'the old slot is stopped only after Caddy moved to the new one',
   );
 });
 
-test('the new release starts on the idle slot before the old one is touched', () => {
-  const startIdle = script.indexOf(
-    'systemctl restart "gev@$IDLE_PORT.service"',
-  );
-  const standby = script.indexOf('systemctl restart "gev@$LIVE_PORT.service"');
-  assert.ok(startIdle > 0, 'the idle slot is started explicitly');
-  assert.ok(standby > 0, 'the old slot is refreshed as a standby');
-  assert.ok(
-    startIdle < standby,
-    'the live slot is only touched after the idle one has started',
-  );
-});
-
-test('both slots stay running so one failure still has an upstream', () => {
-  // Retiring the old slot on every deploy leaves a single upstream: one failed
-  // health check then has nowhere to retry, which is the 502 this replaces.
-  assert.doesNotMatch(
+test('the retired slot is stopped and stays disabled', () => {
+  // Keeping an idle process resident doubles the airport directory in RAM,
+  // which is the memory this release reclaims.
+  assert.match(
     script,
     /systemctl stop "gev@\$LIVE_PORT\.service"/,
-    'the old slot must become a standby, not be stopped',
+    'the slot that stopped serving must be stopped',
   );
-  assert.match(script, /refreshed as standby/);
+  assert.match(
+    script,
+    /systemctl disable "gev@\$LIVE_PORT\.service"/,
+    'a reboot must not restart the retired slot',
+  );
+  assert.match(
+    script,
+    /systemctl enable "gev@\$IDLE_PORT\.service"/,
+    'the serving slot must come back after a reboot',
+  );
+  assert.doesNotMatch(script, /refreshed as standby/);
 });
 
 test('the idle slot must answer before it becomes live', () => {
@@ -85,21 +90,7 @@ test('the idle slot must answer before it becomes live', () => {
   );
 });
 
-test('the single-instance unit from older installers is retired', () => {
-  assert.match(script, /systemctl disable --now gev\.service/);
-  assert.doesNotMatch(
-    script,
-    /systemctl restart gev\.service/,
-    'restarting the one instance is the outage this replaces',
-  );
-});
-
-test('the slot that serves is recorded so a rerun resumes', () => {
-  assert.match(script, /SLOT_FILE=/, 'the live slot must be persisted');
-  assert.match(script, /GEV_LIVE_PORT=/, 'the slot file records the live port');
-});
-
-test('a running standby reloads the new backend while the live slot remains untouched', () => {
+test('the idle slot starts without touching the live one', () => {
   const start = script.indexOf(
     'log "Bringing the new release up on the idle slot',
   );
@@ -117,6 +108,7 @@ systemctl() {
   case "$1" in
     start) : ;; # An already-running systemd unit keeps its previous process.
     restart) idle_loaded=new ;;
+    stop) idle_loaded=stopped ;;
     *) exit 10 ;;
   esac
 }
@@ -134,4 +126,18 @@ ${command}
     0,
     result.stderr || result.stdout || result.error?.message,
   );
+});
+
+test('the single-instance unit from older installers is retired', () => {
+  assert.match(script, /systemctl disable --now gev\.service/);
+  assert.doesNotMatch(
+    script,
+    /systemctl restart gev\.service/,
+    'restarting the one instance is the outage this replaces',
+  );
+});
+
+test('the slot that serves is recorded so a rerun resumes', () => {
+  assert.match(script, /SLOT_FILE=/, 'the live slot must be persisted');
+  assert.match(script, /GEV_LIVE_PORT=/, 'the slot file records the live port');
 });
