@@ -1971,6 +1971,13 @@ The existing aircraft normalizer is separately available through the portable
 `gods-eye-view/sources/adsb-lol` export. Provider URLs, local credentials, cache
 policy, fallback behavior, response shapes and rendering remain unchanged.
 
+The AIS cache drops vessels older than 30 minutes, but the sweep itself runs at
+most once a minute rather than after every ingested frame: the window is 30
+minutes wide, so a minute of lag removes exactly the same rows, while a busy
+feed no longer walks a 50,000-vessel map several times a second. Reads filter
+by freshness independently, so a stale vessel never reaches a response between
+sweeps.
+
 ## Control names for assistive technology
 
 Scope, Bloom, Sharpen and location search have explicit accessible names.

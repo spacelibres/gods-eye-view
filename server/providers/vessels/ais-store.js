@@ -8,6 +8,14 @@ export const AISSTREAM_STALE_MS = 30 * 60 * 1000;
 const AIS_TRACK_SAMPLES = 64;
 const AIS_TRACK_MIN_GAP_SEC = 30;
 const AIS_TRACK_MIN_MOVE_M = 25;
+/**
+ * The stale sweep walks the whole cache (up to 50k vessels). A busy feed
+ * delivers several frames per second, and running it per frame pegged a core
+ * on the deployed host; the cutoff is 30 minutes wide, so a minute of lag
+ * prunes exactly the same rows for a fraction of the cost.
+ */
+const AIS_PRUNE_INTERVAL_MS = 60_000;
+let _aisPruneAt = 0;
 /** @type {Map<string,object>} */
 const _aisStreamVessels = new Map();
 /** @type {Map<string,object>} */
@@ -229,7 +237,10 @@ export function aisStreamRows(maxRows) {
 }
 
 function pruneAisStreamCache() {
-  const cutoff = Date.now() - AISSTREAM_STALE_MS;
+  const now = Date.now();
+  if (now - _aisPruneAt < AIS_PRUNE_INTERVAL_MS) return;
+  _aisPruneAt = now;
+  const cutoff = now - AISSTREAM_STALE_MS;
   for (const [mmsi, row] of _aisStreamVessels) {
     if (row._updatedAt < cutoff) {
       _aisStreamVessels.delete(mmsi);

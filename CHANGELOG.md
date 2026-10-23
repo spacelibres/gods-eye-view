@@ -4,6 +4,18 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.85] — 2026-10-23 — AIS cache pruning stops burning a core
+
+- Run the stale-vessel sweep at most once a minute instead of on every ingested
+  AIS frame. A busy feed delivers several frames per second against a cache of
+  up to 50,000 vessels, so the per-frame sweep walked the whole map constantly:
+  on the deployed host it accounted for 40% of the process CPU time and drove
+  another 37% in garbage collection, on both slots. The cutoff is 30 minutes
+  wide, so a minute of lag prunes exactly the same rows; reads still filter by
+  freshness, so a stale vessel never reaches a response during that minute.
+- Verify the two AIS-focused suites (17 tests) pass, plus the full unit suite,
+  formatting, dependency boundaries and the production build.
+
 ## [0.2.84] — 2026-10-22 — Dependency hash ignores the app version
 
 - Hash the dependency tree, not the lockfile's own `version` fields, so a patch
