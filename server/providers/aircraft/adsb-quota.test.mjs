@@ -210,6 +210,9 @@ test('unfinished requests survive restarts and serialize remaining-credit decisi
   await a;
   f.advance(1000);
   const c = f.gate.fetch('/v2/mil', {}, 'military');
+  // The reservation is awaited before the vendor call, so the pending promise
+  // for `c` only exists once the request has reached the transport.
+  while (f.calls < 2) await new Promise((resolve) => setImmediate(resolve));
   release(
     Response.json({ ac: [] }, { headers: { 'x-ratelimit-remaining': '1' } }),
   );
@@ -239,4 +242,22 @@ test('a crashed transport exposes the full unresolved quota window instead of on
     createAdsbQuota(f.options).waitMs('military'),
     ADSB_DAY_MS - 13000,
   );
+});
+
+test('a ledger lock held for a short transaction is waited for, not reported as unavailable', async (t) => {
+  const f = fixture(t);
+  const lock = f.options.stateFile + '.lock';
+  writeFileSync(lock, '');
+  setTimeout(() => rmSync(lock, { force: true }), 150);
+  const response = await f.gate.fetch('/v2/lat/1/lon/2/dist/250');
+  assert.equal(response.status, 200);
+  assert.equal(f.calls, 1);
+});
+
+test('a ledger lock that is never released still fails closed', async (t) => {
+  const f = fixture(t);
+  writeFileSync(f.options.stateFile + '.lock', '');
+  const response = await f.gate.fetch('/v2/lat/1/lon/2/dist/250');
+  assert.equal(response.status, 503);
+  assert.equal(f.calls, 0);
 });

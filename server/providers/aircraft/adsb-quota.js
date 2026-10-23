@@ -10,6 +10,18 @@ import {
 } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
+import { setTimeout as sleep } from 'node:timers/promises';
+
+/**
+ * Filesystem errors that mean "try again", not "the ledger is broken".
+ *
+ * On Windows an atomic rename of the state file intermittently fails with
+ * EPERM while another process holds the target open, and a held lock file
+ * makes the exclusive create fail with EEXIST. Neither says anything about the
+ * vendor allowance; without a retry the first one leaves the lock in place and
+ * every later request answers 503.
+ */
+const TRANSIENT_LEDGER_ERRORS = new Set(['EEXIST', 'EPERM', 'EACCES', 'EBUSY']);
 
 export const ADSB_DAY_MS = 86_400_000;
 export const ADSB_REFRESH_MS = 240_000;
@@ -61,6 +73,7 @@ export function createAdsbQuota({
     const lock = file + '.lock';
     const fd = openSync(lock, 'wx', 0o600);
     let committed = false;
+    let retryable = false;
     try {
       const state = existsSync(file)
         ? JSON.parse(readFileSync(file, 'utf8'))
@@ -108,11 +121,23 @@ export function createAdsbQuota({
         if (existsSync(temporary)) unlinkSync(temporary);
       }
       return result;
+    } catch (error) {
+      // A sharing violation proves the atomic rename did not replace anything,
+      // so the ledger is unchanged and the transaction can be retried.
+      retryable = TRANSIENT_LEDGER_ERRORS.has(error?.code);
+      throw error;
     } finally {
       closeSync(fd);
-      // An uncertain persistence result must not allow another reservation.
-      // A failed transaction leaves its lock for explicit operator recovery.
-      if (committed) unlinkSync(lock);
+      // An uncertain persistence result must not allow another reservation, so
+      // the lock stays. A retryable one is the opposite: nothing was written,
+      // and keeping the lock would answer 503 until an operator removed it.
+      if (committed || retryable) {
+        try {
+          unlinkSync(lock);
+        } catch {
+          /* Removal is best effort; the retry budget bounds the rest. */
+        }
+      }
     }
   }
   function wait(state, at, kind) {
@@ -155,6 +180,27 @@ export function createAdsbQuota({
         },
       },
     );
+  /**
+   * A peer holds the ledger lock for one short transaction, and Windows can
+   * refuse the atomic rename while the target is open. Both are contention,
+   * not a broken allowance, so a bounded retry re-runs the whole transaction;
+   * nothing was persisted when it threw, so it cannot double-charge.
+   */
+  async function transactWithRetry(action) {
+    const until = performance.now() + 1000;
+    for (;;) {
+      try {
+        return transaction(action);
+      } catch (error) {
+        if (
+          !TRANSIENT_LEDGER_ERRORS.has(error?.code) ||
+          performance.now() >= until
+        )
+          throw error;
+        await sleep(10);
+      }
+    }
+  }
   return {
     waitMs(kind = 'ancillary') {
       try {
@@ -171,7 +217,7 @@ export function createAdsbQuota({
       let delay;
       let reservationAt;
       try {
-        delay = transaction((state, at) => {
+        delay = await transactWithRetry((state, at) => {
           const ms = wait(state, at, kind);
           if (!ms) {
             state.inFlight = at;
@@ -185,7 +231,7 @@ export function createAdsbQuota({
           }
           return ms;
         });
-      } catch {
+      } catch (error) {
         return limited(503, 60_000);
       }
       if (delay) return limited(429, delay);
@@ -202,7 +248,7 @@ export function createAdsbQuota({
         });
       } catch (error) {
         try {
-          transaction((state) => {
+          await transactWithRetry((state) => {
             if (state.inFlight === reservationAt) delete state.inFlight;
           });
         } catch {
@@ -228,7 +274,7 @@ export function createAdsbQuota({
           : retry;
       {
         try {
-          transaction((state) => {
+          await transactWithRetry((state) => {
             if (state.inFlight !== reservationAt)
               throw new Error('Unresolved ADS-B reservation');
             delete state.inFlight;

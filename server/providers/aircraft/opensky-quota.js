@@ -12,6 +12,17 @@ import { resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { setTimeout as sleep } from 'node:timers/promises';
 
+/**
+ * Filesystem errors that mean "try again", not "the ledger is broken".
+ *
+ * On Windows an atomic rename of the state file intermittently fails with
+ * EPERM while another process holds the target open, and a held lock file
+ * makes the exclusive create fail with EEXIST. Neither says anything about the
+ * vendor allowance; without a retry the first one leaves the lock in place and
+ * every later request answers 503.
+ */
+const TRANSIENT_LEDGER_ERRORS = new Set(['EEXIST', 'EPERM', 'EACCES', 'EBUSY']);
+
 export const OPENSKY_DAY_MS = 86_400_000;
 export const OPENSKY_REFRESH_MS = 120_000;
 const COST = 4;
@@ -63,6 +74,7 @@ export function createOpenSkyQuota({
     const lock = name + '.lock';
     const fd = openSync(lock, 'wx', 0o600);
     let committed = false;
+    let retryable = false;
     try {
       const state = existsSync(name)
         ? JSON.parse(readFileSync(name, 'utf8'))
@@ -110,9 +122,23 @@ export function createOpenSkyQuota({
       }
       committed = true;
       return value;
+    } catch (error) {
+      // A sharing violation proves the atomic rename did not replace anything,
+      // so the ledger is unchanged and the transaction can be retried.
+      retryable = TRANSIENT_LEDGER_ERRORS.has(error?.code);
+      throw error;
     } finally {
       closeSync(fd);
-      if (committed) unlinkSync(lock);
+      // Remove the lock we took after a commit, and after a retryable failure:
+      // keeping that one would make every later attempt meet EEXIST and answer
+      // 503 for good. An uncertain persist still leaves it for recovery.
+      if (committed || retryable) {
+        try {
+          unlinkSync(lock);
+        } catch {
+          /* Removal is best effort; the retry budget bounds the rest. */
+        }
+      }
     }
   }
   function wait(state, at) {
@@ -152,7 +178,13 @@ export function createOpenSkyQuota({
       try {
         return transaction(action, persist);
       } catch (error) {
-        if (error.code !== 'EEXIST' || performance.now() >= until) throw error;
+        // A retried transaction re-reads the ledger, and nothing was persisted
+        // when it threw, so a retry cannot double-charge a request.
+        if (
+          !TRANSIENT_LEDGER_ERRORS.has(error?.code) ||
+          performance.now() >= until
+        )
+          throw error;
         await sleep(10);
       }
     }
@@ -207,7 +239,7 @@ export function createOpenSkyQuota({
           }
           return ms;
         });
-      } catch {
+      } catch (error) {
         return denied(503, 60000);
       }
       if (delay) return denied(429, delay);

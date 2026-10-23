@@ -4,6 +4,21 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.90] — 2026-10-23 — A transient ledger error no longer parks the quota
+
+- Retry a lock or an atomic rename that fails with EEXIST, EPERM, EACCES or
+  EBUSY for up to a second. On Windows the state file's rename intermittently
+  fails with EPERM while another process holds the target open, and the failure
+  left the lock behind on purpose, so one transient error turned every later
+  reservation into 503. A retryable failure now releases the lock it took,
+  because nothing was persisted; a genuinely uncertain persist still leaves it
+  for operator recovery.
+- Apply the same treatment to the ADS-B quota ledger, which has the same shape
+  and the same failure mode.
+- Verify the two quota suites (27 tests, including held-lock, fail-closed and
+  concurrent-writer cases), the full unit suite, formatting, boundaries,
+  locales and the production build.
+
 ## [0.2.89] — 2026-10-23 — The language checkmark follows the switch
 
 - Move one check icon to the row that now holds the active language. The icon
