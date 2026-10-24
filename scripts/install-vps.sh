@@ -240,6 +240,11 @@ if [ "$IDLE_PORT" != "$LIVE_PORT" ] &&
   systemctl stop "gev@$IDLE_PORT.service" 2>/dev/null || true
 fi
 
+log "Download and verify pinned static fonts and licenses"
+# Abort before publishing or switching slots if any pinned asset is unavailable.
+# Verified files are reused, so subsequent offline rebuilds need no download.
+run_as_service "$NODE_DIR/npm run assets:prepare"
+
 log "Build"
 if [ -n "$CESIUM_ION_TOKEN" ]; then
   log "Cesium ion token: configured ($(printf '%s' "$CESIUM_ION_TOKEN" | cut -c1-12)…)"

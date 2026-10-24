@@ -4,6 +4,16 @@ Entries are grouped by release, newest first. Each heading names the version it
 was tagged with and the date of that tag, so any line here can be traced back to
 `git log vX.Y.Z`.
 
+## [0.2.92] — 2026-10-24 — Serve UI fonts locally after verified install-time downloads
+
+- Download the existing Inter, JetBrains Mono and Material Symbols fonts and
+  licenses during installation, with pinned byte lengths and SHA-256 hashes.
+  Reuse verified local files; reject invalid downloads before publishing.
+- Serve UI fonts from the application origin and prepare assets automatically
+  for development, production and panel builds. Google 3D Tiles is unchanged.
+- Verify downloader failures/cache repair, glyph coverage, production and panel
+  builds, and browser font loading with Google font hosts blocked.
+
 ## [0.2.91] — 2026-10-23 — Hide the bottom-left Cesium credits in every mode
 
 - Hide the Cesium logo and provider credit container on desktop and mobile,

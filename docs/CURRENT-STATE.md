@@ -1,5 +1,14 @@
 # God's Eye View Current State
 
+UI fonts (Inter, JetBrains Mono and the existing Material Symbols subset) are
+served from the application origin. `npm run assets:prepare` downloads 17 pinned
+font/license files (330,197 bytes) into ignored `public/vendor-fonts/`, validates
+their SHA-256 and size, and reuses verified files without network access. The VPS
+installer prepares these before building or publishing; development, production
+and panel npm builds also prepare them automatically. A failed download aborts
+the new release before switching traffic. Google 3D Tiles, Street View, live
+providers and embedded media retain their existing paths.
+
 Owner override (2026-10-23): the bottom-left Cesium logo and provider credit
 container are hidden on desktop and mobile, including clean-view and recording.
 The credit inventory remains registered with Cesium. This supersedes historical

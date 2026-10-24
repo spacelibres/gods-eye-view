@@ -73,15 +73,12 @@ function referencedGlyphs() {
   return found;
 }
 
-/** The `icon_names` list index.html asks Google for. */
-function subsettedGlyphs(html = readFileSync(INDEX_HTML, 'utf8')) {
-  const match =
-    /Material\+Symbols\+Outlined[^"]*[?&]icon_names=([a-z0-9_,]+)/.exec(html);
-  assert.ok(
-    match,
-    'index.html must request Material Symbols with an icon_names subset',
+/** The pinned subset downloaded during installation, never by the browser. */
+function subsettedGlyphs() {
+  const manifest = JSON.parse(
+    readFileSync(path.join(REPO_ROOT, 'scripts/static-assets.json'), 'utf8'),
   );
-  return new Set(match[1].split(','));
+  return new Set(manifest.iconNames);
 }
 
 test('every glyph the sources render is in the icon_names subset', () => {
@@ -93,10 +90,35 @@ test('every glyph the sources render is in the icon_names subset', () => {
   assert.deepEqual(
     missing,
     [],
-    'Glyphs named by the sources but absent from the index.html icon_names list. ' +
-      'Add them there — an unlisted glyph renders as its own name on screen: ' +
+    'Glyphs named by the sources but absent from the pinned static-assets.json subset. ' +
+      'Regenerate the pinned subset — an unlisted glyph renders as its own name on screen: ' +
       missing.join(', '),
   );
+});
+
+test('the UI loads local fonts and every stylesheet file is integrity-pinned', () => {
+  const html = readFileSync(INDEX_HTML, 'utf8');
+  assert.doesNotMatch(html, /https:\/\/fonts\.(googleapis|gstatic)\.com/);
+  assert.match(html, /href="\/local-fonts\.css"/);
+  const css = readFileSync(
+    path.join(REPO_ROOT, 'public/local-fonts.css'),
+    'utf8',
+  );
+  assert.doesNotMatch(css, /https?:\/\//);
+  const manifest = JSON.parse(
+    readFileSync(path.join(REPO_ROOT, 'scripts/static-assets.json'), 'utf8'),
+  );
+  const files = new Set(manifest.assets.map((asset) => asset.file));
+  for (const [, file] of css.matchAll(/url\(\.\/vendor-fonts\/([^)]*)\)/g)) {
+    assert.ok(files.has(file), `Unpinned stylesheet font: ${file}`);
+  }
+  for (const family of [
+    'Inter',
+    'JetBrains Mono',
+    'Material Symbols Outlined',
+  ]) {
+    assert.ok(css.includes(`font-family: '${family}'`), family);
+  }
 });
 
 test('the unused Material Icons Round family is not loaded', () => {

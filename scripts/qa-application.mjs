@@ -16,6 +16,16 @@ const browser = await puppeteer.launch({
 });
 try {
   const page = await browser.newPage();
+  const externalFonts = [];
+  await page.setRequestInterception(true);
+  page.on('request', (request) => {
+    if (/^https:\/\/fonts\.(googleapis|gstatic)\.com\//.test(request.url())) {
+      externalFonts.push(request.url());
+      void request.abort();
+    } else {
+      void request.continue();
+    }
+  });
   const errors = [];
   page.on('console', (message) => {
     if (
@@ -66,6 +76,34 @@ try {
   assert.equal(before.credits, true);
   console.log(
     'PASS: startup, data registration, annotations and retained credit inventory',
+  );
+
+  const fonts = await page.evaluate(async () => {
+    const families = ['Inter', 'JetBrains Mono', 'Material Symbols Outlined'];
+    const loaded = await Promise.all(
+      families.map(async (family) => {
+        const faces = await document.fonts.load(
+          `24px "${family}"`,
+          family.startsWith('Material') ? 'radar' : 'Hello',
+        );
+        return (
+          faces.length > 0 && faces.every((face) => face.status === 'loaded')
+        );
+      }),
+    );
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    context.font = '24px "Material Symbols Outlined"';
+    return { loaded, iconWidth: context.measureText('radar').width };
+  });
+  assert.deepEqual(fonts.loaded, [true, true, true]);
+  assert.ok(
+    fonts.iconWidth <= 26,
+    'radar must form one icon instead of five letters',
+  );
+  assert.deepEqual(externalFonts, []);
+  console.log(
+    'PASS: all UI font families and icon ligatures load with Google font hosts blocked',
   );
 
   for (const viewport of [

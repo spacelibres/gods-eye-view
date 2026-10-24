@@ -1,7 +1,7 @@
 {
   "name": "gods-eye-view",
   "private": true,
-  "version": "0.2.91",
+  "version": "0.2.92",
   "description": "A real-time intelligence console for planet Earth — photorealistic 3D globe, live aircraft/ships/satellites/earthquakes/CCTV, and hands-free voice control. Runs in a browser.",
   "type": "module",
   "license": "MIT",
@@ -32,6 +32,10 @@
     "visualization"
   ],
   "scripts": {
+    "assets:prepare": "node scripts/prepare-static-assets.mjs",
+    "predev": "npm run assets:prepare",
+    "prebuild": "npm run assets:prepare",
+    "prebuild:panel": "npm run assets:prepare",
     "doctor": "node scripts/setup-doctor.mjs",
     "format": "node scripts/format.mjs --write",
     "format:check": "node scripts/format.mjs --check",

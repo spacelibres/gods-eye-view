@@ -5,6 +5,24 @@ from GitHub.
 
 ## One command
 
+### Local UI fonts
+
+The installer runs `npm run assets:prepare` before building/publishing. It
+downloads pinned WOFF2 files and licenses into ignored `public/vendor-fonts/`;
+Vite copies these into each complete release. `npm run dev`, `npm run build`
+and `npm run build:panel` also prepare them automatically. No Google Fonts
+connection is made by the UI. A fully verified cache permits offline rebuilds;
+a missing/corrupt asset requires the deployment host to reach its pinned source.
+Any HTTP, size or SHA-256 failure aborts before switching the serving release.
+
+The manifest `scripts/static-assets.json` pins 17 files totalling 330,197 bytes:
+Inter and JetBrains Mono use SIL OFL 1.1, and Material Symbols uses Apache 2.0.
+The original license files are served beside the fonts. Only the existing 38-name
+icon subset is downloaded; no npm dependency or font execution code is added.
+To update glyphs, regenerate the matching font, local CSS, manifest names and
+hashes together, preserving license notices and checking glyph coverage.
+Google 3D Tiles and online provider/embedded-media services are unchanged.
+
 On a host that already runs Caddy (this was verified on Ubuntu 26.04 with
 Caddy 2.6.2):
 
